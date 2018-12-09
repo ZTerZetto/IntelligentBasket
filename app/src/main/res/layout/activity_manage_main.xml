@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <LinearLayout
+        android:id="@+id/tab_menu"
+        android:layout_width="match_parent"
+        android:layout_height="55dp"
+        android:orientation="horizontal"
+        android:layout_alignParentBottom="true">
+
+    <TextView
+        android:id="@+id/txt_infoFrag"
+        style="@style/tab_menu_item"
+        android:drawableTop="@android:drawable/ic_menu_day"
+        android:text="消息"/>
+
+    <TextView
+        android:id="@+id/txt_mapFrag"
+        style="@style/tab_menu_item"
+        android:drawableTop="@android:drawable/ic_menu_agenda"
+        android:text="地图"/>
+
+    <TextView
+        android:id="@+id/txt_userFrag"
+        style="@style/tab_menu_item"
+        android:drawableTop="@android:drawable/ic_menu_myplaces"
+        android:text="设置"/>
+
+    </LinearLayout>
+
+    <View
+        android:id="@+id/div_tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="1px"
+        android:background="@android:color/darker_gray"
+        android:layout_above="@id/tab_menu"/>
+
+    <TextView
+        android:id="@+id/txt_userName"
+        style="@style/editStyle" />
+
+    <FrameLayout
+        android:id="@+id/fragment_container"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_above="@id/tab_menu"
+        android:layout_below="@id/txt_userName"
+        android:background="@android:color/transparent">
+    </FrameLayout>
+
+</RelativeLayout>

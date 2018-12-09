@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo.QRCode;
+package com.example.zzx.zbar_demo.zbar;
 
 import android.Manifest;
 import android.content.Intent;
@@ -13,9 +13,7 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.zzx.zbar_demo.MainActivity;
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.zbar.CaptureActivity;
 
 public class QRScanActivity extends AppCompatActivity implements View.OnClickListener{
 

@@ -4,17 +4,17 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
-    <TextView
-        android:id="@+id/tv_scanResult"
-        android:layout_marginTop="50sp"
+    <Button
+        android:id="@+id/btn_login"
+        android:layout_marginTop="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:text="Hello World!" />
+        android:layout_gravity="center"
+        android:text="登录"/>
 
     <Button
         android:id="@+id/btn_scan"
-        android:layout_marginTop="30sp"
+        android:layout_marginTop="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
@@ -25,7 +25,23 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="30sp"
+        android:layout_marginTop="20sp"
         android:text="视频播放"/>
+
+    <Button
+        android:id="@+id/btn_pdf"
+        android:layout_marginTop="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="PDF阅读"/>
+
+    <Button
+        android:id="@+id/btn_lbs"
+        android:layout_marginTop="20sp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:text="百度地图"/>
 
 </LinearLayout>
