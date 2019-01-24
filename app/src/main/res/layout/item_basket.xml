@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="50dp"
+    android:background="#FFF"
+    android:orientation="horizontal"
+    android:padding="5dp">
+
+    <ImageView
+        android:id="@+id/txt_basket_state"
+        android:layout_width="12dp"
+        android:layout_height="12dp"
+        android:layout_gravity="center"
+        android:background="@color/edit_bg" />
+
+    <TextView
+        android:id="@+id/txt_basket_num"
+        style="@style/usertextStyle"
+        android:layout_gravity="center"
+        android:text="吊篮编号：" />
+    <TextView
+        android:id="@+id/txt_worker_Id"
+        style="@style/usertextStyle"
+        android:layout_gravity="center"
+        android:text="负责人：" />
+
+</LinearLayout>

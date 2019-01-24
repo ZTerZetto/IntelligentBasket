@@ -9,7 +9,7 @@
 
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
-    <!-- SD卡读写权限 4.4以下系统-->
+    <!-- SD卡读写权限 4.4以下系统 -->
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 百度地图权限 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -29,11 +29,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
-
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="fiwzxkeFvL7q37ZESCA4yU6nOPfnIa6u" />
+
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -54,8 +53,8 @@
             android:process=":remote" />
 
         <activity android:name=".LoginActivity" />
-        <activity android:name=".ManageMainActivity"></activity>
-        <activity android:name=".WorkerMainActivity"></activity>
+        <activity android:name=".ManageMainActivity" />
+        <activity android:name=".WorkerMainActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -66,6 +65,10 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <activity android:name=".ProDetailActivity" />
+        <activity android:name=".BasketListActivity" />
+        <activity android:name=".WorkerListActivity"></activity>
     </application>
 
 </manifest>

@@ -18,10 +18,11 @@ public class WorkerMainActivity extends AppCompatActivity implements View.OnClic
 
     private TextView tabInfo;
     private TextView tabUser;
-    private TextView txtName;
 
     private InfoFragment infoFragment;
     private UserFragment userFragment;
+
+    private String userRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -29,10 +30,8 @@ public class WorkerMainActivity extends AppCompatActivity implements View.OnClic
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_worker_main);
         Intent intent = getIntent();
-        String userRole = intent.getStringExtra("userRole");
+        userRole = intent.getStringExtra("userRole");
         Log.d("userRole",userRole);
-        txtName = findViewById(R.id.txt_userName);
-        txtName.setText("用户级别: "+ userRole);
         bindView();
     }
 

@@ -2,6 +2,8 @@ package com.example.zzx.zbar_demo;
 
 import android.app.FragmentTransaction;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +11,7 @@ import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
-import com.baidu.mapapi.map.MapFragment;
+import com.example.zzx.zbar_demo.entity.UserInfo;
 import com.example.zzx.zbar_demo.fragment.InfoFragment;
 import com.example.zzx.zbar_demo.fragment.MapViewFragment;
 import com.example.zzx.zbar_demo.fragment.UserFragment;
@@ -17,25 +19,30 @@ import com.example.zzx.zbar_demo.fragment.UserFragment;
 
 public class ManageMainActivity extends AppCompatActivity implements View.OnClickListener {
 
+    /*获取登陆消息*/
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+
     private TextView tabInfo;
     private TextView tabMap;
     private TextView tabUser;
-    private TextView txtName;
 
     private InfoFragment infoFragment;
     private MapViewFragment mapViewFragment;
     private UserFragment userFragment;
+
+    private UserInfo userInfo;
+    private String token;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_manage_main);
-        Intent intent = getIntent();
-        String userRole = intent.getStringExtra("userRole");
-        Log.d("userRole",userRole);
-        txtName = findViewById(R.id.txt_userName);
-        txtName.setText("用户级别: "+ userRole);
+
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        userInfo = new UserInfo(pref.getString("user_id",""),pref.getString("password",""));
+        token = pref.getString("loginToken","");
         bindView();
     }
 
@@ -57,7 +64,7 @@ public class ManageMainActivity extends AppCompatActivity implements View.OnClic
         tabInfo.setOnClickListener(this);
         tabMap.setOnClickListener(this);
         tabUser.setOnClickListener(this);
-        //tabMore.setOnClickListener(this);
+
     }
 
     //重置所有文本的选中状态
@@ -65,7 +72,6 @@ public class ManageMainActivity extends AppCompatActivity implements View.OnClic
         tabInfo.setSelected(false);
         tabMap.setSelected(false);
         tabUser.setSelected(false);
-        //tabMore.setSelected(false);
     }
 
     //隐藏所有Fragment
@@ -73,13 +79,13 @@ public class ManageMainActivity extends AppCompatActivity implements View.OnClic
         if (infoFragment != null) {
             transaction.hide(infoFragment);
         }
-        /*if(mapViewFragment!=null){
+      if(mapViewFragment!=null){
             transaction.hide(mapViewFragment);
         }
         if(userFragment!=null){
             transaction.hide(userFragment);
         }
-        if(f4!=null){
+          /*if(f4!=null){
             transaction.hide(f4);
         }*/
     }
@@ -117,6 +123,9 @@ public class ManageMainActivity extends AppCompatActivity implements View.OnClic
                 if (userFragment == null) {
                     userFragment = new UserFragment();
                     transaction.add(R.id.fragment_container, userFragment);
+                    Bundle bundle = new Bundle();
+                    bundle.putString("loginToken",token);
+                    userFragment.setArguments(bundle);
                 } else {
                     transaction.show(userFragment);
                 }

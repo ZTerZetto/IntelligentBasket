@@ -1,8 +1,12 @@
 package com.example.zzx.zbar_demo.VideoPlay;
 
 
+import android.media.MediaPlayer;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.widget.MediaController;
+import android.widget.VideoView;
+
 import com.example.zzx.zbar_demo.R;
 
 public class VideoPlayActivity extends AppCompatActivity {
@@ -14,7 +18,7 @@ public class VideoPlayActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_video_play);
-        /*if (!LibsChecker.checkVitamioLibs(this))
+/*        if (!LibsChecker.checkVitamioLibs(this))
             return;
         video = (VideoView) findViewById(R.id.video1);
         //Uri uri = Uri.parse(path);

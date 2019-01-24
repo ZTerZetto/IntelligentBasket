@@ -1,9 +1,15 @@
 package com.example.zzx.zbar_demo.Util;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.entity.AppConfig;
 import com.example.zzx.zbar_demo.entity.UserInfo;
+
+
 import java.io.File;
 import okhttp3.FormBody;
-import okhttp3.Headers;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
@@ -26,20 +32,35 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
-
-    public static void sendJsonOkHttpRequest(okhttp3.Callback callback,String httpUrl,String json){
+    public static void sendLoginOkHttpRequest(okhttp3.Callback callback,String json){
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         final Request request = new Request.Builder()
-                .url(httpUrl)
+                .url(AppConfig.LOGIN_USER)
+                .addHeader("Authorization","null")
                 .post(requestBody)
                 .build();
         client.newCall(request).enqueue(callback);
     }
 
-    public static void sendLoginOkHttpRequest(okhttp3.Callback callback, UserInfo userInfo){
+    public static void getUserInfoOkHttpRequest(okhttp3.Callback callback,String token){
         OkHttpClient client = new OkHttpClient();
+
+        FormBody builder = new FormBody.Builder().build();
+        final Request request = new Request.Builder()
+                .url(AppConfig.USER_INFO)
+                .addHeader("Authorization",token)
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    public static void sendLogin2OkHttpRequest(okhttp3.Callback callback, UserInfo userInfo){
+        OkHttpClient client = new OkHttpClient();
+        JSONObject jsonObject = JSON.parseObject(userInfo.toString());
         FormBody builder = new FormBody.Builder()
+               /* .add(jsonObject)*/
                 .add("userId", userInfo.getUserId())
                 .add("userPassword", userInfo.getUserPassword())
                 .build();

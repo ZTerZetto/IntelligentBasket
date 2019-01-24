@@ -28,7 +28,7 @@ public class LoginActivity extends AppCompatActivity {
 
     /*可本地保存密码，
         * 未和服务器端相连接*/
-    private SharedPreferences pref;
+    public SharedPreferences pref;
     private SharedPreferences.Editor editor;
 
     private EditText accountEdit;
@@ -57,12 +57,14 @@ public class LoginActivity extends AppCompatActivity {
         boolean isRemember = pref.getBoolean("remember_password", false);
         if (isRemember) {
             //将账号和密码都设置到文本框中
-            account = pref.getString("account", "");
+            account = pref.getString("user_id", "");
             password = pref.getString("password", "");
             accountEdit.setText(account);
             accountEdit.setSelection(account.length());//光标定位到最后
             passwordEdit.setText(password);
         }
+
+
 
         //跳转至注册界面
         to_register.setOnClickListener(new View.OnClickListener() {
@@ -79,16 +81,6 @@ public class LoginActivity extends AppCompatActivity {
                 account = accountEdit.getText().toString();
                 password = passwordEdit.getText().toString();
                 if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(password)) {
-                    editor = pref.edit();
-
-                    if (rememberPass.isChecked()) {
-                        editor.putBoolean("remember_password", true);
-                        editor.putString("account", account);
-                        editor.putString("password", password);
-                    } else {
-                        editor.clear();
-                    }
-                    editor.apply();
                     userInfo = new UserInfo(account,password);
                     loginHttp(userInfo);
                 } else {
@@ -100,7 +92,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //登录请求连接
     private void loginHttp(UserInfo userInfo){
-        //String json = new Gson().toJson(userInfo);
+        String json = new Gson().toJson(userInfo);
         HttpUtil.sendLoginOkHttpRequest(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -115,24 +107,27 @@ public class LoginActivity extends AppCompatActivity {
                     JSONObject jsonObject = JSON.parseObject(responseData);
                     String isLogin = jsonObject.getString("isLogin");
                     switch (isLogin) {
-                        case "superWebAdmin":
+                        case "true":
+                            //TO DO 保存Token
+                            String token = jsonObject.getString("token");
+                            savePref(token);
                             StartManageMainActicity(isLogin);
                             break;
                         case "rentAdmin":
-                            StartWorkerMainActicity(isLogin);
+                            //StartWorkerMainActicity(isLogin);
                             break;
                         case "areaAdmin":
-                            StartWorkerMainActicity(isLogin);
+                            //StartWorkerMainActicity(isLogin);
                             break;
                         default:
-                            StartWorkerMainActicity("wrong");
+                            //StartWorkerMainActicity("wrong");
                             break;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-        }, userInfo);
+        },json);
     }
 
  /*   private void GetUser(String responseData) {
@@ -147,11 +142,27 @@ public class LoginActivity extends AppCompatActivity {
         User.setUser(username,userid,ticket,role,permission);
     }*/
 
+    //保存Token
+    private void savePref(String token) {
+        SharedPreferences sp = getSharedPreferences("loginToken",0);
+        SharedPreferences.Editor editor = sp.edit();
+
+        editor = pref.edit();
+        if (rememberPass.isChecked()) {
+            editor.putBoolean("remember_password", true);
+            editor.putString("user_id", account);
+            editor.putString("password", password);
+            editor.putString("loginToken",token);
+        } else {
+            editor.clear();
+        }
+        editor.apply();
+    }
+
     //跳转到主界面
     public void StartManageMainActicity(String isLogin) {
-        Log.d("userRole",isLogin);
         Intent intent = new Intent(LoginActivity.this, ManageMainActivity.class);
-        intent.putExtra("userRole",isLogin);
+        //intent.putExtra("userRole",isLogin);
         startActivity(intent);
         finish();
     }

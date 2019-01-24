@@ -1,11 +1,13 @@
 package com.example.zzx.zbar_demo.entity;
 
+import android.support.annotation.Nullable;
+
 import java.io.File;
 
 // Created by $USER_NAME on 2018/11/28/028.
 public class UserInfo {
 
-    public UserInfo(String userId, String userName, String userPassword, String userRole, String userPhone) {
+    public UserInfo(String userId, String userName, @Nullable String userPassword, @Nullable String userRole, @Nullable String userPhone) {
         this.userId = userId;
         this.userName = userName;
         this.userPassword = userPassword;
