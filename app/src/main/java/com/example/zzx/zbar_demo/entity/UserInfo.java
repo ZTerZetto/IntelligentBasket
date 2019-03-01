@@ -7,12 +7,14 @@ import java.io.File;
 // Created by $USER_NAME on 2018/11/28/028.
 public class UserInfo {
 
-    public UserInfo(String userId, String userName, @Nullable String userPassword, @Nullable String userRole, @Nullable String userPhone) {
+    public UserInfo(String userId, String userName, @Nullable String userPhone,@Nullable String userPassword, @Nullable String userRole, @Nullable String workerType) {
         this.userId = userId;
         this.userName = userName;
+        this.userPhone = userPhone;
         this.userPassword = userPassword;
         this.userRole = userRole;
         this.userPhone = userPhone;
+        this.workerType = workerType;
     }
 
     public UserInfo(String userId, String userPassword) {
@@ -22,9 +24,11 @@ public class UserInfo {
 
     String userId;
     String userName;
+    String userPhone;
     String userPassword;
     String userRole;
-    String userPhone;
+
+    String workerType;
     File file;
 
 
@@ -58,6 +62,14 @@ public class UserInfo {
 
     public void setUserRole(String userRole) {
         this.userRole = userRole;
+    }
+
+    public String getWorkerType() {
+        return workerType;
+    }
+
+    public void setWorkerType(String userType) {
+        this.workerType = workerType;
     }
 
     public String getUserPhone() {

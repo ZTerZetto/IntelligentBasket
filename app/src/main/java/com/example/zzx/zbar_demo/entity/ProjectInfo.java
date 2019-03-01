@@ -8,9 +8,14 @@ import java.security.PrivilegedExceptionAction;
 public class ProjectInfo {
     public String projectId;
     public String projectName;
+
+    //当前状态，0：立项； 1：进行中； 2：已结束
     public String projectState;
+    //开始、结束时间
     public String projectStart;
     public String projectEnd;
+
+
 
 
     public String getProjectId() {
@@ -54,13 +59,19 @@ public class ProjectInfo {
     }
 
 
-
+    //负责的租方管理员ID
     public String projectContractUrl;
+    //负责的区域管理员
     public String projectCertUrl;
+    //电子合同地址
     public String adminAreaId;
+    //安检证书地址
     public String adminRentId;
+    //本项目中用到的电柜
     public String boxList;
+    //本项目中涉及的工人
     public String projectBuilders;
+
     public String adminAreaUser;
 
 

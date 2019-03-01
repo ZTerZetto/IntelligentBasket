@@ -1,6 +1,12 @@
 <resources>
     <string name="app_name">智能吊篮管理系统</string>
 
+    <!-- welcome activity -->
+    <string name="app_statement">让吊篮管理更轻松</string>
+
+    <!-- basketDetail activity -->
+    <string name="id_hint">输入吊篮编号</string>
+
     <!--扫码-->
     <string name="qr_name">二维码</string>
     <string name="i_know">我知道了</string>
@@ -15,5 +21,21 @@
     <string name="action_sign_in_manager">  管理员  </string>
     <string name="action_register">注    册</string>
 
+    <!-- parameter activity -->
+    <string name="parameter_title">设备参数</string>
+    <string name="var_switch">开关变量</string>
+    <string name="control_input">控制输入</string>
+    <string name="parameter_motor">电机（左、右）</string>
+    <string name="control_out">控制输出</string>
+    <string name="parameter_vfd">变频器</string>
+    <string name="parameter_contactor">接触器（左、右）</string>
+    <string name="other_data">其他数据</string>
+    <string name="parameter_vfd_current">变频器电流</string>
+    <string name="parameter_clinometer_degree">倾斜仪角度（水平、竖直）</string>
+    <string name="parameter_location">位置信息</string>
 
+    <!-- workphoto activity -->
+    <string name="work_photo_title">设备截图</string>
+    <!-- video monitor activity -->
+    <string name="video_buffering">正在缓冲</string>
 </resources>

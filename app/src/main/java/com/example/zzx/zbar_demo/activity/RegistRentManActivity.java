@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo;
+package com.example.zzx.zbar_demo.activity;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -28,6 +28,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.Util.HttpUtil;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 
@@ -37,7 +38,8 @@ import java.io.IOException;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class RegisterActivity extends AppCompatActivity {
+public class RegistRentManActivity extends AppCompatActivity {
+
 
     public static final int TAKE_PHOTO = 1;
     public static final int CHOOSE_PHOTO = 2;
@@ -57,8 +59,7 @@ public class RegisterActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_register);
-
+        setContentView(R.layout.activity_regist_rent_man);
         Button takePhoto = (Button) findViewById(R.id.take_photo);
         Button chooseFromAlbum = (Button) findViewById(R.id.choose_from_album);
         Button register = findViewById(R.id.btn_regist);
@@ -67,7 +68,6 @@ public class RegisterActivity extends AppCompatActivity {
         edt_userName = findViewById(R.id.edt_register_userName);
         edt_userPhone = findViewById(R.id.edt_register_userPhone);
         edt_userPwd = findViewById(R.id.edt_register_pwd);
-
         photo_exist = false;
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
@@ -90,7 +90,7 @@ public class RegisterActivity extends AppCompatActivity {
                 } else {
                     //转换为封装过的uri对象
                     //FileProvider —— 内容提供器
-                    imageUri = FileProvider.getUriForFile(RegisterActivity.this, "com.example.cameraalbumtest.fileprovider", photo_file);
+                    imageUri = FileProvider.getUriForFile(RegistRentManActivity.this, "com.example.cameraalbumtest.fileprovider", photo_file);
                 }
                 // 启动相机程序
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
@@ -102,8 +102,8 @@ public class RegisterActivity extends AppCompatActivity {
         chooseFromAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(RegisterActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(RegisterActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                if (ContextCompat.checkSelfPermission(RegistRentManActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(RegistRentManActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 } else {
                     openAlbum();
                 }
@@ -114,8 +114,7 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(photo_exist){
-                    userinfo = new UserInfo(edt_userId.getText().toString(), edt_userName.getText().toString(),
-                            edt_userPwd.getText().toString(), "worker", edt_userPhone.getText().toString());
+                    userinfo = new UserInfo("", edt_userName.getText().toString(),edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), "rentAdmin","null");
                     uploadPhoto();
                 }else{
                     Toast.makeText(getApplicationContext(),"请上传身份证图片",Toast.LENGTH_LONG).show();
@@ -239,7 +238,9 @@ public class RegisterActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
-                Toast.makeText(RegisterActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                Looper.prepare();
+                Toast.makeText(RegistRentManActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                Looper.loop();
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {

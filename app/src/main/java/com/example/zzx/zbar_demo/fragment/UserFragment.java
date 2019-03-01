@@ -6,13 +6,13 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -20,14 +20,13 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.example.zzx.zbar_demo.BasketListActivity;
-import com.example.zzx.zbar_demo.LoginActivity;
-import com.example.zzx.zbar_demo.ProDetailActivity;
+import com.example.zzx.zbar_demo.activity.BasketListActivity;
+import com.example.zzx.zbar_demo.activity.LoginActivity;
+import com.example.zzx.zbar_demo.activity.ProDetailActivity;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.Util.HttpUtil;
-import com.example.zzx.zbar_demo.WorkerListActivity;
+import com.example.zzx.zbar_demo.activity.WorkerListActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 
@@ -41,6 +40,7 @@ public class UserFragment extends Fragment {
     private View mView;
     private UserInfo userInfo;
     private String token;
+    public SharedPreferences pref;
 
     private TextView txtUserName;
     private TextView txtRoleName;
@@ -50,6 +50,7 @@ public class UserFragment extends Fragment {
     private LinearLayout llWorkManage;
     private LinearLayout llChangePro;
     private LinearLayout llProDetail;
+    private LinearLayout LLLogout;
 
     private Intent intent;
 
@@ -63,7 +64,8 @@ public class UserFragment extends Fragment {
                     break;
                 }
                 default: {
-
+                    txtUserName.setText("null");
+                    txtRoleName.setText("null");
                     break;
                 }
             }
@@ -84,16 +86,19 @@ public class UserFragment extends Fragment {
             llBasketManage = mView.findViewById(R.id.ll_basket_manage);
             llWorkManage = mView.findViewById(R.id.ll_worker_manage);
             llChangePro = mView.findViewById(R.id.ll_change_pro);
+            LLLogout = mView.findViewById(R.id.ll_logout);
 
             //获取当前角色名并显示
-            Bundle bundle = new Bundle();
-            token = bundle.getString("loginToken");
+            pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            token = pref.getString("loginToken","");
             if(token == null){
-                userInfo.setUserRole(null);
-                userInfo.setUserName(null);
+                userInfo = new UserInfo(null,null);
+                userInfo.setUserRole("游客");
+                userInfo.setUserName("游客");
                 txtUserName.setText(userInfo.getUserName());
                 txtRoleName.setText(userInfo.getUserRole());
             } else {
+                userInfo = new UserInfo(null,null);
                 getUserInfoHttp();
             }
 
@@ -140,6 +145,13 @@ public class UserFragment extends Fragment {
 
                 }
             });
+            LLLogout.setOnClickListener(new View.OnClickListener(){
+
+                @Override
+                public void onClick(View view) {
+                    LogoutHttp();
+                }
+            });
         }
         return mView;
     }
@@ -150,7 +162,48 @@ public class UserFragment extends Fragment {
             @Override
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
+                Looper.prepare();
                 Toast.makeText(getActivity(), "网络连接失败！", Toast.LENGTH_LONG).show();
+                Looper.loop();
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 返回服务器数据
+                String responseData = response.body().string();
+                try {
+                    JSONObject jsonObject = JSON.parseObject(responseData);
+                   /* String isAllowed = jsonObject.getString("isAllowed");*/
+                    Message message = new Message();
+                    /*switch (isAllowed) {
+                        case "true":*/
+                            message.what = 0;
+                            userInfo.setUserRole(jsonObject.getString("userRole"));
+                            userInfo.setUserName(jsonObject.getString("userName"));
+                           /* break;
+                        default:
+                            message.what = 1;
+                            userInfo.setUserRole(null);
+                            userInfo.setUserName(null);
+                            //StartWorkerMainActicity("wrong");
+                            break;
+                    }*/
+                    handler.sendMessage(message);
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },token);
+    }
+
+    //退出登录连接
+    private void LogoutHttp(){
+       /* HttpUtil.quitLoadOkHttpRequest(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //异常情况处理
+                Looper.prepare();
+                Toast.makeText(getActivity(), "网络连接失败！", Toast.LENGTH_LONG).show();
+                Looper.loop();
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -159,25 +212,23 @@ public class UserFragment extends Fragment {
                 try {
                     JSONObject jsonObject = JSON.parseObject(responseData);
                     String isAllowed = jsonObject.getString("isAllowed");
-                    Message message = new Message();
                     switch (isAllowed) {
                         case "true":
-                            message.what = 0;
-                            userInfo.setUserRole(jsonObject.getString("userRole"));
-                            userInfo.setUserName(jsonObject.getString("userName"));
+                            //删除token，并跳转至登录界面
+                            SharedPreferences.Editor editor = pref.edit();
+                            editor.remove("loginToken");
+                            editor.commit();
+                            Intent intent = new Intent(getActivity(), LoginActivity.class);
+                            startActivity(intent);
                             break;
                         default:
-                            message.what = 1;
-                            userInfo.setUserRole(null);
-                            userInfo.setUserName(null);
-                            //StartWorkerMainActicity("wrong");
                             break;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
             }
-        },token);
+        },userInfo.getUserId());*/
     }
 
 }

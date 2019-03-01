@@ -122,4 +122,18 @@
         <ImageView style="@style/img_arrow" />
     </LinearLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:text="退出登录" />
+        <ImageView style="@style/img_arrow" />
+    </LinearLayout>
+
 </LinearLayout>

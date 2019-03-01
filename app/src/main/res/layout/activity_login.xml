@@ -77,6 +77,12 @@
             android:id="@+id/To_Register"
             style="@style/btnStyle"
             android:text="注册" />
+
+        <Button
+            android:id="@+id/Test_Button"
+            style="@style/btnStyle"
+            android:text="不联网测试" />
+
     </LinearLayout>
 
 </LinearLayout>

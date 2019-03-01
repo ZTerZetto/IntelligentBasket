@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWorkPhotosBackground"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar"/>
+
+    <!-- 设备运行截图缩略图 -->
+    <GridView
+        android:id="@+id/work_photo_gv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:numColumns="4"
+        android:scrollbars="none"
+        android:stretchMode="columnWidth"
+        android:horizontalSpacing="3dp"
+        android:verticalSpacing="3dp">
+    </GridView>
+
+</LinearLayout>

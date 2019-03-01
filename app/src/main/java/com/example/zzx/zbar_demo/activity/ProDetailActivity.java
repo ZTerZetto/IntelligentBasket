@@ -1,12 +1,13 @@
-package com.example.zzx.zbar_demo;
+package com.example.zzx.zbar_demo.activity;
 
-import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import com.example.zzx.zbar_demo.PdfRead.PDFStartActivity;
+import com.example.zzx.zbar_demo.R;
 
 public class ProDetailActivity extends AppCompatActivity {
 
@@ -14,7 +15,6 @@ public class ProDetailActivity extends AppCompatActivity {
     private TextView txtProState;
     private LinearLayout llChangeProState;
     private LinearLayout llProContract;
-
 
 
     @Override
@@ -39,9 +39,9 @@ public class ProDetailActivity extends AppCompatActivity {
         llProContract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-
+                Intent intent = new Intent(ProDetailActivity.this,PDFStartActivity.class);
+                startActivity(intent);
             }
         });
-
     }
 }

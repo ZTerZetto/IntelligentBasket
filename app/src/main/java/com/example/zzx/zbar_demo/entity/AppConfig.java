@@ -11,6 +11,14 @@ public class AppConfig {
     * */
     public final static String LOGIN_USER = BASE_URL_PATH.concat("/webLogin");
 
+    /* 登出
+    * userId
+    * Authorization：NULL
+    * GET
+    * */
+    public final static String LOGOUT_USER = BASE_URL_PATH.concat("/quitLoad");
+
+
     /* 获取当前登录者的用户名和角色
    * Authorization：TOKEN
    * POST
@@ -47,6 +55,9 @@ public class AppConfig {
     * */
     public final static String PRO_DETAIL = BASE_URL_PATH.concat("/projectDetailInfo");
 
+
+    // 视频播放器纵横比
+    public static final float ASPECT_RATIO = (float)1.7777777777777777;  // 16:9
 
 
 

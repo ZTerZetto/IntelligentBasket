@@ -1,25 +1,20 @@
-package com.example.zzx.zbar_demo;
+package com.example.zzx.zbar_demo.activity;
 
 import android.content.Context;
 import android.content.Intent;
-import android.os.Handler;
-import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
-import android.widget.Toast;
 
-import com.alibaba.fastjson.JSON;
 import com.example.zzx.zbar_demo.Adapter.BasketAdapter;
+import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.VideoPlay.VideoPlayActivity;
 import com.example.zzx.zbar_demo.entity.BasketInfo;
 
-import java.io.BufferedReader;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -67,7 +62,6 @@ public class BasketListActivity extends AppCompatActivity {
         txtSearch = findViewById(R.id.txt_input_search);
         btnSearch = findViewById(R.id.search_button);
         txtResult = findViewById(R.id.txt_search_result);
-
         initList();
 
 
@@ -75,20 +69,24 @@ public class BasketListActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 String text = txtSearch.getText().toString();
-                List<BasketInfo> arrayList = new ArrayList<>();
-                for (int i=0;i<basketInfoArrayList.size();i++){
-                    BasketInfo basketInfo = basketInfoArrayList.get(i);
-                    if(basketInfo.getBasketId().equals(text)){
-                        arrayList.add(basketInfo);
-                    }
-                }
-                if(arrayList.isEmpty()) {
-                    mLv.setVisibility(View.INVISIBLE);
-                    txtResult.setVisibility(View.VISIBLE);
-                } else {
-                    basketInfoArrayList.clear();
-                    basketInfoArrayList = arrayList;
+                if (text.isEmpty()) {
                     showList(basketInfoArrayList);
+                } else {
+                    List<BasketInfo> arrayList = new ArrayList<>();
+                    for (int i = 0; i < basketInfoArrayList.size(); i++) {
+                        BasketInfo basketInfo = basketInfoArrayList.get(i);
+                        if (basketInfo.getBasketId().equals(text)) {
+                            arrayList.add(basketInfo);
+                        }
+                    }
+                    if (arrayList.isEmpty()) {
+                        mLv.setVisibility(View.INVISIBLE);
+                        txtResult.setVisibility(View.VISIBLE);
+                    } else {
+                        basketInfoArrayList.clear();
+                        basketInfoArrayList = arrayList;
+                        showList(basketInfoArrayList);
+                    }
                 }
             }
         });
@@ -114,13 +112,13 @@ public class BasketListActivity extends AppCompatActivity {
     }
 
     private void initList() {
-        String basketId = "111111";
-        String workerId = "WK239548";
         BasketInfo basketInfo;
-        for(int i=0; i<5 ;i++){
-            basketInfo = new BasketInfo(basketId, "WORKING", workerId+i);
+        for(int i=0; i<10 ;i++){
+            basketInfo = new BasketInfo("BS11"+i, "WORKING", "WK233466"+i);
             basketInfoArrayList.add(basketInfo);
-            basketInfo = new BasketInfo(basketId, "RESTING", workerId+i);
+        }
+        for(int i=0; i<5 ;i++) {
+            basketInfo = new BasketInfo("BS22" + i, "RESTING", "WK239548" + i );
             basketInfoArrayList.add(basketInfo);
         }
         showList(basketInfoArrayList);

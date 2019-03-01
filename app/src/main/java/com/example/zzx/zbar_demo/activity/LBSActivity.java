@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo;
+package com.example.zzx.zbar_demo.activity;
 
 import android.Manifest;
 import android.content.pm.PackageManager;
@@ -19,6 +19,8 @@ import com.baidu.mapapi.map.MapStatusUpdateFactory;
 import com.baidu.mapapi.map.MapView;
 import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
+import com.example.zzx.zbar_demo.R;
+
 import java.util.ArrayList;
 import java.util.List;
 

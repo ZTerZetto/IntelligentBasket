@@ -1,8 +1,9 @@
-package com.example.zzx.zbar_demo;
+package com.example.zzx.zbar_demo.activity;
 
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Looper;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -16,8 +17,8 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.Util.HttpUtil;
-import com.example.zzx.zbar_demo.entity.AppConfig;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -36,6 +37,8 @@ public class LoginActivity extends AppCompatActivity {
 
     private Button login;
     private Button to_register;
+    private Button test;
+
     private CheckBox rememberPass;
 
     private UserInfo userInfo;
@@ -53,6 +56,7 @@ public class LoginActivity extends AppCompatActivity {
         rememberPass = findViewById(R.id.remember_pass);
         login =  findViewById(R.id.Login_Button);
         to_register = findViewById(R.id.To_Register);
+        test = findViewById(R.id.Test_Button);
 
         boolean isRemember = pref.getBoolean("remember_password", false);
         if (isRemember) {
@@ -88,6 +92,14 @@ public class LoginActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //不联网测试
+        test.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                StartManageMainActicity(null);
+            }
+        });
     }
 
     //登录请求连接
@@ -97,7 +109,9 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
+                Looper.prepare();
                 Toast.makeText(LoginActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                Looper.loop();
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
@@ -108,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
                     String isLogin = jsonObject.getString("isLogin");
                     switch (isLogin) {
                         case "true":
-                            //TO DO 保存Token
+                            //TODO 保存Token
                             String token = jsonObject.getString("token");
                             savePref(token);
                             StartManageMainActicity(isLogin);
@@ -145,7 +159,7 @@ public class LoginActivity extends AppCompatActivity {
     //保存Token
     private void savePref(String token) {
         SharedPreferences sp = getSharedPreferences("loginToken",0);
-        SharedPreferences.Editor editor = sp.edit();
+        editor = sp.edit();
 
         editor = pref.edit();
         if (rememberPass.isChecked()) {
@@ -155,11 +169,12 @@ public class LoginActivity extends AppCompatActivity {
             editor.putString("loginToken",token);
         } else {
             editor.clear();
+            //清空数据
         }
-        editor.apply();
+        editor.commit();
     }
 
-    //跳转到主界面
+    //跳转到管理员主界面
     public void StartManageMainActicity(String isLogin) {
         Intent intent = new Intent(LoginActivity.this, ManageMainActivity.class);
         //intent.putExtra("userRole",isLogin);
@@ -167,7 +182,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    //跳转到主界面
+    //跳转到施工人员主界面
     public void StartWorkerMainActicity(String isLogin) {
         Log.d("userRole",isLogin);
         Intent intent = new Intent(LoginActivity.this,  WorkerMainActivity.class);
@@ -178,8 +193,8 @@ public class LoginActivity extends AppCompatActivity {
 
     //跳转到注册界面
     public void StartRegistActicity( ) {
-        Intent intent = new Intent(LoginActivity.this, RegisterActivity.class);
-        startActivityForResult(intent,1);
+        Intent intent = new Intent(LoginActivity.this, RegisterPreActivity.class);
+        startActivity(intent);
     }
 
     @Override
