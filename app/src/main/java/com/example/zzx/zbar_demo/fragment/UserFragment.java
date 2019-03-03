@@ -78,9 +78,9 @@ public class UserFragment extends Fragment {
         if (mView == null) {
             mView = inflater.inflate(R.layout.user_fragment, container, false);
 
-            txtUserName =  mView.findViewById(R.id.txt_user_name);
-            txtRoleName =  mView.findViewById(R.id.txt_role_name);
-            txtProName =  mView.findViewById(R.id.txt_pro_number);
+            txtUserName = mView.findViewById(R.id.txt_user_name);
+            txtRoleName = mView.findViewById(R.id.txt_role_name);
+            txtProName = mView.findViewById(R.id.txt_pro_number);
             llProDetail = mView.findViewById(R.id.ll_pro_detail);
             llSelfSettle = mView.findViewById(R.id.ll_self_settle);
             llBasketManage = mView.findViewById(R.id.ll_basket_manage);
@@ -90,15 +90,15 @@ public class UserFragment extends Fragment {
 
             //获取当前角色名并显示
             pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            token = pref.getString("loginToken","");
-            if(token == null){
-                userInfo = new UserInfo(null,null);
+            token = pref.getString("loginToken", "");
+            if (token == null) {
+                userInfo = new UserInfo(null, null);
                 userInfo.setUserRole("游客");
                 userInfo.setUserName("游客");
                 txtUserName.setText(userInfo.getUserName());
                 txtRoleName.setText(userInfo.getUserRole());
             } else {
-                userInfo = new UserInfo(null,null);
+                userInfo = new UserInfo(null, null);
                 getUserInfoHttp();
             }
 
@@ -107,7 +107,7 @@ public class UserFragment extends Fragment {
             llProDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    intent = new Intent(getActivity(),ProDetailActivity.class);
+                    intent = new Intent(getActivity(), ProDetailActivity.class);
                     startActivity(intent);
                 }
             });
@@ -124,17 +124,17 @@ public class UserFragment extends Fragment {
             llBasketManage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    intent = new Intent(getActivity(),BasketListActivity.class);
+                    intent = new Intent(getActivity(), BasketListActivity.class);
                     startActivity(intent);
                 }
             });
 
             //施工人员管理界面跳转
-            llWorkManage.setOnClickListener(new View.OnClickListener(){
+            llWorkManage.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
-                    intent = new Intent(getActivity(),WorkerListActivity.class);
+                    intent = new Intent(getActivity(), WorkerListActivity.class);
                     startActivity(intent);
                 }
             });
@@ -145,7 +145,7 @@ public class UserFragment extends Fragment {
 
                 }
             });
-            LLLogout.setOnClickListener(new View.OnClickListener(){
+            LLLogout.setOnClickListener(new View.OnClickListener() {
 
                 @Override
                 public void onClick(View view) {
@@ -157,7 +157,7 @@ public class UserFragment extends Fragment {
     }
 
     //登录请求连接
-    private void getUserInfoHttp(){
+    private void getUserInfoHttp() {
         HttpUtil.getUserInfoOkHttpRequest(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -166,6 +166,7 @@ public class UserFragment extends Fragment {
                 Toast.makeText(getActivity(), "网络连接失败！", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 // 返回服务器数据
@@ -176,9 +177,9 @@ public class UserFragment extends Fragment {
                     Message message = new Message();
                     /*switch (isAllowed) {
                         case "true":*/
-                            message.what = 0;
-                            userInfo.setUserRole(jsonObject.getString("userRole"));
-                            userInfo.setUserName(jsonObject.getString("userName"));
+                    message.what = 0;
+                    userInfo.setUserRole(jsonObject.getString("userRole"));
+                    userInfo.setUserName(jsonObject.getString("userName"));
                            /* break;
                         default:
                             message.what = 1;
@@ -192,43 +193,19 @@ public class UserFragment extends Fragment {
                     e.printStackTrace();
                 }
             }
-        },token);
+        }, token);
     }
 
     //退出登录连接
-    private void LogoutHttp(){
-       /* HttpUtil.quitLoadOkHttpRequest(new okhttp3.Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                //异常情况处理
-                Looper.prepare();
-                Toast.makeText(getActivity(), "网络连接失败！", Toast.LENGTH_LONG).show();
-                Looper.loop();
-            }
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                // 返回服务器数据
-                String responseData = response.body().string();
-                try {
-                    JSONObject jsonObject = JSON.parseObject(responseData);
-                    String isAllowed = jsonObject.getString("isAllowed");
-                    switch (isAllowed) {
-                        case "true":
-                            //删除token，并跳转至登录界面
-                            SharedPreferences.Editor editor = pref.edit();
-                            editor.remove("loginToken");
-                            editor.commit();
-                            Intent intent = new Intent(getActivity(), LoginActivity.class);
-                            startActivity(intent);
-                            break;
-                        default:
-                            break;
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        },userInfo.getUserId());*/
+    private void LogoutHttp() {
+        SharedPreferences.Editor editor = pref.edit();
+        editor.remove("loginToken");
+        editor.commit();
+        Intent intent = new Intent(getActivity(), LoginActivity.class);
+        startActivity(intent);
     }
-
 }
+
+
+
+

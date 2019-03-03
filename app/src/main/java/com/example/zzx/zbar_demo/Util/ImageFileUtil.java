@@ -15,7 +15,7 @@ import java.util.Date;
  * Describe:
  */
 public class ImageFileUtil {
-    public static final String PACKAGE_NAME = "com.automation.smarthangingbasket";
+    public static final String PACKAGE_NAME = "example.zzx.zbar_demo";
     public static final String IMAGE_DIRECTORY_NAME = "Images";
 
     // byte数组到图片到硬盘上

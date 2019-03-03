@@ -3,7 +3,6 @@ package com.example.zzx.zbar_demo.widget.image;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.util.AttributeSet;
-import android.widget.ImageView;
 
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;

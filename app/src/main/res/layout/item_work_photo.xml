@@ -5,7 +5,7 @@
     android:background="@android:color/white"
     android:gravity="center">
 
-    <com.automation.smarthangingbasket_test.widget.image.SmartImageView
+    <com.example.zzx.zbar_demo.widget.image.SmartImageView
         android:id="@+id/work_photo"
         android:layout_width="100dp"
         android:layout_height="100dp"

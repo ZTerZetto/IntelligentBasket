@@ -96,7 +96,7 @@ public class BasketListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //跳转至缩略图显示
-                Intent intent = new Intent(mContext, VideoPlayActivity.class);
+                Intent intent = new Intent(mContext, BasketDetailActivity.class);
                 //intent.putExtra("basket_id", basketInfoArrayList.get(i).getBasketId());
                 startActivity(intent);
             }

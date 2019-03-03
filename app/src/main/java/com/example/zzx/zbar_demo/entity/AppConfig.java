@@ -11,13 +11,6 @@ public class AppConfig {
     * */
     public final static String LOGIN_USER = BASE_URL_PATH.concat("/webLogin");
 
-    /* 登出
-    * userId
-    * Authorization：NULL
-    * GET
-    * */
-    public final static String LOGOUT_USER = BASE_URL_PATH.concat("/quitLoad");
-
 
     /* 获取当前登录者的用户名和角色
    * Authorization：TOKEN

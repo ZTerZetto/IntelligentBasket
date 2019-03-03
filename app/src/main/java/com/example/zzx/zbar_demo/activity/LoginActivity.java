@@ -184,9 +184,7 @@ public class LoginActivity extends AppCompatActivity {
 
     //跳转到施工人员主界面
     public void StartWorkerMainActicity(String isLogin) {
-        Log.d("userRole",isLogin);
         Intent intent = new Intent(LoginActivity.this,  WorkerMainActivity.class);
-        intent.putExtra("userRole",isLogin);
         startActivity(intent);
         finish();
     }

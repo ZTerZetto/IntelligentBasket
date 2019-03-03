@@ -1,8 +1,11 @@
 package com.example.zzx.zbar_demo.activity;
 
+import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
@@ -20,11 +23,15 @@ import java.util.TimerTask;
 
 public class WelcomeActivity extends AppCompatActivity {
 
+    public SharedPreferences pref;
+    private String token;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_welcome);
-
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        token = pref.getString("loginToken", "");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);  // 设置全屏模式
         hideBottomUIMenu();  // 隐藏底部导航栏
 
@@ -36,13 +43,18 @@ public class WelcomeActivity extends AppCompatActivity {
         TimerTask delayTask = new TimerTask() {
             @Override
             public void run() {
-                Intent mainIntent = new Intent(WelcomeActivity.this,MainActivity.class);
-                startActivity(mainIntent);
+                if(token == null){
+                    Intent mainIntent = new Intent(WelcomeActivity.this,LoginActivity.class);
+                    startActivity(mainIntent);
+                } else {
+                    Intent mainIntent = new Intent(WelcomeActivity.this,ManageMainActivity.class);
+                    startActivity(mainIntent);
+                }
                 WelcomeActivity.this.finish();
             }
         };
         Timer timer = new Timer();
-        timer.schedule(delayTask,1000);//延时两秒执行 run 里面的操作
+        timer.schedule(delayTask,2000);//延时两秒执行 run 里面的操作
     }
 
     // 全屏模式

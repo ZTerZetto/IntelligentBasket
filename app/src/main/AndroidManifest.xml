@@ -10,6 +10,7 @@
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
     <!-- SD卡读写权限 4.4以下系统 -->
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <!-- 百度地图权限 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -52,7 +53,10 @@
         <activity android:name=".activity.LBSActivity" />
         <activity android:name=".activity.BasketDetailActivity"/>
         <activity android:name=".activity.ParameterActivity"/>
-        <activity android:name=".activity.VideoMonitor2Activity"/>
+        <activity android:name=".activity.VideoMonitor2Activity"
+            android:theme="@style/AppThemeFullscreen"
+            android:configChanges="orientation|screenSize"
+            android:screenOrientation="portrait"/>
         <activity android:name=".activity.WorkPhotosActivity"/>
 
 

@@ -23,16 +23,12 @@ public class WorkerMainActivity extends AppCompatActivity implements View.OnClic
     private InfoFragment infoFragment;
     private UserFragment userFragment;
 
-    private String userRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         requestWindowFeature(Window.FEATURE_NO_TITLE);
         setContentView(R.layout.activity_worker_main);
-        Intent intent = getIntent();
-        userRole = intent.getStringExtra("userRole");
-        Log.d("userRole",userRole);
         bindView();
     }
 

@@ -43,16 +43,6 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
-    public static void quitLoadOkHttpRequest(okhttp3.Callback callback,String json){
-        OkHttpClient client = new OkHttpClient();
-        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-        final Request request = new Request.Builder()
-                .url(AppConfig.LOGOUT_USER)
-                .addHeader("Authorization","null")
-                .post(requestBody)
-                .build();
-        client.newCall(request).enqueue(callback);
-    }
 
     public static void getUserInfoOkHttpRequest(okhttp3.Callback callback,String token){
         OkHttpClient client = new OkHttpClient();
