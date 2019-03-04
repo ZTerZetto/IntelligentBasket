@@ -5,14 +5,17 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.fragment.InfoFragment;
+import com.example.zzx.zbar_demo.fragment.MapViewFragment;
 import com.example.zzx.zbar_demo.fragment.UserFragment;
 
+import java.util.ArrayList;
 
 
 public class WorkerMainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -38,6 +41,7 @@ public class WorkerMainActivity extends AppCompatActivity implements View.OnClic
         tabUser = this.findViewById(R.id.txt_userFrag);
 
         //flagment初始化
+        // 用户页面
         FragmentTransaction transaction = getFragmentManager().beginTransaction();
         infoFragment = new InfoFragment();
         transaction.add(R.id.fragment_container, infoFragment);
@@ -45,6 +49,7 @@ public class WorkerMainActivity extends AppCompatActivity implements View.OnClic
         tabInfo.setSelected(true);
         transaction.show(infoFragment);//默认显示第一个页面*/
         transaction.commit();//
+
 
         tabInfo.setOnClickListener(this);
         tabUser.setOnClickListener(this);
@@ -89,7 +94,6 @@ public class WorkerMainActivity extends AppCompatActivity implements View.OnClic
                     transaction.show(infoFragment);
                 }
                 break;
-
             case R.id.txt_userFrag:
                 selected();
                 tabUser.setSelected(true);
@@ -103,4 +107,6 @@ public class WorkerMainActivity extends AppCompatActivity implements View.OnClic
         }
         transaction.commit();
     }
+
+
 }

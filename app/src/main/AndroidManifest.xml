@@ -20,7 +20,6 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
 
     <application
@@ -30,6 +29,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <!-- 百度地图Key -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="fiwzxkeFvL7q37ZESCA4yU6nOPfnIa6u" />
@@ -58,16 +58,21 @@
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.WorkPhotosActivity"/>
+        <activity android:name=".activity.LoginActivity" />
+        <activity android:name=".activity.ManageMainActivity" />
+        <activity android:name=".activity.WorkerMainActivity"
+            android:screenOrientation="unspecified"/>
+        <activity android:name=".activity.ProDetailActivity" />
+        <activity android:name=".activity.BasketListActivity" />
+        <activity android:name=".activity.WorkerListActivity" />
+        <activity android:name=".activity.RegisterPreActivity" />
+        <activity android:name=".activity.RegistRentManActivity"/>
 
-
+        <!-- 百度地图service -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
             android:process=":remote" />
-
-        <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.ManageMainActivity" />
-        <activity android:name=".activity.WorkerMainActivity" />
 
         <provider
             android:name="android.support.v4.content.FileProvider"
@@ -78,13 +83,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
-        <activity android:name=".activity.ProDetailActivity" />
-        <activity android:name=".activity.BasketListActivity" />
-        <activity android:name=".activity.WorkerListActivity" />
-        <activity android:name=".activity.RegisterPreActivity" />
-        <activity android:name=".activity.RegistRentManActivity"/>
-
 
     </application>
 

@@ -7,9 +7,11 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.baidu.mapapi.SDKInitializer;
 import com.example.zzx.zbar_demo.R;
 
 import java.util.Timer;
@@ -29,6 +31,10 @@ public class WelcomeActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        // 百度地图
+        // 在使用SDK各组件之前初始化context信息，传入ApplicationContext
+        // 注意该方法要在setContentView方法前实现
+        SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_welcome);
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         token = pref.getString("loginToken", "");
