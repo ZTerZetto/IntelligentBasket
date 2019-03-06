@@ -20,6 +20,7 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
+import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.clusterutil.clustering.Cluster;
 import com.baidu.mapapi.clusterutil.clustering.ClusterItem;
 import com.baidu.mapapi.clusterutil.clustering.ClusterManager;
@@ -181,7 +182,7 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
                     // 定义用于显示该InfoWindow的坐标点
                     LatLng pt = new LatLng(item.getPosition().latitude, item.getPosition().longitude);
                     //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
-                    InfoWindow mInfoWindow = new InfoWindow(mPopupView, pt, -100);
+                    InfoWindow mInfoWindow = new InfoWindow(mPopupView, pt, -50);
                     //显示InfoWindow
                     mBaiduMap.showInfoWindow(mInfoWindow);
                 }
@@ -445,7 +446,7 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
         public BitmapDescriptor getBitmapDescriptor() {
             // 返回marker在地图上的图标
             return BitmapDescriptorFactory
-                    .fromResource(R.mipmap.ic_smart_basket);
+                    .fromResource(R.drawable.ic_smart_basket_gcoding);
         }
     }
 

@@ -59,9 +59,10 @@
             android:screenOrientation="portrait"/>
         <activity android:name=".activity.WorkPhotosActivity"/>
         <activity android:name=".activity.LoginActivity" />
-        <activity android:name=".activity.ManageMainActivity" />
-        <activity android:name=".activity.WorkerMainActivity"
-            android:screenOrientation="unspecified"/>
+        <activity android:name=".activity.ManageMainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait"/>
+        <activity android:name=".activity.WorkerMainActivity" />
         <activity android:name=".activity.ProDetailActivity" />
         <activity android:name=".activity.BasketListActivity" />
         <activity android:name=".activity.WorkerListActivity" />
