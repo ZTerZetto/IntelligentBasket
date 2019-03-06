@@ -1,32 +1,50 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:orientation="vertical"
     android:background="@color/colorMainBackground">
 
-    <!-- 确定产品ID -->
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar"/>
+
     <LinearLayout
         android:id="@+id/id_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:layout_marginBottom="10dp">
+        android:orientation="vertical"
+        android:padding="10dp">
 
-        <TextView
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="吊篮编号："
-            style="@style/HangingBasketTextView"/>
-        <EditText
-            android:id="@+id/hangingbasket_id"
-            android:layout_width="0dp"
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/usertextStyle"
+                android:text="吊篮编号："
+                />
+            <TextView
+                android:id="@+id/basket_id"
+                style="@style/usertextStyle"
+                android:hint="@string/basketId_hint" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:hint="@string/id_hint"
-            android:maxLines="1"
-            style="@style/HangingBasketTextView"/>
+            android:gravity="center_vertical"
+            android:padding="5dp"
+            android:orientation="horizontal">
+            <TextView
+                style="@style/usertextStyle"
+                android:text="负责人编号：" />
+            <TextView
+                android:id="@+id/basket_worker_id"
+                style="@style/usertextStyle"
+                android:hint="@string/workerId_hint" />
+        </LinearLayout>
 
     </LinearLayout>
 
@@ -34,7 +52,6 @@
         android:id="@+id/function_gridview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_below="@+id/id_linearlayout"
         android:paddingLeft="5dp"
         android:paddingRight="5dp"
         android:numColumns="5"
@@ -43,4 +60,4 @@
         android:verticalSpacing="2dp"
         android:layout_marginTop="0dp"/>
 
-</RelativeLayout>
+</LinearLayout>

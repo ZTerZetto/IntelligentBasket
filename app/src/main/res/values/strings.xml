@@ -4,9 +4,6 @@
     <!-- welcome activity -->
     <string name="app_statement">让吊篮管理更轻松</string>
 
-    <!-- basketDetail activity -->
-    <string name="id_hint">输入吊篮编号</string>
-
     <!--扫码-->
     <string name="qr_name">二维码</string>
     <string name="i_know">我知道了</string>
@@ -20,6 +17,24 @@
     <string name="action_sign_in"> 登    录 </string>
     <string name="action_sign_in_manager">  管理员  </string>
     <string name="action_register">注    册</string>
+
+    <!-- Register activity-->
+    <string name="registWorker_title">注册-施工人员</string>
+
+    <string name="basic_info">基本信息</string>
+    <string name="type_info">选择工种</string>
+    <string name="pic_info">上传身份证照片（请保证照片清晰明亮）</string>
+    <string name="pic_upNotice">请上传照片!</string>
+    <string name="pic_successNotice">照片上传成功!</string>
+    <string name="pic_failNotice">图片上传失败，请重新上传！</string>
+
+    <!-- basketList activity -->
+    <string name="basketList_title">吊篮列表</string>
+    <!-- basketList activity -->
+    <string name="workerList_tile">施工人员列表</string>
+
+    <!-- basketDetail activity -->
+    <string name="basketDetail_tile">吊篮详情</string>
 
     <!-- parameter activity -->
     <string name="parameter_title">设备参数</string>
@@ -38,4 +53,14 @@
     <string name="work_photo_title">设备截图</string>
     <!-- video monitor activity -->
     <string name="video_buffering">正在缓冲</string>
+
+    <!-- Info fragment -->
+    <string name="info_noMessage">暂无消息</string>
+    <string name="info_title">消息列表</string>
+
+    <!-- basketDetail activity -->
+    <string name="basketId_hint">吊篮编号</string>
+    <string name="workerId_hint">负责人编号</string>
+
+    <string name="searchNothing">抱歉，暂未查找到您需要的结果。</string>
 </resources>

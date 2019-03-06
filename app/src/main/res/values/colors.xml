@@ -6,7 +6,7 @@
 
     <color name="edit_bg">@color/material_grey_300</color>
     <color name="colorTextLight">@color/material_grey_50</color>
-    <color name="colorTextDark">@color/material_grey_50</color>
+    <color name="colorTextDark">@color/material_grey_800</color>
 
     <!-- Text Color -->
     <color name="colorBlackText">#000000</color>

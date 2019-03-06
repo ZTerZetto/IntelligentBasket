@@ -1,6 +1,5 @@
 package com.example.zzx.zbar_demo.activity;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
@@ -11,6 +10,7 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.example.zzx.zbar_demo.R;
+import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -43,7 +43,7 @@ public class WelcomeActivity extends AppCompatActivity {
         TimerTask delayTask = new TimerTask() {
             @Override
             public void run() {
-                if(token == null){
+                if(token == ""){
                     Intent mainIntent = new Intent(WelcomeActivity.this,LoginActivity.class);
                     startActivity(mainIntent);
                 } else {

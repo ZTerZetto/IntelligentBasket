@@ -17,10 +17,12 @@
     <TextView
         android:id="@+id/txt_basket_num"
         style="@style/usertextStyle"
+        android:layout_weight="1"
         android:layout_gravity="center"
         android:text="吊篮编号：" />
     <TextView
         android:id="@+id/txt_worker_Id"
+        android:layout_weight="1"
         style="@style/usertextStyle"
         android:layout_gravity="center"
         android:text="负责人：" />

@@ -2,7 +2,8 @@ package com.example.zzx.zbar_demo.entity;
 
 // Created by $USER_NAME on 2018/11/28/028.
 public class AppConfig {
-    public final static String BASE_URL_PATH = "http://47.100.1.211";
+    public final static String BASE_URL_PATH = "http://47.100.1.211";// http://10.193.2.79:8080;http://47.100.1.211
+    public final static String IMAGE_URL = "http://10.193.0.20:21";
 
     /* 登陆
     * userId、userPassword
@@ -11,6 +12,16 @@ public class AppConfig {
     * */
     public final static String LOGIN_USER = BASE_URL_PATH.concat("/webLogin");
 
+    /* 注册
+    * userId、userName、userPassword、userRole、userPhone、userImage;
+    * Authorization：NULL
+    * POST
+    * */
+    public final static String REGISTER_USER = BASE_URL_PATH.concat("/checkRegister");
+
+    //上传文件
+    public final static String CREATE_FILE = BASE_URL_PATH.concat("/createFtpFile");
+
 
     /* 获取当前登录者的用户名和角色
    * Authorization：TOKEN
@@ -18,14 +29,7 @@ public class AppConfig {
    * */
     public final static String USER_INFO = BASE_URL_PATH.concat("/getUserInfo");
 
-    /* 注册
-    * userId、userName、userPassword、userRole、userPhone、userImage;
-    * POST
-    * */
-    public final static String REGISTER = BASE_URL_PATH.concat("/checkRegister");
 
-    //上传文件
-    public final static String CREAT_FILE = BASE_URL_PATH.concat("/createFile");
 
 
     /* 获取当前登录者的用户名和角色

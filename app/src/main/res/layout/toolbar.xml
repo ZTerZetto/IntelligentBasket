@@ -10,7 +10,7 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="?attr/colorPrimaryDark"
+        android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         app:navigationIcon="@mipmap/ic_navi_back_48px">
 

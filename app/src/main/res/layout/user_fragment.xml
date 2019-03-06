@@ -63,6 +63,7 @@
         android:padding="10dp">
         <TextView
             style="@style/usertextStyle"
+            android:layout_weight="5"
             android:text="项目详情" />
         <ImageView style="@style/img_arrow" />
 
@@ -77,6 +78,7 @@
         android:padding="10dp">
         <TextView
             style="@style/usertextStyle"
+            android:layout_weight="5"
             android:text="吊篮管理" />
         <ImageView style="@style/img_arrow" />
     </LinearLayout>
@@ -90,6 +92,7 @@
         android:padding="10dp">
         <TextView
             style="@style/usertextStyle"
+            android:layout_weight="5"
             android:text="施工人员管理" />
         <ImageView style="@style/img_arrow" />
     </LinearLayout>
@@ -104,6 +107,7 @@
         android:padding="10dp">
         <TextView
             style="@style/usertextStyle"
+            android:layout_weight="5"
             android:text="切换项目" />
         <ImageView style="@style/img_arrow" />
     </LinearLayout>
@@ -118,6 +122,7 @@
         android:padding="10dp">
         <TextView
             style="@style/usertextStyle"
+            android:layout_weight="5"
             android:text="个人设置" />
         <ImageView style="@style/img_arrow" />
     </LinearLayout>
@@ -132,6 +137,7 @@
         android:padding="10dp">
         <TextView
             style="@style/usertextStyle"
+            android:layout_weight="5"
             android:text="退出登录" />
         <ImageView style="@style/img_arrow" />
     </LinearLayout>
