@@ -3,12 +3,15 @@ package com.example.zzx.zbar_demo.activity;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.Toolbar;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.GridView;
+import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.Adapter.FunctionAdapter;
@@ -24,8 +27,8 @@ import java.util.List;
  */
 
 public class BasketDetailActivity extends AppCompatActivity {
+
     // 控件声明
-    private EditText mBasketIdEditView;  // 吊篮Id
     private GridView mFunctionGridView;  // 功能测试
 
     // function gridview
@@ -40,13 +43,21 @@ public class BasketDetailActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basket_detail);
 
+        // 顶部导航栏
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView titleText = (TextView) findViewById(R.id.toolbar_title);
+        toolbar.setTitle("");
+        titleText.setText(getString(R.string.basketDetail_tile));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+
+
         initWidgetResource();
     }
 
     // 资源句柄初始化及监听
     public void initWidgetResource(){
         // 获取控件句柄
-        mBasketIdEditView = (EditText) findViewById(R.id.hangingbasket_id);
         mFunctionGridView = (GridView) findViewById(R.id.function_gridview);
 
         // 初始化功能列表
@@ -59,23 +70,6 @@ public class BasketDetailActivity extends AppCompatActivity {
         // 装载适配器
         mFunctionGridView.setAdapter(mFunctionAdapter);
 
-        // editview 监听
-        mBasketIdEditView.addTextChangedListener(new TextWatcher() {  // editview 文本发生改变
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mBasketId = s.toString();
-            }
-        });
         // GridView 监听
         mFunctionGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -100,6 +94,17 @@ public class BasketDetailActivity extends AppCompatActivity {
             }
         });
 
+    }
+
+    // 顶部导航栏消息响应
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home: // 返回按钮
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // 初始化测试功能列表

@@ -7,18 +7,24 @@ import java.io.File;
 // Created by $USER_NAME on 2018/11/28/028.
 public class UserInfo {
 
-    public UserInfo(String userId, String userName, @Nullable String userPhone,@Nullable String userPassword, @Nullable String userRole, @Nullable String workerType) {
-        this.userId = userId;
+    public UserInfo(String userName, @Nullable String userPhone,@Nullable String userPassword, @Nullable String userRole) {
         this.userName = userName;
         this.userPhone = userPhone;
         this.userPassword = userPassword;
         this.userRole = userRole;
         this.userPhone = userPhone;
-        this.workerType = workerType;
+    }
+    public UserInfo(String userId,String userName, @Nullable String userPhone,@Nullable String userPassword, @Nullable String userRole) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userPhone = userPhone;
+        this.userPassword = userPassword;
+        this.userRole = userRole;
     }
 
-    public UserInfo(String userId, String userPassword) {
-        this.userId = userId;
+
+    public UserInfo(String userPhone, String userPassword) {
+        this.userPhone = userPhone;
         this.userPassword = userPassword;
     }
 
@@ -28,7 +34,7 @@ public class UserInfo {
     String userPassword;
     String userRole;
 
-    String workerType;
+    //String workerType;
     File file;
 
 
@@ -64,6 +70,7 @@ public class UserInfo {
         this.userRole = userRole;
     }
 
+/*
     public String getWorkerType() {
         return workerType;
     }
@@ -71,6 +78,7 @@ public class UserInfo {
     public void setWorkerType(String userType) {
         this.workerType = workerType;
     }
+*/
 
     public String getUserPhone() {
         return userPhone;

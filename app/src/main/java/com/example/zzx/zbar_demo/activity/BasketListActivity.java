@@ -4,6 +4,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
@@ -58,12 +60,19 @@ public class BasketListActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basket_list);
 
+        // 顶部导航栏
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView titleText = (TextView) findViewById(R.id.toolbar_title);
+        toolbar.setTitle("");
+        titleText.setText(getString(R.string.basketList_title));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+
         mLv = findViewById(R.id.list_view);
         txtSearch = findViewById(R.id.txt_input_search);
         btnSearch = findViewById(R.id.search_button);
         txtResult = findViewById(R.id.txt_search_result);
         initList();
-
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -104,11 +113,22 @@ public class BasketListActivity extends AppCompatActivity {
 
     }
 
+    // 顶部导航栏消息响应
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home: // 返回按钮
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
     private void showList(List<BasketInfo> arrayList) {
         adapter = new BasketAdapter(mContext,R.layout.item_basket,arrayList);
         mLv.setAdapter(adapter);
         mLv.setVisibility(View.VISIBLE);
-        txtResult.setVisibility(View.INVISIBLE);
+        txtResult.setVisibility(View.GONE);
     }
 
     private void initList() {

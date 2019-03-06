@@ -1,13 +1,9 @@
 package com.example.zzx.zbar_demo.Util;
-import android.content.SharedPreferences;
-import android.preference.PreferenceManager;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.entity.AppConfig;
 import com.example.zzx.zbar_demo.entity.UserInfo;
-
-
 import java.io.File;
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -23,10 +19,11 @@ public class HttpUtil {
         RequestBody fileBody=RequestBody.create(MediaType.parse("image/jpg"),file);
         RequestBody builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
+                .addFormDataPart("fileName",file.getName())
                 .addFormDataPart("file",file.getName(),fileBody)
                 .build();
         final Request request = new Request.Builder()
-                .url(AppConfig.CREAT_FILE)
+                .url(AppConfig.CREATE_FILE)
                 .post(builder)
                 .build();
         client.newCall(request).enqueue(callback);
@@ -37,6 +34,17 @@ public class HttpUtil {
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         final Request request = new Request.Builder()
                 .url(AppConfig.LOGIN_USER)
+                .addHeader("Authorization","null")
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void sendRegistOkHttpRequest(okhttp3.Callback callback,String json){
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = new Request.Builder()
+                .url(AppConfig.REGISTER_USER)
                 .addHeader("Authorization","null")
                 .post(requestBody)
                 .build();

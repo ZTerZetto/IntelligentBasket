@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo.activity;
+package com.example.zzx.zbar_demo.activity.loginRegist;
 
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;

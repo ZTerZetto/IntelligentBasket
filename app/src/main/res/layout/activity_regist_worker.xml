@@ -5,155 +5,38 @@
     android:layout_height="match_parent"
     android:background="#f5f5f5" >
 
-    <LinearLayout
+    <include layout="@layout/toolbar"/>
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:background="#FFF">
-
-<!--        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:src="@android:drawable/ic_menu_myplaces"
-                android:layout_marginLeft="10dp"
-                android:layout_gravity="center_vertical" />
-            <EditText
-                android:id="@+id/edt_register_userId"
-                style="@style/editStyle"
-                android:hint="账号" />
-        </LinearLayout>-->
-
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:src="@android:drawable/ic_menu_info_details" />
-
-            <EditText
-                android:id="@+id/edt_register_userName"
-                style="@style/editStyle"
-                android:hint="用户名" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:src="@android:drawable/ic_menu_call" />
-            <EditText
-                android:id="@+id/edt_register_userPhone"
-                style="@style/editStyle"
-                android:hint="手机号" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#FFF"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:src="@android:drawable/ic_menu_view" />
-
-            <EditText
-                android:id="@+id/edt_register_pwd"
-                style="@style/editStyle"
-                android:hint="输入密码"
-                android:inputType="textPassword" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:background="#FFF"
-            android:baselineAligned="false"
-            android:orientation="horizontal">
-
-            <ImageView
-                android:layout_width="32dp"
-                android:layout_height="32dp"
-                android:layout_gravity="center_vertical"
-                android:layout_marginLeft="10dp"
-                android:src="@android:drawable/ic_menu_view" />
-
-            <EditText
-                android:id="@+id/edt_register_pwd_again"
-                style="@style/editStyle"
-                android:hint="再次输入密码"
-                android:inputType="textPassword" />
-        </LinearLayout>
-    </LinearLayout>
-
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:background="#FFF"
         android:layout_marginTop="10dp"
-        android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_gravity="center"
-            android:textSize="16sp"
-            android:layout_margin="10dp"
-            android:textColor="@color/colorPrimaryDark"
-            android:text="选择工种" />
-
-        <ImageView style="@style/img_arrow" />
-
-        <Spinner
-            android:id="@+id/spinner_type_choose"
-            style="@style/editStyle" />
-
-    </LinearLayout>
+        android:padding="5dp"
+        android:hint="@string/pic_info"/>
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
+        android:layout_gravity="center_horizontal"
         android:layout_marginBottom="10dp"
-        android:layout_marginTop="10dp"
         android:background="#FFF"
         android:orientation="horizontal">
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="10dp"
-            android:text="上传照片"
-            android:textColor="@color/colorPrimaryDark"
-            android:textSize="16sp" />
 
         <ImageView
             android:id="@+id/picture"
-            android:layout_width="250dp"
-            android:layout_height="150dp"
-            android:layout_gravity="center"
-            android:layout_margin="5dp"
+            android:layout_width="150dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_vertical"
+            android:layout_margin="20dp"
             android:src="@mipmap/ic_launcher" />
+
+        <TextView
+            android:id="@+id/tv_upload_result"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:padding="10dp"
+            android:hint="@string/pic_upNotice"
+            android:layout_gravity="center_vertical"/>
     </LinearLayout>
 
     <LinearLayout
@@ -177,8 +60,132 @@
     </LinearLayout>
 
     <Button
+        android:id="@+id/btn_upload"
+        style="@style/btnStyle"
+        android:layout_width="match_parent"
+        android:text="上传照片" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:hint="@string/basic_info"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:background="#FFF">
+
+        <!--        <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:src="@android:drawable/ic_menu_myplaces"
+                        android:layout_marginLeft="10dp"
+                        android:layout_gravity="center_vertical" />
+                    <EditText
+                        android:id="@+id/edt_register_userId"
+                        style="@style/editStyle"
+                        android:hint="账号" />
+                </LinearLayout>-->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/icon_user_info" />
+
+            <EditText
+                android:id="@+id/edt_register_userName"
+                style="@style/editStyle"
+                android:hint="用户名"/>
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/icon_phone" />
+            <EditText
+                android:id="@+id/edt_register_userPhone"
+                style="@style/editStyle"
+                android:hint="手机号" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#FFF"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/icon_password" />
+
+            <EditText
+                android:id="@+id/edt_register_pwd"
+                style="@style/editStyle"
+                android:hint="输入密码"
+                android:inputType="textPassword" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:background="#FFF"
+            android:baselineAligned="false"
+            android:orientation="horizontal">
+
+            <ImageView
+                android:layout_width="32dp"
+                android:layout_height="32dp"
+                android:layout_gravity="center_vertical"
+                android:layout_marginLeft="10dp"
+                android:src="@mipmap/icon_password" />
+
+            <EditText
+                android:id="@+id/edt_register_pwd_again"
+                style="@style/editStyle"
+                android:hint="再次输入密码"
+                android:inputType="textPassword" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:padding="5dp"
+        android:hint="@string/type_info"/>
+
+   <include layout = "@layout/dropdownmenu"/>
+
+    <Button
         android:id="@+id/btn_regist"
         style="@style/btnStyle"
+        android:layout_marginTop="30dp"
         android:layout_width="match_parent"
         android:text="确认注册" />
 

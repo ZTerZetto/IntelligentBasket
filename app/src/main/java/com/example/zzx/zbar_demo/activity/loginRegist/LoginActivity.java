@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo.activity;
+package com.example.zzx.zbar_demo.activity.loginRegist;
 
 
 import android.content.Intent;
@@ -8,7 +8,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.TextUtils;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -19,6 +18,8 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.Util.HttpUtil;
+import com.example.zzx.zbar_demo.activity.ManageMainActivity;
+import com.example.zzx.zbar_demo.activity.WorkerMainActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -135,6 +136,7 @@ public class LoginActivity extends AppCompatActivity {
                             break;
                         default:
                             //StartWorkerMainActicity("wrong");
+
                             break;
                     }
                 } catch (JSONException e) {

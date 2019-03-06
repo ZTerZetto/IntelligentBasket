@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo.activity;
+package com.example.zzx.zbar_demo.activity.loginRegist;
 
 import android.Manifest;
 import android.annotation.TargetApi;
@@ -20,11 +20,8 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -37,13 +34,12 @@ import com.example.zzx.zbar_demo.entity.UserInfo;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class RegistWorkerActivity extends AppCompatActivity {
+public class RegistRentManActivity extends AppCompatActivity {
+
 
     public static final int TAKE_PHOTO = 1;
     public static final int CHOOSE_PHOTO = 2;
@@ -53,45 +49,26 @@ public class RegistWorkerActivity extends AppCompatActivity {
     private File photo_file;
     private Boolean photo_exist;
 
+    private TextView edt_userId;
     private TextView edt_userName;
     private TextView edt_userPhone;
     private TextView edt_userPwd;
 
     private UserInfo userinfo;
-    private Spinner spinner;
-    private List<String> type_list;
-    private ArrayAdapter<String> typeAdapter;
-    private String workerType;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_regist_worker);
-
+        setContentView(R.layout.activity_regist_rent_man);
         Button takePhoto = (Button) findViewById(R.id.take_photo);
         Button chooseFromAlbum = (Button) findViewById(R.id.choose_from_album);
         Button register = findViewById(R.id.btn_regist);
         picture = (ImageView) findViewById(R.id.picture);
-        spinner = (Spinner) findViewById(R.id.spinner_type_choose);
+        edt_userId = findViewById(R.id.edt_register_userId);
         edt_userName = findViewById(R.id.edt_register_userName);
         edt_userPhone = findViewById(R.id.edt_register_userPhone);
         edt_userPwd = findViewById(R.id.edt_register_pwd);
-
         photo_exist = false;
-
-        initSpinner();
-
-        spinner.setOnItemSelectedListener(new Spinner.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                workerType = (String) spinner.getSelectedItem();
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-
-            }
-        });
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +90,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
                 } else {
                     //转换为封装过的uri对象
                     //FileProvider —— 内容提供器
-                    imageUri = FileProvider.getUriForFile(RegistWorkerActivity.this, "com.example.cameraalbumtest.fileprovider", photo_file);
+                    imageUri = FileProvider.getUriForFile(RegistRentManActivity.this, "com.example.cameraalbumtest.fileprovider", photo_file);
                 }
                 // 启动相机程序
                 Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
@@ -125,8 +102,8 @@ public class RegistWorkerActivity extends AppCompatActivity {
         chooseFromAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(RegistWorkerActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(RegistWorkerActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                if (ContextCompat.checkSelfPermission(RegistRentManActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(RegistRentManActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 } else {
                     openAlbum();
                 }
@@ -136,33 +113,14 @@ public class RegistWorkerActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(workerType.equals(null)){
-                    Toast.makeText(getApplicationContext(),"请选择您的工种！",Toast.LENGTH_LONG).show();
-                } else if(photo_exist.equals(false)){
-                    Toast.makeText(getApplicationContext(),"请上传身份证图片！",Toast.LENGTH_LONG).show();
-                }else{
-                    userinfo = new UserInfo("", edt_userName.getText().toString(),edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), "worker",workerType);
+                if(photo_exist){
+                    userinfo = new UserInfo(edt_userName.getText().toString(),edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), "rentAdmin");
                     uploadPhoto();
+                }else{
+                    Toast.makeText(getApplicationContext(),"请上传身份证图片",Toast.LENGTH_LONG).show();
                 }
             }
         });
-    }
-
-    private void initSpinner() {
-        type_list = new ArrayList<String>();
-        type_list.add("木工");
-        type_list.add("泥瓦匠");
-        type_list.add("油漆工");
-        type_list.add("水泥工");
-        type_list.add("其他");
-
-        //适配器
-        typeAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,type_list);
-        //设置样式
-        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        //加载适配器
-        spinner.setAdapter(typeAdapter);
-
     }
 
     private void openAlbum() {
@@ -281,7 +239,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
                 Looper.prepare();
-                Toast.makeText(RegistWorkerActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegistRentManActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
             @Override

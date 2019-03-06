@@ -8,6 +8,7 @@ import android.widget.Button;
 
 import com.example.zzx.zbar_demo.PdfRead.PDFStartActivity;
 import com.example.zzx.zbar_demo.R;
+import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.zbar.QRScanActivity;
 import com.example.zzx.zbar_demo.VideoPlay.VideoPlayActivity;
 

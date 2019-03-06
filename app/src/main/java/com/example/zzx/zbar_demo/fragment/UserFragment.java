@@ -21,7 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.activity.BasketListActivity;
-import com.example.zzx.zbar_demo.activity.LoginActivity;
+import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.activity.ProDetailActivity;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.Util.HttpUtil;
@@ -173,21 +173,20 @@ public class UserFragment extends Fragment {
                 String responseData = response.body().string();
                 try {
                     JSONObject jsonObject = JSON.parseObject(responseData);
-                   /* String isAllowed = jsonObject.getString("isAllowed");*/
+                   String isAllowed = jsonObject.getString("isAllowed");
                     Message message = new Message();
-                    /*switch (isAllowed) {
-                        case "true":*/
-                    message.what = 0;
-                    userInfo.setUserRole(jsonObject.getString("userRole"));
-                    userInfo.setUserName(jsonObject.getString("userName"));
-                           /* break;
+                    switch (isAllowed) {
+                        case "true":
+                        message.what = 0;
+                        userInfo.setUserRole(jsonObject.getString("userRole"));
+                        userInfo.setUserName(jsonObject.getString("userName"));
+                            break;
                         default:
                             message.what = 1;
-                            userInfo.setUserRole(null);
-                            userInfo.setUserName(null);
-                            //StartWorkerMainActicity("wrong");
+                            userInfo.setUserRole("游客");
+                            userInfo.setUserName("未登录");
                             break;
-                    }*/
+                    }
                     handler.sendMessage(message);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -199,7 +198,7 @@ public class UserFragment extends Fragment {
     //退出登录连接
     private void LogoutHttp() {
         SharedPreferences.Editor editor = pref.edit();
-        editor.remove("loginToken");
+        editor.clear();
         editor.commit();
         Intent intent = new Intent(getActivity(), LoginActivity.class);
         startActivity(intent);

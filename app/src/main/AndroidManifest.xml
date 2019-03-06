@@ -49,7 +49,7 @@
         <activity android:name=".zbar.QRScanActivity" />
         <activity android:name=".VideoPlay.VideoPlayActivity" />
         <activity android:name=".PdfRead.PDFStartActivity" />
-        <activity android:name=".activity.RegistWorkerActivity" />
+        <activity android:name=".activity.loginRegist.RegistWorkerActivity" />
         <activity android:name=".activity.LBSActivity" />
         <activity android:name=".activity.BasketDetailActivity"/>
         <activity android:name=".activity.ParameterActivity"/>
@@ -84,7 +84,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
 
 </manifest>
