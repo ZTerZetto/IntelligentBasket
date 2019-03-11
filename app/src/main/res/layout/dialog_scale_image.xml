@@ -13,7 +13,7 @@
         android:id="@+id/navi_toolbar"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
-        android:background="@color/colorPrimaryDark">
+        android:background="@color/colorPrimary">
 
         <!-- 返回按钮 -->
         <ImageView

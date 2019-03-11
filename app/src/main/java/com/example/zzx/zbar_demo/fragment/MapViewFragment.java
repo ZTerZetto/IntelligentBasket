@@ -8,6 +8,7 @@ import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
 import android.support.annotation.Nullable;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -184,6 +185,7 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
                     //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
                     InfoWindow mInfoWindow = new InfoWindow(mPopupView, pt, -50);
                     //显示InfoWindow
+
                     mBaiduMap.showInfoWindow(mInfoWindow);
                 }
 
@@ -195,7 +197,7 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
             @Override
             public void onClick(View v) {
                 // 点击气泡进入详情页面：待做
-
+                Log.d(TAG, "点击气泡");
             }
         });
     }
@@ -211,6 +213,7 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
             public void onTouchEvent(MotionEvent event) {
                 // 处理手势事件
                 mBaiduMap.hideInfoWindow();
+                Log.d(TAG, "点击空白");
             }
         };
 

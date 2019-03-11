@@ -13,6 +13,7 @@
     <color name="colorWhiteText">#ffffff</color>
     <color name="colorSilverText">#c0c0c0</color>
 
+    <!-- 活动 -->
     <!-- basketDetail activity -->
     <color name="colorMainBackground">#F8F8F8</color>
 
@@ -23,15 +24,13 @@
     <!-- WorkPhotos Activity -->
     <color name="colorWorkPhotosBackground">@color/colorMainBackground</color>
 
+    <!-- 控件 -->
     <!-- MediaController -->
     <color name="transparent">#00000000</color>
     <color name="mediacontroller_bg_pressed">#ff53c1bd</color>
     <color name="mediacontroller_bg">#99000000</color>
 
+    <!-- smart refresh layout -->
+    <color name="smart_loading_background_color">@color/colorPrimaryDark</color>
 
-    <!--<color name="colorPrimary">#57693C</color>
-        <color name="colorPrimaryDark">#524B2E</color>
-        <color name="colorAccent">#646B30</color>
-
-        <color name="orange">#AB5C25</color> -->
 </resources>

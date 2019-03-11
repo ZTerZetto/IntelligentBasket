@@ -26,9 +26,11 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.entity.AppConfig;
 import com.pili.pldroid.player.IMediaController;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
+
+import static com.example.zzx.zbar_demo.entity.AppConfig.ASPECT_RATIO;
+import static com.example.zzx.zbar_demo.entity.AppConfig.ASPECT_RATIO_VIDEO;
 
 
 /**
@@ -55,9 +57,11 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
 
     private static final int FADE_OUT = 1;
     private static final int SHOW_PROGRESS = 2;
+    private static final int UPDATE_FILENAME = 3;
     private boolean mFromXml = false;
     private RelativeLayout mMediaControllerAll; // 弹窗
     private TextView mFileNameTextView;  // 视频名称
+    private String mFileName;
     private ImageView mBackImageView;  // 返回
     private ImageView mPauseImageView; // 暂停播放
     private ImageView mCaptureImageView; // 截屏
@@ -74,9 +78,13 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
         public void handleMessage(Message msg) {
             long pos;
             switch (msg.what) {
-                case FADE_OUT:
+                case FADE_OUT:  // 控制栏消失
                     hide();
                     break;
+//                case UPDATE_FILENAME:  // 更新房间信息控件
+//                    String name = msg.obj.toString();
+//                    mFileNameTextView.setText("HangingBasket_"+name);
+//                    break;
             }
         }
     };
@@ -89,10 +97,11 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
     }
 
     // 构造函数
-    public CustomMediaController(Context context) {
+    public CustomMediaController(Context context, String filename) {
         super(context);
         getScreenInfo();  // 获取屏幕尺寸
         mParentContext = context;
+        mFileName = filename;
         if (!mFromXml && initController(context))
             initFloatingWindow();
     }
@@ -147,6 +156,7 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
 
         mFileNameTextView = (TextView) v.findViewById(getResources().getIdentifier(
                 "mediacontroller_file_name", "id", mContext.getPackageName()));
+        mFileNameTextView.setText("HangingBasket_"+mFileName);
 
         mPauseImageView = (ImageView) v.findViewById(getResources().getIdentifier(
                 "mediacontroller_play_pause", "id", mContext.getPackageName()));
@@ -210,8 +220,11 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
     }
 
     public void setFileName(String name) {
-        if (mFileNameTextView != null)
-            mFileNameTextView.setText(name);
+        Message msg = new Message();
+        msg.what = UPDATE_FILENAME;
+        msg.obj = name;
+        mHandler.sendMessage(msg);
+        mFileNameTextView.setText("HangingBasket_"+name);
     }
 
     // 触摸监听实现
@@ -277,12 +290,10 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
 
         activity.getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //隐藏状态栏
 
-        ViewGroup.LayoutParams lp = mAnchor.getLayoutParams();  // 设定播放器尺寸
-        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        lp.height = (int)(mScreenHeight / AppConfig.ASPECT_RATIO);
-        mAnchor.setLayoutParams(lp);
+        // 设置播放器尺寸
+        setVideoSize(mAnchor, mScreenHeight,mPlVideoTextureView, ASPECT_RATIO_VIDEO);
 
-        mWindow.setHeight((int)(mScreenHeight / AppConfig.ASPECT_RATIO));// 设置控制栏高度
+        mWindow.setHeight((int)(mScreenHeight / ASPECT_RATIO + 0.5));// 设置控制栏高度
 
         mScreenImageView.setImageResource(getResources().getIdentifier( // 设置图标
                 "mediacontroller_originscreen", "mipmap", mContext.getPackageName()));
@@ -295,18 +306,17 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
 
         activity.getWindow().clearFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN); //显示状态栏
 
-        ViewGroup.LayoutParams lp = mAnchor.getLayoutParams();  // 设定播放器尺寸
-        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
-        lp.height = (int)(mScreenWidth / AppConfig.ASPECT_RATIO);
-        mAnchor.setLayoutParams(lp);
+        // 设置播放器尺寸
+        setVideoSize(mAnchor, mScreenWidth,mPlVideoTextureView, ASPECT_RATIO_VIDEO);
 
-        mWindow.setHeight((int)(mScreenWidth / AppConfig.ASPECT_RATIO));  // 设置控制栏高度
+        mWindow.setHeight((int)(mScreenWidth / ASPECT_RATIO + 0.5));  // 设置控制栏高度
 
         mScreenImageView.setImageResource(getResources().getIdentifier( // 设置图标
                 "mediacontroller_fullscreen", "mipmap", mContext.getPackageName()));
 
         mIsFullScreen = false;
     }
+
     // 截屏
     private void doCaptureScreen(){
         mPlVideoTextureView.captureImage(0);
@@ -397,7 +407,7 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
             mRoot = makeControllerView();  // 获取图像资源
             mWindow.setContentView(mRoot);// 弹窗加载视图
             mWindow.setWidth(LayoutParams.MATCH_PARENT); // 设置宽度=父布局
-            mWindow.setHeight((int)(mScreenWidth/AppConfig.ASPECT_RATIO)); // 设置高度=自适应
+            mWindow.setHeight((int)(mScreenWidth/ASPECT_RATIO + 0.5)); // 设置高度=自适应
         }
         initControllerView(mRoot);
     }
@@ -502,6 +512,22 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
     // 设定播放器
     public void setPlVideoTextureView(PLVideoTextureView plVideoTextureView){
         mPlVideoTextureView = plVideoTextureView;
+    }
+
+    // 设定播放器尺寸
+    // view:父布局 plVideoTextureView:播放器 video_ratio:视频纵横比
+    public void setVideoSize(View view, int width, PLVideoTextureView plVideoTextureView, float video_ratio){
+        // 设置播放器前景页面尺寸
+        ViewGroup.LayoutParams lp = view.getLayoutParams();  // 设定播放器尺寸
+        lp.width = ViewGroup.LayoutParams.MATCH_PARENT;
+        lp.height = (int)(width / ASPECT_RATIO);
+        view.setLayoutParams(lp);
+
+        // 设置播放器尺寸
+        ViewGroup.LayoutParams lp_video = plVideoTextureView.getLayoutParams();
+        lp_video.height = ViewGroup.LayoutParams.MATCH_PARENT;
+        lp_video.width = (int)(lp_video.height * video_ratio);
+        plVideoTextureView.setLayoutParams(lp_video);
     }
 
     // 返回弹窗对象

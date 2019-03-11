@@ -5,18 +5,28 @@
     android:orientation="vertical"
     android:background="@android:color/white">
 
+    <!-- 播放器页面 -->
     <RelativeLayout
         android:id="@+id/video_view_rl"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@android:color/black">
 
+        <!-- 加载页面 -->
+        <ImageView
+            android:id="@+id/cover_image_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_gravity="center"
+            android:src="@mipmap/ic_video_cover"
+            android:visibility="gone"/>
+
         <!-- 视频播放 -->
         <com.pili.pldroid.player.widget.PLVideoTextureView
             android:id="@+id/pl_video_view"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true" />
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:layout_centerInParent="true" />
 
         <!-- 缓冲提示 -->
         <LinearLayout
@@ -53,5 +63,7 @@
         </LinearLayout>
 
     </RelativeLayout>
+
+    <!-- 其他页面 -->
 
 </FrameLayout>

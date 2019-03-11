@@ -1,8 +1,12 @@
 package com.example.zzx.zbar_demo.activity;
 
+import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
@@ -15,9 +19,18 @@ import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.Adapter.WorkPhotoAdapter;
 import com.example.zzx.zbar_demo.widget.ScaleImageView;
 import com.example.zzx.zbar_demo.widget.image.WebImage;
+import com.scwang.smartrefresh.header.BezierCircleHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
+import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
+import com.scwang.smartrefresh.layout.listener.OnLoadMoreListener;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static com.example.zzx.zbar_demo.entity.AppConfig.FILE_SERVER_PATH;
 
 /**
  * Created by pengchenghu on 2019/2/23.
@@ -28,7 +41,11 @@ import java.util.List;
 
 public class WorkPhotosActivity extends AppCompatActivity {
 
+    private final static int PULL_UP = 1;
+    private final static int PULL_DOWN = 2;
+
     // 控件声明
+    private RefreshLayout mSmartRefreshLayout;
     private GridView mWorkPhotoGv;  // 网格布局
 
     // work photo gridview
@@ -37,16 +54,58 @@ public class WorkPhotosActivity extends AppCompatActivity {
     private List<Bitmap> mWorkPhotos;
     private WorkPhotoAdapter mWorkPhotoAdapter;
 
+    //
+    private String mBasketId; // 吊篮ID
+
+    @SuppressLint("HandlerLeak")
+    private Handler mHandler = new Handler() {
+        @Override
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case PULL_UP:
+
+                    break;
+                case PULL_DOWN:
+
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_work_photos);
+
+        Intent intent = getIntent();
+        //mBasketId = intent.getStringExtra(HANGING_BASKET_ID);  // 获取吊篮ID
+        if(mBasketId==null || mBasketId.equals("")) mBasketId = "10000";
 
         initWidgetResource();
     }
 
     // 控件初始化
     private void initWidgetResource() {
+        // 上拉、下拉刷新
+        mSmartRefreshLayout = (SmartRefreshLayout) findViewById(R.id.smart_refresh_layout);
+        mSmartRefreshLayout.setRefreshHeader(  //设置 Header 为 贝塞尔雷达 样式
+                new BezierCircleHeader(this));
+        mSmartRefreshLayout.setRefreshFooter(  //设置 Footer 为 球脉冲 样式
+                new BallPulseFooter(this).setSpinnerStyle(SpinnerStyle.Scale));
+        mSmartRefreshLayout.setPrimaryColorsId(R.color.smart_loading_background_color);
+        mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                refreshlayout.finishRefresh(1500/*,false*/);//传入false表示刷新失败
+            }
+        });
+        mSmartRefreshLayout.setOnLoadMoreListener(new OnLoadMoreListener() {
+            @Override
+            public void onLoadMore(RefreshLayout refreshlayout) { // 添加上拉加载更多监听
+                refreshlayout.finishLoadMore(1500/*,false*/);//传入false表示加载失败
+            }
+        });
+
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
@@ -77,9 +136,6 @@ public class WorkPhotosActivity extends AppCompatActivity {
                 scaleImageView.create();
             }
         });
-
-        //
-
     }
 
     // 顶部导航栏消息响应
@@ -94,13 +150,13 @@ public class WorkPhotosActivity extends AppCompatActivity {
     }
 
     /*
-       * 其他函数
+     * 其他函数
      */
     // 初始化图片地址
     private void initWorkPhotoUrls(){
         mWorkPtotoUrls = new ArrayList<>();
 
-        String root_url = "http://10.193.0.20:8089/basket/001/";
+        String root_url = FILE_SERVER_PATH + "/basket/001/";
 
         mWorkPtotoUrls.add(root_url + "201902251424.jpg");
         mWorkPtotoUrls.add(root_url + "201902251425.jpg");

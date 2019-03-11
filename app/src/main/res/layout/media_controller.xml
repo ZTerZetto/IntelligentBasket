@@ -32,8 +32,9 @@
             android:layout_marginLeft="5dp"
             android:layout_centerVertical="true"
             android:gravity="center_vertical|left"
-            style="@style/MediaController_Text"
-            android:text="HangingBasket_001"/>
+            android:text="HangingBasket_"
+            style="@style/MediaController_Text"/>
+        <!--android:text="HangingBasket_001"/>-->
     </RelativeLayout>
 
     <RelativeLayout

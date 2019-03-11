@@ -3,12 +3,13 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@android:color/white"
+    android:layout_centerInParent="true"
     android:gravity="center">
 
     <com.example.zzx.zbar_demo.widget.image.SmartImageView
         android:id="@+id/work_photo"
-        android:layout_width="100dp"
-        android:layout_height="100dp"
+        android:layout_width="150dp"
+        android:layout_height="150dp"
         android:scaleType="centerCrop"
         android:src="@mipmap/test"/>
 

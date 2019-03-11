@@ -10,17 +10,24 @@
     <!-- 顶部导航栏 -->
     <include layout="@layout/toolbar"/>
 
-    <!-- 设备运行截图缩略图 -->
-    <GridView
-        android:id="@+id/work_photo_gv"
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/smart_refresh_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_marginTop="5dp"
-        android:numColumns="4"
-        android:scrollbars="none"
-        android:stretchMode="columnWidth"
-        android:horizontalSpacing="3dp"
-        android:verticalSpacing="3dp">
-    </GridView>
+        android:layout_height="match_parent">
+
+        <!-- 设备运行截图缩略图 -->
+        <GridView
+            android:id="@+id/work_photo_gv"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:numColumns="4"
+            android:scrollbars="none"
+            android:stretchMode="columnWidth"
+            android:horizontalSpacing="0dp"
+            android:verticalSpacing="5dp">
+        </GridView>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
 </LinearLayout>

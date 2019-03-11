@@ -2,8 +2,13 @@ package com.example.zzx.zbar_demo.entity;
 
 // Created by $USER_NAME on 2018/11/28/028.
 public class AppConfig {
-    public final static String BASE_URL_PATH = "http://47.100.1.211";// http://10.193.2.79:8080;http://47.100.1.211
-    public final static String IMAGE_URL = "http://10.193.0.20:21";
+    /*
+     * 服务器地址
+     */
+    public final static String BASE_URL_PATH = "http://47.100.1.211";// 后台地址
+    public final static String IMAGE_URL = "http://10.193.0.20:21"; //
+    public final static String FILE_SERVER_PATH = "http://10.193.0.20:8089"; // 文件服务器地址
+    public final static String VIDEO_STREAM_PATH = "rtmp://47.96.103.244:1935"; // 流媒体服务器地址
 
     /* 登陆
     * userId、userPassword
@@ -53,10 +58,15 @@ public class AppConfig {
     public final static String PRO_DETAIL = BASE_URL_PATH.concat("/projectDetailInfo");
 
 
-    // 视频播放器纵横比
+    /* 获取吊篮实施参数
+     */
+    public static final String REAL_TIME_PARAMETER = BASE_URL_PATH.concat("/getRealTimeData");
+
+    /* 获取流媒体视频
+     */
+    // 视频播放器窗口纵横比
     public static final float ASPECT_RATIO = (float)1.7777777777777777;  // 16:9
-
-
-
-
+    // 视频纵横比
+    public static final float ASPECT_RATIO_VIDEO = (float)1.333333333333;  // 4:3
+    public static final String HANGING_BASKET_VIDEO = VIDEO_STREAM_PATH.concat("/sendToDevice");
 }

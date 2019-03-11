@@ -13,6 +13,8 @@ import com.example.zzx.zbar_demo.entity.VarSwitch;
 
 import java.util.List;
 
+import static android.view.View.GONE;
+
 /**
  * Created by pengchenghu on 2019/2/24.
  * Author Email: 15651851181@163.com
@@ -46,10 +48,15 @@ public class VarSwitchAdapter extends ArrayAdapter<VarSwitch> {
 
         viewHolder.varSwitchName.setText(varSwitch.getName()); // 设置功能名称
         viewHolder.varSwitchImage.setImageResource(varSwitch.getImageId());    // 设置功能图片
-        if(varSwitch.getState())  // 设置提醒信息
+        if(varSwitch.getState() == 0) {  // 设置提醒信息
             viewHolder.infoTypeImage.setImageResource(R.mipmap.ic_safe);
-        else
+            viewHolder.infoTypeImage.setVisibility(View.VISIBLE);
+        } else if(varSwitch.getState() == 1) {
             viewHolder.infoTypeImage.setImageResource(R.mipmap.ic_warning);
+            viewHolder.infoTypeImage.setVisibility(View.VISIBLE);
+        }else if(varSwitch.getState() == 2){
+            viewHolder.infoTypeImage.setVisibility(GONE);
+        }
 
         return view;
     }
@@ -59,5 +66,4 @@ public class VarSwitchAdapter extends ArrayAdapter<VarSwitch> {
         ImageView infoTypeImage;
         TextView varSwitchName;
     }
-
 }

@@ -8,9 +8,9 @@ package com.example.zzx.zbar_demo.entity;
 public class VarSwitch {
     private String name;  // 功能名称
     private int imageId;  // 功能示意图
-    private boolean state; // 开关状态
+    private int state; // 开关状态(0: 安全， 1：提醒)
 
-    public VarSwitch(String name, int imageId, boolean state){
+    public VarSwitch(String name, int imageId, int state){
         this.name = name;
         this.imageId = imageId;
         this.state = state;
@@ -24,11 +24,11 @@ public class VarSwitch {
         return imageId;
     }
 
-    public boolean getState(){
+    public  int getState(){
         return state;
     }
 
-    public void setState(boolean state){
+    public void setState(int state){
         this.state = state;
     }
 }
