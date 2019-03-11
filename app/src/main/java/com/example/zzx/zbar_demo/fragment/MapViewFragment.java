@@ -2,6 +2,7 @@ package com.example.zzx.zbar_demo.fragment;
 
 import android.annotation.SuppressLint;
 import android.app.Fragment;
+import android.content.Intent;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -21,7 +22,6 @@ import com.baidu.location.BDLocation;
 import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
-import com.baidu.mapapi.SDKInitializer;
 import com.baidu.mapapi.clusterutil.clustering.Cluster;
 import com.baidu.mapapi.clusterutil.clustering.ClusterItem;
 import com.baidu.mapapi.clusterutil.clustering.ClusterManager;
@@ -29,6 +29,7 @@ import com.baidu.mapapi.map.BaiduMap;
 import com.baidu.mapapi.map.BitmapDescriptor;
 import com.baidu.mapapi.map.BitmapDescriptorFactory;
 import com.baidu.mapapi.map.InfoWindow;
+import com.baidu.mapapi.map.MapPoi;
 import com.baidu.mapapi.map.MapStatus;
 import com.baidu.mapapi.map.MapStatusUpdate;
 import com.baidu.mapapi.map.MapStatusUpdateFactory;
@@ -38,6 +39,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
 import com.example.zzx.zbar_demo.R;
+import com.example.zzx.zbar_demo.activity.BasketDetailActivity;
 import com.example.zzx.zbar_demo.activity.ManageMainActivity;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
@@ -100,7 +102,7 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
         requestPermission();
         if (mView == null) {
             initWidge(inflater, container);
-            initOnTouchEvent();
+            //initOnTouchEvent();
         }
         return mView;
     }
@@ -185,7 +187,6 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
                     //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
                     InfoWindow mInfoWindow = new InfoWindow(mPopupView, pt, -50);
                     //显示InfoWindow
-
                     mBaiduMap.showInfoWindow(mInfoWindow);
                 }
 
@@ -198,6 +199,22 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
             public void onClick(View v) {
                 // 点击气泡进入详情页面：待做
                 Log.d(TAG, "点击气泡");
+                mBaiduMap.hideInfoWindow();
+                Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
+                startActivity(intent);
+            }
+        });
+        // 点击地图响应
+        mBaiduMap.setOnMapClickListener(new BaiduMap.OnMapClickListener() {
+            @Override
+            public void onMapClick(LatLng latLng) {
+                // 隐藏infowindow
+                mBaiduMap.hideInfoWindow();
+            }
+
+            @Override
+            public boolean onMapPoiClick(MapPoi mapPoi) {
+                return false;
             }
         });
     }
