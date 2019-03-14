@@ -12,11 +12,14 @@
     <string name="camera">摄像头(相机)</string>
 
     <!-- Strings related to login -->
-    <string name="prompt_username"> 用户名 </string>
+    <string name="prompt_username"> 手机号 </string>
     <string name="prompt_password"> 密  码</string>
     <string name="action_sign_in"> 登    录 </string>
     <string name="action_sign_in_manager">  管理员  </string>
     <string name="action_register">注    册</string>
+    <string name="dialog_login_fail">您的账号未通过审核，请重新注册！</string>
+    <string name="dialog_login_audit">您的账号正在被审核，请稍后登录！</string>
+    <string name="login_title">登  录</string>
 
     <!-- Register activity-->
     <string name="registWorker_title">注册-施工人员</string>
@@ -32,9 +35,13 @@
     <string name="basketList_title">吊篮列表</string>
     <!-- basketList activity -->
     <string name="workerList_tile">施工人员列表</string>
+    <!-- projectList activity -->
+    <string name="projectList_title">项目列表</string>
 
     <!-- basketDetail activity -->
     <string name="basketDetail_tile">吊篮详情</string>
+    <!-- projectDetail activity -->
+    <string name="projectDetail_tile">项目详情</string>
 
     <!-- parameter activity -->
     <string name="parameter_title">设备参数</string>

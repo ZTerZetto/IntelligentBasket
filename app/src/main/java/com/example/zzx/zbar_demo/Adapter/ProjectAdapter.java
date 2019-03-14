@@ -2,40 +2,39 @@ package com.example.zzx.zbar_demo.Adapter;
 
 import android.content.Context;
 import android.graphics.Color;
-import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.entity.BasketInfo;
+import com.example.zzx.zbar_demo.entity.ProjectInfo;
 
 import java.util.ArrayList;
 import java.util.List;
 
 // Created by $USER_NAME on 2018/12/12/012.
-public class BasketAdapter extends ArrayAdapter<BasketInfo> {
+public class ProjectAdapter extends ArrayAdapter<ProjectInfo> {
 
     private int resourceId;
-    private List<BasketInfo> basketItems = new ArrayList<>();
+    private List<ProjectInfo> projectItems = new ArrayList<>();
     private  Context context;
 
-    public BasketAdapter(@NonNull Context context, @NonNull int resource, @NonNull List<BasketInfo> objects) {
+    public ProjectAdapter(@NonNull Context context, @NonNull int resource, @NonNull List<ProjectInfo> objects) {
         super(context, resource, objects);
         this.context = context;
-        this.basketItems = objects;
+        this.projectItems = objects;
         resourceId = resource;
     }
 
 
     @Override
     public View getView(int position, View converView, ViewGroup parent){
-        BasketInfo basketItems = getItem(position);//获取当前实例
+        ProjectInfo projectItems = getItem(position);//获取当前实例
         View view ;
         ViewHolder viewHolder;
         if (converView == null){
@@ -51,16 +50,15 @@ public class BasketAdapter extends ArrayAdapter<BasketInfo> {
             viewHolder = (ViewHolder) view.getTag();//重新获取ViewHolder
         }
 
-        viewHolder.basketId.setText("吊篮编号："+ basketItems.getBasketId());
-        if(basketItems.getState().equals("WORKING")){
+        viewHolder.basketId.setText(projectItems.getProjectId());
+        if(projectItems.getProjectState().equals("WORKING")){
             viewHolder.basketState.setBackgroundColor(Color.rgb(0, 255, 0));
-        } else if(basketItems.getState().equals("RESTING")) {
+        } else if(projectItems.getProjectState().equals("RESTING")) {
             viewHolder.basketState.setBackgroundColor(Color.rgb(255, 0, 0));
         }
 
-        viewHolder.workerId.setText("负责人：" + basketItems.getWorkerId());
+        viewHolder.workerId.setText(projectItems.getProjectName());
 
-        //TODO null 的显示设置
         return view;
     }
     class ViewHolder{

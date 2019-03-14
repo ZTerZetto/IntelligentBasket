@@ -7,7 +7,7 @@
     android:padding="5dp">
 
     <ImageView
-        android:id="@+id/txt_basket_state"
+        android:id="@+id/txt_state"
         android:layout_width="12dp"
         android:layout_height="12dp"
         android:layout_gravity="center"
@@ -15,13 +15,13 @@
         android:background="@drawable/shape_round"/>
 
     <TextView
-        android:id="@+id/txt_basket_num"
+        android:id="@+id/txt_id"
         style="@style/usertextStyle"
         android:layout_weight="1"
         android:layout_gravity="center"
         android:text="吊篮编号：" />
     <TextView
-        android:id="@+id/txt_worker_Id"
+        android:id="@+id/txt_worker"
         android:layout_weight="1"
         style="@style/usertextStyle"
         android:layout_gravity="center"

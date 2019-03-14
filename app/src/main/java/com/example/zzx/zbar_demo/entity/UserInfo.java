@@ -7,6 +7,10 @@ import java.io.File;
 // Created by $USER_NAME on 2018/11/28/028.
 public class UserInfo {
 
+    public UserInfo() {
+        super();
+    }
+
     public UserInfo(String userName, @Nullable String userPhone,@Nullable String userPassword, @Nullable String userRole) {
         this.userName = userName;
         this.userPhone = userPhone;
@@ -28,14 +32,28 @@ public class UserInfo {
         this.userPassword = userPassword;
     }
 
-    String userId;
-    String userName;
-    String userPhone;
-    String userPassword;
-    String userRole;
+    public UserInfo(String userId, String userName, String userPassword, String userPhone, String userRole, String userPerm, String userImage, boolean checked) {
+        this.userId = userId;
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userPhone = userPhone;
+        this.userRole = userRole;
+        this.userPerm = userPerm;
+        this.userImage = userImage;
+        this.checked = checked;
+    }
 
-    //String workerType;
-    File file;
+    private String userId;
+    private String userName;
+    private String userPassword;
+    private String userPhone;
+    private String userRole; //用户角色
+
+
+
+    private String userPerm; //用户权限
+    private String userImage;
+    private boolean checked;
 
 
     public String getUserId() {
@@ -88,12 +106,28 @@ public class UserInfo {
         this.userPhone = userPhone;
     }
 
-    public File getFile() {
-        return file;
+    public String getUserPerm() {
+        return userPerm;
     }
 
-    public void setFile(File file) {
-        this.file = file;
+    public void setUserPerm(String userPerm) {
+        this.userPerm = userPerm;
+    }
+
+    public String getUserImage() {
+        return userImage;
+    }
+
+    public void setUserImage(String userImage) {
+        this.userImage = userImage;
+    }
+
+    public boolean getChecked() {
+        return checked;
+    }
+
+    public void setChecked(boolean checked) {
+        checked = checked;
     }
 
 }

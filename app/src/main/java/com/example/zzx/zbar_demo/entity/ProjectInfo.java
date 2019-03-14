@@ -11,11 +11,18 @@ public class ProjectInfo {
 
     //当前状态，0：立项； 1：进行中； 2：已结束
     public String projectState;
+
+    public ProjectInfo(String projectId, String projectName, String projectState, String projectStart, String projectEnd) {
+        this.projectId = projectId;
+        this.projectName = projectName;
+        this.projectState = projectState;
+        this.projectStart = projectStart;
+        this.projectEnd = projectEnd;
+    }
+
     //开始、结束时间
     public String projectStart;
     public String projectEnd;
-
-
 
 
     public String getProjectId() {
@@ -72,7 +79,7 @@ public class ProjectInfo {
     //本项目中涉及的工人
     public String projectBuilders;
 
-    public String adminAreaUser;
+    public UserInfo adminAreaUser;
 
 
     public String getProjectContractUrl() {
@@ -123,17 +130,21 @@ public class ProjectInfo {
         this.projectBuilders = projectBuilders;
     }
 
-    public String getAdminAreaUser() {
+    public UserInfo getAdminAreaUser() {
         return adminAreaUser;
     }
 
-    public void setAdminAreaUser(String adminAreaUser) {
+    public void setAdminAreaUser(UserInfo adminAreaUser) {
         this.adminAreaUser = adminAreaUser;
+    }
+
+    public ProjectInfo() {
+        super();
     }
 
     public ProjectInfo(String projectId, String projectName, String projectState, String projectStart, String projectEnd,
                        @Nullable String projectContractUrl, @Nullable String projectCertUrl, @Nullable String adminAreaId, @Nullable String adminRentId,
-                       @Nullable String boxList, @Nullable String projectBuilders, @Nullable String adminAreaUser) {
+                       @Nullable String boxList, @Nullable String projectBuilders, @Nullable UserInfo adminAreaUser) {
         this.projectId = projectId;
         this.projectName = projectName;
         this.projectState = projectState;

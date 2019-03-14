@@ -9,6 +9,9 @@ public class BasketInfo {
         this.state= state;
         this.workerId = workerId;
     }
+    public BasketInfo() {
+        super();
+    }
 
 
     String basketId;

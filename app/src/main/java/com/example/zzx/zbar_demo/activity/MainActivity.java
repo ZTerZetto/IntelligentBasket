@@ -1,6 +1,8 @@
 package com.example.zzx.zbar_demo.activity;
 
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -28,7 +30,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         setContentView(R.layout.activity_main);
 
         btn_scan = (Button) findViewById(R.id.btn_scan);
-        btn_video =(Button) findViewById(R.id.btn_video);
+        btn_video = (Button) findViewById(R.id.btn_video);
         btn_login = (Button) findViewById(R.id.btn_login);
         btn_pdf = (Button) findViewById(R.id.btn_pdf);
         btn_lbs = (Button) findViewById(R.id.btn_lbs);
@@ -38,7 +40,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_login.setOnClickListener(this);
         btn_pdf.setOnClickListener(this);
         btn_lbs.setOnClickListener(this);
+
+
     }
+
 
     @Override
     public void onClick(View v) {

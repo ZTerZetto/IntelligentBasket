@@ -5,6 +5,8 @@
     android:background="#f5f5f5"
     android:orientation="vertical">
 
+    <include layout="@layout/toolbar"/>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -13,18 +15,19 @@
         android:padding="15dp"
         android:background="#FFF"
         android:orientation="vertical">
+
         <TextView
+            android:id="@+id/txt_pro_name"
             style="@style/usertextStyle"
-            android:layout_gravity="left"
-            android:text="当前项目"
+            android:text="项目名称："
             android:textSize="18sp"
             android:textStyle="bold" />
-
         <TextView
             android:id="@+id/txt_pro_number"
             style="@style/usertextStyle"
             android:textSize="18sp"
             android:text="No:xxxxxxxx" />
+
     </LinearLayout>
 
     <LinearLayout
@@ -51,9 +54,11 @@
         android:padding="10dp">
         <TextView
             style="@style/usertextStyle"
+            android:layout_weight="5"
             android:text="更改项目状态" />
         <ImageView style="@style/img_arrow" />
     </LinearLayout>
+
 
     <LinearLayout
         android:id="@+id/ll_pro_contract"
@@ -66,10 +71,113 @@
 
         <TextView
             style="@style/usertextStyle"
+            android:layout_weight="5"
             android:text="项目合同书" />
 
         <ImageView style="@style/img_arrow" />
     </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="10"
+            android:text="开始日期" />
+        <TextView
+            android:id="@+id/txt_pro_start_time"
+            style="@style/usertextStyle"
+            android:layout_weight="1"
+            android:text="x-x-x" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="10"
+            android:text="截止日期" />
+        <TextView
+            android:id="@+id/txt_pro_end_time"
+            style="@style/usertextStyle"
+            android:layout_weight="1"
+            android:text="x-x-x" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="20dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="10"
+            android:text="区域管理员" />
+        <TextView
+            android:id="@+id/txt_pro_area_admin"
+            style="@style/usertextStyle"
+            android:layout_weight="1"
+            android:text="123" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="10"
+            android:text="租方管理员" />
+        <TextView
+            android:id="@+id/txt_pro_rent_admin"
+            style="@style/usertextStyle"
+            android:layout_weight="1"
+            android:text="123" />
+    </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="10"
+            android:text="项目创建者" />
+        <TextView
+            android:id="@+id/txt_pro_builder"
+            style="@style/usertextStyle"
+            android:layout_weight="1"
+            android:text="222" />
+    </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="10"
+            android:text="项目创建者" />
+        <TextView
+            android:id="@+id/txt_pro_area_user"
+            style="@style/usertextStyle"
+            android:layout_weight="1"
+            android:text="222" />
+    </LinearLayout>
 </LinearLayout>

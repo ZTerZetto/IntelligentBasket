@@ -64,6 +64,7 @@
         <activity android:name=".activity.ProDetailActivity" />
         <activity android:name=".activity.BasketListActivity" />
         <activity android:name=".activity.WorkerListActivity" />
+        <activity android:name=".activity.ProListActivity" />
         <activity android:name=".activity.loginRegist.RegistWorkerActivity"/>
         <activity android:name=".activity.loginRegist.RegistRentManActivity"/>
         <activity android:name=".activity.loginRegist.RegisterPreActivity" />

@@ -2,6 +2,8 @@ package com.example.zzx.zbar_demo.activity;
 
 import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -15,6 +17,7 @@ import android.widget.TextView;
 import com.example.zzx.zbar_demo.Adapter.WorkerAdapter;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.VideoPlay.VideoPlayActivity;
+import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 
 import java.util.ArrayList;
@@ -30,6 +33,10 @@ public class WorkerListActivity extends AppCompatActivity {
     private TextView txtSearch;
     private Button btnSearch;
     private TextView txtResult;
+
+    private String mProjectId;
+    public SharedPreferences pref;
+    private String token;
 
     public static final int HTTP_SUCCESS = 1;
 
@@ -72,6 +79,17 @@ public class WorkerListActivity extends AppCompatActivity {
         txtSearch = findViewById(R.id.txt_input_search);
         btnSearch = findViewById(R.id.search_button);
         txtResult = findViewById(R.id.txt_search_result);
+
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        token = pref.getString("loginToken", "");
+        if (token == null) {
+            Intent intent = new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+        }
+        Intent intent = getIntent();
+        mProjectId = intent.getStringExtra("projectId");
+
         initList();
 
         btnSearch.setOnClickListener(new View.OnClickListener() {
@@ -142,7 +160,35 @@ public class WorkerListActivity extends AppCompatActivity {
             userInfoArrayList.add(workerInfo);
         }
         showList(userInfoArrayList);
+/*HttpUtil.getProjectDetailInfoOkHttpRequest(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //异常情况处理
+                Looper.prepare();
+                Toast.makeText(BasketListActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                Looper.loop();
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 返回服务器数据
+                String responseData = response.body().string();
+                try {
+                    JSONObject jsonObject = JSON.parseObject(responseData);
+                    String isAllowed = jsonObject.getString("isAllowed");
+                    Message msg = new Message();
+                    if(isAllowed.equals("true")){
+                        msg.obj = jsonObject.get("electricRes");
+                        msg.what = 0;
+                    } else{
+                        msg.what = 1;
+                    }
+                    handler.sendMessage(msg);
 
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        },token,mProjectId);*/
     }
 
 }

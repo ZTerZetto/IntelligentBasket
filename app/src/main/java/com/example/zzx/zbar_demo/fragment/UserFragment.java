@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.activity.BasketListActivity;
+import com.example.zzx.zbar_demo.activity.ProListActivity;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.activity.ProDetailActivity;
 import com.example.zzx.zbar_demo.R;
@@ -59,6 +60,7 @@ public class UserFragment extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0: {
+                    userInfo = JSON.parseObject(String.valueOf(msg.obj),UserInfo.class);
                     txtUserName.setText(userInfo.getUserName());
                     txtRoleName.setText(userInfo.getUserRole());
                     break;
@@ -107,8 +109,7 @@ public class UserFragment extends Fragment {
             llProDetail.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    intent = new Intent(getActivity(), ProDetailActivity.class);
-                    startActivity(intent);
+                    startToActivity(ProDetailActivity.class);
                 }
             });
 
@@ -124,8 +125,7 @@ public class UserFragment extends Fragment {
             llBasketManage.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-                    intent = new Intent(getActivity(), BasketListActivity.class);
-                    startActivity(intent);
+                    startToActivity(BasketListActivity.class);
                 }
             });
 
@@ -134,15 +134,14 @@ public class UserFragment extends Fragment {
 
                 @Override
                 public void onClick(View view) {
-                    intent = new Intent(getActivity(), WorkerListActivity.class);
-                    startActivity(intent);
+                    startToActivity(WorkerListActivity.class);
                 }
             });
             //切换项目
             llChangePro.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
+                    startToActivity(ProListActivity.class);
                 }
             });
             LLLogout.setOnClickListener(new View.OnClickListener() {
@@ -156,6 +155,11 @@ public class UserFragment extends Fragment {
         return mView;
     }
 
+    private void startToActivity(Class<?> cls){
+        intent = new Intent(getActivity(), cls);
+        intent.putExtra("projectId","001");
+        startActivity(intent);
+    }
     //登录请求连接
     private void getUserInfoHttp() {
         HttpUtil.getUserInfoOkHttpRequest(new okhttp3.Callback() {
@@ -173,20 +177,10 @@ public class UserFragment extends Fragment {
                 String responseData = response.body().string();
                 try {
                     JSONObject jsonObject = JSON.parseObject(responseData);
-                   String isAllowed = jsonObject.getString("isAllowed");
+
                     Message message = new Message();
-                    switch (isAllowed) {
-                        case "true":
-                        message.what = 0;
-                        userInfo.setUserRole(jsonObject.getString("userRole"));
-                        userInfo.setUserName(jsonObject.getString("userName"));
-                            break;
-                        default:
-                            message.what = 1;
-                            userInfo.setUserRole("游客");
-                            userInfo.setUserName("未登录");
-                            break;
-                    }
+                    message.what = 0;
+                    message.obj = jsonObject.get("userInformation");
                     handler.sendMessage(message);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -200,8 +194,7 @@ public class UserFragment extends Fragment {
         SharedPreferences.Editor editor = pref.edit();
         editor.clear();
         editor.commit();
-        Intent intent = new Intent(getActivity(), LoginActivity.class);
-        startActivity(intent);
+        startToActivity(LoginActivity.class);
     }
 }
 

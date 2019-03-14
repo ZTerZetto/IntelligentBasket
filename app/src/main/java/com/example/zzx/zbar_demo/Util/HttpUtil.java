@@ -46,6 +46,8 @@ public class HttpUtil {
         final Request request = new Request.Builder()
                 .url(AppConfig.REGISTER_USER)
                 .addHeader("Authorization","null")
+
+
                 .post(requestBody)
                 .build();
         client.newCall(request).enqueue(callback);
@@ -63,6 +65,27 @@ public class HttpUtil {
                 .build();
         client.newCall(request).enqueue(callback);
     }
+
+    public static void getProjectInfoOkHttpRequest(okhttp3.Callback callback,String token,String userFlag){
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .url(AppConfig.PROINFO+"?userFlag="+userFlag)
+                .addHeader("Authorization",token)
+                .get()
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void getProjectDetailInfoOkHttpRequest(okhttp3.Callback callback,String token,String projectId){
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .url(AppConfig.PRO_DETAIL+"?projectId=" + projectId)
+                .addHeader("Authorization",token)
+                .get()
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
 
 
     public static void sendLogin2OkHttpRequest(okhttp3.Callback callback, UserInfo userInfo){

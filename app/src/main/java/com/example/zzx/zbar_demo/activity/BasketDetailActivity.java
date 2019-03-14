@@ -120,4 +120,30 @@ public class BasketDetailActivity extends AppCompatActivity {
         //Function video = new Function("监控", R.mipmap.ic_video);
         mFunctions.add(video);
     }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+    }
+
 }
