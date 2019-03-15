@@ -51,11 +51,13 @@
     <string name="control_out">控制输出</string>
     <string name="parameter_vfd">变频器</string>
     <string name="parameter_contactor">接触器（左、右）</string>
-    <string name="other_data">其他数据</string>
+    <string name="basket_data">吊篮数据</string>
     <string name="parameter_weight">称重</string>
     <string name="parameter_vfd_current">变频器电流</string>
     <string name="parameter_clinometer_degree">倾斜仪角度（水平、竖直）</string>
-    <string name="parameter_location">位置信息</string>
+    <string name="other_data">其他数据</string>
+    <string name="parameter_location">位置</string>
+    <string name="parameter_date">时间</string>
 
     <!-- workphoto activity -->
     <string name="work_photo_title">设备截图</string>

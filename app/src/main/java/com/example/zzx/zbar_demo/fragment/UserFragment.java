@@ -101,7 +101,7 @@ public class UserFragment extends Fragment {
                 txtRoleName.setText(userInfo.getUserRole());
             } else {
                 userInfo = new UserInfo(null, null);
-                getUserInfoHttp();
+                //getUserInfoHttp();
             }
 
 

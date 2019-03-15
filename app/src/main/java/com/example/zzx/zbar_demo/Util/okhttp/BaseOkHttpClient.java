@@ -28,6 +28,7 @@ public class BaseOkHttpClient {
 
     public Request buildRequest() {
         Request.Builder builder = new Request.Builder();
+
         if (mBuilder.method == "GET") {
             builder.url(buildGetRequestParam());
             builder.get();
@@ -97,6 +98,7 @@ public class BaseOkHttpClient {
         private String url;
         private String method;
         private List<RequestParameter> params;
+        private List<RequestParameter> headers;
         private boolean isJsonParam;
 
         public BaseOkHttpClient build() {
@@ -150,6 +152,21 @@ public class BaseOkHttpClient {
          * @return
          */
         public Builder form() {
+            return this;
+        }
+
+        /**
+         * 添加头
+         *
+         * @param key
+         * @param value
+         * @return
+         */
+        public Builder addHeader(String key, Object value) {
+            if (headers == null) {
+                headers = new ArrayList<>();
+            }
+            headers.add(new RequestParameter(key, value));
             return this;
         }
 

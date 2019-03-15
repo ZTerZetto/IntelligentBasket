@@ -61,4 +61,5 @@ public class AppConfig {
     // 视频纵横比
     public static final float ASPECT_RATIO_VIDEO = (float)1.333333333333;  // 4:3
     public static final String HANGING_BASKET_VIDEO = VIDEO_STREAM_PATH.concat("/sendToDevice");
+
 }

@@ -1,16 +1,23 @@
 package com.example.zzx.zbar_demo.Util;
 
+import android.net.Uri;
+
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
+import com.example.zzx.zbar_demo.Util.okhttp.RequestParameter;
 import com.example.zzx.zbar_demo.entity.AppConfig;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 import java.io.File;
+import java.net.URLEncoder;
+
 import okhttp3.FormBody;
 import okhttp3.MediaType;
 import okhttp3.MultipartBody;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
+
+import static com.example.zzx.zbar_demo.entity.AppConfig.REAL_TIME_PARAMETER;
 
 // Created by $USER_NAME on 2018/11/28/028.
 public class HttpUtil {
@@ -99,6 +106,25 @@ public class HttpUtil {
         final Request request = new Request.Builder()
                 .url(AppConfig.LOGIN_USER)
                 .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    /*
+     * 设备参数请求
+     */
+    public static void getDeviceParameterOkHttpRequest(okhttp3.Callback callback,
+                                                       String token, String deviceId){
+        OkHttpClient client = new OkHttpClient();
+
+        StringBuilder tempParams = new StringBuilder();
+        //对参数进行URLEncoder
+        tempParams.append(String.format("%s=%s", "deviceId", Uri.encode(deviceId), "utf-8"));
+        String requestUrl = String.format("%s?%s",REAL_TIME_PARAMETER, tempParams.toString());
+        final Request request = new Request.Builder()
+                .url(requestUrl)
+                .addHeader("Authorization",token)
+                .get()
                 .build();
         client.newCall(request).enqueue(callback);
     }

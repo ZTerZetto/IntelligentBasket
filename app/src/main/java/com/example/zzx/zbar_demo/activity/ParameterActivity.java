@@ -2,9 +2,11 @@ package com.example.zzx.zbar_demo.activity;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
@@ -17,6 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.Adapter.VarSwitchAdapter;
 import com.example.zzx.zbar_demo.Util.CustomTimeTask;
+import com.example.zzx.zbar_demo.Util.HttpUtil;
 import com.example.zzx.zbar_demo.Util.okhttp.BaseCallBack;
 import com.example.zzx.zbar_demo.Util.okhttp.BaseOkHttpClient;
 import com.example.zzx.zbar_demo.entity.VarSwitch;
@@ -32,6 +35,8 @@ import java.util.List;
 import java.util.TimerTask;
 
 import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import static com.example.zzx.zbar_demo.entity.AppConfig.REAL_TIME_PARAMETER;
 
@@ -45,6 +50,9 @@ import static com.example.zzx.zbar_demo.entity.AppConfig.REAL_TIME_PARAMETER;
 public class ParameterActivity extends AppCompatActivity {
 
     private static final String TAG = "ParameterActivity";
+
+    // 文件缓存
+    public SharedPreferences pref;
 
     // 消息处理
     private static final int PARAMETER_INFO = 1; // 更新ui
@@ -62,6 +70,7 @@ public class ParameterActivity extends AppCompatActivity {
     private TextView mVfdCurrent;   // 变频器电流
     private TextView mClinometerDegree; // 倾斜仪角度
     private TextView mLocationMsg;  // 位置信息
+    private TextView mDateMsg; // 时间信息
 
     // var switch gridview
     private List<VarSwitch> mVarSwitches;  // 开关变量列表
@@ -80,7 +89,8 @@ public class ParameterActivity extends AppCompatActivity {
                     updateWidgetState(msg.obj);
                     break;
                 case TIMER: // 定时任务
-                    getDeviceParameter();
+                    //getDeviceParameter();
+                    deviceParameterHttp();
                     break;
             }
         }
@@ -93,10 +103,13 @@ public class ParameterActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         //mBasketId = intent.getStringExtra(HANGING_BASKET_ID);  // 获取吊篮id
-        if(mBasketId==null || mBasketId.equals("")) mBasketId = "10000";
+        if(mBasketId==null || mBasketId.equals("")) mBasketId = "1";
+
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
 
         initWidgetResource();  // 初始化控件
-        getDeviceParameter();  // 获取数据
+        //getDeviceParameter();
+        deviceParameterHttp();
         setTimer();  // 开启定时任务
     }
 
@@ -110,7 +123,8 @@ public class ParameterActivity extends AppCompatActivity {
         mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                getDeviceParameter();
+                //getDeviceParameter();
+                deviceParameterHttp();
             }
         });
 
@@ -138,11 +152,14 @@ public class ParameterActivity extends AppCompatActivity {
         mContactorLeft = (ImageView) findViewById(R.id.contactor_left);
         mContactorRight = (ImageView) findViewById(R.id.contactor_right);
 
-        // 其它数据
+        // 吊篮数据
         mDeviceWight = (TextView) findViewById(R.id.weight_tv);
         mVfdCurrent = (TextView) findViewById(R.id.vfd_current_tv);
         mClinometerDegree = (TextView) findViewById(R.id.clinometer_degree_tv);
+
+        // 其他数据
         mLocationMsg = (TextView) findViewById(R.id.location_msg_tv);
+        mDateMsg = (TextView) findViewById(R.id.date_msg_tv);
 
     }
 
@@ -186,6 +203,33 @@ public class ParameterActivity extends AppCompatActivity {
     /*
      * 网络相关
      */
+    private void deviceParameterHttp(){
+        // 获取token
+        String token = pref.getString("loginToken", null);
+
+        HttpUtil.getDeviceParameterOkHttpRequest(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "失败：" + e.toString());
+                mSmartRefreshLayout.finishRefresh(1500,false); // 刷新失败
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 成功
+                String responseData = response.body().string();
+                Log.i(TAG, "成功：" +  responseData);
+                Message msg = new Message();
+                msg.what = PARAMETER_INFO;
+                msg.obj = responseData;
+                mHandler.sendMessage(msg);
+
+                mSmartRefreshLayout.finishRefresh(1500); // 刷新成功
+
+            }
+        }, token, mBasketId);
+    }
+    /*
     private void getDeviceParameter(){
         BaseOkHttpClient.newBuilder()
                 .addParam("deviceId", mBasketId)
@@ -218,6 +262,7 @@ public class ParameterActivity extends AppCompatActivity {
                     }
                 });
     }
+    */
 
     /*
      * 其它函数
@@ -247,7 +292,7 @@ public class ParameterActivity extends AppCompatActivity {
     private void updateWidgetState(Object obj) {
         String json = obj.toString();  // object 转 string
         JSONObject jsonObject = JSON.parseObject(json);  // string 转 jsonobject
-        String electric_data_json = jsonObject.getString("electricData");
+        String electric_data_json = jsonObject.getString("realTimeData");
         JSONObject electric_data_json_object = JSON.parseObject(electric_data_json);
         if(electric_data_json_object == null){
             initialState();
@@ -258,7 +303,7 @@ public class ParameterActivity extends AppCompatActivity {
         /*
          * bool 数据
          */
-        String boolData32 = electric_data_json_object.getString("boolData32");
+        String boolData32 = electric_data_json_object.getString("bool_data_int32");
         if(boolData32.length() >= 15) {
             // 开关变量
             String varswitch = boolData32.substring(0, 8);
@@ -276,22 +321,32 @@ public class ParameterActivity extends AppCompatActivity {
         }
 
         /*
-         * 其他数据
+         * 吊篮数据
          */
         // 称重
         String device_weight = electric_data_json_object.getString("weight");
         mDeviceWight.setText(device_weight + " Kg");
         // 变频器电流
         String vfd_current = electric_data_json_object.getString("current");
-        mVfdCurrent.setText(vfd_current + " A");
+        int dot_index = vfd_current.indexOf(",");
+        String vfd_str = "(" + vfd_current.substring(0, dot_index) + "A," +
+                vfd_current.substring(dot_index) + "A)";
+        mVfdCurrent.setText(vfd_str);
         // 倾斜仪
         String clinometer_degree = electric_data_json_object.getString("degree");
         mClinometerDegree.setText("(" + clinometer_degree + ")");
+
+        /*
+         * 其他数据
+         */
         // 经纬度
         String longitude = electric_data_json_object.getString("longitude");
         String latitude = electric_data_json_object.getString("latitude");
         String altitude = electric_data_json_object.getString("altitude");
         mLocationMsg.setText("(" + longitude + "°," + latitude + "°," + altitude + "m");
+        // 时间
+        String timestamp = electric_data_json_object.getString("timestamp");
+        mDateMsg.setText(timestamp);
     }
 
     // 开关变量

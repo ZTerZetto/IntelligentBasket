@@ -120,7 +120,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/other_data"
+                    android:text="@string/basket_data"
                     android:textColor="@color/colorSilverText"
                     style="@style/ParameterSubTitleTextView"/>
                 <!-- 变频器采集参数 -->
@@ -172,9 +172,14 @@
                         style="@style/ParameterItemContentTextView"
                         android:text="(22.5°,32.6°)"/>
                 </RelativeLayout>
-                <!-- 分割线 -->
-                <View
-                    style="@style/ParameterSplitLineView"/>
+
+                <!-- 其它数据 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/control_out"
+                    android:textColor="@color/colorSilverText"
+                    style="@style/ParameterSubTitleTextView"/>
                 <!-- 北斗采集参数 -->
                 <RelativeLayout
                     style="@style/ParameterRelativeLayout">
@@ -189,7 +194,22 @@
                         style="@style/ParameterItemContentTextView"
                         android:text="(112.5°,26.9°,112.5m)"/>
                 </RelativeLayout>
-
+                <!-- 分割线 -->
+                <View
+                    style="@style/ParameterSplitLineView"/>
+                <RelativeLayout
+                    style="@style/ParameterRelativeLayout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/parameter_date"
+                        style="@style/ParameterItemTextView"/>
+                    <TextView
+                        android:id="@+id/date_msg_tv"
+                        android:layout_alignParentRight="true"
+                        style="@style/ParameterItemContentTextView"
+                        android:text="2018-3-13 12:30:12"/>
+                </RelativeLayout>
             </LinearLayout>
         </ScrollView>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
