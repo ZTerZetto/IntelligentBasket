@@ -1,18 +1,15 @@
 package com.example.zzx.zbar_demo.activity;
 
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
 
-import com.example.zzx.zbar_demo.PdfRead.PDFStartActivity;
+import com.example.zzx.zbar_demo.pdf_read.PDFStartActivity;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.zbar.QRScanActivity;
-import com.example.zzx.zbar_demo.VideoPlay.VideoPlayActivity;
 
 
 public class MainActivity extends AppCompatActivity implements View.OnClickListener {
@@ -41,7 +38,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         btn_pdf.setOnClickListener(this);
         btn_lbs.setOnClickListener(this);
 
-
     }
 
 
@@ -62,8 +58,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
             case R.id.btn_video:
                 //视频播放demo
-                intent = new Intent(MainActivity.this, VideoPlayActivity.class);
-                startActivity(intent);
+                //intent = new Intent(MainActivity.this, VideoPlayActivity.class);
+                //startActivity(intent);
                 break;
 
             case R.id.btn_pdf:

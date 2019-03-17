@@ -14,9 +14,8 @@ import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
 
-import com.example.zzx.zbar_demo.Adapter.WorkerAdapter;
+import com.example.zzx.zbar_demo.adapter.WorkerAdapter;
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.VideoPlay.VideoPlayActivity;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 
@@ -125,9 +124,9 @@ public class WorkerListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //跳转至缩略图显示
-                Intent intent = new Intent(mContext, VideoPlayActivity.class);
+                //Intent intent = new Intent(mContext, VideoPlayActivity.class);
                 //intent.putExtra("basket_id", basketInfoArrayList.get(i).getBasketId());
-                startActivity(intent);
+                //startActivity(intent);
             }
         });
 

@@ -1,18 +1,14 @@
 package com.example.zzx.zbar_demo.activity;
 
 import android.app.FragmentTransaction;
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.fragment.InfoFragment;
-import com.example.zzx.zbar_demo.fragment.MapViewFragment;
 import com.example.zzx.zbar_demo.fragment.UserFragment;
 
 import java.util.ArrayList;

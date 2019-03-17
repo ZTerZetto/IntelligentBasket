@@ -29,7 +29,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.Util.HttpUtil;
+import com.example.zzx.zbar_demo.utils.HttpUtil;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 
 import java.io.File;

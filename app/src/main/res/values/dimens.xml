@@ -2,4 +2,56 @@
     <!-- Default screen margins, per the Android Design guidelines. -->
     <dimen name="activity_horizontal_margin">16dp</dimen>
     <dimen name="activity_vertical_margin">16dp</dimen>
+    <dimen name="fab_margin">16dp</dimen>
+
+    <!--coolshopping参考-->
+    <dimen name="textSize_6">6.0sp</dimen>
+    <dimen name="textSize_7">7.0sp</dimen>
+    <dimen name="textSize_8">8.0sp</dimen>
+    <dimen name="textSize_9">9.0sp</dimen>
+    <dimen name="textSize_10">10.0sp</dimen>
+    <dimen name="textSize_11">11.0sp</dimen>
+    <dimen name="textSize_12">12.0sp</dimen>
+    <dimen name="textSize_13">13.0sp</dimen>
+    <dimen name="textSize_14">14.0sp</dimen>
+    <dimen name="textSize_15">15.0sp</dimen>
+    <dimen name="textSize_16">16.0sp</dimen>
+    <dimen name="textSize_17">17.0sp</dimen>
+    <dimen name="textSize_18">18.0sp</dimen>
+    <dimen name="textSize_19">19.0sp</dimen>
+    <dimen name="textSize_20">20.0sp</dimen>
+    <dimen name="textSize_21">21.0sp</dimen>
+    <dimen name="textSize_22">22.0sp</dimen>
+    <dimen name="textSize_23">23.0sp</dimen>
+    <dimen name="textSize_24">24.0sp</dimen>
+    <dimen name="textSize_25">25.0sp</dimen>
+    <dimen name="textSize_26">26.0sp</dimen>
+    <dimen name="textSize_27">27.0sp</dimen>
+    <dimen name="textSize_28">28.0sp</dimen>
+    <dimen name="textSize_29">29.0sp</dimen>
+    <dimen name="size_17">12.0sp</dimen>
+    <dimen name="size_18">13.0sp</dimen>
+    <dimen name="size_19">14.0sp</dimen>
+    <dimen name="size_20">15.0sp</dimen>
+    <dimen name="size_21">16.0sp</dimen>
+    <dimen name="size_22">17.0sp</dimen>
+    <dimen name="size_23">17.0sp</dimen>
+    <dimen name="size_24">19.0sp</dimen>
+
+    <!-- 用户主页面管理 -->
+    <dimen name="me_login_layout_height">140dp</dimen>
+    <dimen name="me_login_head_width">65dp</dimen>
+    <dimen name="me_login_head_height">60dp</dimen>
+    <dimen name="me_login_layout_paddingLeft">15dp</dimen>
+    <dimen name="me_login_head_marginEnd">10dp</dimen>
+    <dimen name="me_login_level_width">28dp</dimen>
+    <dimen name="me_login_level_height">22dp</dimen>
+    <dimen name="me_login_profile_layout_marginStart">10dp</dimen>
+    <dimen name="me_login_level_marginStart">5dp</dimen>
+    <dimen name="me_login_balance_layout_marginTop">5dp</dimen>
+    <dimen name="me_login_username_size">@dimen/textSize_20</dimen>
+    <dimen name="me_login_balance_size">@dimen/textSize_16</dimen>
+    <dimen name="me_nologin_textSize">@dimen/textSize_14</dimen>
+    <dimen name="me_item_common_layout_marginTop">10dp</dimen>
+
 </resources>

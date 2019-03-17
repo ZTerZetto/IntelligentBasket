@@ -39,7 +39,7 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.activity.BasketDetailActivity;
+import com.example.zzx.zbar_demo.activity.basket.BasketDetailActivity;
 import com.example.zzx.zbar_demo.activity.ManageMainActivity;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
@@ -99,7 +99,7 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        requestPermission();
+        if(!isHasPermission()) requestPermission();  // 检查权限
         if (mView == null) {
             initWidge(inflater, container);
             //initOnTouchEvent();
@@ -392,11 +392,7 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
                         if (isAll) {
-//                            Toast.makeText(BaiduMapActivity.this, "获取权限成功",
-//                                    Toast.LENGTH_SHORT).show();
                         }else {
-//                            Toast.makeText(BaiduMapActivity.this,
-//                                    "获取权限成功，部分权限未正常授予", Toast.LENGTH_SHORT).show();
                             Toast.makeText(getActivity(),
                                     "必须同意所有的权限才能使用本程序", Toast.LENGTH_SHORT).show();
                         }
@@ -419,13 +415,17 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
     }
 
     // 是否有这个权限
-    public void isHasPermission(View view) {
-        if (XXPermissions.isHasPermission(getActivity(), Permission.Group.STORAGE)) {
-            Toast.makeText(getActivity(), "已经获取到权限，不需要再次申请了",
-                    Toast.LENGTH_SHORT).show();
+    public boolean isHasPermission() {
+        if (XXPermissions.isHasPermission(getActivity(), Permission.Group.STORAGE) &&
+                XXPermissions.isHasPermission(getActivity(), Permission.Group.LOCATION) &&
+                XXPermissions.isHasPermission(getActivity(), Permission.READ_PHONE_STATE)) {
+//            Toast.makeText(getActivity(), "已经获取到权限，不需要再次申请了",
+////                    Toast.LENGTH_SHORT).show();
+            return true;
         }else {
-            Toast.makeText(getActivity(), "还没有获取到权限或者部分权限未授予",
-                    Toast.LENGTH_SHORT).show();
+//            Toast.makeText(getActivity(), "还没有获取到权限或者部分权限未授予",
+//                    Toast.LENGTH_SHORT).show();
+            return false;
         }
     }
 

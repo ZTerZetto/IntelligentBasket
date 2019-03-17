@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.Adapter.ScaleImageAdapter;
+import com.example.zzx.zbar_demo.adapter.ScaleImageAdapter;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;

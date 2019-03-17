@@ -52,7 +52,7 @@ public class AppConfig {
 
     /* 获取吊篮实施参数
      */
-    public static final String REAL_TIME_PARAMETER = BASE_URL_PATH.concat("/getRealTimeData");
+    public static final String REAL_TIME_PARAMETER = ANDROID_URL_PATH.concat("/getRealTimeData");
 
     /* 获取流媒体视频
      */
@@ -61,5 +61,11 @@ public class AppConfig {
     // 视频纵横比
     public static final float ASPECT_RATIO_VIDEO = (float)1.333333333333;  // 4:3
     public static final String HANGING_BASKET_VIDEO = VIDEO_STREAM_PATH.concat("/sendToDevice");
+
+    /*
+     * 施工人员活动请求
+     */
+    // 施工人员基本信息
+    public static  final String WORKER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetWorker");
 
 }

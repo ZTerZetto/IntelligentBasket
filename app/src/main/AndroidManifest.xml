@@ -1,18 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.zzx.zbar_demo">
-
     <!-- 网络权限 -->
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!-- 摄像头使用 -->
-    <uses-permission android:name="android.permission.CAMERA" />
-
     <uses-feature android:name="android.hardware.camera" />
-    <uses-feature android:name="android.hardware.camera.autofocus" />
-    <!-- SD卡读写权限 4.4以下系统 -->
+    <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- SD卡读写权限 4.4以下系统 -->
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- 摄像头使用 -->
+    <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <!-- 百度地图权限 -->
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" /> <!-- 百度地图权限 -->
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
@@ -21,6 +18,7 @@
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.CALL_PHONE" />
 
     <application
         android:allowBackup="true"
@@ -29,48 +27,55 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <!-- 百度地图Key -->
+        <activity android:name=".activity.worker.WorkerOrderActivity"></activity>
+        <activity
+            android:name=".activity.worker.WorkerPrimaryActivity"
+            android:label="@string/title_activity_woker_primary"
+            android:theme="@style/AppTheme.NoActionBar" /> <!-- 百度地图Key -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="fiwzxkeFvL7q37ZESCA4yU6nOPfnIa6u" />
-
-        <!--欢迎界面-->
+            android:value="fiwzxkeFvL7q37ZESCA4yU6nOPfnIa6u" /> <!-- 欢迎界面 -->
         <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-        </activity>
-
-        <!--第一个界面-->
-        <activity android:name=".activity.MainActivity"/>
+        </activity> <!-- 第一个界面 -->
+        <activity android:name=".activity.MainActivity" />
         <activity android:name=".zbar.CaptureActivity" />
         <activity android:name=".zbar.QRScanActivity" />
-        <activity android:name=".VideoPlay.VideoPlayActivity" />
-        <activity android:name=".PdfRead.PDFStartActivity" />
+        <activity android:name=".pdf_read.PDFStartActivity" />
         <activity android:name=".activity.LBSActivity" />
-        <activity android:name=".activity.BasketDetailActivity"/>
-        <activity android:name=".activity.ParameterActivity"/>
-        <activity android:name=".activity.VideoMonitor2Activity"
-            android:theme="@style/AppThemeFullscreen"
+        <activity android:name=".activity.basket.BasketDetailActivity" />
+        <activity android:name=".activity.basket.BasketParameterActivity" />
+        <activity
+            android:name=".activity.basket.BasketVideoActivity"
             android:configChanges="orientation|screenSize"
-            android:screenOrientation="portrait"/>
-        <activity android:name=".activity.WorkPhotosActivity"/>
-        <activity android:name=".activity.ManageMainActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/AppThemeFullscreen" />
+        <activity android:name=".activity.basket.BasketPhotoActivity" />
+        <activity
+            android:name=".activity.ManageMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait"/>
+            android:screenOrientation="portrait" />
         <activity android:name=".activity.WorkerMainActivity" />
         <activity android:name=".activity.ProDetailActivity" />
-        <activity android:name=".activity.BasketListActivity" />
+        <activity android:name=".activity.basket.BasketListActivity" />
         <activity android:name=".activity.WorkerListActivity" />
         <activity android:name=".activity.ProListActivity" />
-        <activity android:name=".activity.loginRegist.RegistWorkerActivity"/>
-        <activity android:name=".activity.loginRegist.RegistRentManActivity"/>
+        <activity android:name=".activity.loginRegist.RegistWorkerActivity" />
+        <activity android:name=".activity.loginRegist.RegistRentManActivity" />
         <activity android:name=".activity.loginRegist.RegisterPreActivity" />
-        <activity android:name=".activity.loginRegist.LoginActivity"/>
-
-        <!-- 百度地图service -->
+        <activity android:name=".activity.loginRegist.LoginActivity" />
+        <activity
+            android:name=".widget.zxing.activity.CaptureActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+        <activity
+            android:name=".widget.zxing.activity.ResultActivity"
+            android:screenOrientation="portrait"
+            android:theme="@android:style/Theme.Black.NoTitleBar" /> <!-- 百度地图service -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

@@ -72,5 +72,27 @@
     <string name="basketId_hint">吊篮编号</string>
     <string name="workerId_hint">负责人编号</string>
 
+    <!-- worker primary activity -->
+    <string name="worker_project_state">项目状态：</string>
+    <string name="worker_start_basket">上工</string>
+    <string name="worker_stop_basket">下工</string>
+    <string name="worker_message">消息</string>
+    <string name="worker_order">工单</string>
+    <string name="worker_warning">报警</string>
+    <string name="comment_and_feedback">联系与反馈</string>
+    <string name="setting">设置</string>
+    <!-- capture activity -->
+    <string name="scanning">扫一扫</string>
+    <!-- dialog_verify_action -->
+    <string name="input_operate_password">请输入操作密码</string>
+    <string name="input_finger_print">请验证指纹</string>
+    <string name="use_password">使用密码</string>
+    <string name="use_finger_print">使用指纹</string>
+    <string name="open_basket">扫码上工</string>
+    <string name="close_basket">扫码下工</string>
+    <string name="password_error">密码错误！请重新输入</string>
+
+    <!-- 其它 -->
     <string name="searchNothing">抱歉，暂未查找到您需要的结果。</string>
+    <string name="title_activity_woker_primary">WokerPrimaryActivity</string>
 </resources>

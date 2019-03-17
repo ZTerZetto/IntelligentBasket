@@ -6,13 +6,13 @@ import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.view.WindowManager;
 
 import com.baidu.mapapi.SDKInitializer;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
+import com.example.zzx.zbar_demo.activity.worker.WorkerPrimaryActivity;
 
 import java.util.Timer;
 import java.util.TimerTask;
@@ -27,6 +27,7 @@ public class WelcomeActivity extends AppCompatActivity {
 
     public SharedPreferences pref;
     private String token;
+    private String userRole;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -38,6 +39,7 @@ public class WelcomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_welcome);
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         token = pref.getString("loginToken", "");
+        userRole = pref.getString("userRole", "");
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);  // 设置全屏模式
         hideBottomUIMenu();  // 隐藏底部导航栏
 
@@ -53,7 +55,14 @@ public class WelcomeActivity extends AppCompatActivity {
                     Intent mainIntent = new Intent(WelcomeActivity.this,LoginActivity.class);
                     startActivity(mainIntent);
                 } else {
-                    Intent mainIntent = new Intent(WelcomeActivity.this,ManageMainActivity.class);
+                    Intent mainIntent;
+                    if(userRole.equals("worker")){
+                        mainIntent = new Intent(WelcomeActivity.this,  // worker主活动
+                                WorkerPrimaryActivity.class);
+                    }else {
+                        mainIntent = new Intent(WelcomeActivity.this,  // 管理员页面
+                                ManageMainActivity.class);
+                    }
                     startActivity(mainIntent);
                 }
                 WelcomeActivity.this.finish();

@@ -19,13 +19,11 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.example.zzx.zbar_demo.Adapter.ProjectAdapter;
-import com.example.zzx.zbar_demo.PdfRead.PDFStartActivity;
+import com.example.zzx.zbar_demo.pdf_read.PDFStartActivity;
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.Util.HttpUtil;
+import com.example.zzx.zbar_demo.utils.HttpUtil;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.entity.ProjectInfo;
-import com.google.gson.Gson;
 
 import java.io.IOException;
 

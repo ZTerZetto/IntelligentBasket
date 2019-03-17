@@ -45,7 +45,7 @@ public class ManageMainActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_manage_main);
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
-        userInfo = new UserInfo(pref.getString("user_id",""),pref.getString("password",""));
+        userInfo = new UserInfo(pref.getString("userId",""),pref.getString("password",""));
         token = pref.getString("loginToken","");
         bindView();
     }

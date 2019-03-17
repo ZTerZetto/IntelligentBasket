@@ -8,21 +8,36 @@
     <color name="colorTextLight">@color/material_grey_50</color>
     <color name="colorTextDark">@color/material_grey_800</color>
 
+    <!-- color -->
+    <color name="white">#ffffffff</color>
+    <color name="bg_common_gray">#ffe2e2e2</color>
+    <color name="black">#000000</color>
+    <color name="sliver">#c0c0c0</color>
+    <color name="grad">#ff3c3c3c</color>
+    <color name="bule_gray">#576b95</color>
+    <color name="weak_green">#bbe5bd</color>
+    <color name="red">#fa5151</color>
+
     <!-- Text Color -->
+    <color name="colorWhiteText">@color/white</color>
     <color name="colorBlackText">#000000</color>
-    <color name="colorWhiteText">#ffffff</color>
     <color name="colorSilverText">#c0c0c0</color>
+    <color name="colorGradText">#ff3c3c3c</color>
+    <color name="colorPrimaryDarkText">@color/colorPrimaryDark</color>
+    <color name="colorBuleGrayText">#576b95</color>
 
     <!-- 活动 -->
+    <!-- 吊篮 -->
     <!-- basketDetail activity -->
     <color name="colorMainBackground">#F8F8F8</color>
-
-    <!-- Parameter Activity -->
+    <!-- basket Parameter Activity -->
     <color name="colorParameterBackground">@color/colorMainBackground</color>
     <color name="colorParameterContentBackground">#FFFFFF</color>
-
-    <!-- WorkPhotos Activity -->
+    <!-- basket Photos Activity -->
     <color name="colorWorkPhotosBackground">@color/colorMainBackground</color>
+
+    <!-- 施工人员 -->
+    <color name="colorWorkerPrimaryBackground">@color/colorMainBackground</color>
 
     <!-- 控件 -->
     <!-- MediaController -->

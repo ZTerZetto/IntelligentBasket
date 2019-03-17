@@ -49,8 +49,6 @@ public class UserInfo {
     private String userPhone;
     private String userRole; //用户角色
 
-
-
     private String userPerm; //用户权限
     private String userImage;
     private boolean checked;
