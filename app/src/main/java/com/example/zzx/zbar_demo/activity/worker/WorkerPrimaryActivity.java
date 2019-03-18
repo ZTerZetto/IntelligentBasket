@@ -114,7 +114,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                         @Override
                         public void getVerifyResult(String result) {
                             if(result.contains("Success")) {  // 密码验证通过
-                                Log.i(TAG, "Now, you can opem/close the basket");
+                                Log.i(TAG, "Now, you can open/close the basket");
                                 changeWorkState(mWorkState);
                             }
                         }

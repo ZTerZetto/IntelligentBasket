@@ -45,4 +45,5 @@ dependencies {
     implementation 'com.scwang.smartrefresh:SmartRefreshHeader:1.1.0-alpha-20'
     implementation 'com.jungly:gridPasswordView:0.3'
     implementation files('libs/zxing.jar')
+    implementation files('libs/MiPush_SDK_Client_3_6_15.jar')
 }
