@@ -53,4 +53,10 @@
     <!-- smart refresh layout -->
     <color name="smart_loading_background_color">@color/colorPrimaryDark</color>
 
+    <!-- dialog -->
+    <color name="font_common_1">#424242</color>
+    <color name="font_common_2">#a1a1a1</color>
+    <color name="font_blue">#42369a</color>
+    <color name="commom_background">#f3f3f3</color>
+
 </resources>

@@ -267,6 +267,7 @@
     </style>
 
     <!-- 确认上下工弹窗 -->
+    <!-- 普通弹窗 -->
     <style name="dialog" parent="@android:style/Theme.Dialog">
         <item name="android:windowFrame">@null</item>
         <!--边框-->
@@ -280,6 +281,9 @@
         <!--背景透明-->
         <item name="android:backgroundDimEnabled">true</item>
         <!--模糊-->
+    </style>
+    <!-- 确认弹窗 -->
+    <style name="verify_dialog" parent="@style/dialog">
         <item name="android:windowSoftInputMode">stateAlwaysVisible</item>
         <!--显示软件盘-->
     </style>

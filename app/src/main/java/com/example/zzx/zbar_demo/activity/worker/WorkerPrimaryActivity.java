@@ -1,6 +1,7 @@
 package com.example.zzx.zbar_demo.activity.worker;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.net.Uri;
@@ -23,7 +24,9 @@ import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 import com.example.zzx.zbar_demo.utils.HttpUtil;
-import com.example.zzx.zbar_demo.widget.VerifyWorkDialog;
+import com.example.zzx.zbar_demo.utils.ToastUtil;
+import com.example.zzx.zbar_demo.widget.dialog.CommomDialog;
+import com.example.zzx.zbar_demo.widget.dialog.VerifyWorkDialog;
 import com.example.zzx.zbar_demo.widget.image.SmartImageView;
 import com.example.zzx.zbar_demo.widget.zxing.activity.CaptureActivity;
 import com.hjq.permissions.OnPermission;
@@ -75,10 +78,12 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private RelativeLayout mSettingLayout; // 设置
 
     // 页面信息
+    private String mWorkProject;
     private int mWorkState = 0; // 0:等待上工 1:等待下工
     private String mUserHeadUrl = FILE_SERVER_PATH + "/head/hdImg_default.jpg";
 
     // dialog
+    private CommomDialog mCommomDialog;
     private VerifyWorkDialog mVerifyWorkDialog;
 
     // 用户信息
@@ -105,10 +110,10 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 case OPEN_VERIFY_DIALOG_MSG:  // 打开上/下工确认
                     String basketId = msg.obj.toString();
                     mVerifyWorkDialog = new VerifyWorkDialog(WorkerPrimaryActivity.this,
-                            R.style.dialog, mWorkState, mUserHeadUrl, basketId, new VerifyWorkDialog.OnDialogOperateListener() {
+                            R.style.verify_dialog, mWorkState, mUserHeadUrl, basketId, new VerifyWorkDialog.OnDialogOperateListener() {
                         @Override
                         public void getVerifyResult(String result) {
-                            if(result.contains("Success")) {
+                            if(result.contains("Success")) {  // 密码验证通过
                                 Log.i(TAG, "Now, you can opem/close the basket");
                                 changeWorkState(mWorkState);
                             }
@@ -117,8 +122,12 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     mVerifyWorkDialog.show();
 
                 case UPDATE_USER_DISPLAY_MSG:  // 更新状态
-                    mWorkerHead.setImageUrl(mUserHeadUrl);
-                    mWorkerName.setText(mUserInfo.getUserName());
+                    mWorkerHead.setImageUrl(mUserHeadUrl); // 头像
+                    mWorkerName.setText(mUserInfo.getUserName()); // 用户名
+                    if(mWorkProject == null || mWorkProject.equals("")) // 项目状态
+                        mWorkerProjectState.setText(R.string.worker_no_project);
+                    else
+                        mWorkerProjectState.setText(mWorkProject);
                     break;
             }
         }
@@ -141,7 +150,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mWorkerHead.setCircle(true);
         mWorkerHead.setImageUrl(mUserHeadUrl);
         mWorkerName = (TextView) findViewById(R.id.login_username);  // 用户名
-        mWorkerProjectState = (TextView) findViewById(R.id.worker_project_state); // 登录状态
+        mWorkerProjectState = (TextView) findViewById(R.id.worker_project_state); // 项目状态
 
         // function choose
         mWorkLayout = (LinearLayout) findViewById(R.id.work_layout);  // 开工/下工
@@ -171,6 +180,13 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         switch (v.getId()){
             case R.id.work_layout:  // 开工/下工
                 Log.i(TAG, "You have clicked open/close work button");
+                if(mWorkProject == null || mWorkProject.equals("")){
+                    if(mCommomDialog == null){
+                        mCommomDialog = initDialog();
+                    }
+                    mCommomDialog.show();
+                    break;
+                }
                 intent = new Intent(WorkerPrimaryActivity.this, CaptureActivity.class);
                 startActivityForResult(intent, CAPTURE_ACTIVITY_RESULT);
                 break;
@@ -258,8 +274,13 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
 
             @Override
             public void onResponse(Call call, Response response) throws IOException {
-                String data = response.body().string();
-                parseUserInfoFromInternet(data);
+                if (response.code() == 200) {
+                    Log.d(TAG, "Http Server Success");
+                    String data = response.body().string();
+                    parseUserInfoFromInternet(data);
+                }else{
+                    Log.d(TAG, "Http Server Error" + response.code());
+                }
             }
         }, mToken, mUserInfo.getUserId());
     }
@@ -269,7 +290,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         JSONObject jsonObject = JSON.parseObject(data);
         String userInfo = jsonObject.getString("userInfo");
         mUserInfo = JSON.parseObject(userInfo, UserInfo.class);
-        mHandler.sendEmptyMessage(UPDATE_USER_DISPLAY_MSG);  // 更新状态
+        mWorkProject = jsonObject.getString("inProject");
+        mWorkState = jsonObject.getIntValue("electricState");
+        mHandler.sendEmptyMessage(UPDATE_USER_DISPLAY_MSG);  // 更新人员信息状态
+        mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);    // 更新上/下工状态
+
     }
     //退出登录
     private void logoutHttp() {
@@ -277,6 +302,25 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         editor.clear();
         editor.commit();
         startActivity(new Intent(WorkerPrimaryActivity.this, LoginActivity.class));
+    }
+
+    /*
+     * 提示弹框
+     */
+    private CommomDialog initDialog(){
+        return new CommomDialog(this, R.style.dialog, "您尚无参与的吊篮项目，请与管理员联系上工！",
+                new CommomDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if(confirm){
+                            //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击确定");
+                            dialog.dismiss();
+                        }else{
+                            //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击取消");
+                            dialog.dismiss();
+                        }
+                    }
+                }).setTitle("提示");
     }
 
     /*

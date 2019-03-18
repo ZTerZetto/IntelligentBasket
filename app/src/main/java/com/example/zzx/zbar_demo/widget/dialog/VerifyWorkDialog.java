@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo.widget;
+package com.example.zzx.zbar_demo.widget.dialog;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
