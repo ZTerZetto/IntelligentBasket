@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical">
+
+    <!-- 分割线 -->
+    <View
+        style="@style/parent_worker_order_line_view"/>
+    <!-- 月份 -->
+    <TextView
+        android:id="@+id/order_date"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:paddingLeft="10dp"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="03月/2019"/>
+    <!-- 分割线 -->
+    <View
+        style="@style/parent_worker_order_line_view"/>
+    <!-- listview -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/child_order_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
+
+
+</LinearLayout>

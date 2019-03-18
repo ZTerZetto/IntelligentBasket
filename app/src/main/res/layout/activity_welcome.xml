@@ -11,6 +11,7 @@
         android:layout_height="wrap_content"
         android:layout_alignParentBottom="true"
         android:layout_centerHorizontal="true"
+        android:gravity="center_vertical"
         android:layout_marginBottom="30dp">
 
         <!-- app 图标 -->
@@ -26,7 +27,6 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="vertical"
-            android:layout_centerVertical="true"
             android:layout_toRightOf="@id/app_icon"
             android:layout_marginLeft="10dp"
             android:paddingTop="5dp"
@@ -42,7 +42,6 @@
                 android:layout_height="wrap_content"
                 style="@style/AppStatementTextView"
                 android:text="@string/app_statement"/>
-
         </LinearLayout>
 
     </RelativeLayout>

@@ -66,6 +66,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private LinearLayout mWorkLayout; // 开工/下工
     private ImageView mWorkIv; // 开工状态
     private TextView mWorkTv;
+    private LinearLayout mOrderLayout; // 工单
     private LinearLayout mMessageLayout; // 消息
     private LinearLayout mWarningLayout; //警告
 
@@ -147,6 +148,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mWorkLayout.setOnClickListener(this);
         mWorkIv = (ImageView) findViewById(R.id.work_imageview);
         mWorkTv = (TextView) findViewById(R.id.work_textview);
+        mOrderLayout = (LinearLayout) findViewById(R.id.order_layout);
+        mOrderLayout.setOnClickListener(this);
         mMessageLayout = (LinearLayout) findViewById(R.id.message_layout);
         mMessageLayout.setOnClickListener(this);
         mWarningLayout = (LinearLayout) findViewById(R.id.warning_layout);
@@ -173,6 +176,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.order_layout:
                 Log.i(TAG, "You have clicked order button");
+                intent = new Intent(WorkerPrimaryActivity.this, WorkerOrderActivity.class);
+                startActivity(intent);
                 break;
             case R.id.message_layout:  // 消息
                 Log.i(TAG, "You have clicked message button");

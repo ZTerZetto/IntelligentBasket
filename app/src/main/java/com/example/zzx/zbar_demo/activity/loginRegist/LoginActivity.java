@@ -171,9 +171,7 @@ public class LoginActivity extends AppCompatActivity {
                         savePref(token, userId, userRole);
                         switch (userRole){
                             case "worker":  // 工人主页面
-                                Intent intent = new Intent(LoginActivity.this,
-                                        WorkerPrimaryActivity.class);
-                                startActivity(intent);
+                                StartAndFinishActicity(isLogin,WorkerPrimaryActivity.class);
                                 break;
                             case "rentAdmin":  // 租房管理员
                                 StartManageMainActicity(isLogin);

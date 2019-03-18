@@ -31,9 +31,8 @@
     <!-- welcome activity -->
     <style name="AppNameTextView" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/colorBlackText</item>
-        <item name="android:textSize">18sp</item>
+        <item name="android:textSize">17sp</item>
     </style>
-
     <style name="AppStatementTextView" parent="@android:style/TextAppearance">
         <item name="android:textColor">@color/colorSilverText</item>
         <item name="android:textSize">12sp</item>
@@ -283,6 +282,19 @@
         <!--模糊-->
         <item name="android:windowSoftInputMode">stateAlwaysVisible</item>
         <!--显示软件盘-->
+    </style>
+
+    <!-- worker order activity -->
+    <!-- 分割线 -->
+    <style name="parent_worker_order_line_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/sliver</item>
+    </style>
+    <style name="child_worker_order_line_view">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">1dp</item>
+        <item name="android:background">@color/sliver</item>
     </style>
 
 

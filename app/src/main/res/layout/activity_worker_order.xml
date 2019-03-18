@@ -1,8 +1,52 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorWorkerOrderBackground"
+    android:orientation="vertical">
 
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar"/>
 
+    <!-- 消息提示 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:padding="10dp">
+
+        <!-- 近三个月明细 -->
+        <TextView
+            android:id="@+id/near_order_tv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/near_three_month"/>
+
+        <!-- 筛选框 -->
+        <ImageView
+            android:id="@+id/order_filter_iv"
+            android:layout_width="16dp"
+            android:layout_height="16dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:src="@mipmap/ic_order_filter"/>
+        <!-- 筛选 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toLeftOf="@id/order_filter_iv"
+            android:layout_marginRight="10dp"
+            android:text="@string/order_filter"
+            android:textColor="@color/light_red"/>
+
+    </RelativeLayout>
+
+    <!-- 具体明细 -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/parent_order_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+    </android.support.v7.widget.RecyclerView>
 
 </LinearLayout>
