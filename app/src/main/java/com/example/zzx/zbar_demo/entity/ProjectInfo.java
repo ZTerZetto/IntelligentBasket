@@ -2,10 +2,11 @@ package com.example.zzx.zbar_demo.entity;
 
 import android.support.annotation.Nullable;
 
+import java.io.Serializable;
 import java.security.PrivilegedExceptionAction;
 
 // Created by $USER_NAME on 2019/1/23/023.
-public class ProjectInfo {
+public class ProjectInfo implements Serializable {
     public String projectId;
     public String projectName;
 

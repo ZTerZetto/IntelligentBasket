@@ -24,8 +24,7 @@ import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 import com.example.zzx.zbar_demo.utils.HttpUtil;
-import com.example.zzx.zbar_demo.utils.ToastUtil;
-import com.example.zzx.zbar_demo.widget.dialog.CommomDialog;
+import com.example.zzx.zbar_demo.widget.dialog.CommonDialog;
 import com.example.zzx.zbar_demo.widget.dialog.VerifyWorkDialog;
 import com.example.zzx.zbar_demo.widget.image.SmartImageView;
 import com.example.zzx.zbar_demo.widget.zxing.activity.CaptureActivity;
@@ -83,7 +82,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private String mUserHeadUrl = FILE_SERVER_PATH + "/head/hdImg_default.jpg";
 
     // dialog
-    private CommomDialog mCommomDialog;
+    private CommonDialog mCommonDialog;
     private VerifyWorkDialog mVerifyWorkDialog;
 
     // 用户信息
@@ -98,10 +97,10 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case CHANGE_WORK_STATE_MSG:  // 更改上工状态
-                    if(mWorkState == 0){
+                    if (mWorkState == 0) {
                         mWorkTv.setText(R.string.worker_start_basket);
                         mWorkIv.setImageResource(R.mipmap.ic_worker_open);
-                    }else if(mWorkState ==1){
+                    } else if (mWorkState == 1) {
                         mWorkTv.setText(R.string.worker_stop_basket);
                         mWorkIv.setImageResource(R.mipmap.ic_worker_close);
                     }
@@ -113,7 +112,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                             R.style.verify_dialog, mWorkState, mUserHeadUrl, basketId, new VerifyWorkDialog.OnDialogOperateListener() {
                         @Override
                         public void getVerifyResult(String result) {
-                            if(result.contains("Success")) {  // 密码验证通过
+                            if (result.contains("Success")) {  // 密码验证通过
                                 Log.i(TAG, "Now, you can opem/close the basket");
                                 changeWorkState(mWorkState);
                             }
@@ -124,7 +123,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 case UPDATE_USER_DISPLAY_MSG:  // 更新状态
                     mWorkerHead.setImageUrl(mUserHeadUrl); // 头像
                     mWorkerName.setText(mUserInfo.getUserName()); // 用户名
-                    if(mWorkProject == null || mWorkProject.equals("")) // 项目状态
+                    if (mWorkProject == null || mWorkProject.equals("")) // 项目状态
                         mWorkerProjectState.setText(R.string.worker_no_project);
                     else
                         mWorkerProjectState.setText(mWorkProject);
@@ -139,12 +138,12 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         setContentView(R.layout.activity_worker_primary);
 
         getUserInfo();
-        if(!isHasPermission()) requestPermission();  // 权限申请
+        if (!isHasPermission()) requestPermission();  // 权限申请
         initWidget();
     }
 
     // 初始化控件
-    private void initWidget(){
+    private void initWidget() {
         // header
         mWorkerHead = (SmartImageView) findViewById(R.id.login_head); // 头像
         mWorkerHead.setCircle(true);
@@ -177,14 +176,14 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     @Override
     public void onClick(View v) {
         Intent intent;
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.work_layout:  // 开工/下工
                 Log.i(TAG, "You have clicked open/close work button");
-                if(mWorkProject == null || mWorkProject.equals("")){
-                    if(mCommomDialog == null){
-                        mCommomDialog = initDialog();
+                if (mWorkProject == null || mWorkProject.equals("")) {
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog();
                     }
-                    mCommomDialog.show();
+                    mCommonDialog.show();
                     break;
                 }
                 intent = new Intent(WorkerPrimaryActivity.this, CaptureActivity.class);
@@ -218,12 +217,12 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
      * 活动返回
      */
     @Override
-    protected void onActivityResult(int requestCode, int resultCode, Intent data){
-        switch (requestCode){
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
             case CAPTURE_ACTIVITY_RESULT:
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     String basket_id = data.getStringExtra("basket_id");
-                    Log.i(TAG, "Device ID: "+basket_id);
+                    Log.i(TAG, "Device ID: " + basket_id);
                     Message msg = new Message();
                     msg.what = OPEN_VERIFY_DIALOG_MSG;
                     msg.obj = basket_id;
@@ -236,12 +235,12 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     /*
      * 上/下工切换
      */
-    private void changeWorkState(int workState){
-        if(workState == 0){
+    private void changeWorkState(int workState) {
+        if (workState == 0) {
             mWorkState = 1;
             mWorkIv.setImageResource(R.mipmap.ic_worker_close);
             mWorkTv.setText(R.string.worker_stop_basket);
-        }else if(workState == 1){
+        } else if (workState == 1) {
             mWorkState = 0;
             mWorkIv.setImageResource(R.mipmap.ic_worker_open);
             mWorkTv.setText(R.string.worker_start_basket);
@@ -252,19 +251,20 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
      * 解析用户信息
      */
     // 获取用户数据
-    private void getUserInfo(){
+    private void getUserInfo() {
         // 从本地获取数据
         mPref = PreferenceManager.getDefaultSharedPreferences(this);
         mUserInfo = new UserInfo();
         mUserInfo.setUserId(mPref.getString("userId", ""));
         mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
-        mToken = mPref.getString("loginToken","");
+        mToken = mPref.getString("loginToken", "");
 
         // 从后台获取其他数据
         getUserInfoFromInternet();
     }
+
     // 获取后台数据
-    private void getUserInfoFromInternet(){
+    private void getUserInfoFromInternet() {
         HttpUtil.getWorkerAllInfoOkHttpRequest(new Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -278,14 +278,15 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     Log.d(TAG, "Http Server Success");
                     String data = response.body().string();
                     parseUserInfoFromInternet(data);
-                }else{
+                } else {
                     Log.d(TAG, "Http Server Error" + response.code());
                 }
             }
         }, mToken, mUserInfo.getUserId());
     }
+
     // 解析后台返回数据
-    private void parseUserInfoFromInternet(String data){
+    private void parseUserInfoFromInternet(String data) {
         Log.d(TAG, "parse data:" + data);
         JSONObject jsonObject = JSON.parseObject(data);
         String userInfo = jsonObject.getString("userInfo");
@@ -296,6 +297,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);    // 更新上/下工状态
 
     }
+
     //退出登录
     private void logoutHttp() {
         SharedPreferences.Editor editor = mPref.edit();
@@ -307,15 +309,15 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     /*
      * 提示弹框
      */
-    private CommomDialog initDialog(){
-        return new CommomDialog(this, R.style.dialog, "您尚无参与的吊篮项目，请与管理员联系上工！",
-                new CommomDialog.OnCloseListener() {
+    private CommonDialog initDialog() {
+        return new CommonDialog(this, R.style.dialog, "您尚无参与的吊篮项目，请与管理员联系上工！",
+                new CommonDialog.OnCloseListener() {
                     @Override
                     public void onClick(Dialog dialog, boolean confirm) {
-                        if(confirm){
+                        if (confirm) {
                             //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击确定");
                             dialog.dismiss();
-                        }else{
+                        } else {
                             //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击取消");
                             dialog.dismiss();
                         }
@@ -338,20 +340,20 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                         if (isAll) {
                             //initCamera(scanPreview.getHolder());
                             onResume();
-                        }else {
-                                Toast.makeText(WorkerPrimaryActivity.this,
+                        } else {
+                            Toast.makeText(WorkerPrimaryActivity.this,
                                     "必须同意所有的权限才能使用本程序", Toast.LENGTH_SHORT).show();
                         }
                     }
 
                     @Override
                     public void noPermission(List<String> denied, boolean quick) {
-                        if(quick) {
+                        if (quick) {
                             Toast.makeText(WorkerPrimaryActivity.this, "被永久拒绝授权，请手动授予权限",
                                     Toast.LENGTH_SHORT).show();
                             // 如果是被永久拒绝就跳转到应用权限系统设置页面
                             XXPermissions.gotoPermissionSettings(WorkerPrimaryActivity.this);
-                        }else {
+                        } else {
                             Toast.makeText(WorkerPrimaryActivity.this, "获取权限失败",
                                     Toast.LENGTH_SHORT).show();
                             finish();

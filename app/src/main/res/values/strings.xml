@@ -11,18 +11,24 @@
         \n请点击”设置”->在应用程序中找到”popon”->权限管理->%2$s->”允许”即可 </string>
     <string name="camera">摄像头(相机)</string>
 
+    <!-- Strings related to loginPre -->
+    <string name="dialog_register_fail">暂未开通区域管理员的注册功能！</string>
+
     <!-- Strings related to login -->
     <string name="prompt_username"> 手机号 </string>
     <string name="prompt_password"> 密  码</string>
     <string name="action_sign_in"> 登    录 </string>
     <string name="action_sign_in_manager">  管理员  </string>
     <string name="action_register">注    册</string>
-    <string name="dialog_login_fail">您的账号未通过审核，请重新注册！</string>
+    <string name="dialog_login_audit_fail">您的账号未通过审核，请重新注册！</string>
     <string name="dialog_login_audit">您的账号正在被审核，请稍后登录！</string>
+    <string name="dialog_login_fail">账号或密码错误，请检查后登录！</string>
     <string name="login_title">登  录</string>
 
     <!-- Register activity-->
+    <string name="registPre_title">注册-选择角色</string>
     <string name="registWorker_title">注册-施工人员</string>
+    <string name="registRent_title">注册-租方管理员</string>
 
     <string name="basic_info">基本信息</string>
     <string name="type_info">选择工种</string>
@@ -30,6 +36,12 @@
     <string name="pic_upNotice">请上传照片!</string>
     <string name="pic_successNotice">照片上传成功!</string>
     <string name="pic_failNotice">图片上传失败，请重新上传！</string>
+    <string name="register_success">注册成功！请等待审核！</string>
+    <string name="register_exist">注册失败，手机号已注册</string>
+
+    <!-- ManageMainActivity-->
+    <string name="dialog_main_fail_login">您的登录状态已失效，请重新登录！</string>
+
 
     <!-- basketList activity -->
     <string name="basketList_title">吊篮列表</string>

@@ -23,10 +23,10 @@ public class AppConfig {
     * Authorization：NULL
     * POST
     * */
-    public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
+    public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkAndroidRegister");
 
     //上传文件
-    public final static String CREATE_FILE = FILE_SERVER_PATH.concat("/createFtpFile");
+    public final static String CREATE_FILE = ANDROID_URL_PATH.concat("/createFtpFile");
 
 
     /* 获取当前登录者的用户名和角色
@@ -41,18 +41,32 @@ public class AppConfig {
     * userFlag: 1代表正在进行中的项目
     *  GET
     * */
-    public final static String PROINFO = ANDROID_URL_PATH.concat("/projectInfo");
+    public final static String PRO_LIST = ANDROID_URL_PATH.concat("/androidProjectInfo");
 
     /* 获取被点击项目的详细信息
     * projectId
     * GET
     * */
-    public final static String PRO_DETAIL = ANDROID_URL_PATH.concat("/projectDetailInfo");
+    public final static String PRO_DETAIL = ANDROID_URL_PATH.concat("/androidProjectDetailInfo");
+
+
+    /* 获取项目的吊篮列表
+     * projectId
+     * GET
+     * */
+    public final static String GET_DEVICE_LIST = ANDROID_URL_PATH.concat("/androidGetBasketList");
+
+    /* 获取项目的吊篮列表
+     * projectId
+     * GET
+     * */
+    public final static String GET_WORKER_LIST = ANDROID_URL_PATH.concat("/androidGetUserList");
 
 
     /* 获取吊篮实施参数
      */
     public static final String REAL_TIME_PARAMETER = ANDROID_URL_PATH.concat("/getRealTimeData");
+
 
     /* 获取流媒体视频
      */
@@ -68,4 +82,11 @@ public class AppConfig {
     // 施工人员基本信息
     public static  final String WORKER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetWorker");
 
+
+
+
+    /*
+    * 常量
+    * */
+    public static final String INTENT_USER = "Intent_userInfo";
 }

@@ -1,22 +1,24 @@
 package com.example.zzx.zbar_demo.activity;
 
+import android.app.Dialog;
 import android.app.FragmentTransaction;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
+import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 import com.example.zzx.zbar_demo.fragment.InfoFragment;
 import com.example.zzx.zbar_demo.fragment.MapViewFragment;
 import com.example.zzx.zbar_demo.fragment.UserFragment;
+import com.example.zzx.zbar_demo.widget.dialog.CommonDialog;
 
 import java.util.ArrayList;
 
@@ -25,7 +27,6 @@ public class ManageMainActivity extends AppCompatActivity implements View.OnClic
 
     /*获取登陆消息*/
     private SharedPreferences pref;
-    private SharedPreferences.Editor editor;
 
     private TextView tabInfo;
     private TextView tabMap;
@@ -37,6 +38,7 @@ public class ManageMainActivity extends AppCompatActivity implements View.OnClic
 
     private UserInfo userInfo;
     private String token;
+    private CommonDialog mCommonDialog;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,8 +47,25 @@ public class ManageMainActivity extends AppCompatActivity implements View.OnClic
         setContentView(R.layout.activity_manage_main);
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
-        userInfo = new UserInfo(pref.getString("userId",""),pref.getString("password",""));
-        token = pref.getString("loginToken","");
+        if (pref.getString("loginToken","") != null){
+            token = pref.getString("loginToken", "");
+
+            if(pref.getString("userId","")!= null
+                &&  pref.getString("userRole","") != null
+                &&  pref.getString("userPhone","") != null
+                && pref.getString("password", "") != null
+                && pref.getString("userName","") != null) {
+                userInfo = new UserInfo(pref.getString("userId", ""), pref.getString("userName", ""),
+                        pref.getString("password", ""), pref.getString("userPhone", ""),
+                        pref.getString("userRole", ""),null,null,true);
+            }
+        } else {
+            if (mCommonDialog == null) {
+                mCommonDialog = initDialog(getString(R.string.dialog_main_fail_login));
+            }
+            mCommonDialog.show();
+        }
+
         bindView();
     }
 
@@ -63,7 +82,7 @@ public class ManageMainActivity extends AppCompatActivity implements View.OnClic
         selected();
         tabInfo.setSelected(true);
         transaction.show(infoFragment);//默认显示第一个页面*/
-        transaction.commit();//
+        transaction.commit();
 
         tabInfo.setOnClickListener(this);
         tabMap.setOnClickListener(this);
@@ -171,5 +190,28 @@ public class ManageMainActivity extends AppCompatActivity implements View.OnClic
             listener.onTouchEvent(ev);
         }
         return super.dispatchTouchEvent(ev);
+    }
+
+    /*
+     * 提示弹框
+     */
+    private CommonDialog initDialog(String mMsg) {
+        return new CommonDialog(this, R.style.dialog, mMsg,
+                new CommonDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if (confirm) {
+                            Intent intent = new Intent(ManageMainActivity.this, LoginActivity.class);
+                            startActivity(intent);
+                        } else {
+                            dialog.dismiss();
+                        }
+                    }
+                }).setTitle("提示");
+    }
+
+
+    public UserInfo getInfo(){
+        return userInfo;
     }
 }

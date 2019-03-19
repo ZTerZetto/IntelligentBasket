@@ -42,7 +42,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity> <!-- 第一个界面 -->
+
         <activity android:name=".activity.MainActivity" />
+
         <activity android:name=".zbar.CaptureActivity" />
         <activity android:name=".zbar.QRScanActivity" />
         <activity android:name=".pdf_read.PDFStartActivity" />
@@ -58,7 +60,9 @@
         <activity
             android:name=".activity.ManageMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait" />
+            android:screenOrientation="portrait"
+            android:alwaysRetainTaskState="true"
+            android:launchMode="singleTask" />
         <activity android:name=".activity.WorkerMainActivity" />
         <activity android:name=".activity.ProDetailActivity" />
         <activity android:name=".activity.basket.BasketListActivity" />

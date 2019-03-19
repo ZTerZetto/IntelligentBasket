@@ -16,10 +16,11 @@
         android:layout_margin="3dp">
 
         <EditText
-            android:id="@+id/txt_input_search"
+            android:id="@+id/edit_input_search"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:textColor="@color/colorTextDark"
             android:hint="输入吊篮编号开始检索"
             android:textSize="15sp" />
 

@@ -69,6 +69,7 @@ public class ProDetailActivity extends AppCompatActivity {
                     break;
                 case 1:
                     Toast.makeText(ProDetailActivity.this, "没有权限访问！", Toast.LENGTH_LONG).show();
+                    finish();
                     break;
                 default:
                     break;
@@ -108,10 +109,23 @@ public class ProDetailActivity extends AppCompatActivity {
             finish();
         }
 
-        Intent intent = getIntent();
-        mProjectId = intent.getStringExtra("projectId");
-
-        initProState( );
+        Intent intent = this.getIntent();
+        projectInfo = (ProjectInfo)intent.getSerializableExtra("projectDetail");
+        if(projectInfo!=null){
+            txtProName.setText("项目名称:"+projectInfo.getProjectName());
+            txtProNumber.setText("No:"+projectInfo.getProjectId());
+            txtProState.setText(projectInfo.getProjectState());
+            txtProStart.setText(projectInfo.getProjectStart());
+            txtProEnd.setText(projectInfo.getProjectEnd());
+            txtProRent.setText(projectInfo.getAdminRentId());
+            txtProArea.setText(projectInfo.getAdminAreaId());
+            txtProBuilder.setText(projectInfo.getProjectBuilders());
+        } else {
+            mProjectId = intent.getStringExtra("projectId");
+            if(mProjectId != null){
+                initProState();
+            }
+        }
 
 
         //项目状态更改跳转

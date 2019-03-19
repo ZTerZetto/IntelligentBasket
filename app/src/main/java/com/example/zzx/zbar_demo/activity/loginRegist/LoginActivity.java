@@ -2,6 +2,7 @@ package com.example.zzx.zbar_demo.activity.loginRegist;
 
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -29,9 +30,9 @@ import com.example.zzx.zbar_demo.utils.HttpUtil;
 import com.example.zzx.zbar_demo.activity.ManageMainActivity;
 import com.example.zzx.zbar_demo.activity.worker.WorkerPrimaryActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
+import com.example.zzx.zbar_demo.widget.dialog.CommonDialog;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.lang.reflect.Field;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -53,10 +54,11 @@ public class LoginActivity extends AppCompatActivity {
     private CheckBox rememberPass;
 
     private UserInfo userInfo;
+    private UserInfo mUserInfo;
     private String account;
     private String password;
 
-    private AlertDialog alertDialog;
+    private CommonDialog mCommonDialog;
 
 
     @SuppressLint("HandlerLeak")
@@ -64,10 +66,23 @@ public class LoginActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1:
-                    dialogToRegist(getString(R.string.dialog_login_audit));
-                    break;
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.dialog_login_audit));
+                    }
+                    mCommonDialog.show();
+                break;
                 case 2:
-                    dialogToRegist(getString(R.string.dialog_login_fail));
+
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.dialog_login_audit_fail));
+                    }
+                    mCommonDialog.show();
+                    break;
+                case 3:
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.dialog_login_fail));
+                    }
+                    mCommonDialog.show();
                     break;
                 default:
                     break;
@@ -87,7 +102,7 @@ public class LoginActivity extends AppCompatActivity {
         toolbar.setTitle("");
         titleText.setText(getString(R.string.login_title));
         setSupportActionBar(toolbar);
-        //getSupportActionBar().setHomeButtonEnabled(false); //设置返回键可用
+        getSupportActionBar().setDisplayHomeAsUpEnabled(false); //设置返回键可用
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         accountEdit =  findViewById(R.id.text_input_username);
@@ -123,7 +138,7 @@ public class LoginActivity extends AppCompatActivity {
                 password = passwordEdit.getText().toString();
                 if (!TextUtils.isEmpty(account) && !TextUtils.isEmpty(password)) {
                     userInfo = new UserInfo(account,password);
-                    loginHttp(userInfo);
+                    loginHttp();
                 } else {
                     Toast.makeText(LoginActivity.this, "账户或密码不能为空", Toast.LENGTH_SHORT).show();
                 }
@@ -142,7 +157,7 @@ public class LoginActivity extends AppCompatActivity {
 
 
     //登录请求连接
-    private void loginHttp(UserInfo userInfo){
+    private void loginHttp( ){
         final String json = new Gson().toJson(userInfo);
         HttpUtil.sendLoginOkHttpRequest(new okhttp3.Callback() {
             @Override
@@ -161,20 +176,20 @@ public class LoginActivity extends AppCompatActivity {
                     String isLogin = jsonObject.getString("isLogin");
                     String state = jsonObject.getString("registerState");
                     // pengchenghu
-                    String userInfo = jsonObject.getString("userInfo");
-                    JSONObject userInfoJsonObj = JSON.parseObject(userInfo);
+                    String userString = jsonObject.getString("userInfo");
+                    mUserInfo =JSON.parseObject(userString,UserInfo.class);
+                    JSONObject userInfoJsonObj = JSON.parseObject(userString);
                     // pengchenghu
                     if (isLogin.equals("true")) {
                         String token = jsonObject.getString("token");
                         String userRole = userInfoJsonObj.getString("userRole");
-                        String userId = userInfoJsonObj.getString("userId");
-                        savePref(token, userId, userRole);
+                        savePref(token);
                         switch (userRole){
                             case "worker":  // 工人主页面
                                 StartAndFinishActicity(isLogin,WorkerPrimaryActivity.class);
                                 break;
                             case "rentAdmin":  // 租房管理员
-                                StartManageMainActicity(isLogin);
+                                StartManageMainActicity(userRole);
                                 break;
                             case "areaAdmin":  // 区域管理员
                                 StartManageMainActicity(isLogin);
@@ -194,6 +209,12 @@ public class LoginActivity extends AppCompatActivity {
                                 msg2.what = 2;
                                 handler.sendMessage(msg2);
                                 break;
+                            case "3":
+                                //账号密码错误
+                                Message msg3 = new Message();
+                                msg3.what = 3;
+                                handler.sendMessage(msg3);
+                                break;
                             default:
                                 break;
                         }
@@ -206,18 +227,19 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //保存Token
-    private void savePref(String token, String userId, String userRole) {
+    private void savePref(String token) {
         SharedPreferences sp = getSharedPreferences("loginToken",0);
         editor = sp.edit();
 
         editor = pref.edit();
         if (rememberPass.isChecked()) {
             editor.putBoolean("remember_password", true);
-            editor.putString("userId",userId);
+            editor.putString("userId",mUserInfo.getUserId());
             editor.putString("userPhone", account);
             editor.putString("password", password);
             editor.putString("loginToken",token);
-            editor.putString("userRole",userRole);
+            editor.putString("userRole",mUserInfo.getUserRole());
+            editor.putString("userName",mUserInfo.getUserName());
         } else {
             editor.clear();
             //清空数据
@@ -226,9 +248,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
     //跳转到管理员主界面
-    public void StartManageMainActicity(String isLogin) {
+    public void StartManageMainActicity(String userRole) {
         Intent intent = new Intent(LoginActivity.this, ManageMainActivity.class);
-        //intent.putExtra("userRole",isLogin);
+        intent.putExtra("userRole",userRole);
         startActivity(intent);
         finish();
     }
@@ -246,36 +268,23 @@ public class LoginActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    private void dialogToRegist(String mMsg) {
-        alertDialog = new AlertDialog.Builder(this)
-                .setTitle("登陆失败")
-                .setMessage(mMsg)
-                .setIcon(R.mipmap.ic_warning)
-                .setPositiveButton("确定", new DialogInterface.OnClickListener() {
+    /*
+     * 提示弹框
+     */
+    private CommonDialog initDialog(String mMsg){
+        return new CommonDialog(this, R.style.dialog, mMsg,
+                new CommonDialog.OnCloseListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        alertDialog.cancel();
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if(confirm){
+                            //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击确定");
+                            dialog.dismiss();
+                        }else{
+                            //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击取消");
+                            dialog.dismiss();
+                        }
                     }
-                })
-                .create();
-        alertDialog.show();
-        try {
-            Field mAlert = AlertDialog.class.getDeclaredField("mAlert");
-            mAlert.setAccessible(true);
-            Object mAlertController = mAlert.get(alertDialog);
-            Field mMessage = mAlertController.getClass().getDeclaredField("mMessageView");
-            mMessage.setAccessible(true);
-            TextView mMessageView = (TextView) mMessage.get(mAlertController);
-            mMessageView.setTextColor(Color.GRAY);
-            Field mTitle = mAlertController.getClass().getDeclaredField("mTitleView");
-            mTitle.setAccessible(true);
-            TextView mTitleView = (TextView) mTitle.get(mAlertController);
-            mTitleView.setTextColor(Color.GRAY);
-        } catch (IllegalAccessException e) {
-            e.printStackTrace();
-        } catch (NoSuchFieldException e) {
-            e.printStackTrace();
-        }
+                }).setTitle("提示");
     }
 
     @Override
@@ -298,29 +307,10 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-
     @Override
-    public void onStart() {
-        super.onStart();
+    public void onBackPressed() {
+        super.onBackPressed();
+        this.onDestroy();
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
 }

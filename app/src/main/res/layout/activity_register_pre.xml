@@ -6,6 +6,8 @@
     android:background="#f5f5f5" >
 
 
+    <include layout="@layout/toolbar"/>
+
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

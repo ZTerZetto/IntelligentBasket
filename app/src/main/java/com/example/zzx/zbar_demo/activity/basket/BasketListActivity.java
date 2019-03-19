@@ -1,8 +1,12 @@
 package com.example.zzx.zbar_demo.activity.basket;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -13,38 +17,55 @@ import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.adapter.BasketAdapter;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.entity.BasketInfo;
+import com.example.zzx.zbar_demo.utils.HttpUtil;
 
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class BasketListActivity extends AppCompatActivity {
 
     private ListView mLv;
     private BasketAdapter adapter;
-    private List<BasketInfo> basketInfoArrayList = new ArrayList<>();
+    //private List<BasketInfo> basketInfoArrayList = new ArrayList<>();
+    private List<BasketInfo> basketInfoArrayList;
     private Context mContext = BasketListActivity.this;
 
-    private TextView txtSearch;
+    private TextView edtSearch;
     private Button btnSearch;
     private TextView txtResult;
     private String mProjectId;
     public SharedPreferences pref;
     private String token;
 
-    public static final int HTTP_SUCCESS = 1;
 
 
-/*    @SuppressLint("HandlerLeak")
+    @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    basketInfoArrayList = JSON.parseArray(String.valueOf(msg.obj), BasketInfo.class);
+                    basketInfoArrayList = new ArrayList<>();
+                    String basketListString = String.valueOf(msg.obj);
+                    String[] basket = basketListString.split("[,]");
+                    for(int i = 0;i<basket.length;i++){
+                        BasketInfo mBasketInfo = new BasketInfo(basket[i],"RESTING","x");
+                        basketInfoArrayList.add(mBasketInfo);
+                    }
+
                     if(basketInfoArrayList!=null){
                         adapter = new BasketAdapter(mContext,R.layout.item_basket,basketInfoArrayList);
                         mLv.setAdapter(adapter);
@@ -54,12 +75,13 @@ public class BasketListActivity extends AppCompatActivity {
                     break;
                 case 1:
                     Toast.makeText(BasketListActivity.this, "没有权限访问！", Toast.LENGTH_LONG).show();
+                    finish();
                     break;
                 default:
                     break;
             }
         }
-    };*/
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -75,7 +97,7 @@ public class BasketListActivity extends AppCompatActivity {
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
         mLv = findViewById(R.id.list_view);
-        txtSearch = findViewById(R.id.txt_input_search);
+        edtSearch = findViewById(R.id.edit_input_search);
         btnSearch = findViewById(R.id.search_button);
         txtResult = findViewById(R.id.txt_search_result);
 
@@ -94,7 +116,7 @@ public class BasketListActivity extends AppCompatActivity {
         btnSearch.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                String text = txtSearch.getText().toString();
+                String text = edtSearch.getText().toString();
                 if (text.isEmpty()) {
                     showList(basketInfoArrayList);
                 } else {
@@ -106,7 +128,7 @@ public class BasketListActivity extends AppCompatActivity {
                         }
                     }
                     if (arrayList.isEmpty()) {
-                        mLv.setVisibility(View.INVISIBLE);
+                        mLv.setVisibility(View.GONE);
                         txtResult.setVisibility(View.VISIBLE);
                     } else {
                         basketInfoArrayList.clear();
@@ -149,17 +171,8 @@ public class BasketListActivity extends AppCompatActivity {
     }
 
     private void initList() {
-        BasketInfo basketInfo;
-        for(int i=0; i<10 ;i++){
-            basketInfo = new BasketInfo("BS11"+i, "WORKING", "WK233466"+i);
-            basketInfoArrayList.add(basketInfo);
-        }
-        for(int i=0; i<5 ;i++) {
-            basketInfo = new BasketInfo("BS22" + i, "RESTING", "WK239548" + i );
-            basketInfoArrayList.add(basketInfo);
-        }
-        showList(basketInfoArrayList);
-        /*HttpUtil.getProjectDetailInfoOkHttpRequest(new okhttp3.Callback() {
+        HttpUtil.getBasketListOkHttpRequest(new okhttp3.Callback() {
+
             @Override
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
@@ -175,10 +188,10 @@ public class BasketListActivity extends AppCompatActivity {
                     JSONObject jsonObject = JSON.parseObject(responseData);
                     String isAllowed = jsonObject.getString("isAllowed");
                     Message msg = new Message();
-                    if(isAllowed.equals("true")){
-                        msg.obj = jsonObject.get("electricRes");
+                    if (isAllowed.equals("true")) {
+                        msg.obj = jsonObject.get("basketList");
                         msg.what = 0;
-                    } else{
+                    } else {
                         msg.what = 1;
                     }
                     handler.sendMessage(msg);
@@ -187,7 +200,6 @@ public class BasketListActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        },token,mProjectId);*/
-
+        }, token, mProjectId);
     }
 }

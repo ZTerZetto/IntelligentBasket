@@ -1,7 +1,9 @@
 package com.example.zzx.zbar_demo.activity.loginRegist;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
+import android.app.Dialog;
 import android.content.ContentUris;
 import android.content.Intent;
 import android.content.pm.PackageManager;
@@ -10,7 +12,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Handler;
 import android.os.Looper;
+import android.os.Message;
 import android.provider.DocumentsContract;
 import android.provider.MediaStore;
 import android.support.v4.app.ActivityCompat;
@@ -18,10 +22,15 @@ import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.text.TextUtils;
 import android.util.Log;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -31,6 +40,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.utils.HttpUtil;
 import com.example.zzx.zbar_demo.entity.UserInfo;
+import com.example.zzx.zbar_demo.widget.dialog.CommonDialog;
+import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
@@ -49,26 +60,84 @@ public class RegistRentManActivity extends AppCompatActivity {
     private File photo_file;
     private Boolean photo_exist;
 
-    private TextView edt_userId;
-    private TextView edt_userName;
-    private TextView edt_userPhone;
-    private TextView edt_userPwd;
+    private TextView uploadResult;
 
+    private EditText edt_userName;
+    private EditText edt_userPhone;
+    private EditText edt_userPwd;
+    private EditText edt_userPwd_again;
+
+    private LinearLayout llSpinner;
+
+    private Button takePhoto;
+    private Button chooseFromAlbum;
+    private Button register;
+
+    private CommonDialog mCommonDialog;
     private UserInfo userinfo;
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case 1: {
+                    uploadResult.setText("图片上传成功！");
+                    sendRegister();
+
+                    break;
+                }
+                case 2: {
+                    uploadResult.setText("图片上传失败，请重新上传！");
+                    handler.removeCallbacksAndMessages(null);
+                    break;
+                }
+                case 3: {
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.register_success));
+                    }
+                    mCommonDialog.show();
+                    break;
+                }
+                case 4: {
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.register_exist));
+                    }
+                    mCommonDialog.show();
+                    break;
+                }
+            }
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_regist_rent_man);
-        Button takePhoto = (Button) findViewById(R.id.take_photo);
-        Button chooseFromAlbum = (Button) findViewById(R.id.choose_from_album);
-        Button register = findViewById(R.id.btn_regist);
+        setContentView(R.layout.activity_regist);
+
+        // 顶部导航栏
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView titleText = (TextView) findViewById(R.id.toolbar_title);
+        toolbar.setTitle("");
+        titleText.setText(getString(R.string.registRent_title));
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+
+        takePhoto = (Button) findViewById(R.id.take_photo);
+        chooseFromAlbum = (Button) findViewById(R.id.choose_from_album);
+        register = findViewById(R.id.btn_regist);
+
+        uploadResult = findViewById(R.id.tv_upload_result);
         picture = (ImageView) findViewById(R.id.picture);
-        edt_userId = findViewById(R.id.edt_register_userId);
+
         edt_userName = findViewById(R.id.edt_register_userName);
         edt_userPhone = findViewById(R.id.edt_register_userPhone);
         edt_userPwd = findViewById(R.id.edt_register_pwd);
+        edt_userPwd_again = findViewById(R.id.edt_register_pwd_again);
+        llSpinner = findViewById(R.id.ll_spinner);
+        llSpinner.setVisibility(View.GONE);
+
         photo_exist = false;
+
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,11 +182,25 @@ public class RegistRentManActivity extends AppCompatActivity {
         register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if(photo_exist){
-                    userinfo = new UserInfo(edt_userName.getText().toString(),edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), "rentAdmin");
+                String password = edt_userPwd.getText().toString();
+                String password_2 = edt_userPwd_again.getText().toString();
+
+                if (photo_exist.equals(false)) {
+                    Toast.makeText(getApplicationContext(), "请上传身份证图片！", Toast.LENGTH_LONG).show();
+                } else if (!password.equals(password_2) || password.equals(" ") || password == null) {
+                    Toast.makeText(getApplicationContext(), "两次密码输入不一致！", Toast.LENGTH_LONG).show();
+                    edt_userPwd.getText().clear();
+                    edt_userPwd_again.getText().clear();
+                } else if (!isMobileNO(edt_userPhone.getText().toString())) {
+                    Toast.makeText(getApplicationContext(), "手机号码格式不正确！", Toast.LENGTH_LONG).show();
+                    edt_userPhone.getText().clear();
+                } else if (edt_userName.getText().toString() == null
+                        || edt_userName.getText().toString().equals(" ") ) {
+                    Toast.makeText(getApplicationContext(), "请填写用户名！", Toast.LENGTH_LONG).show();
+                    edt_userPhone.getText().clear();
+                } else {
+                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), "rentAdmin");
                     uploadPhoto();
-                }else{
-                    Toast.makeText(getApplicationContext(),"请上传身份证图片",Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -233,7 +316,7 @@ public class RegistRentManActivity extends AppCompatActivity {
     }
 
     //上传照片文件至服务器
-    private void uploadPhoto(){
+    private void uploadPhoto() {
         HttpUtil.uploadPicOkHttpRequest(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
@@ -242,31 +325,107 @@ public class RegistRentManActivity extends AppCompatActivity {
                 Toast.makeText(RegistRentManActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
+
             @Override
             public void onResponse(Call call, Response response) throws IOException {
                 // 返回服务器数据
                 String responseData = response.body().string();
+                Message message = new Message();
                 try {
                     JSONObject jsonObject = JSON.parseObject(responseData);
-                    Integer result = jsonObject.getInteger("error");
+                    String result = jsonObject.getString("error");
                     switch (result){
-                        case 0 :
-                            Looper.prepare();
-                            Toast.makeText(getApplicationContext(), "图片上传成功", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
-                            break;
-                        case 1:
-                            Looper.prepare();
-                            Toast.makeText(getApplicationContext(), "图片上传失败，请重新尝试！", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
-                            break;
+                        case "0":
+                            message.what = 1;break;
                         default:
-                            break;
+                            message.what = 2;break;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
                 }
+                handler.sendMessage(message);
             }
-        }, photo_file);
+        }, photo_file, userinfo.getUserPhone());
     }
+
+        //注册
+        private void sendRegister() {
+            handler.removeMessages(1);
+            handler.removeMessages(2);
+            String json = new Gson().toJson(userinfo);
+            HttpUtil.sendRegistOkHttpRequest(new okhttp3.Callback(){
+                @Override
+                public void onFailure(Call call, IOException e) {
+                    //异常情况处理
+                    Looper.prepare();
+                    Toast.makeText(RegistRentManActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                    Looper.loop();
+                }
+
+                @Override
+                public void onResponse(Call call, Response response) throws IOException {
+                    String responseData = response.body().string();
+                    try{
+                        JSONObject jsonObject = JSON.parseObject(responseData);
+                        String mMessage = jsonObject.getString("message");
+                        Message message = new Message();
+                        if(mMessage.equals("success")){
+                            message.what = 3;
+                        }else if(mMessage.equals("exist")){
+                            message.what = 4;
+                        }
+                        handler.sendMessage(message);
+                    }catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            },json);
+        }
+
+    /*
+     * 提示弹框
+     */
+    private CommonDialog initDialog(String mMsg){
+        return new CommonDialog(this, R.style.dialog, mMsg,
+                new CommonDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if(confirm){
+                            //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击确定");
+                            Intent intent = new Intent(RegistRentManActivity.this,LoginActivity.class);
+                            startActivity(intent);
+                        }else{
+                            //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击取消");
+                            dialog.dismiss();
+                        }
+                    }
+                }).setTitle("提示");
+    }
+        // 顶部导航栏消息响应
+        @Override
+        public boolean onOptionsItemSelected(MenuItem item) {
+            switch (item.getItemId()){
+                case android.R.id.home: // 返回按钮
+                    onBackPressed();
+                    return true;
+            }
+            return super.onOptionsItemSelected(item);
+        }
+
+        public static boolean isMobileNO(String mobiles) {
+            /**
+             * 判断字符串是否符合手机号码格式
+             * 移动号段: 134,135,136,137,138,139,147,150,151,152,157,158,159,170,178,182,183,184,187,188
+             * 联通号段: 130,131,132,145,155,156,170,171,175,176,185,186
+             * 电信号段: 133,149,153,170,173,177,180,181,189
+             * @param str
+             * @return 待检测的字符串
+             */
+            String telRegex = "^((1[3,5,7,8][0-9])|(15[^4,\\D])|(18[0,5-9]))\\d{8}$";
+            if (TextUtils.isEmpty(mobiles)) {
+                return false;
+            } else {
+                return mobiles.matches(telRegex);
+            }
+        }
 }

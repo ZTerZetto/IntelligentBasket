@@ -51,13 +51,6 @@ public class WorkerAdapter extends ArrayAdapter<UserInfo> {
         }
 
         viewHolder.workerName.setText("姓名：" + userItems.getUserName());
-        /*if(userItems.getState().equals("WORKING")){
-            viewHolder.userState.setBackgroundColor(Color.rgb(0, 255, 0));
-        } else if(userItems.getState().equals("RESTING")) {
-            viewHolder.userState.setBackgroundColor(Color.rgb(255, 0, 0));
-        }*/
-        viewHolder.userState.setBackgroundColor(Color.rgb(0, 255, 0));
-
         viewHolder.workerId.setText("编号：" + userItems.getUserId());
 
         //TODO null 的显示设置
