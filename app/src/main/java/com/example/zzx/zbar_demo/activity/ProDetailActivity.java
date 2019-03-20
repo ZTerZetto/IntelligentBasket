@@ -55,7 +55,7 @@ public class ProDetailActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0:
-                    projectInfo = JSON.parseObject(String.valueOf(msg.obj), ProjectInfo.class);
+                    projectInfo = JSON.parseObject(msg.obj.toString(), ProjectInfo.class);
                     if(projectInfo!=null){
                         txtProName.setText("项目名称:"+projectInfo.getProjectName());
                         txtProNumber.setText("No:"+projectInfo.getProjectId());
@@ -123,6 +123,9 @@ public class ProDetailActivity extends AppCompatActivity {
         } else {
             mProjectId = intent.getStringExtra("projectId");
             if(mProjectId != null){
+                initProState();
+            } else {
+                mProjectId = "001";
                 initProState();
             }
         }

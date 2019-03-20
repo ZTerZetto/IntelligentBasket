@@ -144,8 +144,8 @@ public class WorkerListActivity extends AppCompatActivity {
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //跳转至缩略图显示
                 //Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+userInfoArrayList.get(i).getUserPhone()));
-                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+"15051860168"));
-                startActivity(intent);
+                //Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+"15051860168"));
+                //startActivity(intent);
             }
         });
 

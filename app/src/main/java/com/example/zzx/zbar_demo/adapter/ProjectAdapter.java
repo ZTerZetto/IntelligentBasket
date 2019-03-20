@@ -40,7 +40,7 @@ public class ProjectAdapter extends ArrayAdapter<ProjectInfo> {
             view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.basketId = (TextView) view.findViewById(R.id.txt_id);
-            viewHolder.basketState = (ImageView) view.findViewById(R.id.txt_state);
+            //viewHolder.basketState = (ImageView) view.findViewById(R.id.txt_state);
             viewHolder.workerId = (TextView) view.findViewById(R.id.txt_worker);
 
             view.setTag(viewHolder);
@@ -50,11 +50,11 @@ public class ProjectAdapter extends ArrayAdapter<ProjectInfo> {
         }
 
         viewHolder.basketId.setText(projectItems.getProjectId());
-        if(projectItems.getProjectState().equals("WORKING")){
+        /*if(projectItems.getProjectState().equals("WORKING")){
             viewHolder.basketState.setBackgroundColor(Color.rgb(0, 255, 0));
         } else if(projectItems.getProjectState().equals("RESTING")) {
             viewHolder.basketState.setBackgroundColor(Color.rgb(255, 0, 0));
-        }
+        }*/
 
         viewHolder.workerId.setText(projectItems.getProjectName());
 
@@ -62,7 +62,7 @@ public class ProjectAdapter extends ArrayAdapter<ProjectInfo> {
     }
     class ViewHolder{
         TextView basketId;
-        ImageView basketState;
+        //ImageView basketState;
         TextView workerId;
     }
 }

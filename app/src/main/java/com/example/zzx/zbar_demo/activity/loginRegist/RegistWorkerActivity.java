@@ -196,7 +196,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
         });
 
 
-        register.setOnClickListener(new View.OnClickListener() {
+       register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String password = edt_userPwd.getText().toString();

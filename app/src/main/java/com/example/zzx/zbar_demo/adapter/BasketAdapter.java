@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -40,7 +41,7 @@ public class BasketAdapter extends ArrayAdapter<BasketInfo> {
             view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.basketId = (TextView) view.findViewById(R.id.txt_id);
-            viewHolder.basketState = (ImageView) view.findViewById(R.id.txt_state);
+            //viewHolder.basketState = (ImageView) view.findViewById(R.id.txt_state);
             viewHolder.workerId = (TextView) view.findViewById(R.id.txt_worker);
 
             view.setTag(viewHolder);
@@ -50,12 +51,12 @@ public class BasketAdapter extends ArrayAdapter<BasketInfo> {
         }
 
         viewHolder.basketId.setText("吊篮编号：" + basketItems.getBasketId());
-        if (basketItems.getState().equals("RESTING")) {
+        /*if (basketItems.getState().equals("RESTING")) {
             viewHolder.basketState.setBackgroundColor(Color.rgb(255, 0, 0));
         } else if (basketItems.getState().equals("WORKING")) {
             viewHolder.basketState.setBackgroundColor(Color.rgb(0, 255, 0));
-        }
-
+        }*/
+        //viewHolder.checkBox.setChecked(basketItems.getBo());
         viewHolder.workerId.setText("负责人：" + basketItems.getWorkerId());
 
         //TODO null 的显示设置
@@ -63,7 +64,8 @@ public class BasketAdapter extends ArrayAdapter<BasketInfo> {
     }
     class ViewHolder{
         TextView basketId;
-        ImageView basketState;
+        CheckBox checkBox;
+        //ImageView basketState;
         TextView workerId;
     }
 }

@@ -15,6 +15,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -47,6 +49,10 @@ public class BasketListActivity extends AppCompatActivity {
     private TextView edtSearch;
     private Button btnSearch;
     private TextView txtResult;
+    private CheckBox checkBox;
+    private LinearLayout llChoose;
+    private Button btnBatch;
+    private Button btnAll;
     private String mProjectId;
     public SharedPreferences pref;
     private String token;
@@ -100,6 +106,9 @@ public class BasketListActivity extends AppCompatActivity {
         edtSearch = findViewById(R.id.edit_input_search);
         btnSearch = findViewById(R.id.search_button);
         txtResult = findViewById(R.id.txt_search_result);
+        llChoose = findViewById(R.id.ll_choose);
+        btnBatch = findViewById(R.id.btn_choose_batch);
+        btnAll = findViewById(R.id.btn_choose_all);
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         token = pref.getString("loginToken", "");
@@ -136,6 +145,16 @@ public class BasketListActivity extends AppCompatActivity {
                         showList(basketInfoArrayList);
                     }
                 }
+            }
+        });
+
+        btnBatch.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+
+
+
             }
         });
 

@@ -94,11 +94,11 @@ public class UserFragment extends Fragment {
             pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
 
             String roleName = userInfo.getUserRole();
-            if(roleName.equals("rentAdmin")){
+            if(roleName.equals("areaAdmin")){
                 llChangePro.setVisibility(View.VISIBLE);
                 llProDetail.setVisibility(View.GONE);
                 llWorkManage.setVisibility(View.GONE);
-            } else if(roleName.equals("areaAdmin")){
+            } else if(roleName.equals("rentAdmin")){
                 llChangePro.setVisibility(View.GONE);
                 llProDetail.setVisibility(View.VISIBLE);
                 llWorkManage.setVisibility(View.VISIBLE);

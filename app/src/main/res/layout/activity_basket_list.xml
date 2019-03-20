@@ -20,6 +20,7 @@
             android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_weight="1"
+            android:singleLine="true"
             android:textColor="@color/colorTextDark"
             android:hint="输入吊篮编号开始检索"
             android:textSize="15sp" />
@@ -44,10 +45,29 @@
     <ListView
         android:id="@+id/list_view"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:visibility="gone">
     </ListView>
 
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="30dp"
+        android:id="@+id/ll_choose"
+        android:orientation="horizontal"
+        android:layout_gravity="bottom">
+        <Button
+            android:id="@+id/btn_choose_batch"
+            style = "@style/btnStyle"
+            android:layout_weight="1"
+            android:text="批量报停"/>
+        <Button
+            android:id="@+id/btn_choose_all"
+            style = "@style/btnStyle"
+            android:layout_weight="1"
+            android:text="全部报停"/>
+
+    </LinearLayout>
 
 </LinearLayout>
