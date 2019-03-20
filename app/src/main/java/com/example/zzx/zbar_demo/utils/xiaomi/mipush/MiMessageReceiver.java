@@ -9,7 +9,8 @@ import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 
-import com.example.zzx.zbar_demo.activity.MainActivity;
+import com.example.zzx.zbar_demo.R;
+import com.example.zzx.zbar_demo.application.CustomApplication;
 import com.xiaomi.mipush.sdk.ErrorCode;
 import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushCommandMessage;
@@ -65,7 +66,7 @@ public class MiMessageReceiver extends PushMessageReceiver {
 
     @Override
     public void onReceivePassThroughMessage(Context context, MiPushMessage message) {
-        Log.v(MiPushApplication.TAG,
+        Log.d(CustomApplication.TAG,
                 "onReceivePassThroughMessage is called. " + message.toString());
 
         if (!TextUtils.isEmpty(message.getTopic())) {
@@ -73,7 +74,6 @@ public class MiMessageReceiver extends PushMessageReceiver {
         } else if (!TextUtils.isEmpty(message.getAlias())) {
             mAlias = message.getAlias();
         }
-
     }
 
 
@@ -82,7 +82,7 @@ public class MiMessageReceiver extends PushMessageReceiver {
     // 作用：通过参数message从而获得通知消息，具体请看官方SDK文档
     @Override
     public void onNotificationMessageArrived(Context context, MiPushMessage message) {
-        Log.v(MiPushApplication.TAG,
+        Log.d(CustomApplication.TAG,
                 "onNotificationMessageClicked is called. " + message.toString());
 
         if (!TextUtils.isEmpty(message.getTopic())) {
@@ -90,6 +90,11 @@ public class MiMessageReceiver extends PushMessageReceiver {
         } else if (!TextUtils.isEmpty(message.getAlias())) {
             mAlias = message.getAlias();
         }
+
+        Message msg = Message.obtain();
+        msg.what = CustomApplication.OnReceivePassThroughMessage;
+        msg.obj = message;
+        CustomApplication.getHandler().sendMessage(msg);
 
     }
 
@@ -99,7 +104,7 @@ public class MiMessageReceiver extends PushMessageReceiver {
     // 2. 设置用户点击消息后打开应用 or 网页 or 其他页面
     @Override
     public void onNotificationMessageClicked(Context context, MiPushMessage message) {
-        Log.v(MiPushApplication.TAG,
+        Log.d(CustomApplication.TAG,
                 "onNotificationMessageClicked is called. " + message.toString());
 
         if (!TextUtils.isEmpty(message.getTopic())) {
@@ -108,12 +113,18 @@ public class MiMessageReceiver extends PushMessageReceiver {
             mAlias = message.getAlias();
         }
 
+        Message msg = Message.obtain();
+        msg.what = CustomApplication.onNotificationMessageClicked;
+        msg.obj = message;
+        CustomApplication.getHandler().sendMessage(msg);
+
+
     }
 
     // 用来接收客户端向服务器发送命令后的响应结果。
     @Override
     public void onCommandResult(Context context, MiPushCommandMessage message) {
-        Log.v(MiPushApplication.TAG,
+        Log.d(CustomApplication.TAG,
                 "onCommandResult is called. " + message.toString());
         String command = message.getCommand();
         List<String> arguments = message.getCommandArguments();
@@ -123,70 +134,72 @@ public class MiMessageReceiver extends PushMessageReceiver {
         if (MiPushClient.COMMAND_REGISTER.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mRegId = cmdArg1;
-                //log = context.getString(R.string.register_success);
+                log = context.getString(R.string.register_success);
             } else {
-                //log = context.getString(R.string.register_fail);
+                log = context.getString(R.string.register_fail);
             }
         } else if (MiPushClient.COMMAND_SET_ALIAS.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mAlias = cmdArg1;
-                //log = context.getString(R.string.set_alias_success, mAlias);
+                log = context.getString(R.string.set_alias_success, mAlias);
             } else {
-                //log = context.getString(R.string.set_alias_fail, message.getReason());
+                log = context.getString(R.string.set_alias_fail, message.getReason());
             }
         } else if (MiPushClient.COMMAND_UNSET_ALIAS.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mAlias = cmdArg1;
-                //log = context.getString(R.string.unset_alias_success, mAlias);
+                log = context.getString(R.string.unset_alias_success, mAlias);
             } else {
-                //log = context.getString(R.string.unset_alias_fail, message.getReason());
+                log = context.getString(R.string.unset_alias_fail, message.getReason());
             }
         } else if (MiPushClient.COMMAND_SET_ACCOUNT.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mAccount = cmdArg1;
-                //log = context.getString(R.string.set_account_success, mAccount);
+                log = context.getString(R.string.set_account_success, mAccount);
             } else {
-                //log = context.getString(R.string.set_account_fail, message.getReason());
+                log = context.getString(R.string.set_account_fail, message.getReason());
             }
         } else if (MiPushClient.COMMAND_UNSET_ACCOUNT.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mAccount = cmdArg1;
-                //log = context.getString(R.string.unset_account_success, mAccount);
+                log = context.getString(R.string.unset_account_success, mAccount);
             } else {
-                //log = context.getString(R.string.unset_account_fail, message.getReason());
+                log = context.getString(R.string.unset_account_fail, message.getReason());
             }
         } else if (MiPushClient.COMMAND_SUBSCRIBE_TOPIC.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mTopic = cmdArg1;
-                //log = context.getString(R.string.subscribe_topic_success, mTopic);
+                log = context.getString(R.string.subscribe_topic_success, mTopic);
             } else {
-                //log = context.getString(R.string.subscribe_topic_fail, message.getReason());
+                log = context.getString(R.string.subscribe_topic_fail, message.getReason());
             }
         } else if (MiPushClient.COMMAND_UNSUBSCRIBE_TOPIC.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mTopic = cmdArg1;
-                //log = context.getString(R.string.unsubscribe_topic_success, mTopic);
+                log = context.getString(R.string.unsubscribe_topic_success, mTopic);
             } else {
-                //log = context.getString(R.string.unsubscribe_topic_fail, message.getReason());
+                log = context.getString(R.string.unsubscribe_topic_fail, message.getReason());
             }
         } else if (MiPushClient.COMMAND_SET_ACCEPT_TIME.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mStartTime = cmdArg1;
                 mEndTime = cmdArg2;
-                //log = context.getString(R.string.set_accept_time_success, mStartTime, mEndTime);
+                log = context.getString(R.string.set_accept_time_success, mStartTime, mEndTime);
             } else {
-                //log = context.getString(R.string.set_accept_time_fail, message.getReason());
+                log = context.getString(R.string.set_accept_time_fail, message.getReason());
             }
         } else {
             log = message.getReason();
         }
+
+        Log.d(CustomApplication.TAG, log);
 
     }
 
     // 用于接收客户端向服务器发送注册命令后的响应结果。
     @Override
     public void onReceiveRegisterResult(Context context, MiPushCommandMessage message) {
-        Log.v(MiPushApplication.TAG,
+        Log.d(CustomApplication.TAG,
                 "onReceiveRegisterResult is called. " + message.toString());
         String command = message.getCommand();
         List<String> arguments = message.getCommandArguments();
@@ -196,21 +209,22 @@ public class MiMessageReceiver extends PushMessageReceiver {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mRegId = cmdArg1;
                 //打印日志：注册成功
-                //log = context.getString(R.string.register_success);
+                log = context.getString(R.string.register_success);
             } else {
                 //打印日志：注册失败
-                //log = context.getString(R.string.register_fail);
+                log = context.getString(R.string.register_fail);
             }
         } else {
             log = message.getReason();
         }
 
+        Log.d(CustomApplication.TAG,log);
     }
 
     @Override
     public void onRequirePermissions(Context context, String[] permissions) {
         super.onRequirePermissions(context, permissions);
-        Log.e(MiPushApplication.TAG,
+        Log.e(CustomApplication.TAG,
                 "onRequirePermissions is called. need permission" + arrayToString(permissions));
 
         if (Build.VERSION.SDK_INT >= 23 && context.getApplicationInfo().targetSdkVersion >= 23) {

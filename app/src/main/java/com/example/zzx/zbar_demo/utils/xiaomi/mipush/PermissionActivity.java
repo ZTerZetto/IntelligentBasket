@@ -1,12 +1,13 @@
 package com.example.zzx.zbar_demo.utils.xiaomi.mipush;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.os.Build;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+
+import com.example.zzx.zbar_demo.application.CustomApplication;
 
 /**
  * Created by pengchenghu on 2019/3/18.
@@ -47,7 +48,7 @@ public class PermissionActivity extends AppCompatActivity {
 
             if (granted) {
                 Log.w("PermissionActivity", "Permissions granted:");
-                MiPushApplication.reInitPush(this);
+                CustomApplication.reInitPush(this);
             }
             finish();
         }

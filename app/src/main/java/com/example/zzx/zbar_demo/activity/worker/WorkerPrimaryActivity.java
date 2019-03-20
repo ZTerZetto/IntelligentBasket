@@ -12,6 +12,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -24,14 +25,17 @@ import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 import com.example.zzx.zbar_demo.utils.HttpUtil;
+import com.example.zzx.zbar_demo.application.CustomApplication;
 import com.example.zzx.zbar_demo.utils.ToastUtil;
-import com.example.zzx.zbar_demo.widget.dialog.CommomDialog;
+import com.example.zzx.zbar_demo.utils.xiaomi.mipush.MiPushUtil;
+import com.example.zzx.zbar_demo.widget.dialog.CommonDialog;
 import com.example.zzx.zbar_demo.widget.dialog.VerifyWorkDialog;
 import com.example.zzx.zbar_demo.widget.image.SmartImageView;
 import com.example.zzx.zbar_demo.widget.zxing.activity.CaptureActivity;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.xiaomi.mipush.sdk.MiPushClient;
 
 import java.io.IOException;
 import java.util.List;
@@ -41,6 +45,8 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.example.zzx.zbar_demo.entity.AppConfig.FILE_SERVER_PATH;
+import static com.example.zzx.zbar_demo.entity.AppConfig.WORKER_BEGIN_WORK;
+import static com.example.zzx.zbar_demo.entity.AppConfig.WORKER_ENG_WORK;
 
 /**
  * Created by pengchenghu on 2019/3/15.
@@ -78,12 +84,13 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private RelativeLayout mSettingLayout; // 设置
 
     // 页面信息
-    private String mWorkProject;
+    private String mWorkProject;  // 项目ID
     private int mWorkState = 0; // 0:等待上工 1:等待下工
+    //private String mBasketId; //s 吊篮ID
     private String mUserHeadUrl = FILE_SERVER_PATH + "/head/hdImg_default.jpg";
 
     // dialog
-    private CommomDialog mCommomDialog;
+    private CommonDialog mCommonDialog;
     private VerifyWorkDialog mVerifyWorkDialog;
 
     // 用户信息
@@ -108,14 +115,14 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     break;
 
                 case OPEN_VERIFY_DIALOG_MSG:  // 打开上/下工确认
-                    String basketId = msg.obj.toString();
+                    final String basketId = msg.obj.toString();
                     mVerifyWorkDialog = new VerifyWorkDialog(WorkerPrimaryActivity.this,
                             R.style.verify_dialog, mWorkState, mUserHeadUrl, basketId, new VerifyWorkDialog.OnDialogOperateListener() {
                         @Override
                         public void getVerifyResult(String result) {
                             if(result.contains("Success")) {  // 密码验证通过
                                 Log.i(TAG, "Now, you can open/close the basket");
-                                changeWorkState(mWorkState);
+                                requestBeginOrEndWork(basketId);
                             }
                         }
                     });
@@ -140,7 +147,9 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
 
         getUserInfo();
         if(!isHasPermission()) requestPermission();  // 权限申请
-        initWidget();
+        initWidget();  // 初始化控件
+
+        MiPushUtil.initMiPush(WorkerPrimaryActivity.this, mUserInfo.getUserId(), null);
     }
 
     // 初始化控件
@@ -181,10 +190,10 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
             case R.id.work_layout:  // 开工/下工
                 Log.i(TAG, "You have clicked open/close work button");
                 if(mWorkProject == null || mWorkProject.equals("")){
-                    if(mCommomDialog == null){
-                        mCommomDialog = initDialog();
+                    if(mCommonDialog == null){
+                        mCommonDialog = initDialog();
                     }
-                    mCommomDialog.show();
+                    mCommonDialog.show();
                     break;
                 }
                 intent = new Intent(WorkerPrimaryActivity.this, CaptureActivity.class);
@@ -215,6 +224,20 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     }
 
     /*
+     * 生命周期
+     */
+    @Override
+    protected void onResume(){
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        CustomApplication.setMainActivity(null);
+    }
+
+    /*
      * 活动返回
      */
     @Override
@@ -236,6 +259,61 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     /*
      * 上/下工切换
      */
+    private void requestBeginOrEndWork(String basketId){
+        String url;
+        if(mWorkState == 0) { // 等待上工
+            Log.i(TAG, "Now, you can open the basket");
+            url = WORKER_BEGIN_WORK;
+        }
+        else if(mWorkState == 1) { //等待下工
+            Log.i(TAG, "Now, you can close the basket");
+            url = WORKER_ENG_WORK;
+        }
+        else
+            return;
+
+        HttpUtil.workerBeginOrEndWorkOkHttpRequest(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.d(TAG, e.toString());
+                e.printStackTrace();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if (response.code() == 200) {
+                    Log.d(TAG, "Http Server Success");
+                    String data = response.body().string();
+                    parseBeginOrEndWork(data);
+                }else{
+                    Log.d(TAG, "Http Server Error" + response.code());
+                }
+            }
+        }, url, mToken, mUserInfo.getUserId(), basketId, mWorkProject);
+    }
+    private void parseBeginOrEndWork(String data){
+        JSONObject jsonObject = JSON.parseObject(data);
+        if(mWorkState == 0) { // 等待开工
+            boolean beginWork = jsonObject.getBoolean("beginWork");
+            if(beginWork) {
+                mWorkState = 1;
+                mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
+                return;
+            }
+            else
+                ToastUtil.showToastTips(WorkerPrimaryActivity.this, "打开吊篮失败");
+        }else if(mWorkState == 1){ // 等待下工
+            boolean endWork = jsonObject.getBoolean("endWork");
+            if(endWork) {
+                mWorkState = 0;
+                mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
+                return;
+            }
+            else
+                ToastUtil.showToastTips(WorkerPrimaryActivity.this, "关闭吊篮失败");
+        }
+
+    }
     private void changeWorkState(int workState){
         if(workState == 0){
             mWorkState = 1;
@@ -307,9 +385,9 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     /*
      * 提示弹框
      */
-    private CommomDialog initDialog(){
-        return new CommomDialog(this, R.style.dialog, "您尚无参与的吊篮项目，请与管理员联系上工！",
-                new CommomDialog.OnCloseListener() {
+    private CommonDialog initDialog(){
+        return new CommonDialog(this, R.style.dialog, "您尚无参与的吊篮项目，请与管理员联系上工！",
+                new CommonDialog.OnCloseListener() {
                     @Override
                     public void onClick(Dialog dialog, boolean confirm) {
                         if(confirm){

@@ -149,6 +149,28 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
     /*
+     * 施工人员上下工请求
+     * token
+     * url
+     * userid basketid projectId
+     */
+    public static void workerBeginOrEndWorkOkHttpRequest(okhttp3.Callback callback,
+                                                         String url, String token, String userId,
+                                                         String basketId, String projectId){
+        OkHttpClient client = new OkHttpClient();
+        FormBody builder = new FormBody.Builder()
+                .add("userId", userId)
+                .add("boxId", basketId)
+                .add("projectId", projectId)
+                .build();
+        final Request request = new Request.Builder()
+                .url(url)
+                .addHeader("Authorization", token)
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+    /*
      * 施工人员请求结束
      */
 

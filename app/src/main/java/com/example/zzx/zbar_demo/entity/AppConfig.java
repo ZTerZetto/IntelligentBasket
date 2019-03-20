@@ -67,5 +67,7 @@ public class AppConfig {
      */
     // 施工人员基本信息
     public static  final String WORKER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetWorker");
+    public static  final String WORKER_BEGIN_WORK = ANDROID_URL_PATH.concat("/androidBeginWork");
+    public static  final String WORKER_ENG_WORK = ANDROID_URL_PATH.concat("/androidEndWork");
 
 }

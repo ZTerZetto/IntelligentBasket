@@ -135,7 +135,7 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // StartAndFinishActicity(null,ManageMainActivity.class);
-                StartAndFinishActicity(null, WorkerPrimaryActivity.class); // 跳转到施工人员界面
+                StartAndFinishActicity(null, ManageMainActivity.class); // 跳转到施工人员界面
             }
         });
     }

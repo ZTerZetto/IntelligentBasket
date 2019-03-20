@@ -46,6 +46,10 @@ public class WelcomeActivity extends AppCompatActivity {
         startMainActivity(); // 跳转至主活动
     }
 
+    /*
+     * 定时跳转页面
+     */
+
     // 定时跳转至主页面
     public void startMainActivity(){
         TimerTask delayTask = new TimerTask() {
@@ -69,7 +73,7 @@ public class WelcomeActivity extends AppCompatActivity {
             }
         };
         Timer timer = new Timer();
-        timer.schedule(delayTask,1500);//延时两秒执行 run 里面的操作
+        timer.schedule(delayTask,1500);//延时1.5秒执行 run 里面的操作
     }
 
     // 全屏模式
@@ -85,10 +89,15 @@ public class WelcomeActivity extends AppCompatActivity {
         }
     }
 
+
+    /*
+     * 生命周期
+     */
     // 当WelcomeActivity不可见时，销毁WelcomeActivity
     @Override
     protected void onStop(){
         super.onStop();
         finish();
     }
+
 }
