@@ -16,14 +16,14 @@ public class AppConfig {
     * Authorization：NULL
     * POST
     * */
-    public final static String LOGIN_USER = ANDROID_URL_PATH.concat("/androidLogin");
+    public final static String LOGIN_USER = ANDROID_URL_PATH.concat("/login");
 
     /* 注册
     * userId、userName、userPassword、userRole、userPhone、userImage;
     * Authorization：NULL
     * POST
     * */
-    public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkAndroidRegister");
+    public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
 
     //上传文件
     public final static String CREATE_FILE = ANDROID_URL_PATH.concat("/createFtpFile");

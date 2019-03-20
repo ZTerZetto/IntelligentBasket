@@ -134,7 +134,7 @@ public class MiMessageReceiver extends PushMessageReceiver {
         if (MiPushClient.COMMAND_REGISTER.equals(command)) {
             if (message.getResultCode() == ErrorCode.SUCCESS) {
                 mRegId = cmdArg1;
-                log = context.getString(R.string.register_success);
+                log = context.getString(R.string.push_register_success);
             } else {
                 log = context.getString(R.string.register_fail);
             }

@@ -128,7 +128,7 @@ public class CustomApplication extends Application {
         // 下面与消息提示相关
         notificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         channelId = "chat";
-        setChannel(true);
+        //setChannel(true);
     }
 
     // 通过判断手机里的所有进程是否有这个App的进程

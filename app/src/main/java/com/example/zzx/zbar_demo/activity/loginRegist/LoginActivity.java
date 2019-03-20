@@ -30,6 +30,7 @@ import com.example.zzx.zbar_demo.utils.HttpUtil;
 import com.example.zzx.zbar_demo.activity.ManageMainActivity;
 import com.example.zzx.zbar_demo.activity.worker.WorkerPrimaryActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
+import com.example.zzx.zbar_demo.utils.ToastUtil;
 import com.example.zzx.zbar_demo.widget.dialog.CommonDialog;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -164,11 +165,16 @@ public class LoginActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
                 Looper.prepare();
-                Toast.makeText(LoginActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                Toast.makeText(LoginActivity.this, "网络连接失败！", Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
             @Override
             public void onResponse(Call call, Response response) throws IOException {
+                if(response.code() != 200){
+                    Looper.prepare();
+                    Toast.makeText(LoginActivity.this, "网络连接超时,请稍后重试！", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
                 // 返回服务器数据
                 String responseData = response.body().string();
                 try {
