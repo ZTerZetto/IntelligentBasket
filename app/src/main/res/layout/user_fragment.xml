@@ -40,7 +40,7 @@
         </LinearLayout>
     </LinearLayout>
 
-    <LinearLayout
+    <!--<LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
@@ -50,9 +50,10 @@
         <TextView
             android:id="@+id/txt_pro_number"
             style="@style/usertextStyle"
+            android:layout_weight="5"
             android:textStyle="bold"
             android:text="当前项目：" />
-    </LinearLayout>
+    </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/ll_pro_detail"
@@ -60,7 +61,8 @@
         android:layout_height="wrap_content"
         android:background="#FFF"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
         <TextView
             style="@style/usertextStyle"
             android:layout_weight="5"
@@ -89,7 +91,8 @@
         android:layout_height="wrap_content"
         android:background="#FFF"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
         <TextView
             style="@style/usertextStyle"
             android:layout_weight="5"
@@ -104,7 +107,8 @@
         android:layout_marginTop="15dp"
         android:background="#FFF"
         android:orientation="horizontal"
-        android:padding="10dp">
+        android:padding="10dp"
+        android:visibility="gone">
         <TextView
             style="@style/usertextStyle"
             android:layout_weight="5"

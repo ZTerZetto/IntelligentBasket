@@ -146,6 +146,17 @@
         <item name="android:background">@drawable/tab_selector_bg</item>
     </style>
 
+    <!-- “设置”框 字体样式 -->
+    <style name="itemTextStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorPrimaryDark</item>
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">2dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:background">@drawable/tab_selector_bg</item>
+    </style>
+
     <!-- “我的” 文本右边箭头样式 -->
     <style name="img_arrow">
         <item name="android:layout_width">wrap_content</item>

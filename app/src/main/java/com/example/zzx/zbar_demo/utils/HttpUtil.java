@@ -19,17 +19,28 @@ import static com.example.zzx.zbar_demo.entity.AppConfig.REAL_TIME_PARAMETER;
 
 // Created by $USER_NAME on 2018/11/28/028.
 public class HttpUtil {
-    public static void uploadPicOkHttpRequest(okhttp3.Callback callback, File file) {
+    public static void uploadPicOkHttpRequest(okhttp3.Callback callback, File file,String phoneNum) {
         OkHttpClient client = new OkHttpClient();
         RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"), file);
         RequestBody builder = new MultipartBody.Builder()
                 .setType(MultipartBody.FORM)
-                .addFormDataPart("fileName", file.getName())
+                .addFormDataPart("userPhone", phoneNum)
                 .addFormDataPart("file", file.getName(), fileBody)
                 .build();
         final Request request = new Request.Builder()
                 .url(AppConfig.CREATE_FILE)
                 .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void sendRegistOkHttpRequest(okhttp3.Callback callback, String json) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = new Request.Builder()
+                .url(AppConfig.REGISTER_USER)
+                .addHeader("Authorization", "null")
+                .post(requestBody)
                 .build();
         client.newCall(request).enqueue(callback);
     }
@@ -45,18 +56,7 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
-    public static void sendRegistOkHttpRequest(okhttp3.Callback callback, String json) {
-        OkHttpClient client = new OkHttpClient();
-        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
-        final Request request = new Request.Builder()
-                .url(AppConfig.REGISTER_USER)
-                .addHeader("Authorization", "null")
 
-
-                .post(requestBody)
-                .build();
-        client.newCall(request).enqueue(callback);
-    }
 
 
     public static void getUserInfoOkHttpRequest(okhttp3.Callback callback, String token) {
@@ -74,7 +74,7 @@ public class HttpUtil {
     public static void getProjectInfoOkHttpRequest(okhttp3.Callback callback, String token, String userFlag) {
         OkHttpClient client = new OkHttpClient();
         final Request request = new Request.Builder()
-                .url(AppConfig.PROINFO + "?userFlag=" + userFlag)
+                .url(AppConfig.PRO_LIST + "?userFlag=" + userFlag)
                 .addHeader("Authorization", token)
                 .get()
                 .build();
@@ -91,6 +91,25 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
+    public static void getBasketListOkHttpRequest(okhttp3.Callback callback, String token, String projectId) {
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .url(AppConfig.GET_DEVICE_LIST + "?projectId=" + projectId)
+                .addHeader("Authorization", token)
+                .get()
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    public static void getWorkerListOkHttpRequest(okhttp3.Callback callback, String token, String projectId) {
+        OkHttpClient client = new OkHttpClient();
+        final Request request = new Request.Builder()
+                .url(AppConfig.GET_WORKER_LIST + "?projectId=" + projectId)
+                .addHeader("Authorization", token)
+                .get()
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
 
     public static void sendLogin2OkHttpRequest(okhttp3.Callback callback, UserInfo userInfo) {
         OkHttpClient client = new OkHttpClient();

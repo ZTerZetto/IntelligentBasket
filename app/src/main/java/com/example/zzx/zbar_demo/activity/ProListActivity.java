@@ -95,7 +95,8 @@ public class ProListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 Intent intent = new Intent(ProListActivity.this,ProDetailActivity.class);
-                intent.putExtra("projectId",projectArrayList.get(i).getProjectId());
+                //intent.putExtra("projectId",projectArrayList.get(i).getProjectId());
+                intent.putExtra("projectDetail",projectArrayList.get(i));
                 startActivity(intent);
             }
         });
@@ -135,14 +136,14 @@ public class ProListActivity extends AppCompatActivity {
                 String responseData = response.body().string();
                 try {
                     JSONObject jsonObject = JSON.parseObject(responseData);
-                    String isAllowed = jsonObject.getString("isAllowed");
+                    //String isAllowed = jsonObject.getString("isAllowed");
                     Message msg = new Message();
-                    if(isAllowed.equals("true")){
+                   // if(isAllowed.equals("true")){
                         msg.obj = jsonObject.get("projectList");
                         msg.what = 0;
-                    } else {
+                    /*} else {
                         msg.what = 1;
-                    }
+                    }*/
                     handler.sendMessage(msg);
                 } catch (JSONException e) {
                     e.printStackTrace();

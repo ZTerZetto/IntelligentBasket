@@ -16,14 +16,14 @@
 
     <TextView
         android:id="@+id/txt_id"
-        style="@style/usertextStyle"
+        style="@style/itemTextStyle"
         android:layout_weight="1"
         android:layout_gravity="center"
         android:text="吊篮编号：" />
     <TextView
         android:id="@+id/txt_worker"
         android:layout_weight="1"
-        style="@style/usertextStyle"
+        style="@style/itemTextStyle"
         android:layout_gravity="center"
         android:text="负责人：" />
 

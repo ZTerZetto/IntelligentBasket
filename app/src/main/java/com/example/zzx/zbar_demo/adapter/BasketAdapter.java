@@ -49,11 +49,11 @@ public class BasketAdapter extends ArrayAdapter<BasketInfo> {
             viewHolder = (ViewHolder) view.getTag();//重新获取ViewHolder
         }
 
-        viewHolder.basketId.setText("吊篮编号："+ basketItems.getBasketId());
-        if(basketItems.getState().equals("WORKING")){
-            viewHolder.basketState.setBackgroundColor(Color.rgb(0, 255, 0));
-        } else if(basketItems.getState().equals("RESTING")) {
+        viewHolder.basketId.setText("吊篮编号：" + basketItems.getBasketId());
+        if (basketItems.getState().equals("RESTING")) {
             viewHolder.basketState.setBackgroundColor(Color.rgb(255, 0, 0));
+        } else if (basketItems.getState().equals("WORKING")) {
+            viewHolder.basketState.setBackgroundColor(Color.rgb(0, 255, 0));
         }
 
         viewHolder.workerId.setText("负责人：" + basketItems.getWorkerId());

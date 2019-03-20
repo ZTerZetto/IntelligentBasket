@@ -1,6 +1,7 @@
 package com.example.zzx.zbar_demo.fragment;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Fragment;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -20,6 +21,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
+import com.example.zzx.zbar_demo.activity.ManageMainActivity;
 import com.example.zzx.zbar_demo.activity.basket.BasketListActivity;
 import com.example.zzx.zbar_demo.activity.ProListActivity;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
@@ -60,7 +62,6 @@ public class UserFragment extends Fragment {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 0: {
-                    userInfo = JSON.parseObject(String.valueOf(msg.obj),UserInfo.class);
                     txtUserName.setText(userInfo.getUserName());
                     txtRoleName.setText(userInfo.getUserRole());
                     break;
@@ -82,28 +83,26 @@ public class UserFragment extends Fragment {
 
             txtUserName = mView.findViewById(R.id.txt_user_name);
             txtRoleName = mView.findViewById(R.id.txt_role_name);
-            txtProName = mView.findViewById(R.id.txt_pro_number);
+            //txtProName = mView.findViewById(R.id.txt_pro_number);
             llProDetail = mView.findViewById(R.id.ll_pro_detail);
             llSelfSettle = mView.findViewById(R.id.ll_self_settle);
             llBasketManage = mView.findViewById(R.id.ll_basket_manage);
             llWorkManage = mView.findViewById(R.id.ll_worker_manage);
             llChangePro = mView.findViewById(R.id.ll_change_pro);
+
             LLLogout = mView.findViewById(R.id.ll_logout);
-
-            //获取当前角色名并显示
             pref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-            token = pref.getString("loginToken", "");
-            if (token == null) {
-                userInfo = new UserInfo(null, null);
-                userInfo.setUserRole("游客");
-                userInfo.setUserName("游客");
-                txtUserName.setText(userInfo.getUserName());
-                txtRoleName.setText(userInfo.getUserRole());
-            } else {
-                userInfo = new UserInfo(null, null);
-                //getUserInfoHttp();
-            }
 
+            String roleName = userInfo.getUserRole();
+            if(roleName.equals("rentAdmin")){
+                llChangePro.setVisibility(View.VISIBLE);
+                llProDetail.setVisibility(View.GONE);
+                llWorkManage.setVisibility(View.GONE);
+            } else if(roleName.equals("areaAdmin")){
+                llChangePro.setVisibility(View.GONE);
+                llProDetail.setVisibility(View.VISIBLE);
+                llWorkManage.setVisibility(View.VISIBLE);
+            }
 
             //项目详情界面跳转
             llProDetail.setOnClickListener(new View.OnClickListener() {
@@ -195,7 +194,23 @@ public class UserFragment extends Fragment {
         editor.clear();
         editor.commit();
         startToActivity(LoginActivity.class);
+        getActivity().finish();
+
     }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        userInfo = ((ManageMainActivity) activity).getInfo();
+        Message message = new Message();
+        if(userInfo != null){
+            message.what = 0;
+        } else {
+            message.what = 1;
+        }
+        handler.sendMessage(message);
+    }
+
 }
 
 

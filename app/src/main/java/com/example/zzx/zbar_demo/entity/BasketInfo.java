@@ -12,7 +12,9 @@ public class BasketInfo {
     public BasketInfo() {
         super();
     }
-
+    public BasketInfo(String basketId) {
+        this.basketId = basketId;
+    }
 
     String basketId;
 

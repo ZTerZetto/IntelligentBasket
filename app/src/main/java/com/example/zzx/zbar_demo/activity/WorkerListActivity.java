@@ -1,26 +1,42 @@
 package com.example.zzx.zbar_demo.activity;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONException;
+import com.alibaba.fastjson.JSONObject;
+import com.example.zzx.zbar_demo.activity.basket.BasketListActivity;
 import com.example.zzx.zbar_demo.adapter.WorkerAdapter;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
+import com.example.zzx.zbar_demo.utils.HttpUtil;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
+import okhttp3.Response;
 
 public class WorkerListActivity extends AppCompatActivity {
 
@@ -37,15 +53,13 @@ public class WorkerListActivity extends AppCompatActivity {
     public SharedPreferences pref;
     private String token;
 
-    public static final int HTTP_SUCCESS = 1;
 
 
-/*    @SuppressLint("HandlerLeak")
+    @SuppressLint("HandlerLeak")
         private Handler handler = new Handler() {
             public void handleMessage(Message msg) {
                 switch(msg.what) {
-                    case HTTP_SUCCESS:
-                        Log.d("search", "success");
+                    case 0:
                         String jso = msg.obj.toString();
                         userInfoArrayList = JSON.parseArray(jso, UserInfo.class);
 
@@ -53,13 +67,18 @@ public class WorkerListActivity extends AppCompatActivity {
                             adapter = new WorkerAdapter(mContext,R.layout.item_worker,userInfoArrayList);
                             mLv.setAdapter(adapter);
                             mLv.setVisibility(View.VISIBLE);
+                            txtResult.setVisibility(View.GONE);
                         }
+                        break;
+                    case 1:
+                        Toast.makeText(WorkerListActivity.this, "没有权限访问！", Toast.LENGTH_LONG).show();
+                        finish();
                         break;
                     default:
                         break;
                 }
             }
-    };*/
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -108,7 +127,7 @@ public class WorkerListActivity extends AppCompatActivity {
                         }
                     }
                     if (arrayList.isEmpty()) {
-                        mLv.setVisibility(View.INVISIBLE);
+                        mLv.setVisibility(View.GONE);
                         txtResult.setVisibility(View.VISIBLE);
                     } else {
                         userInfoArrayList.clear();
@@ -124,9 +143,9 @@ public class WorkerListActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 //跳转至缩略图显示
-                //Intent intent = new Intent(mContext, VideoPlayActivity.class);
-                //intent.putExtra("basket_id", basketInfoArrayList.get(i).getBasketId());
-                //startActivity(intent);
+                //Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+userInfoArrayList.get(i).getUserPhone()));
+                Intent intent = new Intent(Intent.ACTION_DIAL, Uri.parse("tel:"+"15051860168"));
+                startActivity(intent);
             }
         });
 
@@ -151,20 +170,13 @@ public class WorkerListActivity extends AppCompatActivity {
     }
 
     private void initList() {
-        String workerName = "张三三";
-        String workerId = "WK239548";
-        UserInfo workerInfo;
-        for(int i=0; i<10 ;i++){
-            workerInfo = new UserInfo(workerId+i,workerName,null,null,null);
-            userInfoArrayList.add(workerInfo);
-        }
-        showList(userInfoArrayList);
-/*HttpUtil.getProjectDetailInfoOkHttpRequest(new okhttp3.Callback() {
+
+        HttpUtil.getWorkerListOkHttpRequest(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
                 Looper.prepare();
-                Toast.makeText(BasketListActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                Toast.makeText(WorkerListActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
             @Override
@@ -176,7 +188,7 @@ public class WorkerListActivity extends AppCompatActivity {
                     String isAllowed = jsonObject.getString("isAllowed");
                     Message msg = new Message();
                     if(isAllowed.equals("true")){
-                        msg.obj = jsonObject.get("electricRes");
+                        msg.obj = jsonObject.get("userList");
                         msg.what = 0;
                     } else{
                         msg.what = 1;
@@ -187,7 +199,7 @@ public class WorkerListActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
             }
-        },token,mProjectId);*/
+        },token,mProjectId);
     }
 
 }

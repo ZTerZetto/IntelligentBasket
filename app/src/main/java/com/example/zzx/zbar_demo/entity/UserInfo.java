@@ -3,9 +3,10 @@ package com.example.zzx.zbar_demo.entity;
 import android.support.annotation.Nullable;
 
 import java.io.File;
+import java.io.Serializable;
 
 // Created by $USER_NAME on 2018/11/28/028.
-public class UserInfo {
+public class UserInfo implements Serializable {
 
     public UserInfo() {
         super();
@@ -30,6 +31,11 @@ public class UserInfo {
     public UserInfo(String userPhone, String userPassword) {
         this.userPhone = userPhone;
         this.userPassword = userPassword;
+    }
+    public UserInfo(String userId,String userRole,String userName) {
+        this.userId = userId;
+        this.userRole = userRole;
+        this.userPhone = userName;
     }
 
     public UserInfo(String userId, String userName, String userPassword, String userPhone, String userRole, String userPerm, String userImage, boolean checked) {
