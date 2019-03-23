@@ -20,9 +20,7 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-
-    <!-- 小米推送 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" /> <!-- 小米推送 -->
     <permission
         android:name="com.example.zzx.zbar_demo.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
@@ -30,20 +28,18 @@
     <uses-permission android:name="com.example.zzx.zbar_demo.permission.MIPUSH_RECEIVE" />
 
     <application
-        android:name="com.example.zzx.zbar_demo.application.CustomApplication"
+        android:name=".application.CustomApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-
+        <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity"></activity>
         <!-- 百度地图Ket -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="fiwzxkeFvL7q37ZESCA4yU6nOPfnIa6u" />
-
-        <!-- 欢迎页面 -->
+            android:value="fiwzxkeFvL7q37ZESCA4yU6nOPfnIa6u" /> <!-- 欢迎页面 -->
         <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,7 +47,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity android:name=".activity.MainActivity" />
         <activity android:name=".zbar.CaptureActivity" />
         <activity android:name=".zbar.QRScanActivity" />
@@ -65,12 +60,11 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeFullscreen" />
         <activity android:name=".activity.basket.BasketPhotoActivity" />
-        <activity android:name=".activity.worker.WorkerOrderActivity"/>
+        <activity android:name=".activity.worker.WorkerOrderActivity" />
         <activity
             android:name=".activity.worker.WorkerPrimaryActivity"
             android:label="@string/title_activity_woker_primary"
             android:theme="@style/AppTheme.NoActionBar" />
-
         <activity
             android:name=".activity.ManageMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
@@ -91,20 +85,14 @@
         <activity
             android:name=".widget.zxing.activity.ResultActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" />
-
-        <!-- 百度地图 -->
+            android:theme="@android:style/Theme.Black.NoTitleBar" /> <!-- 百度地图 -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" />
-
-        <!-- 小米推送 -->
+            android:process=":remote" /> <!-- 小米推送 -->
         <activity
-            android:name="com.example.zzx.zbar_demo.utils.xiaomi.mipush.PermissionActivity"
-            android:label="" />
-
-        <!-- 4个后台服务 -->
+            android:name=".utils.xiaomi.mipush.PermissionActivity"
+            android:label="" /> <!-- 4个后台服务 -->
         <service
             android:name="com.xiaomi.push.service.XMJobService"
             android:enabled="true"
@@ -121,11 +109,9 @@
             android:exported="true" />
         <service
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-            android:enabled="true" />
-
-        <!-- 3个广播 -->
+            android:enabled="true" /> <!-- 3个广播 -->
         <receiver
-            android:name="com.example.zzx.zbar_demo.utils.xiaomi.mipush.MiMessageReceiver"
+            android:name=".utils.xiaomi.mipush.MiMessageReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
@@ -153,9 +139,7 @@
             <intent-filter>
                 <action android:name="com.xiaomi.push.PING_TIMER" />
             </intent-filter>
-        </receiver>
-
-        <!-- 文件服务 -->
+        </receiver> <!-- 文件服务 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
             android:authorities="com.example.cameraalbumtest.fileprovider"
@@ -165,9 +149,6 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
-
     </application>
-
-
 
 </manifest>

@@ -22,6 +22,7 @@
     <color name="sliver">#c0c0c0</color>
     <color name="dark_gary">#e8e9ed</color>
     <color name="light_gary">#f4f6f6</color>
+    <color name="gray01">#80666666</color>
 
     <!-- Text Color -->
     <color name="colorWhiteText">@color/white</color>

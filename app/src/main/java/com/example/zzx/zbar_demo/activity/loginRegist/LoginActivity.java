@@ -3,15 +3,12 @@ package com.example.zzx.zbar_demo.activity.loginRegist;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
-import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -26,11 +23,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.R;
+import com.example.zzx.zbar_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.example.zzx.zbar_demo.utils.HttpUtil;
 import com.example.zzx.zbar_demo.activity.ManageMainActivity;
 import com.example.zzx.zbar_demo.activity.worker.WorkerPrimaryActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
-import com.example.zzx.zbar_demo.utils.ToastUtil;
 import com.example.zzx.zbar_demo.widget.dialog.CommonDialog;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -151,7 +148,8 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // StartAndFinishActicity(null,ManageMainActivity.class);
-                StartAndFinishActicity(null, ManageMainActivity.class); // 跳转到施工人员界面
+                //StartAndFinishActicity(null, ManageMainActivity.class); // 跳转到施工人员界面
+                StartAndFinishActicity(null, RentAdminPrimaryActivity.class); // 跳转到施工人员界面
             }
         });
     }

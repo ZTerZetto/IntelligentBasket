@@ -6,7 +6,7 @@ public class AppConfig {
      * 服务器地址
      */
     public final static String BASE_URL_PATH = "http://47.100.1.211";// 后台地址
-    public final static String ANDROID_URL_PATH = "http://10.193.1.44:8080";// ANDROID后台地址 http://10.193.2.79:8080
+    public final static String ANDROID_URL_PATH = "http://10.193.2.79:8080";// ANDROID后台地址 http://10.193.2.79:8080
     public final static String IMAGE_URL = "http://10.193.0.20:21";
     public final static String FILE_SERVER_PATH = "http://10.193.0.20:8089"; // 文件服务器地址
     public final static String VIDEO_STREAM_PATH = "rtmp://47.96.103.244:1935"; // 流媒体服务器地址
@@ -83,8 +83,6 @@ public class AppConfig {
     public static  final String WORKER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetWorker");
     public static  final String WORKER_BEGIN_WORK = ANDROID_URL_PATH.concat("/androidBeginWork");
     public static  final String WORKER_ENG_WORK = ANDROID_URL_PATH.concat("/androidEndWork");
-
-
 
 
     /*

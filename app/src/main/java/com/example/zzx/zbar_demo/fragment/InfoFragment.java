@@ -42,7 +42,7 @@ public class InfoFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.info_fragment, container, false);
+            mView = inflater.inflate(R.layout.fragment_info, container, false);
 
             // 顶部导航栏
             Toolbar toolbar = (Toolbar) mView.findViewById(R.id.toolbar);

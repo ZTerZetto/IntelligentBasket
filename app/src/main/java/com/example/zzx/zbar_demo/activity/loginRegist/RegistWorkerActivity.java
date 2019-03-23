@@ -233,9 +233,10 @@ public class RegistWorkerActivity extends AppCompatActivity {
         }
         //适配器初始化
         spinner.setDropDownVerticalOffset(50); //下拉的纵向偏移
-        typeAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,type_list);
+        typeAdapter = new ArrayAdapter<String>(this,R.layout.spinner_simple_item,type_list);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(typeAdapter);
+        spinner.setSelection(4, true); // 设置默认值为:其它
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override

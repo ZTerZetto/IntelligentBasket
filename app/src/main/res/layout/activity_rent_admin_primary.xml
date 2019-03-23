@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:hjm="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.hjm.bottomtabbar.BottomTabBar
+        android:id="@+id/bottom_tab_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        hjm:tab_bar_background="#FFFFFF"
+        hjm:tab_divider_background="#FF0000"
+        hjm:tab_font_size="16px"
+        hjm:tab_img_font_padding="2px"
+        hjm:tab_img_height="70px"
+        hjm:tab_img_width="70px"
+        hjm:tab_isshow_divider="true"
+        hjm:tab_padding_bottom="5px"
+        hjm:tab_padding_top="5px"
+        hjm:tab_selected_color="#ff009688"
+        hjm:tab_unselected_color="#ffe8e9ed"/>
+
+</RelativeLayout>

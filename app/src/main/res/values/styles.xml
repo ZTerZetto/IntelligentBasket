@@ -276,6 +276,13 @@
     <style name="more_common_item_textView_style" parent="me_common_item_title_textView_style">
         <item name="android:textSize">@dimen/textSize_16</item>
     </style>
+    <style name="more_common_desc_textView_style" parent="base_textView_style">
+        <item name="android:layout_alignParentEnd">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:textSize">@dimen/textSize_15</item>
+        <item name="android:textColor">@color/gray01</item>
+    </style>
 
     <!-- 确认上下工弹窗 -->
     <!-- 普通弹窗 -->
@@ -310,6 +317,13 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/sliver</item>
+    </style>
+
+    <!-- rentAdmin -->
+    <!-- rentAdmin Activity -->
+    <style name="TabLayoutTextStyle">
+        <item name="android:textSize">@dimen/textSize_20</item>
+        <item name="android:textStyle">bold</item>
     </style>
 
 

@@ -20,7 +20,7 @@ import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.utils.ToastUtil;
 import com.example.zzx.zbar_demo.utils.okhttp.BaseCallBack;
 import com.example.zzx.zbar_demo.utils.okhttp.BaseOkHttpClient;
-import com.example.zzx.zbar_demo.widget.CustomMediaController;
+import com.example.zzx.zbar_demo.widget.pldroid.CustomMediaController;
 import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLOnBufferingUpdateListener;
 import com.pili.pldroid.player.PLOnCompletionListener;

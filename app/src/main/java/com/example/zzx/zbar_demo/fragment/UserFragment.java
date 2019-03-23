@@ -79,7 +79,7 @@ public class UserFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if (mView == null) {
-            mView = inflater.inflate(R.layout.user_fragment, container, false);
+            mView = inflater.inflate(R.layout.fragment_user, container, false);
 
             txtUserName = mView.findViewById(R.id.txt_user_name);
             txtRoleName = mView.findViewById(R.id.txt_role_name);

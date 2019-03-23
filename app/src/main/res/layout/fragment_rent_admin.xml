@@ -2,16 +2,15 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWorkerPrimaryBackground"
     android:orientation="vertical">
-    
+
     <!-- header 登录状态 -->
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="@dimen/me_login_layout_height"
         android:paddingLeft="@dimen/me_login_layout_paddingLeft"
-        android:background="@mipmap/bg_my_login">
+        android:background="@drawable/bg_white_quai">
 
         <!-- 头像 -->
         <com.example.zzx.zbar_demo.widget.image.SmartImageView
@@ -72,7 +71,7 @@
                     android:text="@string/worker_project_state"
                     android:textSize="@dimen/me_login_balance_size"/>
                 <TextView
-                    android:id="@+id/worker_project_state"
+                    android:id="@+id/user_project_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="无"
@@ -82,7 +81,6 @@
 
         <!-- 右箭头 -->
         <!-- need do something -->
-
     </RelativeLayout>
 
     <!-- 我页面详情 -->
@@ -96,66 +94,7 @@
             android:orientation="vertical">
 
             <!-- 功能模块 -->
-            <!-- 工作管理 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="70dp"
-                android:background="@drawable/bg_white_quai"
-                android:orientation="horizontal">
-                <!-- 上工/下工 -->
-                <LinearLayout
-                    android:id="@+id/work_layout"
-                    style="@style/me_userLayout_linearLayout_style">
-                    <ImageView
-                        android:id="@+id/work_imageview"
-                        style="@style/me_userLayout_imageView_style"
-                        android:src="@mipmap/ic_worker_open"/>
-                    <TextView
-                        android:id="@+id/work_textview"
-                        style="@style/me_userLayout_textView_style1"
-                        android:text="@string/worker_start_basket"/>
-                </LinearLayout>
-                <View
-                    style="@style/me_vertical_view_style"/>
-                <!-- 工单 -->
-                <LinearLayout
-                    android:id="@+id/order_layout"
-                    style="@style/me_userLayout_linearLayout_style">
-                    <ImageView
-                        style="@style/me_userLayout_imageView_style"
-                        android:src="@mipmap/ic_worker_order"/>
-                    <TextView
-                        style="@style/me_userLayout_textView_style1"
-                        android:text="@string/worker_order"/>
-                </LinearLayout>
-                <View
-                    style="@style/me_vertical_view_style"/>
-                <!-- 消息 -->
-                <LinearLayout
-                    android:id="@+id/message_layout"
-                    style="@style/me_userLayout_linearLayout_style">
-                    <ImageView
-                        style="@style/me_userLayout_imageView_style"
-                        android:src="@mipmap/ic_worker_message"/>
-                    <TextView
-                        style="@style/me_userLayout_textView_style1"
-                        android:text="@string/worker_message"/>
-                </LinearLayout>
-                <View
-                    style="@style/me_vertical_view_style"/>
-                <!-- 报警 -->
-                <LinearLayout
-                    android:id="@+id/warning_layout"
-                    style="@style/me_userLayout_linearLayout_style">
-                    <ImageView
-                        style="@style/me_userLayout_imageView_style"
-                        android:src="@mipmap/ic_worker_warning"/>
-                    <TextView
-                        style="@style/me_userLayout_textView_style1"
-                        android:text="@string/worker_warning"/>
-                </LinearLayout>
-
-            </LinearLayout>
+            <!-- 没想明白怎么写 -->
 
             <!--软件设置相关-->
             <LinearLayout
@@ -241,6 +180,6 @@
         </LinearLayout>
 
     </ScrollView>
-    
+
 
 </LinearLayout>

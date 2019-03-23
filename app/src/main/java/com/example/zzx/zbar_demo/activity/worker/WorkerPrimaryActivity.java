@@ -80,8 +80,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private LinearLayout mWarningLayout; //警告
 
     // 其它功能
-    private RelativeLayout mContactLayout; // 联系与反馈
-    private RelativeLayout mSettingLayout; // 设置
+    private RelativeLayout mGiveHighPrice; // 给个好评
+    private RelativeLayout mFeedbackComment; // 反馈意见
+    private RelativeLayout mContactService; // 联系客服
+    private RelativeLayout mCheckUpdate; // 检查更新
+    private RelativeLayout mInRegardTo; //关于
 
     // 页面信息
     private String mWorkProject;  // 项目ID
@@ -174,10 +177,16 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mWarningLayout.setOnClickListener(this);
 
         // other function
-        mContactLayout = (RelativeLayout) findViewById(R.id.comment_and_feedback_layout);
-        mContactLayout.setOnClickListener(this);
-        mSettingLayout = (RelativeLayout) findViewById(R.id.setting_layout);
-        mSettingLayout.setOnClickListener(this);
+        mGiveHighPrice = (RelativeLayout) findViewById(R.id.more_item_comment_layout); // 给个好评
+        mGiveHighPrice.setOnClickListener(this);
+        mFeedbackComment = (RelativeLayout) findViewById(R.id.more_item_feedback_layout); // 反馈意见
+        mFeedbackComment.setOnClickListener(this);
+        mContactService = (RelativeLayout) findViewById(R.id.more_item_contact_kefu_layout); // 联系客服
+        mContactService.setOnClickListener(this);
+        mCheckUpdate = (RelativeLayout) findViewById(R.id.more_item_check_update_layout); // 检查更新
+        mCheckUpdate.setOnClickListener(this);
+        mInRegardTo = (RelativeLayout) findViewById(R.id.more_item_about_layout); // 关于
+        mInRegardTo.setOnClickListener(this);
     }
 
     /*
@@ -213,11 +222,20 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 intent.setData(Uri.parse("tel:15651851181"));
                 startActivity(intent);
                 break;
-            case R.id.comment_and_feedback_layout:  // 联系与反馈
-                Log.i(TAG, "You have clicked comment and feedback button");
+            case R.id.more_item_comment_layout:  // 给个好评
+                Log.i(TAG, "You have clicked high price button");
                 break;
-            case R.id.setting_layout:  // 设置
-                Log.i(TAG, "You have clicked setting button");
+            case R.id.more_item_feedback_layout:  // 反馈意见
+                Log.i(TAG, "You have clicked feedback button");
+                break;
+            case R.id.more_item_contact_kefu_layout: // 联系客服
+                Log.i(TAG, "You have clicked contact service button");
+                break;
+            case R.id.more_item_check_update_layout: // 检查更新
+                Log.i(TAG, "You have clicked check update button");
+                break;
+            case R.id.more_item_about_layout: // 关于
+                Log.i(TAG, "You have clicked in regard to button");
                 logoutHttp();
                 break;
         }
