@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo.activity.AreaAdmin;
+package com.example.zzx.zbar_demo.activity.areaAdmin;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,7 +16,6 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.activity.basket.BasketPhotoActivity;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.adapter.CommitPhotoAdapter;
 import com.example.zzx.zbar_demo.entity.AppConfig;

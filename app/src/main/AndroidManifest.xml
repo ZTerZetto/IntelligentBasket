@@ -35,6 +35,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+
         <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity"></activity>
         <!-- 百度地图Ket -->
         <meta-data
@@ -71,8 +72,8 @@
             android:name=".activity.ManageMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.WorkerMainActivity" />
         <activity android:name=".activity.ProDetailActivity" />
+        <activity android:name=".activity.areaAdmin.ProCommitActivity" />
         <activity android:name=".activity.basket.BasketListActivity" />
         <activity android:name=".activity.WorkerListActivity" />
         <activity android:name=".activity.ProListActivity" />
@@ -80,6 +81,8 @@
         <activity android:name=".activity.loginRegist.RegistRentManActivity" />
         <activity android:name=".activity.loginRegist.RegisterPreActivity" />
         <activity android:name=".activity.loginRegist.LoginActivity" />
+
+        <!-- Zxing -->
         <activity
             android:name=".widget.zxing.activity.CaptureActivity"
             android:screenOrientation="portrait"
@@ -87,7 +90,9 @@
         <activity
             android:name=".widget.zxing.activity.ResultActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" /> <!-- 百度地图 -->
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+
+        <!-- 百度地图 -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"

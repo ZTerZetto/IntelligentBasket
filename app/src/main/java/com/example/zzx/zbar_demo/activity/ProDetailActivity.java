@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.example.zzx.zbar_demo.activity.AreaAdmin.ProCommitActivity;
+import com.example.zzx.zbar_demo.activity.areaAdmin.ProCommitActivity;
 import com.example.zzx.zbar_demo.pdf_read.PDFStartActivity;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.utils.HttpUtil;
