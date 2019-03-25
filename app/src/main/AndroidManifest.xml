@@ -39,7 +39,9 @@
         <!-- 百度地图Ket -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="fiwzxkeFvL7q37ZESCA4yU6nOPfnIa6u" /> <!-- 欢迎页面 -->
+            android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" />
+
+        <!-- 欢迎页面 -->
         <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

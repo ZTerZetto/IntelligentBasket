@@ -177,6 +177,22 @@
                 </RelativeLayout>
             </LinearLayout>
 
+            <!--检查更新关于等-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/me_item_common_layout_marginTop"
+                android:orientation="vertical"
+                android:background="@drawable/bg_white_quai">
+                <RelativeLayout
+                    android:id="@+id/log_out_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="退出登录"/>
+                </RelativeLayout>
+            </LinearLayout>
+
         </LinearLayout>
 
     </ScrollView>

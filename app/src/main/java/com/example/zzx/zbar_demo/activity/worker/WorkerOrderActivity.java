@@ -10,7 +10,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.adapter.WorkerOrderAdapter;
+import com.example.zzx.zbar_demo.adapter.worker.WorkerOrderAdapter;
 import com.example.zzx.zbar_demo.entity.WorkerOrder;
 
 import java.util.ArrayList;

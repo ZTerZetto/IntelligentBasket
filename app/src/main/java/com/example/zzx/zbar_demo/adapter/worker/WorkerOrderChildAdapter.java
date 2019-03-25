@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo.adapter;
+package com.example.zzx.zbar_demo.adapter.worker;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -12,9 +12,6 @@ import android.widget.TextView;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.entity.WorkerOrder;
 import com.example.zzx.zbar_demo.utils.DateUtil;
-import com.example.zzx.zbar_demo.utils.ToastUtil;
-
-import org.w3c.dom.Text;
 
 import java.util.Calendar;
 import java.util.List;

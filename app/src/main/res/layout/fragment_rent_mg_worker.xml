@@ -1,6 +1,100 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBackground">
 
-</LinearLayout>
+    <!-- 顶部导航 -->
+    <RelativeLayout
+        android:id="@+id/navi_header"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="?attr/colorPrimary"
+        android:gravity="center"
+        android:layout_alignParentTop="true">
+
+        <TextView
+            android:id="@+id/toolbar_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="施工人员管理"
+            android:singleLine="true"
+            android:textColor="@color/colorWhiteText"
+            android:textSize="21sp" />
+
+    </RelativeLayout>
+
+        <!-- 吊篮主体 -->
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/worker_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/navi_header"
+        android:layout_above="@+id/worker_controller">
+
+    </android.support.v7.widget.RecyclerView>
+
+    <!-- 控制栏 -->
+    <RelativeLayout
+        android:id="@+id/worker_controller"
+        android:layout_width="match_parent"
+        android:layout_height="54dp"
+        android:layout_alignParentBottom="true"
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
+
+        <!-- 复选框 -->
+        <CheckBox
+            android:id="@+id/worker_all_checkbox"
+            style="@style/CustomCheckboxTheme" />
+        <!-- 全选 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/worker_all_checkbox"
+            android:layout_centerVertical="true"
+            android:text="全选"/>
+
+        <!-- 合计 -->
+        <TextView
+            android:layout_toLeftOf="@id/worker_number"
+            android:text="合计:"
+            style="@style/ApplyTotalTextView"/>
+        <TextView
+            android:id="@+id/worker_number"
+            android:layout_toLeftOf="@id/ge"
+            android:text="0"
+            android:textSize="@dimen/textSize_20"
+            android:textStyle="bold"
+            android:textColor="@color/dark_red"
+            style="@style/ApplyTotalTextView"/>
+        <TextView
+            android:id="@+id/ge"
+            android:layout_toLeftOf="@id/worker_apply_delete"
+            android:text="个"
+            android:layout_marginRight="15dp"
+            style="@style/ApplyTotalTextView"/>
+
+
+        <!-- 预报停 -->
+        <TextView
+            android:id="@+id/worker_apply_delete"
+            android:text="删除"
+            style="@style/ApplyOperateTextView"/>
+
+    </RelativeLayout>
+
+    <!-- 悬浮窗 -->
+    <ImageView
+        android:id="@+id/worker_add_image_view"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:layout_alignParentRight="true"
+        android:layout_above="@id/worker_controller"
+        android:layout_marginRight="30dp"
+        android:layout_marginBottom="40dp"
+        android:src="@mipmap/ic_round_add_fill"/>
+
+
+</RelativeLayout>

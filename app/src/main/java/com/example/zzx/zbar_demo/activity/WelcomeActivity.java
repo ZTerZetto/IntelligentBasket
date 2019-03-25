@@ -12,6 +12,7 @@ import android.view.WindowManager;
 import com.baidu.mapapi.SDKInitializer;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
+import com.example.zzx.zbar_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.example.zzx.zbar_demo.activity.worker.WorkerPrimaryActivity;
 
 import java.util.Timer;
@@ -63,7 +64,10 @@ public class WelcomeActivity extends AppCompatActivity {
                     if(userRole.equals("worker")){
                         mainIntent = new Intent(WelcomeActivity.this,  // worker主活动
                                 WorkerPrimaryActivity.class);
-                    }else {
+                    }else if(userRole.equals("rentAdmin")){
+                        mainIntent = new Intent(WelcomeActivity.this,  // 管理员页面
+                                RentAdminPrimaryActivity.class);
+                    }else{
                         mainIntent = new Intent(WelcomeActivity.this,  // 管理员页面
                                 ManageMainActivity.class);
                     }

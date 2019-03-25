@@ -17,7 +17,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.adapter.VarSwitchAdapter;
+import com.example.zzx.zbar_demo.adapter.basket.VarSwitchAdapter;
 import com.example.zzx.zbar_demo.utils.CustomTimeTask;
 import com.example.zzx.zbar_demo.utils.HttpUtil;
 import com.example.zzx.zbar_demo.entity.VarSwitch;
@@ -300,6 +300,7 @@ public class BasketParameterActivity extends AppCompatActivity {
          * bool 数据
          */
         String boolData32 = electric_data_json_object.getString("bool_data_int32");
+        boolData32 = Integer.toBinaryString(Integer.valueOf(boolData32));
         if(boolData32.length() >= 15) {
             // 开关变量
             String varswitch = boolData32.substring(0, 8);

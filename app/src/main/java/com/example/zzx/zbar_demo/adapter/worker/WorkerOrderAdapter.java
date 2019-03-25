@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo.adapter;
+package com.example.zzx.zbar_demo.adapter.worker;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -14,9 +14,7 @@ import com.example.zzx.zbar_demo.entity.WorkerOrder;
 import com.example.zzx.zbar_demo.utils.DateUtil;
 import com.example.zzx.zbar_demo.utils.ToastUtil;
 
-import java.time.Month;
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 
 /**

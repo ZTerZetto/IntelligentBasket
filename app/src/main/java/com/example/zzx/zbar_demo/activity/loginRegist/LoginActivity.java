@@ -193,7 +193,7 @@ public class LoginActivity extends AppCompatActivity {
                                 StartAndFinishActicity(isLogin,WorkerPrimaryActivity.class);
                                 break;
                             case "rentAdmin":  // 租房管理员
-                                StartManageMainActicity(userRole);
+                                StartAndFinishActicity(isLogin,RentAdminPrimaryActivity.class);
                                 break;
                             case "areaAdmin":  // 区域管理员
                                 StartManageMainActicity(isLogin);
@@ -259,7 +259,7 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    //跳转到施工人员主界面
+    //跳转到其它主界面
     public void StartAndFinishActicity(String isLogin ,Class<?> cls ) {
         Intent intent = new Intent(LoginActivity.this,  cls);
         startActivity(intent);

@@ -1,4 +1,4 @@
-package com.example.zzx.zbar_demo.adapter;
+package com.example.zzx.zbar_demo.adapter.basket;
 
 import android.content.Context;
 import android.view.LayoutInflater;

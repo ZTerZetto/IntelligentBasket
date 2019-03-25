@@ -1,12 +1,15 @@
 package com.example.zzx.zbar_demo.activity.rentAdmin;
 
+import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.example.zzx.zbar_demo.R;
+import com.example.zzx.zbar_demo.entity.UserInfo;
 import com.example.zzx.zbar_demo.fragment.rentAdmin.ManageBasketFragment;
 import com.example.zzx.zbar_demo.fragment.rentAdmin.ManageWorkerFragment;
 import com.example.zzx.zbar_demo.fragment.rentAdmin.RentAdminFragment;
@@ -20,6 +23,12 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
     // 屏幕素质
     private int mScreenWidth;
     private int mScreenHeight;
+
+    // 用户登录信息相关
+    private UserInfo mUserInfo;
+    private String mToken;
+    private SharedPreferences mPref;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -54,6 +63,26 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
                 })
                 .setSpot(2, true);
 
+    }
+
+    /*
+     * 获取用户信息
+     */
+    /*
+     * 解析用户信息
+     */
+    // 获取用户数据
+    private void getUserInfo(){
+        // 从本地获取数据
+        mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserInfo = new UserInfo();
+        mUserInfo.setUserId(mPref.getString("userId", ""));
+        mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mToken = mPref.getString("loginToken","");
+    }
+    // 将用户信息传递给子Fragment
+    public UserInfo pushUserInfo(){
+        return mUserInfo;
     }
 
     /*

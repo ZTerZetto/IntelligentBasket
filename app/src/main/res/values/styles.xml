@@ -319,12 +319,52 @@
         <item name="android:background">@color/sliver</item>
     </style>
 
-    <!-- rentAdmin -->
-    <!-- rentAdmin Activity -->
+    <!-- 租方管理员 -->
+    <!-- 租方管理员，吊篮顶部切换 -->
     <style name="TabLayoutTextStyle">
         <item name="android:textSize">@dimen/textSize_20</item>
         <item name="android:textStyle">bold</item>
     </style>
-
+    <!-- 复选框 -->
+    <style name="CustomCheckboxTheme" parent="@android:style/Widget.CompoundButton.CheckBox">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:scaleX">0.30</item>
+        <item name="android:scaleY">0.30</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:button">@drawable/checkbox_style</item>
+    </style>
+    <!-- 底部合计文字 -->
+    <style name="ApplyTotalTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:textSize">@dimen/textSize_18</item>
+    </style>
+    <!-- 底部操作 -->
+    <style name="ApplyOperateTextView">
+        <item name="android:layout_width">120dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/dark_red</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textSize_20</item>
+    </style>
+    <!-- 吊篮基本信息 -->
+    <style name="BasketItemLinearLayout">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="BasketItemCatTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="BasketItemContentTextView" >
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
+    </style>
 
 </resources>

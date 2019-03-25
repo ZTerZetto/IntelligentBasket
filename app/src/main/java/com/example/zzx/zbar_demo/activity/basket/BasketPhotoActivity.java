@@ -16,7 +16,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.adapter.WorkPhotoAdapter;
+import com.example.zzx.zbar_demo.adapter.basket.WorkPhotoAdapter;
 import com.example.zzx.zbar_demo.widget.ScaleImageView;
 import com.example.zzx.zbar_demo.widget.image.WebImage;
 import com.scwang.smartrefresh.header.BezierCircleHeader;

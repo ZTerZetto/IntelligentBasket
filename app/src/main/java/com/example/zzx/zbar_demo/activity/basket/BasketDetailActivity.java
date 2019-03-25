@@ -11,7 +11,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.adapter.FunctionAdapter;
+import com.example.zzx.zbar_demo.adapter.basket.FunctionAdapter;
 import com.example.zzx.zbar_demo.entity.Function;
 
 import java.util.ArrayList;
