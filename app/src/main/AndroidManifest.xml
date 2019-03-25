@@ -20,7 +20,9 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" /> <!-- 小米推送 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+
+    <!-- 小米推送 -->
     <permission
         android:name="com.example.zzx.zbar_demo.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
@@ -35,11 +37,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity"></activity>
+        <activity android:name=".activity.AreaAdmin.ProCommitActivity"></activity>
         <!-- 百度地图Ket -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="fiwzxkeFvL7q37ZESCA4yU6nOPfnIa6u" /> <!-- 欢迎页面 -->
+            android:value="fiwzxkeFvL7q37ZESCA4yU6nOPfnIa6u" />
+
+        <!-- 欢迎页面 -->
         <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -60,7 +64,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeFullscreen" />
         <activity android:name=".activity.basket.BasketPhotoActivity" />
-        <activity android:name=".activity.worker.WorkerOrderActivity" />
+        <activity android:name=".activity.worker.WorkerOrderActivity"/>
         <activity
             android:name=".activity.worker.WorkerPrimaryActivity"
             android:label="@string/title_activity_woker_primary"
@@ -69,7 +73,12 @@
             android:name=".activity.ManageMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.WorkerMainActivity" />
+        <activity
+            android:name=".activity.rentAdmin.RentMainActivity"
+            android:configChanges="orientation|keyboardHidden|screenSize"
+            android:screenOrientation="portrait" />
+        <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity"></activity>
+
         <activity android:name=".activity.ProDetailActivity" />
         <activity android:name=".activity.basket.BasketListActivity" />
         <activity android:name=".activity.WorkerListActivity" />
@@ -109,7 +118,9 @@
             android:exported="true" />
         <service
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-            android:enabled="true" /> <!-- 3个广播 -->
+            android:enabled="true" />
+
+        <!-- 3个广播 -->
         <receiver
             android:name=".utils.xiaomi.mipush.MiMessageReceiver"
             android:exported="true">

@@ -243,10 +243,10 @@ public class RegistWorkerActivity extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String type = (String) spinner.getSelectedItem();
                 switch (type){
-                    case "木工": workerType = "worker_1";break;
-                    case "泥瓦匠": workerType = "worker_2";break;
-                    case "油漆工": workerType = "worker_3";break;
-                    case "水泥工": workerType = "worker_4";break;
+                    case "涂料": workerType = "worker_1";break;
+                    case "幕墙": workerType = "worker_2";break;
+                    case "内装": workerType = "worker_3";break;
+                    case "土建": workerType = "worker_4";break;
                     default: workerType = "worker";break;
                 }
             }
@@ -260,10 +260,10 @@ public class RegistWorkerActivity extends AppCompatActivity {
     }
     private void initSpinner() {
         type_list = new ArrayList<String>();
-        type_list.add("木工");
-        type_list.add("泥瓦匠");
-        type_list.add("油漆工");
-        type_list.add("水泥工");
+        type_list.add("涂料");
+        type_list.add("幕墙");
+        type_list.add("内装");
+        type_list.add("土建");
         type_list.add("其他");
 
     }

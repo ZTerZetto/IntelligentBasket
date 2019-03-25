@@ -1,0 +1,191 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWorkerPrimaryBackground"
+    android:orientation="vertical">
+
+    <!-- header 登录状态 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/me_login_layout_height"
+        android:paddingLeft="@dimen/me_login_layout_paddingLeft"
+        android:background="@mipmap/bg_my_login">
+
+    <!-- 头像 -->
+    <com.example.zzx.zbar_demo.widget.image.SmartImageView
+        android:id="@+id/login_head"
+        android:layout_width="@dimen/me_login_head_width"
+        android:layout_height="@dimen/me_login_head_width"
+        android:layout_marginEnd="@dimen/me_login_head_marginEnd"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:scaleType="fitXY"
+        android:src="@mipmap/ic_launcher_round"/>
+    <!-- 账户信息 -->
+    <LinearLayout
+        android:id="@+id/login_message"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerVertical="true"
+        android:layout_toRightOf="@+id/login_head"
+        android:layout_alignParentBottom="true"
+        android:layout_marginBottom="20dp"
+        android:orientation="vertical">
+        <!-- 用户姓名 -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart=
+                "@dimen/me_login_profile_layout_marginStart">
+            <!-- 姓名 -->
+            <TextView
+                android:id="@+id/txt_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="@color/colorBlackText"
+                android:text="张三"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+            <!-- 等级 -->
+            <!--<ImageView
+                android:id="@+id/login_iv_level"
+                android:layout_width="@dimen/me_login_level_width"
+                android:layout_height="@dimen/me_login_level_height"
+                android:layout_marginStart="@dimen/me_login_level_marginStart"
+                android:layout_toRightOf="@+id/txt_user_name"
+                android:src="@mipmap/ic_level_0"/>-->
+        </RelativeLayout>
+
+        <!-- 项目信息 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/me_login_balance_layout_marginTop"
+            android:layout_marginStart="@dimen/me_login_profile_layout_marginStart">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/user_frag_role_name"
+                android:textSize="@dimen/me_login_balance_size"/>
+            <TextView
+                android:id="@+id/txt_role_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="无"
+                android:textSize="@dimen/textSize_16"/>
+        </LinearLayout>
+    </LinearLayout>
+    </RelativeLayout>
+
+
+    <!--<LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            android:id="@+id/txt_pro_number"
+            style="@style/usertextStyle"
+            android:layout_weight="5"
+            android:textStyle="bold"
+            android:text="当前项目：" />
+    </LinearLayout>-->
+
+    <LinearLayout
+        android:id="@+id/ll_pro_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFF"
+        android:layout_marginTop="15dp"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="5"
+            android:text="项目详情" />
+        <ImageView style="@style/img_arrow" />
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_basket_manage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="5"
+            android:text="吊篮管理" />
+        <ImageView style="@style/img_arrow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_worker_manage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:visibility="gone">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="5"
+            android:text="施工人员管理" />
+        <ImageView style="@style/img_arrow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_change_pro"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        android:visibility="gone">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="5"
+            android:text="切换项目" />
+        <ImageView style="@style/img_arrow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_self_settle"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="5"
+            android:text="个人设置" />
+        <ImageView style="@style/img_arrow" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_logout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="15dp"
+        android:background="#FFF"
+        android:orientation="horizontal"
+        android:padding="10dp">
+        <TextView
+            style="@style/usertextStyle"
+            android:layout_weight="5"
+            android:text="退出登录" />
+        <ImageView style="@style/img_arrow" />
+    </LinearLayout>
+
+</LinearLayout>

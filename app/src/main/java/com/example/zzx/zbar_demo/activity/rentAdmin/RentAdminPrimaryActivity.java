@@ -56,6 +56,8 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
 
     }
 
+
+
     /*
      * 获取屏幕素质
      */

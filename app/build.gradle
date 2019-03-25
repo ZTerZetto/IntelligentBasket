@@ -46,4 +46,5 @@ dependencies {
     implementation 'com.hjm:BottomTabBar:1.2.2'
     implementation files('libs/zxing.jar')
     implementation files('libs/MiPush_SDK_Client_3_6_15.jar')
+    implementation 'com.hjm:BottomTabBar:1.2.2'
 }

@@ -19,7 +19,7 @@
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@android:drawable/ic_menu_myplaces"
+                android:src="@mipmap/icon_user_info"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical" />
             <EditText
@@ -35,7 +35,7 @@
             <ImageView
                 android:layout_width="32dp"
                 android:layout_height="32dp"
-                android:src="@android:drawable/ic_menu_view"
+                android:src="@mipmap/icon_password"
                 android:layout_marginLeft="10dp"
                 android:layout_gravity="center_vertical" />
             <EditText
