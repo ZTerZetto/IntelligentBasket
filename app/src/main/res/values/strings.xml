@@ -52,8 +52,12 @@
 
     <!-- basketDetail activity -->
     <string name="basketDetail_tile">吊篮详情</string>
+
     <!-- projectDetail activity -->
     <string name="projectDetail_tile">项目详情</string>
+    <!-- ProCommit activity-->
+    <string name="proCommit_tile">项目验收申请</string>
+    <string name="proCommit_describe">请输入项目描述...</string>
 
     <!-- parameter activity -->
     <string name="parameter_title">设备参数</string>
@@ -79,6 +83,9 @@
     <!-- Info fragment -->
     <string name="info_noMessage">暂无消息</string>
     <string name="info_title">消息列表</string>
+
+    <!-- user fragment-->
+    <string name="user_frag_role_name">职位：</string>
 
     <!-- basketDetail activity -->
     <string name="basketId_hint">吊篮编号</string>

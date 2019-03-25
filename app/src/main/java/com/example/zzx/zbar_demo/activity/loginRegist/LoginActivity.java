@@ -3,12 +3,15 @@ package com.example.zzx.zbar_demo.activity.loginRegist;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -28,6 +31,7 @@ import com.example.zzx.zbar_demo.utils.HttpUtil;
 import com.example.zzx.zbar_demo.activity.ManageMainActivity;
 import com.example.zzx.zbar_demo.activity.worker.WorkerPrimaryActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
+import com.example.zzx.zbar_demo.utils.ToastUtil;
 import com.example.zzx.zbar_demo.widget.dialog.CommonDialog;
 import com.google.gson.Gson;
 import java.io.IOException;
@@ -149,7 +153,7 @@ public class LoginActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // StartAndFinishActicity(null,ManageMainActivity.class);
                 //StartAndFinishActicity(null, ManageMainActivity.class); // 跳转到施工人员界面
-                StartAndFinishActicity(null, RentAdminPrimaryActivity.class); // 跳转到施工人员界面
+                StartAndFinishActicity(RentAdminPrimaryActivity.class); // 跳转到施工人员界面
             }
         });
     }
@@ -190,10 +194,10 @@ public class LoginActivity extends AppCompatActivity {
                         savePref(token);
                         switch (userRole){
                             case "worker":  // 工人主页面
-                                StartAndFinishActicity(isLogin,WorkerPrimaryActivity.class);
+                                StartAndFinishActicity(WorkerPrimaryActivity.class);
                                 break;
                             case "rentAdmin":  // 租房管理员
-                                StartAndFinishActicity(isLogin,RentAdminPrimaryActivity.class);
+                                StartAndFinishActicity(RentAdminPrimaryActivity.class);
                                 break;
                             case "areaAdmin":  // 区域管理员
                                 StartManageMainActicity(isLogin);
@@ -259,8 +263,8 @@ public class LoginActivity extends AppCompatActivity {
         finish();
     }
 
-    //跳转到其它主界面
-    public void StartAndFinishActicity(String isLogin ,Class<?> cls ) {
+    //跳转到施工人员主界面
+    public void StartAndFinishActicity( Class<?> cls ) {
         Intent intent = new Intent(LoginActivity.this,  cls);
         startActivity(intent);
         finish();

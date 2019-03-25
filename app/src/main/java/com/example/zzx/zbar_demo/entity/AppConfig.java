@@ -1,12 +1,14 @@
 package com.example.zzx.zbar_demo.entity;
 
+import android.content.Intent;
+
 // Created by $USER_NAME on 2018/11/28/028.
 public class AppConfig {
     /*
      * 服务器地址
      */
     public final static String BASE_URL_PATH = "http://47.100.1.211";// 后台地址
-    public final static String ANDROID_URL_PATH = "http://10.193.2.79:8080";// ANDROID后台地址 http://10.193.2.79:8080
+    public final static String ANDROID_URL_PATH = "http://10.193.2.79:8080";// ANDROID后台地址 http://10.193.1.44:8080
     public final static String IMAGE_URL = "http://10.193.0.20:21";
     public final static String FILE_SERVER_PATH = "http://10.193.0.20:8089"; // 文件服务器地址
     public final static String VIDEO_STREAM_PATH = "rtmp://47.96.103.244:1935"; // 流媒体服务器地址
@@ -85,8 +87,11 @@ public class AppConfig {
     public static  final String WORKER_ENG_WORK = ANDROID_URL_PATH.concat("/androidEndWork");
 
 
+
+
     /*
     * 常量
     * */
     public static final String INTENT_USER = "Intent_userInfo";
+    public static final Integer MAX_SELECT_PIC_NUM = 5;
 }

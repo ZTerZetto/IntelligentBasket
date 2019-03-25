@@ -65,6 +65,8 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
 
     }
 
+
+
     /*
      * 获取用户信息
      */

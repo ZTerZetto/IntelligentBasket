@@ -6,21 +6,21 @@
     <LinearLayout
         android:id="@+id/tab_menu"
         android:layout_width="match_parent"
-        android:layout_height="55dp"
+        android:layout_height="60dp"
         android:orientation="horizontal"
         android:layout_alignParentBottom="true">
 
-    <TextView
-        android:id="@+id/txt_infoFrag"
-        style="@style/tab_menu_item"
-        android:drawableTop="@android:drawable/ic_menu_day"
-        android:text="消息"/>
+        <TextView
+            android:id="@+id/txt_userFrag"
+            style="@style/tab_menu_item"
+            android:drawableTop="@mipmap/icon_frag_user"
+            android:text="设置" />
 
-    <TextView
-        android:id="@+id/txt_userFrag"
-        style="@style/tab_menu_item"
-        android:drawableTop="@android:drawable/ic_menu_myplaces"
-        android:text="设置"/>
+        <TextView
+            android:id="@+id/txt_mapFrag"
+            style="@style/tab_menu_item"
+            android:drawableTop="@mipmap/icon_frag_map"
+            android:text="地图" />
 
     </LinearLayout>
 
@@ -30,7 +30,6 @@
         android:layout_height="1px"
         android:background="@android:color/darker_gray"
         android:layout_above="@id/tab_menu"/>
-
 
     <FrameLayout
         android:id="@+id/fragment_container"
