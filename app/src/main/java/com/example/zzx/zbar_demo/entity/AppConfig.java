@@ -8,9 +8,12 @@ public class AppConfig {
      * 服务器地址
      */
     public final static String BASE_URL_PATH = "http://47.100.1.211";// 后台地址
-    public final static String ANDROID_URL_PATH = "http://10.193.2.79:8080";// ANDROID后台地址 http://10.193.1.44:8080
+    //public final static String ANDROID_URL_PATH = "http://47.100.1.211";
+    //public final static String ANDROID_URL_PATH = "http://10.193.1.44:8080";
+    public final static String ANDROID_URL_PATH = "http://10.193.2.79:8080";
     public final static String IMAGE_URL = "http://10.193.0.20:21";
     public final static String FILE_SERVER_PATH = "http://10.193.0.20:8089"; // 文件服务器地址
+    public final static String COMMUNICATION_SERVER_PATH = "http://47.100.1.211:8081"; // 通讯服务器地址
     public final static String VIDEO_STREAM_PATH = "rtmp://47.96.103.244:1935"; // 流媒体服务器地址
 
     /* 登陆
@@ -76,16 +79,21 @@ public class AppConfig {
     public static final float ASPECT_RATIO = (float)1.7777777777777777;  // 16:9
     // 视频纵横比
     public static final float ASPECT_RATIO_VIDEO = (float)1.333333333333;  // 4:3
-    public static final String HANGING_BASKET_VIDEO = VIDEO_STREAM_PATH.concat("/sendToDevice");
+    public static final String HANGING_BASKET_VIDEO = COMMUNICATION_SERVER_PATH.concat("/sendToDevice");
 
     /*
      * 施工人员活动请求
      */
     // 施工人员基本信息
-    public static  final String WORKER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetWorker");
-    public static  final String WORKER_BEGIN_WORK = ANDROID_URL_PATH.concat("/androidBeginWork");
-    public static  final String WORKER_ENG_WORK = ANDROID_URL_PATH.concat("/androidEndWork");
+    public static final String WORKER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetWorker");
+    public static final String WORKER_BEGIN_WORK = ANDROID_URL_PATH.concat("/androidBeginWork");
+    public static final String WORKER_ENG_WORK = ANDROID_URL_PATH.concat("/androidEndWork");
 
+    /*
+     * 租方管理员活动请求
+     */
+    // 租方管理员请求所有吊篮信息
+    public static final String RENT_ADMIN_MG_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/forecastStop");
 
 
 
@@ -94,4 +102,16 @@ public class AppConfig {
     * */
     public static final String INTENT_USER = "Intent_userInfo";
     public static final Integer MAX_SELECT_PIC_NUM = 5;
+
+    /*
+     * 公/局域 网切换
+     * 默认是局域网
+     */
+//    public static void setPublicAndroidUrl(boolean usePublic){
+//        if(usePublic){
+//            ANDROID_URL_PATH = "http://47.100.1.211";
+//        }else{
+//            ANDROID_URL_PATH = "http://10.193.2.79:8080";
+//        }
+//    }
 }

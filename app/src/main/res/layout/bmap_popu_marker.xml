@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/info_layout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp"
+        android:background="@drawable/bmap_info_bubble">
+
+        <TextView
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/marker_id"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="编号：220181494"/>
+
+        <TextView
+            android:textColor="@color/colorPrimary"
+            android:id="@+id/marker_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="地址：东南大学四牌楼校区"/>
+
+    </LinearLayout>
+
+    <ImageView
+        android:id="@+id/iv_triangle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/info_layout"
+        android:layout_centerHorizontal="true"
+        android:src="@drawable/bmap_triangle_down"/>
+
+</RelativeLayout>

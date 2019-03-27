@@ -168,7 +168,7 @@ public class BasketParameterActivity extends AppCompatActivity {
                 Log.d(TAG, "定时任务：获取最新吊篮数据");
             }
         });
-        customTimeTask.start();
+        //customTimeTask.start();
     }
 
 
@@ -326,12 +326,15 @@ public class BasketParameterActivity extends AppCompatActivity {
         // 变频器电流
         String vfd_current = electric_data_json_object.getString("current");
         int dot_index = vfd_current.indexOf(",");
-        String vfd_str = "(" + vfd_current.substring(0, dot_index) + "A," +
+        String vfd_str = "(" + vfd_current.substring(0, dot_index) + "A" +
                 vfd_current.substring(dot_index) + "A)";
         mVfdCurrent.setText(vfd_str);
         // 倾斜仪
         String clinometer_degree = electric_data_json_object.getString("degree");
-        mClinometerDegree.setText("(" + clinometer_degree + ")");
+        dot_index = clinometer_degree.indexOf(",");
+        String cilnometer_str = "(" + clinometer_degree.substring(0, dot_index) + "°" +
+                vfd_current.substring(dot_index) + "°)";
+        mClinometerDegree.setText(cilnometer_str);
 
         /*
          * 其他数据
@@ -340,7 +343,7 @@ public class BasketParameterActivity extends AppCompatActivity {
         String longitude = electric_data_json_object.getString("longitude");
         String latitude = electric_data_json_object.getString("latitude");
         String altitude = electric_data_json_object.getString("altitude");
-        mLocationMsg.setText("(" + longitude + "°," + latitude + "°," + altitude + "m");
+        mLocationMsg.setText("(" + longitude + "°," + latitude + "°," + altitude + "m)");
         // 时间
         String timestamp = electric_data_json_object.getString("timestamp");
         mDateMsg.setText(timestamp);

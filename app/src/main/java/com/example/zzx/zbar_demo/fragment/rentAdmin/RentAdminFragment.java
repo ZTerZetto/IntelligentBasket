@@ -29,7 +29,7 @@ import com.example.zzx.zbar_demo.entity.UserInfo;
 /**
  * Created by pengchenghu on 2019/3/22.
  * Author Email: 15651851181@163.com
- * Describe:
+ * Describe: 租方管理员用户页面
  */
 public class RentAdminFragment extends Fragment implements View.OnClickListener {
 

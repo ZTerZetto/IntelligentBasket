@@ -16,6 +16,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 
 import static com.example.zzx.zbar_demo.entity.AppConfig.REAL_TIME_PARAMETER;
+import static com.example.zzx.zbar_demo.entity.AppConfig.VIDEO_STREAM_PATH;
 
 // Created by $USER_NAME on 2018/11/28/028.
 public class HttpUtil {
@@ -55,8 +56,6 @@ public class HttpUtil {
                 .build();
         client.newCall(request).enqueue(callback);
     }
-
-
 
 
     public static void getUserInfoOkHttpRequest(okhttp3.Callback callback, String token) {
@@ -128,6 +127,8 @@ public class HttpUtil {
 
     /*
      * 设备参数请求
+     * /getRealTimeData
+     * get token deviceId
      */
     public static void getDeviceParameterOkHttpRequest(okhttp3.Callback callback,
                                                        String token, String deviceId) {
@@ -141,6 +142,29 @@ public class HttpUtil {
                 .url(requestUrl)
                 .addHeader("Authorization", token)
                 .get()
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+    /*
+     * 设备视频请求
+     * /getRealTimeData
+     * get token deviceId
+     */
+    public static void getDeviceVideoOkHttpRequest(okhttp3.Callback callback, String token,
+                                                   String deviceId, String videoUrl) {
+        // 生成推流地址
+        String command = "/server.command?command=start_rtmp_stream&pipe=0&url=".concat(videoUrl);
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("deviceId", Integer.valueOf(deviceId));
+        jsonObject.put("http_str", command);
+        String json = jsonObject.toJSONString();
+
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = new Request.Builder()
+                .url(AppConfig.HANGING_BASKET_VIDEO)
+                .addHeader("Authorization", token)
+                .post(requestBody)
                 .build();
         client.newCall(request).enqueue(callback);
     }
@@ -191,6 +215,33 @@ public class HttpUtil {
     }
     /*
      * 施工人员请求结束
+     */
+
+    /*
+     * 租方管理员请求开始
+     */
+    /*
+     * 租方管理员请求吊篮列表
+     * get
+     * token， userid, url
+     */
+    public static void rentAdminGetBasketInfo(okhttp3.Callback callback,
+                                              String url, String token, String userId){
+        OkHttpClient client = new OkHttpClient();
+
+        StringBuilder tempParams = new StringBuilder();
+        //对参数进行URLEncoder
+        tempParams.append(String.format("%s=%s", "userId", Uri.encode(userId), "utf-8"));
+        String requestUrl = String.format("%s?%s", url, tempParams.toString());
+        final Request request = new Request.Builder()
+                .url(requestUrl)
+                .addHeader("Authorization", token)
+                .get()
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+    /*
+     * 租方管理员请求结束
      */
 
 }

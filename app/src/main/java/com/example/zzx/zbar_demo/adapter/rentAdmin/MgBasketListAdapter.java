@@ -11,7 +11,6 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.adapter.worker.WorkerOrderChildAdapter;
 import com.example.zzx.zbar_demo.entity.MgBasketInfo;
 import com.example.zzx.zbar_demo.widget.image.SmartImageView;
 
@@ -91,7 +90,7 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(
-                R.layout.item_basket_recycler_view, viewGroup, false);
+                R.layout.item_rent_admin_mg_basket, viewGroup, false);
         ViewHolder viewHolder = new ViewHolder(view, mOnItemClickListener);
 
         return viewHolder;
@@ -105,10 +104,14 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
         }
         viewHolder.basketSelected.setChecked(isCheck.get(position));  // 设置状态
         //viewHolder.basketImage.setImageUrl();
-        //viewHolder.basketId.setText(mgBasketInfo.getId());
-        //viewHolder.basketState.setText(mgBasketInfo.getState());
-        //viewHolder.basketOutStorage.setText(mgBasketInfo.getOutStorage());
-        //viewHolder.basketPrincipal.setText(mgBasketInfo.getPrincipal());
+        viewHolder.basketId.setText(mgBasketInfo.getId());
+        if(mgBasketInfo.getState().equals("1")){
+            viewHolder.basketState.setText("正在施工");
+        }else if(mgBasketInfo.getState().equals("0")){
+            viewHolder.basketState.setText("停止运行");
+        }
+        viewHolder.basketOutStorage.setText(mgBasketInfo.getOutStorage().substring(0,10));
+        viewHolder.basketPrincipal.setText(mgBasketInfo.getPrincipal());
     }
 
     @Override

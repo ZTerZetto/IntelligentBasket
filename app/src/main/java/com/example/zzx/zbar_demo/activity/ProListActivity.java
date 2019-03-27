@@ -94,7 +94,7 @@ public class ProListActivity extends AppCompatActivity {
         mLv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                Intent intent = new Intent(ProListActivity.this,ProDetailActivity.class);
+                Intent intent = new Intent(ProListActivity.this, ProDetailActivity.class);
                 //intent.putExtra("projectId",projectArrayList.get(i).getProjectId());
                 intent.putExtra("projectDetail",projectArrayList.get(i));
                 startActivity(intent);

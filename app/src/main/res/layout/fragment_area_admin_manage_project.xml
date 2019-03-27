@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/project_more_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ToolBarPopupThem">
+
+        <TextView
+            android:id="@+id/project_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="南京凤凰国际大厦"
+            android:singleLine="true"
+            android:textColor="@color/colorWhiteText"
+            android:textSize="19sp" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <!-- 切换吊篮状态 -->
+    <GridView
+        android:id="@+id/mg_basket_state"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_below="@+id/project_more_toolbar"
+        android:numColumns="6"
+        android:paddingLeft="5dp"
+        android:paddingRight="5dp">
+
+    </GridView>
+
+    <!-- 吊篮列表 -->
+    <RelativeLayout
+        android:id="@+id/fragment_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/mg_basket_state">
+        <!-- 吊篮列表 -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/basket_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <!-- 空空如也 -->
+        <RelativeLayout
+            android:id="@+id/basket_no_avaliable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/no_basket_iv"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_above="@+id/no_basket_hint"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/ic_no_avaliable_basket" />
+            <TextView
+                android:id="@+id/no_basket_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
+                android:text="您还没有相关的吊篮"
+                android:textSize="16sp"/>
+
+        </RelativeLayout>
+
+    </RelativeLayout>
+
+
+</RelativeLayout>

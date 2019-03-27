@@ -88,12 +88,8 @@
     <!-- 悬浮窗 -->
     <ImageView
         android:id="@+id/worker_add_image_view"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_alignParentRight="true"
+        style="@style/AddFloatImageView"
         android:layout_above="@id/worker_controller"
-        android:layout_marginRight="30dp"
-        android:layout_marginBottom="40dp"
         android:src="@mipmap/ic_round_add_fill"/>
 
 

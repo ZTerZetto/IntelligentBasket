@@ -148,7 +148,7 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
         mBaiduMap.setOnMarkerClickListener(mClusterManager); // 设置maker点击时的响应
 
         // 地图气泡初始化
-        mPopupView = inflater.inflate(R.layout.popu_marker, null);
+        mPopupView = inflater.inflate(R.layout.bmap_popu_marker, null);
         mText_id = (TextView) mPopupView.findViewById(R.id.marker_id);
         mText_text = (TextView) mPopupView.findViewById(R.id.marker_text);
 
@@ -466,7 +466,7 @@ public class MapViewFragment extends Fragment implements SensorEventListener, Ba
         public BitmapDescriptor getBitmapDescriptor() {
             // 返回marker在地图上的图标
             return BitmapDescriptorFactory
-                    .fromResource(R.drawable.ic_smart_basket_gcoding);
+                    .fromResource(R.mipmap.ic_baidu_gcoding);
         }
     }
 

@@ -45,7 +45,7 @@ public class IconGenerator {
      */
     public IconGenerator(Context context) {
         mContext = context;
-        mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.text_bubble, null);
+        mContainer = (ViewGroup) LayoutInflater.from(mContext).inflate(R.layout.bmap_text_bubble, null);
         mRotationLayout = (RotationLayout) mContainer.getChildAt(0);
         mContentView = mTextView = (TextView) mRotationLayout.findViewById(R.id.text);
         setStyle(STYLE_DEFAULT);

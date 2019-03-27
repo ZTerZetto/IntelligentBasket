@@ -2,10 +2,12 @@ package com.example.zzx.zbar_demo.activity.basket;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -16,7 +18,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.R;
+import com.example.zzx.zbar_demo.entity.UserInfo;
+import com.example.zzx.zbar_demo.utils.HttpUtil;
 import com.example.zzx.zbar_demo.utils.ToastUtil;
 import com.example.zzx.zbar_demo.utils.okhttp.BaseCallBack;
 import com.example.zzx.zbar_demo.utils.okhttp.BaseOkHttpClient;
@@ -32,6 +37,8 @@ import com.pili.pldroid.player.widget.PLVideoTextureView;
 import java.io.IOException;
 
 import okhttp3.Call;
+import okhttp3.Callback;
+import okhttp3.Response;
 
 import static com.example.zzx.zbar_demo.entity.AppConfig.ASPECT_RATIO;
 import static com.example.zzx.zbar_demo.entity.AppConfig.ASPECT_RATIO_VIDEO;
@@ -61,8 +68,7 @@ public class BasketVideoActivity extends AppCompatActivity {
 
     private Toast mToast = null;
     private int mDisplayAspectRatio = PLVideoTextureView.ASPECT_RATIO_FIT_PARENT; //default
-    //private String mVideoUrls;
-    private String mVideoUrls = "rtmp://47.96.103.244:1935/rtmplive/hangingbasket_002";
+    private String mVideoUrls;
     private boolean mIsBuffering = true;
     private CustomMediaController mMediaController;
 
@@ -72,6 +78,9 @@ public class BasketVideoActivity extends AppCompatActivity {
 
     // 吊篮相关
     private String mBasketId;
+
+    // 用户登录token
+    private String mToken;
 
     // 处理线程信息
     @SuppressLint("HandlerLeak")
@@ -104,9 +113,10 @@ public class BasketVideoActivity extends AppCompatActivity {
             mBasketId = "1";
         }
 
+        getToken();
         getScreenSize();
         initWidget();
-        //openDeviceVideo();  // 发送视频流请求
+        openDeviceVideo();  // 发送视频流请求
     }
 
     private void initWidget(){
@@ -305,33 +315,27 @@ public class BasketVideoActivity extends AppCompatActivity {
     // flag->true:打开， false:关闭
     private void openDeviceVideo(){
         mVideoUrls = VIDEO_STREAM_PATH + "/rtmplive/" + mBasketId;
-        String command = "/server.command?command=start_rtmp_stream&pipe=0&url=".concat(mVideoUrls);
-        BaseOkHttpClient.newBuilder()
-                .addParam("deviceId",  Integer.parseInt(mBasketId))
-                .addParam("http_str", command)
-                .post()
-                .json()
-                .url(HANGING_BASKET_VIDEO)
-                .build()
-                .enqueue(new BaseCallBack() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        // 成功
+
+        HttpUtil.getDeviceVideoOkHttpRequest(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "失败：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                switch (response.code()){
+                    case 200:
                         Log.i(TAG, "成功");
                         mHandler.sendEmptyMessage(OPEN_VIDEO_SUCESS);
-                    }
-
-                    @Override
-                    public void onError(int code) {
-                        Log.i(TAG, "错误编码：" + code);
+                        break;
+                    default:
+                        Log.i(TAG, "错误编码：" + response.code());
                         mHandler.sendEmptyMessage(OPEN_VIDEO_FAILED);
-                    }
-
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-                        Log.i(TAG, "失败：" + e.toString());
-                    }
-                });
+                        break;
+                }
+            }
+        }, mToken, mBasketId, mVideoUrls);
     }
     // 关闭视频流
     private void closeDeviceVideo(){
@@ -348,6 +352,13 @@ public class BasketVideoActivity extends AppCompatActivity {
                 mStateInfoTv.setText(stat);
             }
         });
+    }
+
+    // 获取登录token
+    private void getToken(){
+        // 从本地获取数据
+        SharedPreferences mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mToken = mPref.getString("loginToken","");
     }
 
     // 获取屏幕的宽高度

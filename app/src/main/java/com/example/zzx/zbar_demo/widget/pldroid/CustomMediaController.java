@@ -138,7 +138,7 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
     protected View makeControllerView() {
         return ((LayoutInflater) mContext
                 .getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(getResources().getIdentifier( // 布局
-                "media_controller", "layout", mContext.getPackageName()), this);
+                "pldroid_media_controller", "layout", mContext.getPackageName()), this);
     }
     private void initControllerView(View v) {
         mMediaControllerAll = (RelativeLayout) v.findViewById(getResources().getIdentifier(

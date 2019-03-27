@@ -13,6 +13,7 @@ import com.example.zzx.zbar_demo.entity.UserInfo;
 import com.example.zzx.zbar_demo.fragment.rentAdmin.ManageBasketFragment;
 import com.example.zzx.zbar_demo.fragment.rentAdmin.ManageWorkerFragment;
 import com.example.zzx.zbar_demo.fragment.rentAdmin.RentAdminFragment;
+import com.example.zzx.zbar_demo.fragment.rentAdmin.RentAdminMessageFragment;
 import com.hjm.bottomtabbar.BottomTabBar;
 
 public class RentAdminPrimaryActivity extends AppCompatActivity {
@@ -35,6 +36,7 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_rent_admin_primary);
 
+        getUserInfo();
         initWidget();
     }
 
@@ -50,6 +52,7 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
                 .setChangeColor(Color.parseColor("#009688"),Color.parseColor("#cccccc"))
                 .addTabItem("吊篮", R.mipmap.ic_navi_basket, ManageBasketFragment.class)
                 .addTabItem("工人", R.mipmap.ic_navi_worker, ManageWorkerFragment.class)
+                .addTabItem("消息", R.mipmap.ic_navi_message, RentAdminMessageFragment.class)
                 .addTabItem("我", R.mipmap.ic_navi_me,RentAdminFragment.class)
                 .isShowDivider(false)
                 //.setDividerColor(Color.parseColor("#FF0000"))
@@ -62,7 +65,6 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
                     }
                 })
                 .setSpot(2, true);
-
     }
 
 
@@ -85,6 +87,10 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
     // 将用户信息传递给子Fragment
     public UserInfo pushUserInfo(){
         return mUserInfo;
+    }
+    // 将用户token传递给子Fragment
+    public String pushToken(){
+        return mToken;
     }
 
     /*

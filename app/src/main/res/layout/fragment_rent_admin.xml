@@ -111,6 +111,7 @@
                         style="@style/me_common_item_arrow_right_imageView_style"/>
                 </RelativeLayout>
             </LinearLayout>
+
             <!--软件设置相关-->
             <LinearLayout
                 android:layout_width="match_parent"

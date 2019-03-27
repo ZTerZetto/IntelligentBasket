@@ -9,6 +9,9 @@
         <item name="colorPrimaryDark">@color/colorPrimary</item>
         <item name="colorAccent">@color/colorAccent</item>
         <!-- toolbar-->
+        <!-- 修改toolbar图标的颜色-->
+        <item name="android:textColorSecondary">#ffffff</item>
+        <!-- 修改toolbar文字的颜色-->
         <item name="android:textColorPrimary">#ffffff</item>
     </style>
 
@@ -126,7 +129,7 @@
         <item name="android:layout_width">0dp</item>
         <item name="android:layout_weight">1</item>
         <item name="android:layout_height">match_parent</item>
-        <item name="android:background">@drawable/tab_selector_bg</item>
+        <item name="android:background">@drawable/bg_tab_selector</item>
         <item name="android:button">@null</item>
         <item name="android:gravity">center</item>
         <item name="android:layout_margin">8dp</item>
@@ -143,7 +146,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">2dp</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@drawable/tab_selector_bg</item>
+        <item name="android:background">@drawable/bg_tab_selector</item>
     </style>
 
     <!-- “设置”框 字体样式 -->
@@ -154,7 +157,7 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:padding">2dp</item>
         <item name="android:layout_gravity">center_vertical</item>
-        <item name="android:background">@drawable/tab_selector_bg</item>
+        <item name="android:background">@drawable/bg_tab_selector</item>
     </style>
 
     <!-- “我的” 文本右边箭头样式 -->
@@ -365,6 +368,54 @@
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/black</item>
+    </style>
+    <!-- 添加悬浮框 -->
+    <style name="AddFloatImageView">
+        <item name="android:layout_width">50dp</item>
+        <item name="android:layout_height">50dp</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_marginRight">30dp</item>
+        <item name="android:layout_marginBottom">40dp</item>
+    </style>
+
+    <!-- 区域管理员 -->
+    <!-- toolbar 弹窗设置 -->
+    <style name="ToolBarPopupThem" parent="Widget.AppCompat.Light.PopupMenu.Overflow">
+        <!-- 设置popupMenu背景颜色-->
+        <item name="android:colorBackground">#4c4c4c</item>
+        <!--设置popupMenu弹出位置不覆盖toolbar -->
+        <item name="overlapAnchor">false</item>
+        <!-- 修改字体大小 -->
+        <item name="android:textSize">15sp</item>
+        <!-- 修改字体颜色 -->
+        <item name="android:textColor">#ffffff</item>
+    </style>
+    <!-- 吊篮状态管理 -->
+     <style name="MgBasketStateRelativeLayout">
+         <item name="android:layout_width">0dp</item>
+         <item name="android:layout_height">32dp</item>
+         <item name="android:layout_weight">1</item>
+     </style>
+     <style name="MgBasketStateTextView">
+         <item name="android:layout_width">match_parent</item>
+         <item name="android:layout_height">38dp</item>
+         <item name="android:textSize">14sp</item>
+         <item name="android:gravity">center</item>
+     </style>
+    <style name="MgBasketStateView">
+         <item name="android:layout_width">match_parent</item>
+         <item name="android:layout_height">2dp</item>
+         <item name="android:layout_alignParentBottom">true</item>
+         <item name="android:background">@color/colorPrimary</item>
+         <item name="android:visibility">invisible</item>
+    </style>
+    <!-- 吊篮列表 -->
+    <style name="MgBasketOperationTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:background">@drawable/bg_ellipse_with_gray_line</item>
+        <item name="android:padding">8dp</item>
     </style>
 
 </resources>

@@ -34,7 +34,7 @@ import java.util.Map;
 /**
  * Created by pengchenghu on 2019/3/22.
  * Author Email: 15651851181@163.com
- * Describe:
+ * Describe: 租方管理员管理工人
  */
 public class ManageWorkerFragment extends Fragment implements View.OnClickListener {
 

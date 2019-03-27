@@ -17,8 +17,8 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
-import com.baidu.location.BDLocationListener;
 import com.baidu.location.LocationClient;
 import com.baidu.location.LocationClientOption;
 import com.baidu.mapapi.clusterutil.clustering.Cluster;
@@ -40,7 +40,6 @@ import com.baidu.mapapi.model.LatLngBounds;
 import com.example.zzx.zbar_demo.R;
 import com.example.zzx.zbar_demo.activity.ManageMainActivity;
 import com.example.zzx.zbar_demo.activity.basket.BasketDetailActivity;
-import com.example.zzx.zbar_demo.fragment.MapViewFragment;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -53,7 +52,7 @@ import static android.content.Context.SENSOR_SERVICE;
 /**
  * Created by pengchenghu on 2019/3/22.
  * Author Email: 15651851181@163.com
- * Describe:
+ * Describe: 租方管理员地图管理吊篮
  */
 public class MgBasketMapFragment extends Fragment implements SensorEventListener, BaiduMap.OnMapLoadedCallback{
 
@@ -147,7 +146,7 @@ public class MgBasketMapFragment extends Fragment implements SensorEventListener
         mBaiduMap.setOnMarkerClickListener(mClusterManager); // 设置maker点击时的响应
 
         // 地图气泡初始化
-        mPopupView = inflater.inflate(R.layout.popu_marker, null);
+        mPopupView = inflater.inflate(R.layout.bmap_popu_marker, null);
         mText_id = (TextView) mPopupView.findViewById(R.id.marker_id);
         mText_text = (TextView) mPopupView.findViewById(R.id.marker_text);
 
@@ -307,7 +306,7 @@ public class MgBasketMapFragment extends Fragment implements SensorEventListener
     /*
         定位监听SDK
      */
-    public class MyLocationListenner implements BDLocationListener {
+    public class MyLocationListenner extends BDAbstractLocationListener {
 
         @Override
         public void onReceiveLocation(BDLocation location) {
@@ -331,6 +330,9 @@ public class MgBasketMapFragment extends Fragment implements SensorEventListener
                 ms = new MapStatus.Builder().target(ll).zoom(18.0f).build();
                 mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(ms));;
             }
+            if(mCurrentLat<3.85 || mCurrentLat>53.55 // 定位不在中国境内，重新定位
+                    || mCurrentLon<73.55 || mCurrentLon>135.08 )
+                isFirstLoc = true;
         }
 
         public void onReceivePoi(BDLocation poiLocation) {
@@ -455,7 +457,7 @@ public class MgBasketMapFragment extends Fragment implements SensorEventListener
         public BitmapDescriptor getBitmapDescriptor() {
             // 返回marker在地图上的图标
             return BitmapDescriptorFactory
-                    .fromResource(R.drawable.ic_smart_basket_gcoding);
+                    .fromResource(R.drawable.ic_baidu_gcoding);
         }
     }
 

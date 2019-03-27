@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 区域管理员管理吊篮 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@drawable/bg_round_white"
+    android:layout_margin="10dp"
+    android:padding="10dp"
+    android:orientation="vertical">
+
+    <!-- 状态栏 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/basket_statement_textview"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:text="待审核"
+            android:textColor="@color/colorPrimary" />
+    </RelativeLayout>
+
+    <!-- 吊篮信息栏 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp">
+        <!-- 吊篮图片 -->
+        <com.example.zzx.zbar_demo.widget.image.SmartImageView
+            android:id="@+id/basket_index_imageview"
+            android:layout_width="100dp"
+            android:layout_height="75dp"
+            android:src="@mipmap/test"/>
+        <!-- 文字信息 -->
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/basket_index_imageview"
+            android:layout_marginLeft="15dp"
+            android:layout_centerVertical="true"
+            android:orientation="vertical">
+
+            <!-- .... 可以添加其它信息，丰富页面 ... -->
+            <!-- 吊篮编号 -->
+            <LinearLayout
+                style="@style/BasketItemLinearLayout">
+                <TextView
+                    style="@style/BasketItemCatTextView"
+                    android:text="吊篮编号："/>
+                <TextView
+                    android:id="@+id/basket_id"
+                    style="@style/BasketItemContentTextView"
+                    android:text="10006731"/>
+            </LinearLayout>
+
+            <!-- 最近开工 -->
+            <LinearLayout
+                style="@style/BasketItemLinearLayout"
+                android:visibility="invisible">
+                <TextView
+                    style="@style/BasketItemCatTextView"
+                    android:text="最近开工："/>
+                <TextView
+                    android:id="@+id/basket_last_open_time"
+                    style="@style/BasketItemContentTextView"
+                    android:text="2019-03-14"/>
+            </LinearLayout>
+
+            <!-- 吊篮编号 -->
+            <LinearLayout
+                style="@style/BasketItemLinearLayout"
+                android:visibility="invisible">
+                <TextView
+                    style="@style/BasketItemCatTextView"
+                    android:text="累计时长："/>
+                <TextView
+                    android:id="@+id/basket_sumup_time"
+                    style="@style/BasketItemContentTextView"
+                    android:text="125h 32min"/>
+            </LinearLayout>
+
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- 吊篮操作栏 -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp">
+
+        <!-- 预验收申请 -->
+        <TextView
+            android:id="@+id/pre_assessment_acceptance"
+            style="@style/MgBasketOperationTextView"
+            android:text="预验收申请"
+            android:visibility="gone"/>
+
+        <!-- 预验收申请 -->
+        <TextView
+            android:id="@+id/pre_apply_stop"
+            style="@style/MgBasketOperationTextView"
+            android:text="预报停申请"
+            android:visibility="gone"/>
+
+    </RelativeLayout>
+
+</LinearLayout>

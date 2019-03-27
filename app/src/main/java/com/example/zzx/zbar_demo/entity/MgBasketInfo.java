@@ -3,7 +3,7 @@ package com.example.zzx.zbar_demo.entity;
 /**
  * Created by pengchenghu on 2019/3/25.
  * Author Email: 15651851181@163.com
- * Describe:
+ * Describe: 租方管理员管理吊篮
  */
 public class MgBasketInfo {
     //private boolean selected;  // 是否被选中

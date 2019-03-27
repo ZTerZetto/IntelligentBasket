@@ -12,7 +12,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.example.zzx.zbar_demo.R;
-import com.example.zzx.zbar_demo.entity.MgBasketInfo;
 import com.example.zzx.zbar_demo.entity.MgWorkerInfo;
 import com.example.zzx.zbar_demo.widget.image.SmartImageView;
 
@@ -97,7 +96,7 @@ public class MgWorkerListAdapter extends RecyclerView.Adapter<MgWorkerListAdapte
     @Override
     public MgWorkerListAdapter.ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int position) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(
-                R.layout.item_worker_recycler_view, viewGroup, false);
+                R.layout.item_rent_admin_mg_worker, viewGroup, false);
         MgWorkerListAdapter.ViewHolder viewHolder = new MgWorkerListAdapter.ViewHolder(view, mOnItemClickListener);
 
         return viewHolder;
