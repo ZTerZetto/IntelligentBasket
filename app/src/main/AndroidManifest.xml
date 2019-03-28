@@ -35,7 +35,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.common.QRcodeCardActivity"></activity>
+        <activity android:name=".activity.areaAdmin.UploadImageActivity"></activity>
+        <activity android:name=".activity.common.QRcodeCardActivity" />
         <activity android:name=".activity.common.PersonalInformationActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
         <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" /> <!-- 百度地图Ket -->
@@ -75,7 +76,14 @@
         <activity android:name=".activity.loginRegist.RegistWorkerActivity" />
         <activity android:name=".activity.loginRegist.RegistRentManActivity" />
         <activity android:name=".activity.loginRegist.RegisterPreActivity" />
-        <activity android:name=".activity.loginRegist.LoginActivity" /> <!-- Zxing -->
+        <activity android:name=".activity.loginRegist.LoginActivity" />
+
+        <!-- 多图片选择器 -->
+        <activity
+            android:configChanges="orientation|screenSize"
+            android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity" />
+
+        <!-- Zxing -->
         <activity
             android:name=".widget.zxing.activity.CaptureActivity"
             android:screenOrientation="portrait"
@@ -83,11 +91,16 @@
         <activity
             android:name=".widget.zxing.activity.ResultActivity"
             android:screenOrientation="portrait"
-            android:theme="@android:style/Theme.Black.NoTitleBar" /> <!-- 百度地图 -->
+            android:theme="@android:style/Theme.Black.NoTitleBar" />
+
+
+        <!-- 百度地图 -->
         <service
             android:name="com.baidu.location.f"
             android:enabled="true"
-            android:process=":remote" /> <!-- 小米推送 -->
+            android:process=":remote" />
+
+        <!-- 小米推送 -->
         <activity
             android:name=".utils.xiaomi.mipush.PermissionActivity"
             android:label="" /> <!-- 4个后台服务 -->
@@ -140,7 +153,7 @@
         </receiver> <!-- 文件服务 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.automation.cameraalbumtest.fileprovider"
+            android:authorities="com.automation.zzx.intelligent_basket_demo.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data
