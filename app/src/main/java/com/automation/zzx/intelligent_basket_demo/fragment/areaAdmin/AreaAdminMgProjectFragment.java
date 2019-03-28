@@ -74,7 +74,7 @@ public class AreaAdminMgProjectFragment extends Fragment {
     // 上下左右滑动监听
     private static enum State{ VISIBLE,ANIMATIONING,INVISIBLE,}
     private State state = State.INVISIBLE;
-    protected static final float FLIP_DISTANCE = 50;
+    protected static final float FLIP_DISTANCE = 150;
     private GestureDetector mGestureDetector;
     private AreaAdminPrimaryActivity.MyOnTouchListener myOnTouchListener;
     private SVCGestureListener mGestureListener = new SVCGestureListener();
@@ -365,29 +365,33 @@ public class AreaAdminMgProjectFragment extends Fragment {
 
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,float velocityY) {
-            if (e1.getX() - e2.getX() > FLIP_DISTANCE) {
-                Log.i(TAG, "向左滑...");
-                int tmp_position = pre_selectedPosition + 1;
-                pre_selectedPosition = (tmp_position < mStateLists.size()) ? tmp_position : (mStateLists.size()-1);
-                mgStateAdapter.setSelectedPosition(pre_selectedPosition);
-                mHandler.sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);  // 更新列表
-                return true;
-            }
-            if (e2.getX() - e1.getX() > FLIP_DISTANCE) {
-                Log.i(TAG, "向右滑...");
-                int tmp_position = pre_selectedPosition - 1;
-                pre_selectedPosition = (tmp_position > 0) ? tmp_position : 0;
-                mgStateAdapter.setSelectedPosition(pre_selectedPosition);
-                mHandler.sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);  // 更新列表
-                return true;
-            }
-            if (e1.getY() - e2.getY() > FLIP_DISTANCE) {
-                Log.i(TAG, "向上滑...");
-                return true;
-            }
-            if (e2.getY() - e1.getY() > FLIP_DISTANCE) {
-                Log.i(TAG, "向下滑...");
-                return true;
+            if(Math.abs(e1.getX()-e2.getX()) > Math.abs(e1.getY()-e2.getY())) {
+                // s水平滑动的距离大于竖直滑动的距离
+                if (e1.getX() - e2.getX() > FLIP_DISTANCE) {
+                    Log.i(TAG, "向左滑...");
+                    int tmp_position = pre_selectedPosition + 1;
+                    pre_selectedPosition = (tmp_position < mStateLists.size()) ? tmp_position : (mStateLists.size() - 1);
+                    mgStateAdapter.setSelectedPosition(pre_selectedPosition);
+                    mHandler.sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);  // 更新列表
+                    return true;
+                }
+                if (e2.getX() - e1.getX() > FLIP_DISTANCE) {
+                    Log.i(TAG, "向右滑...");
+                    int tmp_position = pre_selectedPosition - 1;
+                    pre_selectedPosition = (tmp_position > 0) ? tmp_position : 0;
+                    mgStateAdapter.setSelectedPosition(pre_selectedPosition);
+                    mHandler.sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);  // 更新列表
+                    return true;
+                }
+            }else {
+                if (e1.getY() - e2.getY() > FLIP_DISTANCE) {
+                    Log.i(TAG, "向上滑...");
+                    return true;
+                }
+                if (e2.getY() - e1.getY() > FLIP_DISTANCE) {
+                    Log.i(TAG, "向下滑...");
+                    return true;
+                }
             }
 
             Log.d(TAG, e2.getX() + " " + e2.getY());

@@ -1,5 +1,6 @@
 package com.automation.zzx.intelligent_basket_demo.activity.common;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -104,6 +105,7 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
                 break;
             case R.id.user_qrcode_layout:
                 Log.i(TAG, "You have clicked the user_qrcode_layout");
+                startActivity(new Intent(PersonalInformationActivity.this, QRcodeCardActivity.class));
                 break;
             case R.id.user_more_layout:
                 Log.i(TAG, "You have clicked the user_more_layout");
