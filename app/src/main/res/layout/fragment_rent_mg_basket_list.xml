@@ -1,7 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBackground">
 
     <!-- 吊篮主体 -->
     <android.support.v7.widget.RecyclerView
@@ -13,19 +14,54 @@
     </android.support.v7.widget.RecyclerView>
 
     <!-- 控制栏 -->
-    <LinearLayout
+    <RelativeLayout
         android:id="@+id/basket_controller"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="54dp"
         android:layout_alignParentBottom="true"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:gravity="center_vertical">
 
+        <!-- 复选框 -->
         <CheckBox
-            android:id="@+id/basket_checkbox"
+            android:id="@+id/basket_all_checkbox"
+            style="@style/CustomCheckboxTheme" />
+        <!-- 全选 -->
+        <TextView
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/basket_all_checkbox"
+            android:layout_centerVertical="true"
+            android:text="全选"/>
 
-    </LinearLayout>
+        <!-- 合计 -->
+        <TextView
+            android:layout_toLeftOf="@id/basket_number"
+            android:text="合计:"
+            style="@style/ApplyTotalTextView"/>
+        <TextView
+            android:id="@+id/basket_number"
+            android:layout_toLeftOf="@id/ge"
+            android:text="0"
+            android:textSize="@dimen/textSize_20"
+            android:textStyle="bold"
+            android:textColor="@color/dark_red"
+            style="@style/ApplyTotalTextView"/>
+        <TextView
+            android:id="@+id/ge"
+            android:layout_toLeftOf="@id/basket_apply_stop"
+            android:text="个"
+            android:layout_marginRight="15dp"
+            style="@style/ApplyTotalTextView"/>
+
+
+        <!-- 预报停 -->
+        <TextView
+            android:id="@+id/basket_apply_stop"
+            android:text="预报停"
+            style="@style/ApplyOperateTextView"/>
+
+    </RelativeLayout>
 
 
 </RelativeLayout>

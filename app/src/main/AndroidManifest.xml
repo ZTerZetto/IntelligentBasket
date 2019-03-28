@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.zzx.zbar_demo">
+    package="com.automation.zzx.intelligent_basket_demo">
     <!-- 网络权限 -->
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- SD卡读写权限 4.4以下系统 -->
@@ -20,14 +20,12 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-
-    <!-- 小米推送 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" /> <!-- 小米推送 -->
     <permission
-        android:name="com.example.zzx.zbar_demo.permission.MIPUSH_RECEIVE"
+        android:name="com.automation.zzx.intelligent_basket_demo.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.zzx.zbar_demo.permission.MIPUSH_RECEIVE" />
+    <uses-permission android:name="com.automation.zzx.intelligent_basket_demo.permission.MIPUSH_RECEIVE" />
 
     <application
         android:name=".application.CustomApplication"
@@ -37,13 +35,13 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.AreaAdmin.ProCommitActivity"></activity>
-        <!-- 百度地图Ket -->
+        <activity android:name=".activity.common.QRcodeCardActivity"></activity>
+        <activity android:name=".activity.common.PersonalInformationActivity" />
+        <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
+        <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" /> <!-- 百度地图Ket -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="fiwzxkeFvL7q37ZESCA4yU6nOPfnIa6u" />
-
-        <!-- 欢迎页面 -->
+            android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" /> <!-- 欢迎页面 -->
         <activity android:name=".activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -51,11 +49,7 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".activity.MainActivity" />
-        <activity android:name=".zbar.CaptureActivity" />
-        <activity android:name=".zbar.QRScanActivity" />
         <activity android:name=".pdf_read.PDFStartActivity" />
-        <activity android:name=".activity.LBSActivity" />
         <activity android:name=".activity.basket.BasketDetailActivity" />
         <activity android:name=".activity.basket.BasketParameterActivity" />
         <activity
@@ -64,7 +58,7 @@
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeFullscreen" />
         <activity android:name=".activity.basket.BasketPhotoActivity" />
-        <activity android:name=".activity.worker.WorkerOrderActivity"/>
+        <activity android:name=".activity.worker.WorkerOrderActivity" />
         <activity
             android:name=".activity.worker.WorkerPrimaryActivity"
             android:label="@string/title_activity_woker_primary"
@@ -73,20 +67,15 @@
             android:name=".activity.ManageMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-        <activity
-            android:name=".activity.rentAdmin.RentMainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity"></activity>
-
         <activity android:name=".activity.ProDetailActivity" />
+        <activity android:name=".activity.areaAdmin.ProCommitActivity" />
         <activity android:name=".activity.basket.BasketListActivity" />
         <activity android:name=".activity.WorkerListActivity" />
         <activity android:name=".activity.ProListActivity" />
         <activity android:name=".activity.loginRegist.RegistWorkerActivity" />
         <activity android:name=".activity.loginRegist.RegistRentManActivity" />
         <activity android:name=".activity.loginRegist.RegisterPreActivity" />
-        <activity android:name=".activity.loginRegist.LoginActivity" />
+        <activity android:name=".activity.loginRegist.LoginActivity" /> <!-- Zxing -->
         <activity
             android:name=".widget.zxing.activity.CaptureActivity"
             android:screenOrientation="portrait"
@@ -118,9 +107,7 @@
             android:exported="true" />
         <service
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
-            android:enabled="true" />
-
-        <!-- 3个广播 -->
+            android:enabled="true" /> <!-- 3个广播 -->
         <receiver
             android:name=".utils.xiaomi.mipush.MiMessageReceiver"
             android:exported="true">
@@ -153,7 +140,7 @@
         </receiver> <!-- 文件服务 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.cameraalbumtest.fileprovider"
+            android:authorities="com.automation.cameraalbumtest.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

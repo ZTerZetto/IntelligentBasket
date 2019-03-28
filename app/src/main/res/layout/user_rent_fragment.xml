@@ -14,7 +14,7 @@
         android:background="@mipmap/bg_my_login">
 
     <!-- 头像 -->
-    <com.example.zzx.zbar_demo.widget.image.SmartImageView
+    <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
         android:id="@+id/login_head"
         android:layout_width="@dimen/me_login_head_width"
         android:layout_height="@dimen/me_login_head_width"
