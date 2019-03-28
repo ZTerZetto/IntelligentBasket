@@ -13,7 +13,7 @@
         android:id="@+id/basket_checkbox"
         style="@style/CustomCheckboxTheme" />
     <!-- 最新图片 -->
-    <com.example.zzx.zbar_demo.widget.image.SmartImageView
+    <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
         android:id="@+id/basket_realimage"
         android:layout_width="100dp"
         android:layout_height="76dp"

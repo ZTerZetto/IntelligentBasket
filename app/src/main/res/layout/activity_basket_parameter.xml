@@ -33,7 +33,7 @@
                     android:text="@string/var_switch"
                     android:textColor="@color/colorSilverText"
                     style="@style/ParameterSubTitleTextView"/>
-                <com.example.zzx.zbar_demo.widget.SmartGridView
+                <com.automation.zzx.intelligent_basket_demo.widget.SmartGridView
                     android:id="@+id/var_switch_gv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.example.zzx.zbar_demo">
+    package="com.automation.zzx.intelligent_basket_demo">
     <!-- 网络权限 -->
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" /> <!-- SD卡读写权限 4.4以下系统 -->
@@ -22,67 +22,68 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.WRITE_SETTINGS" /> <!-- 小米推送 -->
     <permission
-        android:name="com.example.zzx.zbar_demo.permission.MIPUSH_RECEIVE"
+        android:name="com.automation.zzx.intelligent_basket_demo.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
 
-    <uses-permission android:name="com.example.zzx.zbar_demo.permission.MIPUSH_RECEIVE" />
+    <uses-permission
+        android:name="com.automation.zzx.intelligent_basket_demo.permission.MIPUSH_RECEIVE" />
 
     <application
-        android:name=".application.CustomApplication"
+        android:name="com.automation.zzx.intelligent_basket_demo.application.CustomApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.common.PersonalInformationActivity"></activity>
-        <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
-        <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" /> <!-- 百度地图Ket -->
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity"></activity>
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity" /> <!-- 百度地图Ket -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" /> <!-- 欢迎页面 -->
-        <activity android:name=".activity.WelcomeActivity">
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".pdf_read.PDFStartActivity" />
-        <activity android:name=".activity.basket.BasketDetailActivity" />
-        <activity android:name=".activity.basket.BasketParameterActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.pdf_read.PDFStartActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.basket.BasketParameterActivity" />
         <activity
-            android:name=".activity.basket.BasketVideoActivity"
+            android:name="com.automation.zzx.intelligent_basket_demo.activity.basket.BasketVideoActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeFullscreen" />
-        <activity android:name=".activity.basket.BasketPhotoActivity" />
-        <activity android:name=".activity.worker.WorkerOrderActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.basket.BasketPhotoActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerOrderActivity" />
         <activity
-            android:name=".activity.worker.WorkerPrimaryActivity"
+            android:name="com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity"
             android:label="@string/title_activity_woker_primary"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
-            android:name=".activity.ManageMainActivity"
+            android:name="com.automation.zzx.intelligent_basket_demo.activity.ManageMainActivity"
             android:configChanges="orientation|keyboardHidden|screenSize"
             android:screenOrientation="portrait" />
-        <activity android:name=".activity.ProDetailActivity" />
-        <activity android:name=".activity.areaAdmin.ProCommitActivity" />
-        <activity android:name=".activity.basket.BasketListActivity" />
-        <activity android:name=".activity.WorkerListActivity" />
-        <activity android:name=".activity.ProListActivity" />
-        <activity android:name=".activity.loginRegist.RegistWorkerActivity" />
-        <activity android:name=".activity.loginRegist.RegistRentManActivity" />
-        <activity android:name=".activity.loginRegist.RegisterPreActivity" />
-        <activity android:name=".activity.loginRegist.LoginActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.ProDetailActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProCommitActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.basket.BasketListActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.WorkerListActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.ProListActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.loginRegist.RegistWorkerActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.loginRegist.RegistRentManActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.loginRegist.RegisterPreActivity" />
+        <activity android:name="com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity" />
 
         <!-- Zxing -->
         <activity
-            android:name=".widget.zxing.activity.CaptureActivity"
+            android:name="com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" />
         <activity
-            android:name=".widget.zxing.activity.ResultActivity"
+            android:name="com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.ResultActivity"
             android:screenOrientation="portrait"
             android:theme="@android:style/Theme.Black.NoTitleBar" />
 
@@ -92,7 +93,7 @@
             android:enabled="true"
             android:process=":remote" /> <!-- 小米推送 -->
         <activity
-            android:name=".utils.xiaomi.mipush.PermissionActivity"
+            android:name="com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.PermissionActivity"
             android:label="" /> <!-- 4个后台服务 -->
         <service
             android:name="com.xiaomi.push.service.XMJobService"
@@ -112,7 +113,7 @@
             android:name="com.xiaomi.mipush.sdk.MessageHandleService"
             android:enabled="true" /> <!-- 3个广播 -->
         <receiver
-            android:name=".utils.xiaomi.mipush.MiMessageReceiver"
+            android:name="com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiMessageReceiver"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.xiaomi.mipush.RECEIVE_MESSAGE" />
@@ -143,7 +144,7 @@
         </receiver> <!-- 文件服务 -->
         <provider
             android:name="android.support.v4.content.FileProvider"
-            android:authorities="com.example.cameraalbumtest.fileprovider"
+            android:authorities="com.automation.cameraalbumtest.fileprovider"
             android:exported="false"
             android:grantUriPermissions="true">
             <meta-data

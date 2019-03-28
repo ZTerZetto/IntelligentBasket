@@ -27,7 +27,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="5dp">
         <!-- 吊篮图片 -->
-        <com.example.zzx.zbar_demo.widget.image.SmartImageView
+        <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
             android:id="@+id/basket_index_imageview"
             android:layout_width="100dp"
             android:layout_height="75dp"

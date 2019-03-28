@@ -6,7 +6,7 @@
     android:layout_centerInParent="true"
     android:gravity="center">
 
-    <com.example.zzx.zbar_demo.widget.image.SmartImageView
+    <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
 
         android:id="@+id/pro_photo"
         android:layout_width="100dp"

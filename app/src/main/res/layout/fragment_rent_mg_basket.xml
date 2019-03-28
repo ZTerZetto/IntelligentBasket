@@ -24,13 +24,13 @@
     </android.support.design.widget.TabLayout>
 
     <!-- 页面布局 -->
-    <com.example.zzx.zbar_demo.widget.NoScrollViewPager
+    <com.automation.zzx.intelligent_basket_demo.widget.NoScrollViewPager
         android:id="@+id/view_pager"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:background="@color/white">
 
-    </com.example.zzx.zbar_demo.widget.NoScrollViewPager>
+    </com.automation.zzx.intelligent_basket_demo.widget.NoScrollViewPager>
 
 
 </LinearLayout>

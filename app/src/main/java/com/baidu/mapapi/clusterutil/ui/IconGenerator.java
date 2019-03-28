@@ -15,7 +15,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.example.zzx.zbar_demo.R;
+import com.automation.zzx.intelligent_basket_demo.R;
 
 
 /**
