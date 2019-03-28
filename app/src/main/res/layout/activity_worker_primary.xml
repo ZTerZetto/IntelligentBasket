@@ -2,16 +2,16 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorWorkerPrimaryBackground"
     android:orientation="vertical">
     
     <!-- header 登录状态 -->
     <RelativeLayout
+        android:id="@+id/login_layout"
         android:layout_width="match_parent"
         android:layout_height="@dimen/me_login_layout_height"
         android:paddingLeft="@dimen/me_login_layout_paddingLeft"
-        android:background="@mipmap/bg_my_login">
+        android:background="@drawable/bg_round_white">
 
         <!-- 头像 -->
         <com.example.zzx.zbar_demo.widget.image.SmartImageView
@@ -19,26 +19,22 @@
             android:layout_width="@dimen/me_login_head_width"
             android:layout_height="@dimen/me_login_head_width"
             android:layout_marginEnd="@dimen/me_login_head_marginEnd"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
+            android:layout_centerVertical="true"
             android:scaleType="fitXY"
-            android:src="@mipmap/ic_launcher_round"/>
+            android:src="@mipmap/ic_default_user_head"/>
         <!-- 账户信息 -->
         <LinearLayout
             android:id="@+id/login_message"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_centerVertical="true"
             android:layout_toRightOf="@+id/login_head"
-            android:layout_alignParentBottom="true"
-            android:layout_marginBottom="20dp"
+            android:layout_centerVertical="true"
             android:orientation="vertical">
             <!-- 用户姓名 -->
             <RelativeLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart=
-                    "@dimen/me_login_profile_layout_marginStart">
+                android:layout_marginStart="@dimen/me_login_profile_layout_marginStart">
                 <!-- 姓名 -->
                 <TextView
                     android:id="@+id/login_username"
@@ -80,8 +76,15 @@
             </LinearLayout>
         </LinearLayout>
 
+        <!-- 二维码图标 -->
+        <ImageView
+            android:id="@+id/login_qr_code"
+            android:layout_toLeftOf="@+id/login_right_arrow"
+            style="@style/me_common_item_qr_code_imageView_style"/>
         <!-- 右箭头 -->
-        <!-- need do something -->
+        <ImageView
+            android:id="@+id/login_right_arrow"
+            style="@style/me_common_item_arrow_right_imageView_style"/>
 
     </RelativeLayout>
 
@@ -100,6 +103,7 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="70dp"
+                android:layout_marginTop="10dp"
                 android:background="@drawable/bg_white_quai"
                 android:orientation="horizontal">
                 <!-- 上工/下工 -->
@@ -159,11 +163,7 @@
 
             <!--软件设置相关-->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/me_item_common_layout_marginTop"
-                android:orientation="vertical"
-                android:background="@drawable/bg_white_quai">
+                style="@style/more_common_linearlayout_style">
                 <RelativeLayout
                     android:id="@+id/more_item_comment_layout"
                     style="@style/me_common_item_relativeLayout_style">
@@ -209,11 +209,7 @@
 
             <!--检查更新关于等-->
             <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/me_item_common_layout_marginTop"
-                android:orientation="vertical"
-                android:background="@drawable/bg_white_quai">
+                style="@style/more_common_linearlayout_style">
                 <RelativeLayout
                     android:id="@+id/more_item_check_update_layout"
                     style="@style/me_common_item_relativeLayout_style">
@@ -236,6 +232,20 @@
                     <ImageView
                         style="@style/me_common_item_arrow_right_imageView_style"/>
                 </RelativeLayout>
+            </LinearLayout>
+
+            <!-- 退出登录等 -->
+            <LinearLayout
+                style="@style/more_common_linearlayout_style">
+
+                <RelativeLayout
+                    android:id="@+id/more_item_log_out_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="退出登录"/>
+                </RelativeLayout>
+
             </LinearLayout>
 
         </LinearLayout>

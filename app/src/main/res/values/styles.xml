@@ -259,6 +259,14 @@
         <item name="android:clickable">true</item>
         <item name="android:paddingLeft">15dp</item>
     </style>
+    <!-- 右二维码 -->
+    <style name="me_common_item_qr_code_imageView_style">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:src">@mipmap/ic_login_qreode</item>
+    </style>
     <!-- 右箭头样式 -->
     <style name="me_common_item_arrow_right_imageView_style">
         <item name="android:layout_width">wrap_content</item>
@@ -285,6 +293,18 @@
         <item name="android:layout_marginRight">10dp</item>
         <item name="android:textSize">@dimen/textSize_15</item>
         <item name="android:textColor">@color/gray01</item>
+    </style>
+    <!-- 含有右箭头的内容 -->
+    <style name="more_common_desc_align_left_textView_style" parent="more_common_desc_textView_style">
+        <item name="android:layout_alignParentEnd">false</item>
+    </style>
+    <!-- 功能模块布局 -->
+    <style name="more_common_linearlayout_style">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_marginTop">@dimen/me_item_common_layout_marginTop</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@drawable/bg_white_quai</item>
     </style>
 
     <!-- 确认上下工弹窗 -->
@@ -321,6 +341,9 @@
         <item name="android:layout_height">1dp</item>
         <item name="android:background">@color/sliver</item>
     </style>
+
+    <!-- worker information -->
+
 
     <!-- 租方管理员 -->
     <!-- 租方管理员，吊篮顶部切换 -->

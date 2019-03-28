@@ -42,13 +42,21 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/mg_basket_state">
-        <!-- 吊篮列表 -->
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/basket_recycler_view"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent">
 
-        </android.support.v7.widget.RecyclerView>
+        <!-- 吊篮列表 -->
+        <RelativeLayout
+            android:id="@+id/basket_avaliable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/basket_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+            </android.support.v7.widget.RecyclerView>
+
+        </RelativeLayout>
 
         <!-- 空空如也 -->
         <RelativeLayout

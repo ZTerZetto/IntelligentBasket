@@ -22,12 +22,14 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.example.zzx.zbar_demo.R;
+import com.example.zzx.zbar_demo.activity.common.PersonalInformationActivity;
 import com.example.zzx.zbar_demo.activity.loginRegist.LoginActivity;
 import com.example.zzx.zbar_demo.entity.UserInfo;
 import com.example.zzx.zbar_demo.utils.HttpUtil;
 import com.example.zzx.zbar_demo.application.CustomApplication;
 import com.example.zzx.zbar_demo.utils.ToastUtil;
 import com.example.zzx.zbar_demo.utils.xiaomi.mipush.MiPushUtil;
+import com.example.zzx.zbar_demo.utils.xiaomi.mipush.PermissionActivity;
 import com.example.zzx.zbar_demo.widget.dialog.CommonDialog;
 import com.example.zzx.zbar_demo.widget.dialog.VerifyWorkDialog;
 import com.example.zzx.zbar_demo.widget.image.SmartImageView;
@@ -67,6 +69,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private final static int UPDATE_USER_DISPLAY_MSG = 103;
 
     // header
+    private RelativeLayout mWorkerLoginLayout; // 登录总布局
     private SmartImageView mWorkerHead; // 头像
     private TextView mWorkerName;  // 名字
     private TextView mWorkerProjectState;  // 项目
@@ -85,6 +88,9 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private RelativeLayout mContactService; // 联系客服
     private RelativeLayout mCheckUpdate; // 检查更新
     private RelativeLayout mInRegardTo; //关于
+
+    // 退出登录
+    private RelativeLayout mLogout; // 退出登录
 
     // 页面信息
     private String mWorkProject;  // 项目ID
@@ -158,6 +164,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     // 初始化控件
     private void initWidget(){
         // header
+        mWorkerLoginLayout = (RelativeLayout) findViewById(R.id.login_layout);
+        mWorkerLoginLayout.setOnClickListener(this);
         mWorkerHead = (SmartImageView) findViewById(R.id.login_head); // 头像
         mWorkerHead.setCircle(true);
         mWorkerHead.setImageUrl(mUserHeadUrl);
@@ -187,6 +195,10 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mCheckUpdate.setOnClickListener(this);
         mInRegardTo = (RelativeLayout) findViewById(R.id.more_item_about_layout); // 关于
         mInRegardTo.setOnClickListener(this);
+
+        // logout
+        mLogout = (RelativeLayout) findViewById(R.id.more_item_log_out_layout); // 退出登录
+        mLogout.setOnClickListener(this);
     }
 
     /*
@@ -196,6 +208,10 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()){
+            case R.id.login_layout:  // 跳转至个人信息页面
+                Log.i(TAG, "You have clicked login layout");
+                startActivity(new Intent(WorkerPrimaryActivity.this, PersonalInformationActivity.class));
+                break;
             case R.id.work_layout:  // 开工/下工
                 Log.i(TAG, "You have clicked open/close work button");
                 if(mWorkProject == null || mWorkProject.equals("")){
@@ -208,7 +224,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 intent = new Intent(WorkerPrimaryActivity.this, CaptureActivity.class);
                 startActivityForResult(intent, CAPTURE_ACTIVITY_RESULT);
                 break;
-            case R.id.order_layout:
+            case R.id.order_layout:  // 工单
                 Log.i(TAG, "You have clicked order button");
                 intent = new Intent(WorkerPrimaryActivity.this, WorkerOrderActivity.class);
                 startActivity(intent);
@@ -236,6 +252,9 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.more_item_about_layout: // 关于
                 Log.i(TAG, "You have clicked in regard to button");
+                break;
+            case R.id.more_item_log_out_layout:
+                Log.i(TAG, "You have clicked log out button");
                 logoutHttp();
                 break;
         }
