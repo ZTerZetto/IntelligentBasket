@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent"
+    android:layout_height="wrap_content"
     android:background="@color/material_grey_300">
 
-    <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
-        android:id="@+id/work_photo"
+    <ImageView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_centerInParent="true"
         android:scaleType="centerCrop"
-        android:src="@mipmap/test"/>
+        android:id="@+id/gridview_image"
+        android:src="@mipmap/ic_add_upload_image"/>
 
 </RelativeLayout>

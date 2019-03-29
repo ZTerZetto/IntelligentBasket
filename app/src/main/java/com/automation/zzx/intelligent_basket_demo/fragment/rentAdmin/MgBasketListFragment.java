@@ -131,6 +131,10 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Map<Integer,Boolean> isCheck = mgBasketListAdapter.getMap();
+                if(!isChecked){  // 规避减一个checkbox导致取消全选的问题
+                    if(isCheck.size() != mgBasketListAdapter.checkedBasket())
+                        return;
+                }
                 mgBasketListAdapter.initCheck(isChecked);
                 mgBasketListAdapter.notifyDataSetChanged();
             }

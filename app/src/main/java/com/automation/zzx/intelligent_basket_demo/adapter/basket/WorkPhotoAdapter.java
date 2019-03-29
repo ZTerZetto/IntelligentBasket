@@ -1,10 +1,12 @@
 package com.automation.zzx.intelligent_basket_demo.adapter.basket;
 
+import android.app.Activity;
 import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
+import android.widget.RelativeLayout;
 
 
 import com.automation.zzx.intelligent_basket_demo.R;
@@ -18,10 +20,12 @@ import java.util.List;
  * Describe: 设备运行状态截图适配器
  */
 public class WorkPhotoAdapter extends ArrayAdapter<String> {
+    private Context context;
     private int resourceId;
 
     public WorkPhotoAdapter(Context context, int textViewResourceId, List<String> objects){
         super(context, textViewResourceId, objects);
+        this.context = context;
         resourceId = textViewResourceId;
     }
 
@@ -36,6 +40,13 @@ public class WorkPhotoAdapter extends ArrayAdapter<String> {
             view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
             viewHolder = new ViewHolder();
             viewHolder.workPhotoIv = (SmartImageView) view.findViewById(R.id.work_photo);
+
+            // 设置图片大小
+            int widthPix = ((Activity) context).getResources().getDisplayMetrics().widthPixels;
+            widthPix = widthPix / 4 - 20;
+            RelativeLayout.LayoutParams params = new RelativeLayout.LayoutParams(widthPix, widthPix);
+            viewHolder.workPhotoIv.setLayoutParams(params);
+
             view.setTag(viewHolder);
         }else{
             view = convertView;

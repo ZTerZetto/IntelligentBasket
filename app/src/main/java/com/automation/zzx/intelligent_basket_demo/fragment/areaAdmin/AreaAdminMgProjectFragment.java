@@ -30,6 +30,7 @@ import android.widget.TextView;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.ProDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadImageActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
@@ -185,13 +186,14 @@ public class AreaAdminMgProjectFragment extends Fragment {
             public void onPreAssAndAceptClick(View view, int position) {
                 // 点击预安装
                 Log.i(TAG, "You have clicked the "+ position+" item's PreAssAndAcept");
-
+                startActivity(new Intent(getActivity(), UploadImageActivity.class));
             }
 
             @Override
             public void onPreApplyStopClick(View view, int position) {
                 // 点击预报停
                 Log.i(TAG, "You have clicked the "+ position+" item's PreApplyStop");
+                startActivity(new Intent(getActivity(), UploadImageActivity.class));
 
             }
         });
@@ -366,7 +368,7 @@ public class AreaAdminMgProjectFragment extends Fragment {
         @Override
         public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,float velocityY) {
             if(Math.abs(e1.getX()-e2.getX()) > Math.abs(e1.getY()-e2.getY())) {
-                // s水平滑动的距离大于竖直滑动的距离
+                // 水平滑动的距离大于竖直滑动的距离
                 if (e1.getX() - e2.getX() > FLIP_DISTANCE) {
                     Log.i(TAG, "向左滑...");
                     int tmp_position = pre_selectedPosition + 1;

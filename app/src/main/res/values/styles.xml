@@ -13,6 +13,10 @@
         <item name="android:textColorSecondary">#ffffff</item>
         <!-- 修改toolbar文字的颜色-->
         <item name="android:textColorPrimary">#ffffff</item>
+        <!-- popupmenu -->
+        <item name="popupMenuStyle">@style/popupMenuStyle</item>
+        <item name="textAppearanceLargePopupMenu">@style/textAppearanceLargePopupMenu</item>
+        <item name="textAppearanceSmallPopupMenu">@style/textAppearanceSmallPopupMenu</item>
     </style>
 
     <style name="AppTheme.NoActionBar">
@@ -439,6 +443,19 @@
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:background">@drawable/bg_ellipse_with_gray_line</item>
         <item name="android:padding">8dp</item>
+    </style>
+    <!-- 上传图片活动-弹出菜单 -->
+    <style name="popupMenuStyle" parent="Widget.AppCompat.PopupMenu">
+        <!-- 设置popupMenu背景颜色-->
+        <item name="android:popupBackground">@color/white</item>
+    </style>
+    <style name="textAppearanceLargePopupMenu"
+        parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Large">
+        <item name="android:textColor">@color/black</item>
+    </style>
+    <style name="textAppearanceSmallPopupMenu"
+        parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
+        <item name="android:textColor">@color/black</item>
     </style>
 
 </resources>

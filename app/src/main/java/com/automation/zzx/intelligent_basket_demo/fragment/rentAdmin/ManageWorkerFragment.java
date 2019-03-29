@@ -113,6 +113,10 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
             @Override
             public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
                 Map<Integer,Boolean> isCheck = mgWorkerListAdapter.getMap();
+                if(!isChecked){  // 规避减一个checkbox导致取消全选的问题
+                    if(isCheck.size() != mgWorkerListAdapter.checkedBasket())
+                        return;
+                }
                 mgWorkerListAdapter.initCheck(isChecked);
                 mgWorkerListAdapter.notifyDataSetChanged();
             }
