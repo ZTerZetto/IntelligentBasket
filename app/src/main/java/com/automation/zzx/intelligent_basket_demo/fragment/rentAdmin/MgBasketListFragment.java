@@ -32,6 +32,8 @@ import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -49,6 +51,7 @@ import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_A
  * Created by pengchenghu on 2019/3/22.
  * Author Email: 15651851181@163.com
  * Describe: 租方管理员列表管理吊篮
+ * Extra: 本页HTTP请求使用BaseOkHttpClient
  */
 public class MgBasketListFragment extends Fragment implements View.OnClickListener {
 
@@ -77,6 +80,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
         public void handleMessage(Message msg) {
             switch(msg.what) {
                 case MG_BASKET_LIST_INFO:  // 吊篮列表更新
+                    mgBasketInfoList.clear();
                     mgBasketInfoList.addAll(parseBasketListInfo((String) msg.obj));
                     mgBasketListAdapter.notifyDataSetChanged();
                     break;
@@ -162,46 +166,68 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
     }
 
     /*
-     * 从后台获取吊篮列表数据
+     * 网络请求相关
      */
+    //从后台获取吊篮列表数据
     public void rentAdminGetBasketListInfo(){
-        HttpUtil.rentAdminGetBasketInfo(new Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", token)
+                .addParam("userId", userInfo.getUserId())
+                .get()
+                .url(RENT_ADMIN_MG_ALL_BASKET_INFO)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.i(TAG, "成功" );
+                        String responseData = o.toString();
+                        Message message = new Message();
+                        message.what = MG_BASKET_LIST_INFO;
+                        message.obj = responseData;
+                        handler.sendMessage(message);
+                    }
 
-            }
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "错误：" + code);
+                        switch (code){
+                            case 401: // 未授权
+                                ToastUtil.showToastTips(getActivity(), "登录已过期，请重新登陆");
+                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                                getActivity().finish();
+                                break;
+                            case 403: // 禁止
+                                break;
+                            case 404: // 404
+                                break;
+                        }
+                    }
 
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if(response.code() == 401){ // token 过期
-                    ToastUtil.showToastTips(getActivity(), "登录已过期，请重新登陆");
-                    startActivity(new Intent(getActivity(), LoginActivity.class));
-                    getActivity().finish();
-                    return;
-                }
-                // 获取数据
-                String responseData = response.body().string();
-                Message message = new Message();
-                message.what = MG_BASKET_LIST_INFO;
-                message.obj = responseData;
-                handler.sendMessage(message);
-            }
-        }, RENT_ADMIN_MG_ALL_BASKET_INFO, token, userInfo.getUserId());
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "失败：" + e.toString());
+                    }
+                });
     }
+
     // 解析吊篮列表数据
     private List<MgBasketInfo> parseBasketListInfo(String responseDate){
         List<MgBasketInfo> mgBasketInfos = new ArrayList<>();
 
         JSONObject jsonObject = JSON.parseObject(responseDate);
-        Iterator<String> iterator = jsonObject.keySet().iterator();
+
+        ((RentAdminPrimaryActivity) getActivity()).getProjectId(  // 解析获取项目Id
+                jsonObject.getString("projectId"));
+
+        Iterator<String> iterator = jsonObject.keySet().iterator();  // 迭代获取吊篮信息
         while(iterator.hasNext()){
             String key = iterator.next();
             if(!key.contains("Box")) continue;
             String value = jsonObject.getString(key);
             JSONObject basketObj = JSON.parseObject(value);
-            MgBasketInfo mgBasketInfo = new MgBasketInfo(null, basketObj.getString("boxId"),
-                    String.valueOf(basketObj.getIntValue("state")), basketObj.getString("date"),
-                    basketObj.getString("builderId"));
+            MgBasketInfo mgBasketInfo = new MgBasketInfo(null, basketObj.getString("deviceId"),
+                    String.valueOf(basketObj.getIntValue("workingState")), basketObj.getString("date"),
+                    basketObj.getString("managerId"));
             mgBasketInfos.add(mgBasketInfo);
         }
         return mgBasketInfos;
@@ -232,6 +258,11 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
             onAttachToContext(activity);
         }
     }
+
+    /*
+     * 权限申请
+     */
+
 
     /*
      * 初始化列表

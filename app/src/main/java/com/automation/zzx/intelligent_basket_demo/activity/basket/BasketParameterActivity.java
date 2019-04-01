@@ -86,7 +86,7 @@ public class BasketParameterActivity extends AppCompatActivity {
                     break;
                 case TIMER: // 定时任务
                     //getDeviceParameter();
-                    deviceParameterHttp();
+                    deviceParameterHttp(false);
                     break;
             }
         }
@@ -99,13 +99,13 @@ public class BasketParameterActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         //mBasketId = intent.getStringExtra(HANGING_BASKET_ID);  // 获取吊篮id
-        if(mBasketId==null || mBasketId.equals("")) mBasketId = "1";
+        if(mBasketId==null || mBasketId.equals("")) mBasketId = "js_nj_00003";
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
 
         initWidgetResource();  // 初始化控件
         //getDeviceParameter();
-        deviceParameterHttp();
+        deviceParameterHttp(false);
         setTimer();  // 开启定时任务
     }
 
@@ -120,7 +120,7 @@ public class BasketParameterActivity extends AppCompatActivity {
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 //getDeviceParameter();
-                deviceParameterHttp();
+                deviceParameterHttp(true);
             }
         });
 
@@ -161,14 +161,14 @@ public class BasketParameterActivity extends AppCompatActivity {
 
     // 定时器初始化
     private void setTimer(){
-        customTimeTask = new CustomTimeTask(2000, new TimerTask() {
+        customTimeTask = new CustomTimeTask(1000, new TimerTask() {
             @Override
             public void run() {
                 mHandler.sendEmptyMessage(TIMER);
                 Log.d(TAG, "定时任务：获取最新吊篮数据");
             }
         });
-        //customTimeTask.start();
+        customTimeTask.start();
     }
 
 
@@ -198,8 +198,9 @@ public class BasketParameterActivity extends AppCompatActivity {
 
     /*
      * 网络相关
+     * boolean fresh: true 下拉刷新 false:timer fresh
      */
-    private void deviceParameterHttp(){
+    private void deviceParameterHttp(final boolean fresh){
         // 获取token
         String token = pref.getString("loginToken", null);
 
@@ -207,7 +208,7 @@ public class BasketParameterActivity extends AppCompatActivity {
             @Override
             public void onFailure(Call call, IOException e) {
                 Log.i(TAG, "失败：" + e.toString());
-                mSmartRefreshLayout.finishRefresh(1500,false); // 刷新失败
+                mSmartRefreshLayout.finishRefresh(500,false); // 刷新失败
             }
 
             @Override
@@ -220,7 +221,8 @@ public class BasketParameterActivity extends AppCompatActivity {
                 msg.obj = responseData;
                 mHandler.sendMessage(msg);
 
-                mSmartRefreshLayout.finishRefresh(1500); // 刷新成功
+                if(fresh)
+                    mSmartRefreshLayout.finishRefresh(500); // 刷新成功
 
             }
         }, token, mBasketId);
@@ -301,21 +303,23 @@ public class BasketParameterActivity extends AppCompatActivity {
          */
         String boolData32 = electric_data_json_object.getString("bool_data_int32");
         boolData32 = Integer.toBinaryString(Integer.valueOf(boolData32));
-        if(boolData32.length() >= 15) {
-            // 开关变量
-            String varswitch = boolData32.substring(0, 8);
-            updateVarSwitch(varswitch);
-            // 控制输入
-            String control_input = boolData32.substring(8, 11);
-            updateControInput(control_input);
-            // 控制输出
-            // 1.vfd
-            String control_output_vfd = boolData32.substring(11,13);
-            updateVfd(control_output_vfd);
-            // 2.contactor
-            String control_output_contactor = boolData32.substring(13,15);
-            updateContactor(control_output_contactor);
+        if(boolData32.length() < 15){
+            boolData32 = String.format("%15s", boolData32);
+            boolData32 = boolData32.replace(" ", "0");
         }
+        // 开关变量
+        String varswitch = boolData32.substring(0, 8);
+        updateVarSwitch(varswitch);
+        // 控制输入
+        String control_input = boolData32.substring(8, 11);
+        updateControInput(control_input);
+        // 控制输出
+        // 1.vfd
+        String control_output_vfd = boolData32.substring(11,13);
+        updateVfd(control_output_vfd);
+        // 2.contactor
+        String control_output_contactor = boolData32.substring(13,15);
+        updateContactor(control_output_contactor);
 
         /*
          * 吊篮数据
@@ -326,15 +330,19 @@ public class BasketParameterActivity extends AppCompatActivity {
         // 变频器电流
         String vfd_current = electric_data_json_object.getString("current");
         int dot_index = vfd_current.indexOf(",");
-        String vfd_str = "(" + vfd_current.substring(0, dot_index) + "A" +
-                vfd_current.substring(dot_index) + "A)";
-        mVfdCurrent.setText(vfd_str);
+        if(dot_index < vfd_current.length() && dot_index > 0) {
+            String vfd_str = "(" + vfd_current.substring(0, dot_index) + "A" +
+                    vfd_current.substring(dot_index) + "A)";
+            mVfdCurrent.setText(vfd_str);
+        }
         // 倾斜仪
         String clinometer_degree = electric_data_json_object.getString("degree");
-        dot_index = clinometer_degree.indexOf(",");
-        String cilnometer_str = "(" + clinometer_degree.substring(0, dot_index) + "°" +
-                vfd_current.substring(dot_index) + "°)";
-        mClinometerDegree.setText(cilnometer_str);
+        int clinometer_degree_dot_index = clinometer_degree.indexOf(",");
+        if(clinometer_degree_dot_index < clinometer_degree.length() && clinometer_degree_dot_index > 0) {
+            String cilnometer_str = "(" + clinometer_degree.substring(0, clinometer_degree_dot_index) + "°" +
+                    clinometer_degree.substring(clinometer_degree_dot_index) + "°)";
+            mClinometerDegree.setText(cilnometer_str);
+        }
 
         /*
          * 其他数据

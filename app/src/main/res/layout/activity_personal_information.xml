@@ -39,6 +39,22 @@
         <View
             style="@style/me_horizontal_view_style"/>
 
+        <!-- 工号 -->
+        <RelativeLayout
+            android:id="@+id/user_id_layout"
+            style="@style/me_common_item_relativeLayout_style">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="工号"/>
+            <TextView
+                android:id="@+id/user_id_textview"
+                style="@style/more_common_desc_textView_style"
+                android:text="9989"/>
+        </RelativeLayout>
+
+        <View
+            style="@style/me_horizontal_view_style"/>
+
         <!-- 用户名 -->
         <RelativeLayout
             android:id="@+id/user_name_layout"
@@ -54,6 +70,22 @@
             <ImageView
                 android:id="@+id/user_name_arrow"
                 style="@style/me_common_item_arrow_right_imageView_style"/>
+        </RelativeLayout>
+
+        <View
+            style="@style/me_horizontal_view_style"/>
+
+        <!-- 类型 -->
+        <RelativeLayout
+            android:id="@+id/user_role_layout"
+            style="@style/me_common_item_relativeLayout_style">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="类型"/>
+            <TextView
+                android:id="@+id/user_role_textview"
+                style="@style/more_common_desc_textView_style"
+                android:text="施工人员"/>
         </RelativeLayout>
 
         <View

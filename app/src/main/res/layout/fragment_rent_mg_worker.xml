@@ -39,7 +39,7 @@
     <RelativeLayout
         android:id="@+id/worker_controller"
         android:layout_width="match_parent"
-        android:layout_height="54dp"
+        android:layout_height="60dp"
         android:layout_alignParentBottom="true"
         android:orientation="horizontal"
         android:gravity="center_vertical">

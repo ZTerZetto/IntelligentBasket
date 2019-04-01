@@ -8,7 +8,7 @@ public class AppConfig {
     public final static String BASE_URL_PATH = "http://47.100.1.211";// 后台地址
     //public final static String ANDROID_URL_PATH = "http://47.100.1.211";
     //public final static String ANDROID_URL_PATH = "http://10.193.1.44:8080";
-    public final static String ANDROID_URL_PATH = "http://10.193.2.79:8080";
+    public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080";
     public final static String IMAGE_URL = "http://10.193.0.20:21";
     public final static String FILE_SERVER_PATH = "http://10.193.0.20:8089"; // 文件服务器地址
     public final static String COMMUNICATION_SERVER_PATH = "http://47.100.1.211:8081"; // 通讯服务器地址
@@ -84,7 +84,9 @@ public class AppConfig {
      */
     // 施工人员基本信息
     public static final String WORKER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetWorker");
+    // 施工人员上工
     public static final String WORKER_BEGIN_WORK = ANDROID_URL_PATH.concat("/androidBeginWork");
+    // 施工人员下工
     public static final String WORKER_ENG_WORK = ANDROID_URL_PATH.concat("/androidEndWork");
 
     /*
@@ -92,8 +94,10 @@ public class AppConfig {
      */
     // 租方管理员请求所有吊篮信息
     public static final String RENT_ADMIN_MG_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/forecastStop");
-
-
+    // 租方管理员请求所有施工人员
+    public static final String RENT_ADMIN_GET_ALL_WORKER_INFO = ANDROID_URL_PATH.concat("/getUserList");
+    // 租方管理员添加施工人员
+    public static final String RENT_ADMIN_ADD_WORKER= ANDROID_URL_PATH.concat("/androidIncreaseWorker");
 
     /*
     * 常量
@@ -105,11 +109,4 @@ public class AppConfig {
      * 公/局域 网切换
      * 默认是局域网
      */
-//    public static void setPublicAndroidUrl(boolean usePublic){
-//        if(usePublic){
-//            ANDROID_URL_PATH = "http://47.100.1.211";
-//        }else{
-//            ANDROID_URL_PATH = "http://10.193.2.79:8080";
-//        }
-//    }
 }

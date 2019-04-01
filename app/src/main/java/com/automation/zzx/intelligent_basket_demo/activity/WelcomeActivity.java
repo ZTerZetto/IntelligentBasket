@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.baidu.mapapi.SDKInitializer;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
@@ -65,11 +66,11 @@ public class WelcomeActivity extends AppCompatActivity {
                         mainIntent = new Intent(WelcomeActivity.this,  // worker主活动
                                 WorkerPrimaryActivity.class);
                     }else if(userRole.equals("rentAdmin")){
-                        mainIntent = new Intent(WelcomeActivity.this,  // 管理员页面
+                        mainIntent = new Intent(WelcomeActivity.this,  // 租方管理员页面
                                 RentAdminPrimaryActivity.class);
                     }else{
-                        mainIntent = new Intent(WelcomeActivity.this,  // 管理员页面
-                                ManageMainActivity.class);
+                        mainIntent = new Intent(WelcomeActivity.this,  // 施工人员管理员页面
+                                AreaAdminPrimaryActivity.class);
                     }
                     startActivity(mainIntent);
                 }

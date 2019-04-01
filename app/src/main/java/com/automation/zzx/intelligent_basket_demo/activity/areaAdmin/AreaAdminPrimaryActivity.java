@@ -43,6 +43,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_admin_primary);
 
+        getUserInfo();
         initWidget();
     }
 
@@ -82,6 +83,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity {
         mUserInfo = new UserInfo();
         mUserInfo.setUserId(mPref.getString("userId", ""));
         mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mUserInfo.setUserRole(mPref.getString("userRole", ""));
         mToken = mPref.getString("loginToken","");
     }
     // 将用户信息传递给子Fragment

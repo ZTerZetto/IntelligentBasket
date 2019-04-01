@@ -8,6 +8,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -46,6 +47,7 @@ import okhttp3.Response;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_PATH;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.WORKER_BEGIN_WORK;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.WORKER_ENG_WORK;
+import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
 
 /**
  * Created by pengchenghu on 2019/3/15.
@@ -207,7 +209,9 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         switch (v.getId()){
             case R.id.login_layout:  // 跳转至个人信息页面
                 Log.i(TAG, "You have clicked login layout");
-                startActivity(new Intent(WorkerPrimaryActivity.this, PersonalInformationActivity.class));
+                intent = new Intent(WorkerPrimaryActivity.this, PersonalInformationActivity.class);
+                intent.putExtra("userInfo", (Parcelable) mUserInfo);
+                startActivity(intent);
                 break;
             case R.id.work_layout:  // 开工/下工
                 Log.i(TAG, "You have clicked open/close work button");
@@ -279,8 +283,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         switch (requestCode){
             case CAPTURE_ACTIVITY_RESULT:
                 if(resultCode == RESULT_OK){
-                    String basket_id = data.getStringExtra("basket_id");
-                    Log.i(TAG, "Device ID: "+basket_id);
+                    String basket_id = data.getStringExtra(QR_CODE_RESULT);
+                    Log.i(TAG, "Device ID: "+ basket_id);
                     Message msg = new Message();
                     msg.what = OPEN_VERIFY_DIALOG_MSG;
                     msg.obj = basket_id;
@@ -370,6 +374,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mUserInfo = new UserInfo();
         mUserInfo.setUserId(mPref.getString("userId", ""));
         mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mUserInfo.setUserRole(mPref.getString("userRole", ""));
         mToken = mPref.getString("loginToken","");
 
         // 从后台获取其他数据
@@ -414,6 +419,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         editor.clear();
         editor.commit();
         startActivity(new Intent(WorkerPrimaryActivity.this, LoginActivity.class));
+        this.finish();  // 销毁此活动
     }
 
     /*

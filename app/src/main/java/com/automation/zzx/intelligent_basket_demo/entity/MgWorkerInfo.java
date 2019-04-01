@@ -8,6 +8,7 @@ package com.automation.zzx.intelligent_basket_demo.entity;
 public class MgWorkerInfo {
 
     private String headImg;
+    private String id; // 工人id
     private String name;  // 工人姓名
     private String state;  // 工作状态
     private String basketId;  // 吊篮ID
@@ -22,6 +23,14 @@ public class MgWorkerInfo {
     /*
      * Bean 函数
      */
+
+    public String getId(){
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 
     public String getHeadImg() {
         return headImg;

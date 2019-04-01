@@ -1,6 +1,7 @@
 package com.automation.zzx.intelligent_basket_demo.activity.common;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Handler;
@@ -32,7 +33,8 @@ public class QRcodeCardActivity extends AppCompatActivity {
     private Bitmap mUserQRcodeBitmap;
 
     // 用户信息
-    private String userId = "null";  // 用户ID
+    private String userId;  // 用户ID
+    private String userRole; // 用户类型
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -40,7 +42,8 @@ public class QRcodeCardActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case GENERATE_QRCODE_MSG:
-                    mUserQRcodeBitmap = EncodeMessage.createQRImage(QRcodeCardActivity.this, userId,
+                    String content = userRole + ":" + userId;
+                    mUserQRcodeBitmap = EncodeMessage.createQRImage(QRcodeCardActivity.this, content,
                             BitmapFactory.decodeResource(getResources(), R.mipmap.ic_default_user_head));
                     mQRcodeImageView.setImageBitmap(mUserQRcodeBitmap);
                     break;
@@ -52,6 +55,10 @@ public class QRcodeCardActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_qrcode_card);
+
+        Intent intent = getIntent();
+        userId = intent.getStringExtra("userId");
+        userRole = intent.getStringExtra("userRole");
 
         initWidgetResource();
 
