@@ -43,6 +43,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_admin_primary);
 
+        getUserInfo();
         initWidget();
     }
 

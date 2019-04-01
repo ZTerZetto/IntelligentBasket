@@ -175,11 +175,11 @@
                 </RelativeLayout>
             </LinearLayout>
 
-            <!--检查更新关于等-->
+            <!-- 退出登录 -->
             <LinearLayout
                 style="@style/more_common_linearlayout_style">
                 <RelativeLayout
-                    android:id="@+id/log_out_layout"
+                    android:id="@+id/more_item_log_out_layout"
                     style="@style/me_common_item_relativeLayout_style">
                     <TextView
                         style="@style/more_common_item_textView_style"
