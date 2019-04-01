@@ -273,10 +273,8 @@ public class LoginActivity extends AppCompatActivity {
                     @Override
                     public void onClick(Dialog dialog, boolean confirm) {
                         if(confirm){
-                            //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击确定");
                             dialog.dismiss();
                         }else{
-                            //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击取消");
                             dialog.dismiss();
                         }
                     }
@@ -303,10 +301,5 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 
-    @Override
-    public void onBackPressed() {
-        super.onBackPressed();
-        this.onDestroy();
-    }
 
 }

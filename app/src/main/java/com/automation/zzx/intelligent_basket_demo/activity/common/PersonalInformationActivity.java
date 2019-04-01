@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 
 /**
  * Created by pengchenghu on 2019/3/28.
@@ -27,18 +28,27 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
     // 账号信息
     private RelativeLayout mUserHeadRv;
     private ImageView mUserHeadIv; // 头像
+    private RelativeLayout mUserIdRv; // 工号
+    private TextView mUserIdTv;
     private RelativeLayout mUserNameRv; // 用户名
     private TextView mUserNameTv;
+    private RelativeLayout mUserRoleRv; // 账户类型
+    private TextView mUserRoleTv;
     private RelativeLayout mUserPhoneRv; // 手机号
     private TextView mUserPhoneTv;
     private RelativeLayout mUserPasswordRv; // 密码
     private RelativeLayout mUserQRcodeRv; // 二维码名片
     private RelativeLayout mUserMoreRv; // 更多
 
+    // 个人信息
+    private UserInfo mUserInfo;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_personal_information);
+
+        mUserInfo = (UserInfo) getIntent().getExtras().get("userInfo");
 
         initWidgetResource();
     }
@@ -58,11 +68,15 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
         // 个人信息栏
         mUserHeadRv = (RelativeLayout) findViewById(R.id.user_head_layout);
         mUserHeadRv.setOnClickListener(this);
+        mUserIdRv = (RelativeLayout) findViewById(R.id.user_id_layout);
+        mUserIdTv = (TextView) findViewById(R.id.user_id_textview);
         mUserHeadIv = (ImageView) findViewById(R.id.user_head_imageview);
         mUserHeadIv.setOnClickListener(this);
         mUserNameRv = (RelativeLayout) findViewById(R.id.user_name_layout);
         mUserNameRv.setOnClickListener(this);
         mUserNameTv = (TextView) findViewById(R.id.user_name_textview);
+        mUserRoleRv = (RelativeLayout) findViewById(R.id.user_role_layout);
+        mUserRoleTv = (TextView) findViewById(R.id.user_role_textview);
         mUserPhoneRv = (RelativeLayout) findViewById(R.id.user_phone_layout);
         mUserPhoneTv = (TextView) findViewById(R.id.user_phone_textview);
         mUserPasswordRv = (RelativeLayout) findViewById(R.id.user_password_layout);
@@ -71,6 +85,22 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
         mUserQRcodeRv.setOnClickListener(this);
         mUserMoreRv = (RelativeLayout) findViewById(R.id.user_more_layout);
         mUserMoreRv.setOnClickListener(this);
+
+        // 信息更新
+        mUserIdTv.setText(mUserInfo.getUserId());
+        mUserNameTv.setText(mUserInfo.getUserName());
+        switch(mUserInfo.getUserRole()){
+            case "worker":
+                mUserRoleTv.setText("施工人员");
+                break;
+            case "rentAdmin":
+                mUserRoleTv.setText("租方管理员");
+                break;
+            case "areaAdmin":
+                mUserRoleTv.setText("区域管理员");
+                break;
+        }
+        mUserPhoneTv.setText(mUserInfo.getUserPhone());
     }
 
     /*
@@ -90,24 +120,28 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
     // 控件点击响应
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch(v.getId()){
-            case R.id.user_head_layout:
+            case R.id.user_head_layout:  // 更换头像
                 Log.i(TAG, "You have clicked the user_head_layout");
                 break;
-            case R.id.user_head_imageview:
+            case R.id.user_head_imageview:  // 查看大图
                 Log.i(TAG, "You have clicked the user_head_image");
                 break;
-            case R.id.user_name_layout:
+            case R.id.user_name_layout:  // 更换用户名
                 Log.i(TAG, "You have clicked the user_name_layout");
                 break;
-            case R.id.user_password_layout:
+            case R.id.user_password_layout:  // 更换密码
                 Log.i(TAG, "You have clicked the user_password_layout");
                 break;
-            case R.id.user_qrcode_layout:
+            case R.id.user_qrcode_layout:  // 点击二维码名片
                 Log.i(TAG, "You have clicked the user_qrcode_layout");
-                startActivity(new Intent(PersonalInformationActivity.this, QRcodeCardActivity.class));
+                intent = new Intent(PersonalInformationActivity.this, QRcodeCardActivity.class);
+                intent.putExtra("userId", mUserInfo.getUserId());
+                intent.putExtra("userRole", mUserInfo.getUserRole());
+                startActivity(intent);
                 break;
-            case R.id.user_more_layout:
+            case R.id.user_more_layout:  // 更多按钮
                 Log.i(TAG, "You have clicked the user_more_layout");
                 break;
         }

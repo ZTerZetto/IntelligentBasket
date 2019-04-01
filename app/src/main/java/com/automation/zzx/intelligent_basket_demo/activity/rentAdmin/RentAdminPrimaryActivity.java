@@ -16,7 +16,10 @@ import com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.RentAdminFr
 import com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.RentAdminMessageFragment;
 import com.hjm.bottomtabbar.BottomTabBar;
 
+
 public class RentAdminPrimaryActivity extends AppCompatActivity {
+
+    private final static String TAG = "RentAdminPrimary";
 
     // 控件
     private BottomTabBar mBottomTabBar;
@@ -28,6 +31,7 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
     // 用户登录信息相关
     private UserInfo mUserInfo;
     private String mToken;
+    private String mProjectId;
     private SharedPreferences mPref;
 
 
@@ -82,6 +86,7 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
         mUserInfo = new UserInfo();
         mUserInfo.setUserId(mPref.getString("userId", ""));
         mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mUserInfo.setUserRole(mPref.getString("userRole", ""));
         mToken = mPref.getString("loginToken","");
     }
     // 将用户信息传递给子Fragment
@@ -91,6 +96,14 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
     // 将用户token传递给子Fragment
     public String pushToken(){
         return mToken;
+    }
+    // 获取projectID
+    public void getProjectId(String projectId){
+        mProjectId = projectId;
+    }
+    // 将ProjectId传递给子Fragment
+    public String pushProjectId(){
+        return mProjectId;
     }
 
     /*
@@ -102,4 +115,5 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
         mScreenHeight = dm2.heightPixels;
         mScreenWidth = dm2.widthPixels;
     }
+
 }

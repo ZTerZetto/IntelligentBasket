@@ -68,7 +68,7 @@ public class ProDetailActivity extends AppCompatActivity {
                 case GET_PROJECT_INFO:
                     projectInfo = JSON.parseObject(msg.obj.toString(), ProjectInfo.class);
                     if(projectInfo!=null){
-                        txtProName.setText("项目名称:"+projectInfo.getProjectName());
+                        txtProName.setText(projectInfo.getProjectName());
                         txtProNumber.setText("No:"+projectInfo.getProjectId());
                         txtProState.setText(projectInfo.getProjectState());
                         txtProStart.setText(projectInfo.getProjectStart());

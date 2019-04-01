@@ -60,6 +60,8 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
 
 	private static final String TAG = CaptureActivity.class.getSimpleName();
 
+	public static final String QR_CODE_RESULT = "qr_code_result";
+
 	// 识别相关
 	private CameraManager cameraManager;
 	private CaptureActivityHandler handler;
@@ -228,7 +230,7 @@ public class CaptureActivity extends Activity implements SurfaceHolder.Callback,
 		beepManager.playBeepSoundAndVibrate();
 
 		Intent intent = new Intent();
-		intent.putExtra("basket_id", rawResult.getText());
+		intent.putExtra(QR_CODE_RESULT, rawResult.getText());
 		setResult(RESULT_OK, intent);
 		finish();
 	}

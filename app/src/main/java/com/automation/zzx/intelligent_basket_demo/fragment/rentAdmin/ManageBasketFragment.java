@@ -33,13 +33,13 @@ public class ManageBasketFragment extends Fragment {
         mTabLayout = (TabLayout) view.findViewById(R.id.head_tab_layout);
         mViewPager = (NoScrollViewPager) view.findViewById(R.id.view_pager);
 
-        List<Fragment> fragmentList = new ArrayList<>();
-        fragmentList.add(new MgBasketListFragment());
+        List<Fragment> fragmentList = new ArrayList<>();   // 添加fragment
         fragmentList.add(new MgBasketMapFragment());
+        fragmentList.add(new MgBasketListFragment());
 
-        List<String> titleList = new ArrayList<>();
-        titleList.add("列表");
+        List<String> titleList = new ArrayList<>();  // 添加fragment说明
         titleList.add("地图");
+        titleList.add("列表");
 
         MgBasketContentFragmentAdapter mgBasketContentFragmentAdapter =
                 new MgBasketContentFragmentAdapter(getFragmentManager(), fragmentList, titleList);

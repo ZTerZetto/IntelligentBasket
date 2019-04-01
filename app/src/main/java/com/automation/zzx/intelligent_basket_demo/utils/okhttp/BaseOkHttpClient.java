@@ -29,6 +29,8 @@ public class BaseOkHttpClient {
     public Request buildRequest() {
         Request.Builder builder = new Request.Builder();
 
+        builder = buildHeaderParam(builder); // 添加头信息
+
         if (mBuilder.method == "GET") {
             builder.url(buildGetRequestParam());
             builder.get();
@@ -41,6 +43,19 @@ public class BaseOkHttpClient {
             }
         }
         return builder.build();
+    }
+
+    /*
+     * Header 参数拼接
+     */
+    private Request.Builder buildHeaderParam(Request.Builder builder){
+        if(mBuilder.headers.size() <= 0){
+            return builder;
+        }
+        for (RequestParameter p : mBuilder.headers) {
+            builder.addHeader(p.getKey(), p.getObj() == null ? "" : p.getObj().toString());
+        }
+        return builder;
     }
 
     /**
@@ -108,6 +123,7 @@ public class BaseOkHttpClient {
         private Builder() {
             method = "GET";
             params = new ArrayList<>();
+            headers = new ArrayList<>();
             isJsonParam = false;
         }
 
