@@ -9,11 +9,14 @@ import android.util.DisplayMetrics;
 import android.view.View;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.application.CustomApplication;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.ManageBasketFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.ManageWorkerFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.RentAdminFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.RentAdminMessageFragment;
+import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
 import com.hjm.bottomtabbar.BottomTabBar;
 
 
@@ -42,6 +45,7 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
 
         getUserInfo();
         initWidget();
+        MiPushUtil.initMiPush(RentAdminPrimaryActivity.this, mUserInfo.getUserId(), null);
     }
 
     private void initWidget(){
@@ -114,6 +118,12 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
         DisplayMetrics dm2 = getResources().getDisplayMetrics();
         mScreenHeight = dm2.heightPixels;
         mScreenWidth = dm2.widthPixels;
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        CustomApplication.setMainActivity(null);
     }
 
 }

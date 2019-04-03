@@ -49,7 +49,7 @@ public class DrivingRouteOverlay extends OverlayManager {
         if (mRouteLine.getAllStep() != null
                 && mRouteLine.getAllStep().size() > 0) {
             
-            for (DrivingRouteLine.DrivingStep step : mRouteLine.getAllStep()) {
+            for (DrivingStep step : mRouteLine.getAllStep()) {
                 Bundle b = new Bundle();
                 b.putInt("index", mRouteLine.getAllStep().indexOf(step));
                 if (step.getEntrance() != null) {

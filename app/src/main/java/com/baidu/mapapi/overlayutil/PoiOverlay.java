@@ -80,7 +80,7 @@ public class PoiOverlay extends OverlayManager {
      * 覆写此方法以改变默认点击行为
      * 
      * @param i    被点击的poi在
-     *             {@link com.baidu.mapapi.search.poi.PoiResult#getAllPoi()} 中的索引
+     *             {@link PoiResult#getAllPoi()} 中的索引
      * @return     true--事件已经处理，false--事件未处理
      */
     public boolean onPoiClick(int i) {

@@ -10,10 +10,13 @@ import android.view.MotionEvent;
 import android.view.View;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.application.CustomApplication;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMessageFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment;
+import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
 import com.hjm.bottomtabbar.BottomTabBar;
 
 import java.util.ArrayList;
@@ -45,6 +48,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity {
 
         getUserInfo();
         initWidget();
+        MiPushUtil.initMiPush(AreaAdminPrimaryActivity.this, mUserInfo.getUserId(), null);
     }
 
     private void initWidget(){
@@ -129,5 +133,11 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity {
         DisplayMetrics dm2 = getResources().getDisplayMetrics();
         mScreenHeight = dm2.heightPixels;
         mScreenWidth = dm2.widthPixels;
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        CustomApplication.setMainActivity(null);
     }
 }

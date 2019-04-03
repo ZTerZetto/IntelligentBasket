@@ -6,7 +6,7 @@
     android:background="@color/colorMainBackground">
 
     <!-- 顶部导航栏 -->
-    <include layout="@layout/toolbar_with_titile_and_back"/>
+    <include layout="@layout/toolbar_with_title_and_back"/>
 
     <LinearLayout
         android:id="@+id/id_linearlayout"

@@ -183,6 +183,8 @@ public class CustomApplication extends Application {
                     case OnReceivePassThroughMessage:  // 通知栏消息
                         // 震动和声音提示
                         onMessageNotify();
+                        // 消息解析
+                        onMessageParse(miMessageReceiver);
                         break;
                     case onNotificationMessageClicked:
                         // 停止震动
@@ -217,6 +219,15 @@ public class CustomApplication extends Application {
 //        notification.ledOffMS = 1000;
 //        notification.flags = Notification.FLAG_SHOW_LIGHTS;
 //        notificationManager.notify(ID_LED, notification);
+    }
+
+
+    /*
+    *  消息解析
+    * */
+    public void onMessageParse(MiMessageReceiver miMessageReceiver){
+
+
     }
 
     public void stopMessageNotify(){

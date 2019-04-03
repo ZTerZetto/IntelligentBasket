@@ -99,8 +99,8 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
         final Set<QuadItem<T>> visitedCandidates = new HashSet<QuadItem<T>>(); // 遍历QuadItem时保存被遍历过的Item
         final Set<Cluster<T>> results = new HashSet<Cluster<T>>();  // 保存要返回的cluster簇，每个cluster中包含若干个MyItem对象
         final Map<QuadItem<T>, Double> distanceToCluster = new HashMap<QuadItem<T>, Double>(); //Item --> 此Item与所属的cluster中心点的距离
-        final Map<QuadItem<T>, com.baidu.mapapi.clusterutil.clustering.algo.StaticCluster<T>> itemToCluster =
-                new HashMap<QuadItem<T>, com.baidu.mapapi.clusterutil.clustering.algo.StaticCluster<T>>();  // Item对象 --> 此Item所属的cluster
+        final Map<QuadItem<T>, StaticCluster<T>> itemToCluster =
+                new HashMap<QuadItem<T>, StaticCluster<T>>();  // Item对象 --> 此Item所属的cluster
 
         synchronized (mQuadTree) {
             for (QuadItem<T> candidate : mItems) {  // 遍历所有的QuadItem
@@ -121,9 +121,8 @@ public class NonHierarchicalDistanceBasedAlgorithm<T extends ClusterItem> implem
                     distanceToCluster.put(candidate, 0d);
                     continue;  //并且结束此次循环
                 }
-                com.baidu.mapapi.clusterutil.clustering.algo.StaticCluster<T> cluster =
-                        new com.baidu.mapapi.clusterutil.clustering.algo
-                                .StaticCluster<T>(candidate.mClusterItem.getPosition());  // 如果搜索到多个点,那么就以此item为中心创建一个cluster
+                StaticCluster<T> cluster =
+                        new StaticCluster<T>(candidate.mClusterItem.getPosition());  // 如果搜索到多个点,那么就以此item为中心创建一个cluster
                 results.add(cluster);
 
                 for (QuadItem<T> clusterItem : clusterItems) {  // 遍历所有框住的点

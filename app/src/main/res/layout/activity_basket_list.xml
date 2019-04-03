@@ -6,7 +6,7 @@
     android:background="#f5f5f5" >
 
     <!-- 顶部导航栏 -->
-    <include layout="@layout/toolbar_with_titile_and_back"/>
+    <include layout="@layout/toolbar_with_title_and_back"/>
 
     <LinearLayout
         android:layout_width="match_parent"
