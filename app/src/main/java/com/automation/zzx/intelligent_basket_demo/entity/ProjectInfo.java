@@ -9,9 +9,30 @@ public class ProjectInfo implements Serializable {
     public String projectId;
     public String projectName;
 
-    //当前状态，0：立项； 1：进行中； 2：已结束
+    // 当前状态，0：立项； 1：进行中； 2：已结束
     public String projectState;
 
+    // 负责的租方管理员ID
+    public String projectContractUrl;
+    // 负责的区域管理员
+    public String projectCertUrl;
+    // 电子合同地址
+    public String adminAreaId;
+    // 安检证书地址
+    public String adminRentId;
+    // 本项目中用到的电柜
+    public String boxList;
+    // 本项目中涉及的工人
+    public String projectBuilders;
+    // 本项目区域管理员基本信息
+    public UserInfo adminAreaUser;
+    // 开始、结束时间
+    public String projectStart;
+    public String projectEnd;
+
+    /*
+     * 构造函数
+     */
     public ProjectInfo(String projectId, String projectName, String projectState, String projectStart, String projectEnd) {
         this.projectId = projectId;
         this.projectName = projectName;
@@ -20,11 +41,31 @@ public class ProjectInfo implements Serializable {
         this.projectEnd = projectEnd;
     }
 
-    //开始、结束时间
-    public String projectStart;
-    public String projectEnd;
+    public ProjectInfo() {
+        super();
+    }
 
+    public ProjectInfo(String projectId, String projectName, String projectState, String projectStart, String projectEnd,
+                       @Nullable String projectContractUrl, @Nullable String projectCertUrl, @Nullable String adminAreaId, @Nullable String adminRentId,
+                       @Nullable String boxList, @Nullable String projectBuilders, @Nullable UserInfo adminAreaUser) {
+        this.projectId = projectId;
+        this.projectName = projectName;
+        this.projectState = projectState;
+        this.projectStart = projectStart;
+        this.projectEnd = projectEnd;
 
+        this.projectContractUrl = projectContractUrl;
+        this.projectCertUrl = projectCertUrl;
+        this.adminAreaId = adminAreaId;
+        this.adminRentId = adminRentId;
+        this.boxList = boxList;
+        this.projectBuilders = projectBuilders;
+        this.adminAreaUser = adminAreaUser;
+    }
+
+    /*
+     * Bean 函数
+     */
     public String getProjectId() {
         return projectId;
     }
@@ -64,23 +105,6 @@ public class ProjectInfo implements Serializable {
     public void setProjectEnd(String projectEnd) {
         this.projectEnd = projectEnd;
     }
-
-
-    //负责的租方管理员ID
-    public String projectContractUrl;
-    //负责的区域管理员
-    public String projectCertUrl;
-    //电子合同地址
-    public String adminAreaId;
-    //安检证书地址
-    public String adminRentId;
-    //本项目中用到的电柜
-    public String boxList;
-    //本项目中涉及的工人
-    public String projectBuilders;
-
-    public UserInfo adminAreaUser;
-
 
     public String getProjectContractUrl() {
         return projectContractUrl;
@@ -135,28 +159,6 @@ public class ProjectInfo implements Serializable {
     }
 
     public void setAdminAreaUser(UserInfo adminAreaUser) {
-        this.adminAreaUser = adminAreaUser;
-    }
-
-    public ProjectInfo() {
-        super();
-    }
-
-    public ProjectInfo(String projectId, String projectName, String projectState, String projectStart, String projectEnd,
-                       @Nullable String projectContractUrl, @Nullable String projectCertUrl, @Nullable String adminAreaId, @Nullable String adminRentId,
-                       @Nullable String boxList, @Nullable String projectBuilders, @Nullable UserInfo adminAreaUser) {
-        this.projectId = projectId;
-        this.projectName = projectName;
-        this.projectState = projectState;
-        this.projectStart = projectStart;
-        this.projectEnd = projectEnd;
-
-        this.projectContractUrl = projectContractUrl;
-        this.projectCertUrl = projectCertUrl;
-        this.adminAreaId = adminAreaId;
-        this.adminRentId = adminRentId;
-        this.boxList = boxList;
-        this.projectBuilders = projectBuilders;
         this.adminAreaUser = adminAreaUser;
     }
 

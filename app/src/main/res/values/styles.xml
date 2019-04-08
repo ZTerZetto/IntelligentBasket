@@ -287,6 +287,18 @@
         <item name="android:textSize">@dimen/textSize_14</item>
         <item name="android:textColor">@color/colorGradText</item>
     </style>
+    <!-- 数字提示 -->
+    <style name="me_common_item_count_textView_style" parent="base_textView_style">
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:layout_marginRight">5dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:textColor">@color/gray01</item>
+        <item name="android:textSize">@dimen/textSize_12</item>
+    </style>
+    <style name="me_common_item_count_with_organgered_bg_textView_style" parent="me_common_item_count_textView_style">
+        <item name="android:background">@mipmap/bg_num_organge_red</item>
+        <item name="android:textColor">@color/white</item>
+    </style>
     <!--更多-->
     <style name="more_common_item_textView_style" parent="me_common_item_title_textView_style">
         <item name="android:textSize">@dimen/textSize_16</item>

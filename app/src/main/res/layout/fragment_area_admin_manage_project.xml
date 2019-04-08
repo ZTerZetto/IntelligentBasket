@@ -36,19 +36,153 @@
 
     </GridView>
 
-    <!-- 吊篮列表 -->
+    <!-- body -->
     <RelativeLayout
         android:id="@+id/fragment_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/mg_basket_state">
+        <!-- 项目管理 -->
+        <LinearLayout
+            android:id="@+id/project_manage"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:visibility="visible">
+
+            <!-- 项目进度 -->
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="@drawable/bg_white_quai">
+                <!-- 项目进度条 -->
+                <com.automation.zzx.intelligent_basket_demo.utils.TimeLineView
+                    android:id="@+id/project_schedule_timelineview"
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:layout_margin="20dp"
+                    app:textSize="14sp"
+                    app:startedLineColor="@color/colorPrimary"
+                    app:startedCircleColor="@color/colorPrimary"
+                    app:startedStringColor="@color/colorPrimary"
+                    app:underwayCircleColor="@color/colorPrimary"
+                    app:underwayStringColor="@color/colorPrimary"/>
+            </RelativeLayout>
+
+            <!-- 项目基本信息 -->
+            <LinearLayout
+                android:id="@+id/project_bsae_info"
+                style="@style/more_common_linearlayout_style">
+                <!-- 项目编号 -->
+                <RelativeLayout
+                    android:id="@+id/project_id_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="项目编号"/>
+                    <TextView
+                        android:id="@+id/project_id_textview"
+                        style="@style/more_common_desc_textView_style"
+                        android:text="NJ20180129136"/>
+                </RelativeLayout>
+                <View
+                    style="@style/me_horizontal_view_style"/>
+
+                <!-- 项目名称 -->
+                <RelativeLayout
+                    android:id="@+id/project_name_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="项目名称"/>
+                    <TextView
+                        android:id="@+id/project_name_textview"
+                        style="@style/more_common_desc_textView_style"
+                        android:text="南京凤凰国际大厦"/>
+                </RelativeLayout>
+                <View
+                    style="@style/me_horizontal_view_style"/>
+
+                <!-- 开始日期-->
+                <RelativeLayout
+                    android:id="@+id/project_start_time_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="开始日期"/>
+                    <TextView
+                        android:id="@+id/project_start_time_textview"
+                        style="@style/more_common_desc_textView_style"
+                        android:text="2019-03-15 12:30"/>
+                </RelativeLayout>
+                <View
+                    style="@style/me_horizontal_view_style"/>
+            </LinearLayout>
+
+            <!-- 中期操作 -->
+            <LinearLayout
+                android:id="@+id/project_median_period_operate"
+                style="@style/more_common_linearlayout_style">
+
+                <RelativeLayout
+                    android:id="@+id/examine_compact_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="查看合同"/>
+                    <ImageView
+                        style="@style/me_common_item_arrow_right_imageView_style"/>
+                </RelativeLayout>
+                <View
+                    style="@style/me_horizontal_view_style"/>
+
+                <!-- 预验收申请 -->
+                <RelativeLayout
+                    android:id="@+id/project_pre_apply_layout"
+                    style="@style/me_common_item_relativeLayout_style"
+                    android:visibility="gone">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="预验收申请"/>
+                    <ImageView
+                        android:id="@+id/project_pre_apply_iv_arrow_right"
+                        style="@style/me_common_item_arrow_right_imageView_style"/>
+                    <TextView
+                        android:id="@+id/project_pre_apply_tv_count"
+                        android:layout_toLeftOf="@+id/project_pre_apply_iv_arrow_right"
+                        style="@style/me_common_item_count_with_organgered_bg_textView_style"
+                        android:text="!"/>
+                </RelativeLayout>
+                <View style="@style/me_horizontal_view_style"/>
+
+                <!-- 查看/上传安监证书 -->
+                <RelativeLayout
+                    android:id="@+id/send_examine_certificate_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        android:id="@+id/send_examine_certification_tv"
+                        style="@style/more_common_item_textView_style"
+                        android:text="安监证书"/>
+                    <ImageView
+                        android:id="@+id/send_examine_certificate_iv_arrow_right"
+                        style="@style/me_common_item_arrow_right_imageView_style"/>
+                    <TextView
+                        android:id="@+id/send_examine_certificate_tv_count"
+                        android:layout_toLeftOf="@+id/send_examine_certificate_iv_arrow_right"
+                        style="@style/me_common_item_count_with_organgered_bg_textView_style"
+                        android:text="!"/>
+                </RelativeLayout>
+                <View style="@style/me_horizontal_view_style"/>
+            </LinearLayout>
+
+        </LinearLayout>
 
         <!-- 吊篮列表 -->
         <RelativeLayout
             android:id="@+id/basket_avaliable"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:visibility="visible">
+            android:visibility="gone">
             <android.support.v7.widget.RecyclerView
                 android:id="@+id/basket_recycler_view"
                 android:layout_width="match_parent"
@@ -83,7 +217,14 @@
 
         </RelativeLayout>
 
-    </RelativeLayout>
+        <!-- 悬浮窗 -->
+        <ImageView
+            android:id="@+id/basket_add_image_view"
+            style="@style/AddFloatImageView"
+            android:layout_alignParentBottom="true"
+            android:src="@mipmap/ic_round_add_fill"
+            android:visibility="gone"/>
 
+    </RelativeLayout>
 
 </RelativeLayout>

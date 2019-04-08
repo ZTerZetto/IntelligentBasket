@@ -104,20 +104,20 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
                 viewHolder.basketStatementTextView.setText("待出库");
                 break;
             case "1":
-                viewHolder.basketStatementTextView.setText("待分配");
+                viewHolder.basketStatementTextView.setText("待安装");
                 break;
             case "2":
-                viewHolder.basketStatementTextView.setText("待安装");
+                viewHolder.basketStatementTextView.setText("安装审核");
                 viewHolder.basketPreAssAndAccept.setVisibility(View.VISIBLE);
                 break;
             case "3":
-                viewHolder.basketStatementTextView.setText("待审核");
-                break;
-            case "4":
                 viewHolder.basketStatementTextView.setText("使用中");
                 break;
-            case "5":
+            case "4":
                 viewHolder.basketStatementTextView.setText("待报停");
+                break;
+            case "5":
+                viewHolder.basketStatementTextView.setText("报停审核");
                 viewHolder.basketPreApplyStop.setVisibility(View.VISIBLE);
                 break;
             default:

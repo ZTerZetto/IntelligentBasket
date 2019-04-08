@@ -6,9 +6,9 @@ public class AppConfig {
      * 服务器地址
      */
     public final static String BASE_URL_PATH = "http://47.100.1.211";// 后台地址
-    //public final static String ANDROID_URL_PATH = "http://47.100.1.211";
-    //public final static String ANDROID_URL_PATH = "http://10.193.1.44:8080";
-    public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080";
+    //public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
+    //public final static String ANDROID_URL_PATH = "http://10.193.1.44:8080";  // 师姐
+    public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080"; // 老刘
     public final static String IMAGE_URL = "http://10.193.0.20:21";
     public final static String FILE_SERVER_PATH = "http://10.193.0.20:8089"; // 文件服务器地址
     public final static String COMMUNICATION_SERVER_PATH = "http://47.100.1.211:8081"; // 通讯服务器地址
@@ -98,6 +98,16 @@ public class AppConfig {
     public static final String RENT_ADMIN_GET_ALL_WORKER_INFO = ANDROID_URL_PATH.concat("/getUserList");
     // 租方管理员添加施工人员
     public static final String RENT_ADMIN_ADD_WORKER= ANDROID_URL_PATH.concat("/androidIncreaseWorker");
+
+    /*
+     * 区域管理员请求
+     */
+    // 区域管理员请求所有的项目信息
+    public static final String AREA_ADMIN_GET_ALL_PROJECT_INFO = ANDROID_URL_PATH.concat("/getAllProject");
+    // 区域管理员请求特定项目的所有吊篮
+    public static final String AREA_ADMIN_GET_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/getBasketList");
+    // 区域管理员请求特定项目添加指定吊篮
+    public static final String AREA_ADMIN_ADD_BASKET_INTO_PROJECT = ANDROID_URL_PATH.concat("/androidIncreaseBasket");
 
     /*
     * 常量

@@ -7,6 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import java.io.File;
+import java.util.List;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -241,6 +242,15 @@ public class HttpUtil {
     }
     /*
      * 租方管理员请求结束
+     */
+
+    /*
+     * 区域管理员请求开始
+     */
+    // 上传安监证书/预验收申请
+
+    /*
+     * 区域管理员请求结束
      */
 
 }
