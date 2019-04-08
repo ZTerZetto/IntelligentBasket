@@ -24,12 +24,20 @@ import android.util.Log;
 
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiMessageReceiver;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
 import com.xiaomi.mipush.sdk.Logger;
 import com.xiaomi.mipush.sdk.MiPushClient;
+import com.xiaomi.mipush.sdk.MiPushMessage;
 
+import org.litepal.LitePal;
+import org.litepal.crud.DataSupport;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Created by pengchenghu on 2019/3/18.
@@ -63,12 +71,17 @@ public class CustomApplication extends Application {
     private String channelId;
     private int chatCount = 0;
 
+    // 解析消息
+    SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");//设置日期格式
+
     // 为了提高推送服务的注册率，官方Demo建议在Application的onCreate中初始化推送服务
     // 你也可以根据需要，在其他地方初始化推送服务
-
     @Override
     public void onCreate() {
         super.onCreate();
+
+        // 初始化LitePal数据库
+        LitePal.initialize(this);
 
         // 判断用户是否已经打开App，详细见下面方法定
         if (shouldInit()) {
@@ -178,13 +191,13 @@ public class CustomApplication extends Application {
         @Override
         public void handleMessage(Message msg) {
             if (mainActivity != null) {
-                MiMessageReceiver miMessageReceiver = (MiMessageReceiver) msg.obj;
+                MiPushMessage miMessage = (MiPushMessage) msg.obj;
                 switch(msg.what){
                     case OnReceivePassThroughMessage:  // 通知栏消息
                         // 震动和声音提示
                         onMessageNotify();
                         // 消息解析
-                        onMessageParse(miMessageReceiver);
+                        onMessageParse(miMessage);
                         break;
                     case onNotificationMessageClicked:
                         // 停止震动
@@ -221,13 +234,27 @@ public class CustomApplication extends Application {
 //        notificationManager.notify(ID_LED, notification);
     }
 
-
     /*
     *  消息解析
     * */
-    public void onMessageParse(MiMessageReceiver miMessageReceiver){
-
-
+    public void onMessageParse(MiPushMessage message){
+        MessageInfo messageInfo = new MessageInfo(dataFormat.format(new Date()),
+                message.getTitle(), message.getDescription());
+        Map<String, String> keyValuePair = message.getExtra();
+        messageInfo.setmType(keyValuePair.get("type"));
+        messageInfo.setmProjectId(keyValuePair.get("projectId"));
+        messageInfo.setmProjectName(keyValuePair.get("projectName"));
+        switch (messageInfo.getmType()){
+            case "1":  // 报警消息
+                messageInfo.setmWorkerPhone(keyValuePair.get("workerPhone"));
+                messageInfo.setmRentAdminPhone(keyValuePair.get("rentAdminPhone"));
+                break;
+            case "2": // 验收申请
+                break;
+            case "3": // 项目流程
+                break;
+        }
+        messageInfo.save(); // 保存数据库
     }
 
     public void stopMessageNotify(){

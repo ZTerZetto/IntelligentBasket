@@ -12,8 +12,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgAreaMessageAdapter;
-import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgrRentMessageAdapter;
+import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgRentMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 
 import java.util.ArrayList;
@@ -26,7 +25,7 @@ import java.util.List;
  */
 public class RentAdminMessageFragment extends Fragment {
     private View mView;
-    private MgrRentMessageAdapter mgRentMessageAdapter;
+    private MgRentMessageAdapter mgRentMessageAdapter;
     private List<MessageInfo> mMessageInfoList = new ArrayList<>();
     private RecyclerView recyclerView;
 
@@ -47,7 +46,7 @@ public class RentAdminMessageFragment extends Fragment {
             recyclerView = mView.findViewById(R.id.rv_message);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(linearLayoutManager);
-            mgRentMessageAdapter = new MgrRentMessageAdapter(mMessageInfoList);
+            mgRentMessageAdapter = new MgRentMessageAdapter(mMessageInfoList);
             recyclerView.setAdapter(mgRentMessageAdapter);
         }
         return mView;

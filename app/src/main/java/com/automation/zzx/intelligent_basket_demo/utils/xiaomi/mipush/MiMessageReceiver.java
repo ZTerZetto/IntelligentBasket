@@ -117,8 +117,6 @@ public class MiMessageReceiver extends PushMessageReceiver {
         msg.what = CustomApplication.onNotificationMessageClicked;
         msg.obj = message;
         CustomApplication.getHandler().sendMessage(msg);
-
-
     }
 
     // 用来接收客户端向服务器发送命令后的响应结果。

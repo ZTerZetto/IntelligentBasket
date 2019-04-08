@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin;
+package com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin;
 
 
 import android.support.annotation.NonNull;
@@ -16,7 +16,7 @@ import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import java.util.List;
 
 
-public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdapter.ViewHolder> {
+public class MgRentMessageAdapter extends RecyclerView.Adapter<MgRentMessageAdapter.ViewHolder> {
 
     private List<MessageInfo> mMessageInfoList;
 
@@ -25,7 +25,7 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
         TextView tvTime;//消息时间
         LinearLayout llMessage;
         TextView tvTitle;//消息标题
-        TextView tvContent;//消息内容
+        TextView tvDescription;//消息内容
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -34,11 +34,11 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
             tvTime = itemView.findViewById(R.id.tv_message_time);
             llMessage = itemView.findViewById(R.id.ll_message);
             tvTitle = itemView.findViewById(R.id.tv_message_title);
-            tvContent = itemView.findViewById(R.id.tv_message_description);
+            tvDescription = itemView.findViewById(R.id.tv_message_description);
         }
     }
 
-    public MgAreaMessageAdapter(List<MessageInfo> messageInfoList){
+    public MgRentMessageAdapter(List<MessageInfo> messageInfoList){
         mMessageInfoList = messageInfoList;
     }
 
@@ -52,7 +52,7 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 MessageInfo mMessageInfo = mMessageInfoList.get(position);
-                Toast.makeText(v.getContext(),"AreaAdmin报警提示："+mMessageInfo.getmDescription(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(),"RentAdmin报警提示："+mMessageInfo.getmDescription(),Toast.LENGTH_SHORT).show();
             }
         });
         return holder;
@@ -63,7 +63,7 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
         MessageInfo mMessageInfo = mMessageInfoList.get(i);
         viewHolder.tvTime.setText(mMessageInfo.getmTime());
         viewHolder.tvTitle.setText(mMessageInfo.getmTitle());
-        viewHolder.tvContent.setText(mMessageInfo.getmDescription());
+        viewHolder.tvDescription.setText(mMessageInfo.getmDescription());
     }
 
     @Override

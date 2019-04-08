@@ -1,5 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin;
-
+package com.automation.zzx.intelligent_basket_demo.adapter.worker;
 
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
@@ -15,8 +14,12 @@ import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 
 import java.util.List;
 
-
-public class MgrRentMessageAdapter extends RecyclerView.Adapter<MgrRentMessageAdapter.ViewHolder> {
+/**
+ * Created by pengchenghu on 2019/4/8.
+ * Author Email: 15651851181@163.com
+ * Describe:
+ */
+public class WorkerMessageAdapter extends RecyclerView.Adapter<WorkerMessageAdapter.ViewHolder>{
 
     private List<MessageInfo> mMessageInfoList;
 
@@ -25,7 +28,7 @@ public class MgrRentMessageAdapter extends RecyclerView.Adapter<MgrRentMessageAd
         TextView tvTime;//消息时间
         LinearLayout llMessage;
         TextView tvTitle;//消息标题
-        TextView tvContent;//消息内容
+        TextView tvDescription;//消息内容
 
         public ViewHolder(View itemView) {
             super(itemView);
@@ -34,11 +37,11 @@ public class MgrRentMessageAdapter extends RecyclerView.Adapter<MgrRentMessageAd
             tvTime = itemView.findViewById(R.id.tv_message_time);
             llMessage = itemView.findViewById(R.id.ll_message);
             tvTitle = itemView.findViewById(R.id.tv_message_title);
-            tvContent = itemView.findViewById(R.id.tv_message_content);
+            tvDescription = itemView.findViewById(R.id.tv_message_description);
         }
     }
 
-    public MgrRentMessageAdapter(List<MessageInfo> messageInfoList){
+    public WorkerMessageAdapter(List<MessageInfo> messageInfoList){
         mMessageInfoList = messageInfoList;
     }
 
@@ -52,7 +55,7 @@ public class MgrRentMessageAdapter extends RecyclerView.Adapter<MgrRentMessageAd
             public void onClick(View v) {
                 int position = holder.getAdapterPosition();
                 MessageInfo mMessageInfo = mMessageInfoList.get(position);
-                Toast.makeText(v.getContext(),"RentAdmin报警提示："+mMessageInfo.getmContent(),Toast.LENGTH_SHORT).show();
+                Toast.makeText(v.getContext(),"RentAdmin报警提示："+mMessageInfo.getmDescription(),Toast.LENGTH_SHORT).show();
             }
         });
         return holder;
@@ -63,12 +66,11 @@ public class MgrRentMessageAdapter extends RecyclerView.Adapter<MgrRentMessageAd
         MessageInfo mMessageInfo = mMessageInfoList.get(i);
         viewHolder.tvTime.setText(mMessageInfo.getmTime());
         viewHolder.tvTitle.setText(mMessageInfo.getmTitle());
-        viewHolder.tvContent.setText(mMessageInfo.getmContent());
+        viewHolder.tvDescription.setText(mMessageInfo.getmDescription());
     }
 
     @Override
     public int getItemCount() {
         return mMessageInfoList.size();
     }
-
 }

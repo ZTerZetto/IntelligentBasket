@@ -47,6 +47,7 @@ dependencies {
     implementation 'com.jungly:gridPasswordView:0.3'
     implementation 'com.hjm:BottomTabBar:1.2.2'
     implementation 'com.github.lovetuzitong:MultiImageSelector:1.2'
+    implementation 'org.litepal.android:core:1.6.1'
     implementation files('libs/zxing.jar')
     implementation files('libs/MiPush_SDK_Client_3_6_15.jar')
 }

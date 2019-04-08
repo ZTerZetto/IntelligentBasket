@@ -232,6 +232,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.message_layout:  // 消息
                 Log.i(TAG, "You have clicked message button");
+                intent = new Intent(WorkerPrimaryActivity.this, WorkerMessageActivity.class);
+                startActivity(intent);
                 break;
             case R.id.warning_layout:  // 报警
                 Log.i(TAG, "You have clicked warning button");
