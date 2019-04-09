@@ -7,7 +7,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import java.io.File;
-import java.util.List;
+import java.util.ArrayList;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -20,7 +20,7 @@ import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.REAL_T
 
 // Created by $USER_NAME on 2018/11/28/028.
 public class HttpUtil {
-    public static void uploadPicOkHttpRequest(okhttp3.Callback callback, File file,String phoneNum) {
+    public static void uploadSinglePicOkHttpRequest(okhttp3.Callback callback, File file,String phoneNum) {
         OkHttpClient client = new OkHttpClient();
         RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"), file);
         RequestBody builder = new MultipartBody.Builder()
@@ -34,6 +34,25 @@ public class HttpUtil {
                 .build();
         client.newCall(request).enqueue(callback);
     }
+    public static void uploadPicOkHttpRequest(okhttp3.Callback callback, final ArrayList<String> fileList, String projectId, String token) {
+        OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder MultipartBodyBuilder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM)
+                .addFormDataPart("projectId", projectId);
+        for(int i = 0; i < fileList.size();i++){
+            File file = new File(fileList.get(i));
+            RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"),file);
+            MultipartBodyBuilder.addFormDataPart("file", file.getName(), fileBody);
+        }
+        MultipartBody builder = MultipartBodyBuilder.build();
+        final Request request = new Request.Builder()
+                .url(AppConfig.CREATE_CERT_FILE)
+                .addHeader("Authorization",token)
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
 
     public static void sendRegistOkHttpRequest(okhttp3.Callback callback, String json) {
         OkHttpClient client = new OkHttpClient();

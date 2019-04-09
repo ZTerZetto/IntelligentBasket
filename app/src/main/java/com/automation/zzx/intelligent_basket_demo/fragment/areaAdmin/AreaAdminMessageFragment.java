@@ -71,10 +71,10 @@ public class AreaAdminMessageFragment extends Fragment {
     * */
     private void initMessageInfoList(){
         for(int i = 0; i < 5;i++){
-            MessageInfo messageInfo = new MessageInfo("2019年3月31日 14:00","报警消息","张三违规操作");
+            MessageInfo messageInfo = new MessageInfo("2019年3月2"+i+"日 1"+i+":00","吊篮预报停申请","项目001 "+i+"号吊篮申请预报停");
             mMessageInfoList.add(messageInfo);
         }
-        MessageInfo messageInfo = new MessageInfo("今天 14:00","吊篮预报停申请","项目001吊篮申请预报停");
+        MessageInfo messageInfo = new MessageInfo("今天 14:00","吊篮预报停申请","项目001 10号吊篮申请预报停");
         mMessageInfoList.add(messageInfo);
     }
 
