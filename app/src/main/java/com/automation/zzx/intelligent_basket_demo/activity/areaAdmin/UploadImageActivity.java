@@ -60,6 +60,8 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     private final static int GET_UPLOAD_INFO = 100;
     private final static int GET_UPLOAD_WRONG = 101;
 
+    private final static String PROJECT_ID = "project_id";
+
 
     //相册位置
     public static final String CAMERA_PATH= Environment.getExternalStorageDirectory() +
@@ -98,7 +100,6 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                     break;
                 case GET_UPLOAD_WRONG:
                     DialogToast("提示", "安检证书上传失败！").show();
-                    finish();
                     break;
                 default:
                     break;
@@ -114,7 +115,10 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
         //获取基本信息
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         token = pref.getString("loginToken", "");
-        projectId = pref.getString("projectId", "");
+        //projectId = pref.getString("projectId", "");
+        Intent intent = new Intent();
+        projectId = intent.getStringExtra("project_id");
+        if(projectId==null) projectId = "001";
 
 
         // 获取权限
@@ -352,7 +356,7 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                 }
             }
 
-        },mUploadImageUrlList,"001",token);
+        },mUploadImageUrlList,projectId,token);
     }
 
 
