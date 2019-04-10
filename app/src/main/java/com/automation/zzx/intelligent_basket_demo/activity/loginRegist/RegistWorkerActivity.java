@@ -93,7 +93,6 @@ public class RegistWorkerActivity extends AppCompatActivity {
                 case 1: {
                     uploadResult.setText("图片上传成功！");
                     sendRegister();
-
                     break;
                 }
                 case 2: {
@@ -139,7 +138,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
         chooseFromAlbum = (Button) findViewById(R.id.choose_from_album);
         register = findViewById(R.id.btn_regist);
 
-        uploadResult = findViewById(R.id.tv_upload_result);
+        uploadResult = (TextView) findViewById(R.id.tv_upload_result);
         picture = (ImageView) findViewById(R.id.picture);
         spinner = (Spinner) findViewById(R.id.spinner_type_choose);
 
@@ -153,7 +152,6 @@ public class RegistWorkerActivity extends AppCompatActivity {
         photo_exist = false;
 
         initRegister();
-
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -218,7 +216,8 @@ public class RegistWorkerActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "请填写用户名！", Toast.LENGTH_LONG).show();
                     edt_userPhone.getText().clear();
                 } else {
-                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), workerType);
+                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(),
+                            edt_userPwd.getText().toString(), workerType);
                     uploadPhoto();
                 }
             }
@@ -237,6 +236,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(typeAdapter);
         spinner.setSelection(4, true); // 设置默认值为:其它
+        workerType = "worker";
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
@@ -397,9 +397,11 @@ public class RegistWorkerActivity extends AppCompatActivity {
                     String result = jsonObject.getString("error");
                     switch (result){
                         case "0":
-                            message.what = 1;break;
+                            message.what = 1;
+                            break;
                         default:
-                            message.what = 2;break;
+                            message.what = 2;
+                            break;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();

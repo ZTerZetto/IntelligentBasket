@@ -34,7 +34,7 @@ public class HttpUtil {
                 .addFormDataPart("file", file.getName(), fileBody)
                 .build();
         final Request request = new Request.Builder()
-                .url(AppConfig.CREATE_FILE)
+                .url(AppConfig.CREATE_IDENTITY_CARD_IMAGE)
                 .post(builder)
                 .build();
         client.newCall(request).enqueue(callback);

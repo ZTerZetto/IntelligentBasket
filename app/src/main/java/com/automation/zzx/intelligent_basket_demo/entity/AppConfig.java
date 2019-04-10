@@ -29,7 +29,7 @@ public class AppConfig {
     public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
 
     //上传单个文件
-    public final static String CREATE_FILE = ANDROID_URL_PATH.concat("/createFtpFile");
+    public final static String CREATE_IDENTITY_CARD_IMAGE = ANDROID_URL_PATH.concat("/createImageFile");
 
     /* 获取当前登录者的用户名和角色
    * Authorization：TOKEN
