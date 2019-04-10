@@ -12,6 +12,7 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -100,8 +101,9 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private AlertDialog mSelectProjectDialog;  // 切换项目弹窗
     private List<String> mProjectNameList;  // 项目名字列表（网络请求）
     private List<ProjectInfo> mProjectInfoList; // 项目详情列表
-    private int currentSelectedProject = 0; // 当前项目号
+    private int currentSelectedProject = 0; // 当前项目号位置
     private int tmpSelectedProject = 0; // 临时项目号
+    private String mProjectId;// 当前项目号
 
     // 吊篮状态选择栏
     private GridView mBasketStateGv; // 吊篮状态
@@ -150,6 +152,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private UserInfo mUserInfo;
     private String mToken;
     private SharedPreferences mPref;
+    private SharedPreferences.Editor editor;
 
     /*
      * 消息函数
@@ -212,6 +215,13 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
 
         View view = inflater.inflate(R.layout.fragment_area_admin_manage_project,
                 container, false);
+
+        //sharedPreference读取
+        mPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+       if(mPref.getString("projectId","") != null){
+           mProjectId = mPref.getString("projectId","");
+       }
+
 
         // 顶部toolbar
         mProjectMoreTb = (Toolbar) view.findViewById(R.id.project_more_toolbar);
@@ -864,7 +874,11 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     @Override
     public void onDestroy() {
         super.onDestroy();
+        editor = mPref.edit();
+        editor.putString("projectId",mProjectInfoList.get(currentSelectedProject).getProjectId());
+        editor.commit();
         ((AreaAdminPrimaryActivity) getActivity()).unregisterMyOnTouchListener(myOnTouchListener);
+
     }
 
     /*

@@ -28,8 +28,11 @@ public class AppConfig {
     * */
     public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
 
-    //上传文件
+    //上传单个文件
     public final static String CREATE_FILE = ANDROID_URL_PATH.concat("/createFtpFile");
+
+    //上传多个文件
+    public final static String CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");
 
 
     /* 获取当前登录者的用户名和角色

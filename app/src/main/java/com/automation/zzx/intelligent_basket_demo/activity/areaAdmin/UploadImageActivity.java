@@ -1,24 +1,24 @@
 package com.automation.zzx.intelligent_basket_demo.activity.areaAdmin;
 
+import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
-import android.content.pm.PackageManager;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
-import android.graphics.Color;
 import android.net.Uri;
 import android.os.Environment;
+import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
+import android.preference.PreferenceManager;
 import android.provider.MediaStore;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.Toolbar;
-import android.text.SpannableStringBuilder;
 import android.util.Log;
-import android.view.Gravity;
-import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
@@ -26,22 +26,27 @@ import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.UploadImageLikeWxAdapter;
+import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
-
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
+import okhttp3.Call;
+import okhttp3.Response;
 
 
 public class UploadImageActivity extends AppCompatActivity implements View.OnClickListener {
@@ -50,6 +55,13 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
 
     private final static int GET_PHOTO_FROM_ALBUM = 1;  // 相册
     public static final int TAKE_PHOTO_FROM_CAMERA= 2;  // 照相机
+
+    // Handler消息
+    private final static int GET_UPLOAD_INFO = 100;
+    private final static int GET_UPLOAD_WRONG = 101;
+
+    private final static String PROJECT_ID = "project_id";
+
 
     //相册位置
     public static final String CAMERA_PATH= Environment.getExternalStorageDirectory() +
@@ -72,10 +84,42 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     private File photoFile ; // 图片文件
     private Uri photoUrl ; // 图片URL
 
+    //基本信息
+    private SharedPreferences pref;
+    private SharedPreferences.Editor editor;
+    private String projectId;
+    private String token;
+
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch (msg.what) {
+                case GET_UPLOAD_INFO:
+                    DialogToast("提示", "您已成功上传安检证书！").show();
+                    break;
+                case GET_UPLOAD_WRONG:
+                    DialogToast("提示", "安检证书上传失败！").show();
+                    break;
+                default:
+                    break;
+            }
+        }
+    };
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_image);
+
+        //获取基本信息
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        token = pref.getString("loginToken", "");
+        //projectId = pref.getString("projectId", "");
+        Intent intent = new Intent();
+        projectId = intent.getStringExtra("project_id");
+        if(projectId==null) projectId = "001";
+
 
         // 获取权限
         if(!isHasPermission()) requestPermission();
@@ -111,6 +155,7 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                     showAddImageWayMenu(view);
                 }else{
                     // 点击其它图片
+
                 }
             }
         });
@@ -134,8 +179,11 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.toolbar_send_textview:  // 发送监听
+
                 break;
             case R.id.toolbar_send_imageview: // 发送监听
+                startSendImage();
+
                 break;
         }
     }
@@ -259,6 +307,61 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     }
 
     /*
+     * 上传照片至服务器
+     */
+    private void startSendImage(){
+        HttpUtil.uploadPicOkHttpRequest(new okhttp3.Callback() {
+
+            @Override
+            public void onFailure(Call call, IOException e) {
+            //异常情况处理
+                Looper.prepare();
+                Toast.makeText(UploadImageActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                Looper.loop();
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 返回服务器数据
+                if (response.isSuccessful()) {
+                    String responseData = response.body().string();
+                    JSONObject jsonObject = JSON.parseObject(responseData);
+                    String error = jsonObject.getString("error");
+                    Message msg = new Message();
+                    switch (error){
+                        case "0":
+                            msg.what = GET_UPLOAD_INFO;
+                            //上传成功操作
+                            break;
+                        case "1":
+                            msg.what = GET_UPLOAD_WRONG;
+                            break;
+                    }
+                    handler.sendEmptyMessage(msg.what);
+                } else {
+                    int errorCode = response.code();
+                    switch (errorCode){
+                        case 201:
+                            ToastUtil.showToastTips(UploadImageActivity.this, "安检证书已上传，请勿重复提交！");
+                            finish();
+                            break;
+                        case 401:
+                            ToastUtil.showToastTips(UploadImageActivity.this, "登陆已过期，请重新登录");
+                            startActivity(new Intent(UploadImageActivity.this, LoginActivity.class));
+                            finish();
+                            break;
+                        case 403:
+                            break;
+                    }
+                }
+            }
+
+        },mUploadImageUrlList,projectId,token);
+    }
+
+
+
+    /*
      * 申请权限
      */
     private void requestPermission() {
@@ -299,5 +402,27 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                 && XXPermissions.isHasPermission(UploadImageActivity.this, Permission.CAMERA))
             return true;
         return false;
+    }
+
+
+    /*
+     * 弹窗
+     */
+    /*
+     * 提示弹框
+     */
+    private CommonDialog DialogToast(String mTitle, String mMsg){
+        return new CommonDialog(UploadImageActivity.this, R.style.dialog, mMsg,
+                new CommonDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if (confirm) {
+                            dialog.dismiss();
+                            finish();
+                        } else {
+                            dialog.dismiss();
+                        }
+                    }
+                }).setTitle(mTitle);
     }
 }

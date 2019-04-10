@@ -317,7 +317,7 @@ public class RegistRentManActivity extends AppCompatActivity {
 
     //上传照片文件至服务器
     private void uploadPhoto() {
-        HttpUtil.uploadPicOkHttpRequest(new okhttp3.Callback() {
+        HttpUtil.uploadSinglePicOkHttpRequest(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
