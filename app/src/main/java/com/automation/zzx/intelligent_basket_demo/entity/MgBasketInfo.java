@@ -12,6 +12,7 @@ public class MgBasketInfo {
     private String state; // 吊篮运行状态
     private String outStorage; // 吊篮出库日期
     private String principal; // 主要负责人
+    private String storageState; // 吊篮出/入库状态
 
     /*
      * 构造函数
@@ -20,13 +21,14 @@ public class MgBasketInfo {
         //this.selected = false;
     }
     public MgBasketInfo(String indexImageUri, String id, String state, String outStorage,
-                        String principal){
+                        String principal, String storageState){
         //this.selected = false;
         this.indexImageUri =indexImageUri;
         this.id = id;
         this.state = state;
         this.outStorage = outStorage;
         this.principal = principal;
+        this.storageState = storageState;
     }
 
     /*
@@ -79,5 +81,13 @@ public class MgBasketInfo {
 
     public void setPrincipal(String principal) {
         this.principal = principal;
+    }
+
+    public String getStorageState() {
+        return storageState;
+    }
+
+    public void setStorageState(String storageState) {
+        this.storageState = storageState;
     }
 }

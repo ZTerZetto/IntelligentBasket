@@ -7,6 +7,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
@@ -333,27 +334,31 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     }
     private void parseBeginOrEndWork(String data){
         JSONObject jsonObject = JSON.parseObject(data);
+        String hint = "";
         if(mWorkState == 0) { // 等待开工
             boolean beginWork = jsonObject.getBoolean("beginWork");
             if(beginWork) {
                 mWorkState = 1;
                 mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
-                return;
+                hint="打开吊篮成功";
+            } else {
+                hint="打开吊篮失败";
             }
-            else
-                ToastUtil.showToastTips(WorkerPrimaryActivity.this, "打开吊篮失败");
         }else if(mWorkState == 1){ // 等待下工
             boolean endWork = jsonObject.getBoolean("endWork");
             if(endWork) {
                 mWorkState = 0;
                 mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
-                return;
+                hint="关闭吊篮成功";
+            } else {
+                hint="关闭吊篮失败";
             }
-            else
-                ToastUtil.showToastTips(WorkerPrimaryActivity.this, "关闭吊篮失败");
         }
-
+        Looper.prepare();
+        ToastUtil.showToastTips(WorkerPrimaryActivity.this, hint);
+        Looper.loop();
     }
+
     private void changeWorkState(int workState){
         if(workState == 0){
             mWorkState = 1;
@@ -410,7 +415,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         String userInfo = jsonObject.getString("userInfo");
         mUserInfo = JSON.parseObject(userInfo, UserInfo.class);
         mWorkProject = jsonObject.getString("inProject");
-        mWorkState = jsonObject.getIntValue("electricState");
+        mWorkState = jsonObject.getIntValue("userState");
         mHandler.sendEmptyMessage(UPDATE_USER_DISPLAY_MSG);  // 更新人员信息状态
         mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);    // 更新上/下工状态
 

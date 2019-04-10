@@ -3,6 +3,7 @@ package com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -34,6 +35,7 @@ import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -45,6 +47,7 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_APPLY_PRE_STOP_BASKETS;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_MG_ALL_BASKET_INFO;
 
 /**
@@ -56,7 +59,10 @@ import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_A
 public class MgBasketListFragment extends Fragment implements View.OnClickListener {
 
     private final static String TAG = "MgBasketListFragment";
-    private final static int MG_BASKET_LIST_INFO = 1;
+
+    // Handler消息
+    private final static int MG_BASKET_LIST_INFO = 1;  // 吊篮消息列表视图更新显示
+    private final static int GET_BASKET_LIST_INFO = 2; // 从后台获取吊篮列表数据
 
     // 吊篮列表
     private RecyclerView basketRv; // 吊篮列表
@@ -69,11 +75,10 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
     private TextView basketApplyStop; // 吊篮预报停
 
     // 本地存储
-    private String projectId;
     public SharedPreferences pref;
-    // 个人信息
     private UserInfo userInfo; // 个人信息
     private String token; //
+    private String projectId;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
@@ -159,7 +164,21 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                 Log.i(TAG, "You have clicked the apply_stop button");
                 if(Integer.parseInt(basketNumber.getText().toString()) == 0) {
                     ToastUtil.showToastTips(getActivity(), "您尚未选择任何吊篮");
-                    break;
+                }else{
+                    String content = "您申请预报停的吊篮编号为" + getApplyPreStopBasketList();
+                    // 弹窗二次确认
+                    new CommonDialog(getActivity(), R.style.dialog, "您选择",
+                            new CommonDialog.OnCloseListener() {
+                                @Override
+                                public void onClick(Dialog dialog, boolean confirm) {
+                                    if(confirm){
+                                        rentAdminApplyPreStopBasket();  // 预报停申请
+                                        dialog.dismiss();
+                                    }else{
+                                        dialog.dismiss();
+                                    }
+                                }
+                            }).setTitle("提示").show();
                 }
                 break;
         }
@@ -168,7 +187,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
     /*
      * 网络请求相关
      */
-    //从后台获取吊篮列表数据
+    // 从后台获取吊篮列表数据
     public void rentAdminGetBasketListInfo(){
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization", token)
@@ -209,7 +228,6 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                     }
                 });
     }
-
     // 解析吊篮列表数据
     private List<MgBasketInfo> parseBasketListInfo(String responseDate){
         List<MgBasketInfo> mgBasketInfos = new ArrayList<>();
@@ -227,10 +245,70 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
             JSONObject basketObj = JSON.parseObject(value);
             MgBasketInfo mgBasketInfo = new MgBasketInfo(null, basketObj.getString("deviceId"),
                     String.valueOf(basketObj.getIntValue("workingState")), basketObj.getString("date"),
-                    basketObj.getString("managerId"));
+                    basketObj.getString("managerId"), basketObj.getString("storageState"));
             mgBasketInfos.add(mgBasketInfo);
         }
         return mgBasketInfos;
+    }
+
+    // 预报停申请
+    private void rentAdminApplyPreStopBasket(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", token)
+                .addParam("projectId", projectId)
+                .addParam("storageList", getApplyPreStopBasketList())
+                .post()
+                .url(RENT_ADMIN_APPLY_PRE_STOP_BASKETS)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.i(TAG, "预报停成功" );
+                        JSONObject jsonObject = JSON.parseObject(o.toString());
+                        if(jsonObject.getString("update").equals("申请成功")) {
+                            // 申请成功
+                            handler.sendEmptyMessage(GET_BASKET_LIST_INFO);
+                            DialogToast("提示", "预报停申请成功，待区域管理员审核!");
+                        }else{
+                            // 申请失败
+                            DialogToast("错误", "未知错误，预报停申请失败！");
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "预报停错误：" + code);
+                        switch (code){
+                            case 401: // 未授权
+                                ToastUtil.showToastTips(getActivity(), "登录已过期，请重新登陆");
+                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                                getActivity().finish();
+                                break;
+                            case 403: // 禁止
+                                break;
+                            case 404: // 404
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "预报停失败：" + e.toString());
+                    }
+                });
+    }
+    // 获取预报停吊篮列表
+    private String getApplyPreStopBasketList(){
+        String results = "";
+
+        Map<Integer,Boolean> isCheck = mgBasketListAdapter.getMap();
+        for(int i=0; i<isCheck.size(); i++){
+            if(isCheck.get(i)){
+                results += mgBasketInfoList.get(i).getId() + ",";
+            }
+        }
+        results = results.substring(0, results.length()-1);
+        return results;
     }
 
     /*
@@ -243,6 +321,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
         //do something
         userInfo = ((RentAdminPrimaryActivity) context).pushUserInfo();
         token = ((RentAdminPrimaryActivity) context).pushToken();
+        projectId = ((RentAdminPrimaryActivity) context).pushProjectId();
     }
     @TargetApi(23)
     @Override
@@ -264,6 +343,22 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
      */
 
 
+    /*
+     * 提示弹框
+     */
+    private CommonDialog DialogToast(String mTitle, String mMsg){
+        return new CommonDialog(getActivity(), R.style.dialog, mMsg,
+                new CommonDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if(confirm){
+                            dialog.dismiss();
+                        }else{
+                            dialog.dismiss();
+                        }
+                    }
+                }).setTitle(mTitle);
+    }
     /*
      * 初始化列表
      */

@@ -307,6 +307,9 @@ public class BasketParameterActivity extends AppCompatActivity {
             boolData32 = String.format("%15s", boolData32);
             boolData32 = boolData32.replace(" ", "0");
         }
+        /* 应学弟请求，将字符串反置 */
+        StringBuffer stringBuffer = new StringBuffer(boolData32);
+        boolData32 = stringBuffer.reverse().toString();
         // 开关变量
         String varswitch = boolData32.substring(0, 8);
         updateVarSwitch(varswitch);

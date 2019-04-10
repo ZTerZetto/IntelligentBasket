@@ -105,10 +105,26 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
         viewHolder.basketSelected.setChecked(isCheck.get(position));  // 设置状态
         //viewHolder.basketImage.setImageUrl();
         viewHolder.basketId.setText(mgBasketInfo.getId());
-        if(mgBasketInfo.getState().equals("1")){
-            viewHolder.basketState.setText("正在施工");
-        }else if(mgBasketInfo.getState().equals("0")){
-            viewHolder.basketState.setText("停止运行");
+        switch (mgBasketInfo.getStorageState()){
+            case "1":
+                viewHolder.basketState.setText("等待安装");
+                break;
+            case "2":
+                viewHolder.basketState.setText("等待安装审核");
+                break;
+            case "3":
+                if(mgBasketInfo.getState().equals("1")){
+                    viewHolder.basketState.setText("正在施工");
+                }else if(mgBasketInfo.getState().equals("0")){
+                    viewHolder.basketState.setText("停止运行");
+                }
+                break;
+            case "4":
+                viewHolder.basketState.setText("预报停申请中");
+                break;
+            case "5":
+                viewHolder.basketState.setText("预报停审核中");
+                break;
         }
         viewHolder.basketOutStorage.setText(mgBasketInfo.getOutStorage().substring(0,10));
         viewHolder.basketPrincipal.setText(mgBasketInfo.getPrincipal());

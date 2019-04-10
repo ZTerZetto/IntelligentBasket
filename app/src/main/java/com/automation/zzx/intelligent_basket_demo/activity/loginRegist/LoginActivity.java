@@ -190,6 +190,11 @@ public class LoginActivity extends AppCompatActivity {
                         savePref(token);
                         switch (userRole){
                             case "worker":  // 工人主页面
+                            case "worker_1":
+                            case "worker_2":
+                            case "worker_3":
+                            case "worker_4":
+                            case "worker_5":
                                 StartAndFinishActicity(WorkerPrimaryActivity.class);
                                 break;
                             case "rentAdmin":  // 租房管理员

@@ -277,10 +277,10 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
         String userListStr = jsonObject.getString("userList");
         if(userListStr==null) return mgWorkerInfos;
         JSONArray userList= JSON.parseArray(userListStr);
-        Iterator<Object> iterator = userList.iterator();  // 迭代获取吊篮信息
+        Iterator<Object> iterator = userList.iterator();  // 迭代获取工人信息
         while(iterator.hasNext()) {
             JSONObject workerInfoJsonObject = (JSONObject) iterator.next();
-            if(workerInfoJsonObject.getString("userRole").equals("worker")) {
+            if(workerInfoJsonObject.getString("userRole").contains("worker")) {
                 MgWorkerInfo mgWorkerInfo = new MgWorkerInfo();
                 mgWorkerInfo.setId(workerInfoJsonObject.getString("userId"));
                 mgWorkerInfo.setName(workerInfoJsonObject.getString("userName"));

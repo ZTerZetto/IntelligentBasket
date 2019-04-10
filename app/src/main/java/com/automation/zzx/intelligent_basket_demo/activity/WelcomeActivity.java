@@ -35,9 +35,7 @@ public class WelcomeActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         // 百度地图
-        // 在使用SDK各组件之前初始化context信息，传入ApplicationContext
-        // 注意该方法要在setContentView方法前实现
-        SDKInitializer.initialize(getApplicationContext());
+        //SDKInitializer.initialize(getApplicationContext());
         setContentView(R.layout.activity_welcome);
         pref = PreferenceManager.getDefaultSharedPreferences(this);
         token = pref.getString("loginToken", "");
@@ -62,15 +60,17 @@ public class WelcomeActivity extends AppCompatActivity {
                     startActivity(mainIntent);
                 } else {
                     Intent mainIntent;
-                    if(userRole.equals("worker")){
+                    if(userRole.contains("worker")){
                         mainIntent = new Intent(WelcomeActivity.this,  // worker主活动
                                 WorkerPrimaryActivity.class);
                     }else if(userRole.equals("rentAdmin")){
                         mainIntent = new Intent(WelcomeActivity.this,  // 租方管理员页面
                                 RentAdminPrimaryActivity.class);
-                    }else{
+                    }else if(userRole.equals("areaAdmin")){
                         mainIntent = new Intent(WelcomeActivity.this,  // 施工人员管理员页面
                                 AreaAdminPrimaryActivity.class);
+                    }else {
+                        mainIntent = new Intent(WelcomeActivity.this,LoginActivity.class);
                     }
                     startActivity(mainIntent);
                 }

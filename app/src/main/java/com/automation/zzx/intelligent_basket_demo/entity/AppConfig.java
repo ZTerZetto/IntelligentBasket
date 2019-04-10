@@ -94,6 +94,8 @@ public class AppConfig {
      */
     // 租方管理员请求所有吊篮信息
     public static final String RENT_ADMIN_MG_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/forecastStop");
+    // 租方管理员请求吊篮预报停
+    public static final String RENT_ADMIN_APPLY_PRE_STOP_BASKETS = ANDROID_URL_PATH.concat("/prepareEnd");
     // 租方管理员请求所有施工人员
     public static final String RENT_ADMIN_GET_ALL_WORKER_INFO = ANDROID_URL_PATH.concat("/getUserList");
     // 租方管理员添加施工人员

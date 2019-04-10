@@ -76,7 +76,8 @@
                 <!-- 项目编号 -->
                 <RelativeLayout
                     android:id="@+id/project_id_layout"
-                    style="@style/me_common_item_relativeLayout_style">
+                    style="@style/me_common_item_relativeLayout_style"
+                    android:clickable="false">
                     <TextView
                         style="@style/more_common_item_textView_style"
                         android:text="项目编号"/>
@@ -91,7 +92,8 @@
                 <!-- 项目名称 -->
                 <RelativeLayout
                     android:id="@+id/project_name_layout"
-                    style="@style/me_common_item_relativeLayout_style">
+                    style="@style/me_common_item_relativeLayout_style"
+                    android:clickable="false">
                     <TextView
                         style="@style/more_common_item_textView_style"
                         android:text="项目名称"/>
@@ -106,7 +108,8 @@
                 <!-- 开始日期-->
                 <RelativeLayout
                     android:id="@+id/project_start_time_layout"
-                    style="@style/me_common_item_relativeLayout_style">
+                    style="@style/me_common_item_relativeLayout_style"
+                    android:clickable="false">
                     <TextView
                         style="@style/more_common_item_textView_style"
                         android:text="开始日期"/>
@@ -115,8 +118,8 @@
                         style="@style/more_common_desc_textView_style"
                         android:text="2019-03-15 12:30"/>
                 </RelativeLayout>
-                <View
-                    style="@style/me_horizontal_view_style"/>
+                <!--<View-->
+                    <!--style="@style/me_horizontal_view_style"/>-->
             </LinearLayout>
 
             <!-- 中期操作 -->
@@ -140,7 +143,7 @@
                 <RelativeLayout
                     android:id="@+id/project_pre_apply_layout"
                     style="@style/me_common_item_relativeLayout_style"
-                    android:visibility="gone">
+                    android:visibility="visible">
                     <TextView
                         style="@style/more_common_item_textView_style"
                         android:text="预验收申请"/>
@@ -172,7 +175,7 @@
                         style="@style/me_common_item_count_with_organgered_bg_textView_style"
                         android:text="!"/>
                 </RelativeLayout>
-                <View style="@style/me_horizontal_view_style"/>
+                <!--<View style="@style/me_horizontal_view_style"/>-->
             </LinearLayout>
 
         </LinearLayout>

@@ -88,8 +88,9 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private final static int UPDATE_PROJECT_LIST_FROM_INTERNET_MSG = 4; // 从网络重新获取指定项目的吊篮信息
 
     // 页面跳转
-    private final static int CAPTURE_ACTIVITY_RESULT = 1;
-    private final static int UPLOAD_IMAGE_RESULT = 2;  // 上传安监证书与预报停页面
+    private final static int CAPTURE_ACTIVITY_RESULT = 1;  // 扫码返回
+    private final static int UPLOAD_BASKET_IMAGE_RESULT = 2;  // 上传预验收图片
+    private final static int UPLOAD_CERTIFICATE_IMAGE_RESULT = 3;  // 上传安监证书页面
     private final static String PROJECT_ID = "project_id";
 
     // 控件
@@ -292,9 +293,10 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mProjectStartTextView = (TextView) view.findViewById(R.id.project_start_time_textview);
         mExamineCompactRelativeLayout = (RelativeLayout) view.findViewById(R.id.examine_compact_layout);
         mExamineCompactRelativeLayout.setOnClickListener(this);  // 查看合同
-        mPreApplyRelativeLayout = (RelativeLayout) view.findViewById(R.id.project_pre_apply_layout);
+        mPreApplyRelativeLayout = (RelativeLayout) view.findViewById(R.id.project_pre_apply_layout); // 预验收
+        mPreApplyRelativeLayout.setOnClickListener(this);
         mPreApplyCountTextView = (TextView) view.findViewById(R.id.project_pre_apply_tv_count);
-        mSendOrExamineCertificateRelativeLayout = (RelativeLayout) view.findViewById(R.id.send_examine_certificate_layout);
+        mSendOrExamineCertificateRelativeLayout = (RelativeLayout) view.findViewById(R.id.send_examine_certificate_layout);  // 安监证书
         mSendOrExamineCertificateRelativeLayout.setOnClickListener(this);
         mSendOrExamineCertificateTextView = (TextView) view.findViewById(R.id.send_examine_certification_tv);
         mSendOrExamineCertificateCountTextView = (TextView) view.findViewById(R.id.send_examine_certificate_tv_count);
@@ -333,11 +335,17 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             case R.id.examine_compact_layout:  // 查看合同
                 Log.i(TAG, "You have clicked the examine compact button");
                 break;
+            case R.id.project_pre_apply_layout:  // 预验收申请
+                Log.i(TAG, "You have clicked the pre_apply compact button");
+                intent = new Intent(getActivity(), UploadImageActivity.class);
+                intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
+                break;
             case R.id.send_examine_certificate_layout: // 上传/查看安监证书
                 Log.i(TAG, "You have clicked the examine certification button");
                 intent = new Intent(getActivity(), UploadImageActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
-                startActivityForResult(intent, UPLOAD_IMAGE_RESULT);
+                startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
                 break;
         }
     }
@@ -497,17 +505,30 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     // 解析项目中的吊篮列表信息
     private void parseBasketListInfo(String responseDate){
         JSONObject jsonObject = JSON.parseObject(responseDate);
-
-        String basketListStr = jsonObject.getString("basketList");
-        basketListStr = (basketListStr==null) ? "" : basketListStr;
-        String [] basketIds = basketListStr.split(",");
-        for(int i=0; i<basketIds.length; i++){
-            if(basketIds[i].equals(""))
-                continue;
-            mgBasketStatementList.add(new MgBasketStatement(basketIds[i], null, getRandomStatement()));
+        Iterator<String> iterator = jsonObject.keySet().iterator();  // 迭代获取吊篮信息
+        while(iterator.hasNext()) {
+            String key = iterator.next();
+            if(!key.contains("storage")) continue;
+            String value = jsonObject.getString(key);
+            JSONObject basketObj = JSON.parseObject(value);
+            mgBasketStatementList.add(new MgBasketStatement(basketObj.getString("deviceId"),
+                    null, basketObj.getString("storageState")));
         }
-
         parseMgBasketStatementList(mgBasketStatementList);
+    }
+    // 解析吊篮状态
+    private void parseMgBasketStatementList(List<MgBasketStatement> mgBasketStatements){
+        // 初始化吊篮分类列表
+        for(int i=0; i<mStateLists.size();i++){
+            mgBasketStatementClassifiedList.add(new ArrayList<MgBasketStatement>());
+        }
+        // 将数据装载进对应位置
+        for(int i=0; i<mgBasketStatements.size(); i++){
+            MgBasketStatement mgBasketStatement = mgBasketStatements.get(i);
+            mgBasketStatementClassifiedList.get(Integer.valueOf(mgBasketStatement.getBasketStatement())).
+                    add(mgBasketStatement);
+        }
+        mgBasketStatementClassifiedList.get(0).addAll(mgBasketStatements);
     }
 
     // 将吊篮添加至项目
@@ -595,22 +616,6 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mProjectScheduleList.add("结束");
     }
 
-    /*
-     * 解析列表数据
-     */
-    private void parseMgBasketStatementList(List<MgBasketStatement> mgBasketStatements){
-        // 初始化吊篮分类列表
-        for(int i=0; i<mStateLists.size();i++){
-            mgBasketStatementClassifiedList.add(new ArrayList<MgBasketStatement>());
-        }
-        // 将数据装载进对应位置
-        for(int i=0; i<mgBasketStatements.size(); i++){
-            MgBasketStatement mgBasketStatement = mgBasketStatements.get(i);
-            mgBasketStatementClassifiedList.get(Integer.valueOf(mgBasketStatement.getBasketStatement())).
-                    add(mgBasketStatement);
-        }
-        mgBasketStatementClassifiedList.get(0).addAll(mgBasketStatements);
-    }
 
     /*
      * 设置手势监听
@@ -762,14 +767,17 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mProjectNameTextView.setText(projectInfo.getProjectName());
         switch(projectInfo.getProjectState()){
             case "0": // 立项
-                mProjectStartRelativeLayout.setVisibility(View.GONE);
-                if(projectInfo.getBoxList().equals("") || projectInfo.getBoxList()==null){
+                //mProjectStartRelativeLayout.setVisibility(View.GONE);
+                mProjectStartTextView.setText("暂未开始");
+                if(projectInfo.getBoxList()==null || projectInfo.getBoxList().equals("")){
                     currentProjectScheduleFlag = 1;
                     mProjectScheduleTimeLine.setStep(1);  //
+                    mSendOrExamineCertificateTextView.setText("上传安监证书");
+                    mSendOrExamineCertificateCountTextView.setVisibility(View.VISIBLE);
                     break;
                 }
                 if(projectInfo.getProjectCertUrl()==null || projectInfo.getProjectCertUrl().equals("")){ // 尚未上传安监证书
-                    mSendOrExamineCertificateTextView.setText("上传预验收图片和安监证书");
+                    mSendOrExamineCertificateTextView.setText("上传安监证书");
                     mSendOrExamineCertificateCountTextView.setVisibility(View.VISIBLE);
                     currentProjectScheduleFlag = 2;
                     mProjectScheduleTimeLine.setStep(2);
@@ -781,7 +789,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 }
                 break;
             case "1": // 使用
-                mProjectStartRelativeLayout.setVisibility(View.VISIBLE);
+                //mProjectStartRelativeLayout.setVisibility(View.VISIBLE);
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
                 mSendOrExamineCertificateTextView.setText("查看安监证书");
                 mSendOrExamineCertificateCountTextView.setVisibility(View.GONE);
@@ -789,7 +797,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 mProjectScheduleTimeLine.setStep(4);
                 break;
             case "2": // 结束
-                mProjectStartRelativeLayout.setVisibility(View.VISIBLE);
+                //mProjectStartRelativeLayout.setVisibility(View.VISIBLE);
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
                 mSendOrExamineCertificateTextView.setText("查看安监证书");
                 mSendOrExamineCertificateCountTextView.setVisibility(View.GONE);
