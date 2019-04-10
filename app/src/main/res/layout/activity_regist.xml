@@ -138,26 +138,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="150dp"
-                android:layout_gravity="center_horizontal"
                 android:layout_marginBottom="10dp"
                 android:background="#FFF"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/picture"
-                    android:layout_width="150dp"
+                    android:layout_width="200dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="center_horizontal"
                     android:layout_margin="20dp"
                     android:src="@mipmap/ic_launcher" />
 
-                <TextView
-                    android:id="@+id/tv_upload_result"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:padding="10dp"
-                    android:hint="@string/pic_upNotice"
-                    android:layout_gravity="center_vertical"/>
             </LinearLayout>
 
             <!-- 选择照片 -->
