@@ -33,6 +33,8 @@ import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActi
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.UploadImageLikeWxAdapter;
 import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
@@ -43,10 +45,22 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.Call;
 import okhttp3.Response;
+
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_BEGIN_PROJECT;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_CREATE_CERT_FILE;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_CREATE_PRESTOP_FILE;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_GET_ALL_PROJECT_INFO;
+import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.PROJECT_ID;
+import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRESTOP_IMAGE;
+import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_CERTIFICATE_IMAGE;
+import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_IMAGE_TYPE;
 
 
 public class UploadImageActivity extends AppCompatActivity implements View.OnClickListener {
@@ -59,9 +73,6 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     // Handler消息
     private final static int GET_UPLOAD_INFO = 100;
     private final static int GET_UPLOAD_WRONG = 101;
-
-    private final static String PROJECT_ID = "project_id";
-
 
     //相册位置
     public static final String CAMERA_PATH= Environment.getExternalStorageDirectory() +
@@ -87,8 +98,15 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     //基本信息
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
-    private String projectId;
-    private String token;
+
+    private String token; // 验证token
+    private String managerId; // 申请人Id
+    private String projectId;  // 上传的项目编号
+    private String uploadType; // 上传图片类型
+    private int maxUploadImageNumer; // 最大上传图片数量
+    private String uploadHint; // 上传提示信息
+    private String uploadUrl; // 上传地址
+    private Map<String, String> params = new HashMap<String, String>(); // 上传参数
 
 
     @SuppressLint("HandlerLeak")
@@ -96,10 +114,10 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_UPLOAD_INFO:
-                    DialogToast("提示", "您已成功上传安检证书！").show();
+                    DialogToast("提示", "您已成功上传" + uploadHint).show();
                     break;
                 case GET_UPLOAD_WRONG:
-                    DialogToast("提示", "安检证书上传失败！").show();
+                    DialogToast("提示", uploadHint + "上传失败！").show();
                     break;
                 default:
                     break;
@@ -112,19 +130,15 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_upload_image);
 
-        //获取基本信息
-        pref = PreferenceManager.getDefaultSharedPreferences(this);
-        token = pref.getString("loginToken", "");
-        //projectId = pref.getString("projectId", "");
-        Intent intent = new Intent();
-        projectId = intent.getStringExtra("project_id");
-        if(projectId==null) projectId = "001";
-
-
         // 获取权限
         if(!isHasPermission()) requestPermission();
         // 初始化控件
         initWidgetResource();
+
+        //获取基本信息
+        getBaseInfoFromPred();
+        getProjectInfoFromIntent();
+        setUploadParameters();
     }
 
     /*
@@ -151,11 +165,9 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if(position == mUploadImageList.size()-1){
                     // 点击加号图片
-                    //点击了添加图片按钮，弹出弹窗
                     showAddImageWayMenu(view);
                 }else{
                     // 点击其它图片
-
                 }
             }
         });
@@ -169,7 +181,11 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case android.R.id.home: // 返回按钮
-                onBackPressed();
+                if(mUploadImageUrlList.size() > 0){
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                }
+                finish();
                 return true;
         }
         return super.onOptionsItemSelected(item);
@@ -179,11 +195,11 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     public void onClick(View v) {
         switch (v.getId()){
             case R.id.toolbar_send_textview:  // 发送监听
-
                 break;
             case R.id.toolbar_send_imageview: // 发送监听
                 startSendImage();
-
+                // 上传预验收申请同时申请启动项目-》待管理员审核
+                if(uploadType.equals(UPLOAD_BASKETS_PRESTOP_IMAGE)) beginProject();
                 break;
         }
     }
@@ -292,7 +308,7 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
         Intent intent = new Intent(UploadImageActivity.this, MultiImageSelectorActivity.class);
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SHOW_CAMERA, false);// 是否显示调用相机拍照
         // 设置模式 (支持 单选/MultiImageSelectorActivity.MODE_SINGLE 或者 多选/MultiImageSelectorActivity.MODE_MULTI)
-        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, 9);// 最大图片选择数量
+        intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_COUNT, maxUploadImageNumer);// 最大图片选择数量
         // 默认选择图片,回填选项(支持String ArrayList)
         intent.putExtra(MultiImageSelectorActivity.EXTRA_SELECT_MODE, MultiImageSelectorActivity.MODE_MULTI);
         intent.putStringArrayListExtra(MultiImageSelectorActivity.EXTRA_DEFAULT_SELECTED_LIST, mUploadImageUrlList);
@@ -307,11 +323,11 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     }
 
     /*
-     * 上传照片至服务器
+     * 后台通信
      */
+    // 上传图片
     private void startSendImage(){
         HttpUtil.uploadPicOkHttpRequest(new okhttp3.Callback() {
-
             @Override
             public void onFailure(Call call, IOException e) {
             //异常情况处理
@@ -342,12 +358,15 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                     int errorCode = response.code();
                     switch (errorCode){
                         case 201:
-                            ToastUtil.showToastTips(UploadImageActivity.this, "安检证书已上传，请勿重复提交！");
+                            ToastUtil.showToastTips(UploadImageActivity.this,
+                                    uploadHint + "已上传，请勿重复提交！");
                             finish();
                             break;
                         case 401:
-                            ToastUtil.showToastTips(UploadImageActivity.this, "登陆已过期，请重新登录");
-                            startActivity(new Intent(UploadImageActivity.this, LoginActivity.class));
+                            ToastUtil.showToastTips(UploadImageActivity.this,
+                                    "登陆已过期，请重新登录");
+                            startActivity(new Intent(UploadImageActivity.this,
+                                    LoginActivity.class));
                             finish();
                             break;
                         case 403:
@@ -356,10 +375,80 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                 }
             }
 
-        },mUploadImageUrlList,projectId,token);
+        }, mUploadImageUrlList, params, token, uploadUrl);
     }
 
+    // 开始项目
+    private void beginProject(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", token)
+                .addParam("projectId", projectId)
+                .addParam("picNum", mUploadImageUrlList.size())
+                .addParam("managerId", managerId)
+                .post()
+                .url(AREA_ADMIN_BEGIN_PROJECT)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.d(TAG, "成功提交开始项目申请");
+                    }
 
+                    @Override
+                    public void onError(int code) {
+                        Log.d(TAG, "提交开始项目申请错误，错误编码："+code);
+
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.d(TAG, "提交开始项目申请失败");
+                    }
+                });
+    }
+
+    /*
+     * 获取基本信息
+     */
+    // 用户信息
+    private void getBaseInfoFromPred(){
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        managerId = pref.getString("userId", "");
+        token = pref.getString("loginToken", "");
+    }
+    // 项目/图片信息
+    private void getProjectInfoFromIntent(){
+        Intent intent = getIntent();
+        projectId = intent.getStringExtra(PROJECT_ID);
+        uploadType = intent.getStringExtra(UPLOAD_IMAGE_TYPE);
+    }
+    // 设置上传图片的参数、路径等
+    private void setUploadParameters(){
+        if(uploadType==null || uploadType.equals(""))
+            return;
+        switch (uploadType){
+            case UPLOAD_CERTIFICATE_IMAGE: // 安监证书地址
+                uploadUrl = AREA_ADMIN_CREATE_CERT_FILE;
+                mToolbar.setTitle("上传安监证书");
+                uploadHint = "安监证书";
+                maxUploadImageNumer = 1;
+                break;
+            case UPLOAD_BASKETS_PRESTOP_IMAGE: // 预验收申请图片地址
+                uploadUrl = AREA_ADMIN_CREATE_PRESTOP_FILE;
+                mToolbar.setTitle("上传安装预验收图片");
+                uploadHint = "安装预验收图片";
+                maxUploadImageNumer = 9;
+                break;
+            default: // 默认预验收申请地址
+                uploadUrl = AREA_ADMIN_CREATE_PRESTOP_FILE;
+                mToolbar.setTitle("上传安装预验收图片");
+                uploadHint = "安装预验收图片";
+                maxUploadImageNumer = 9;
+                break;
+        }
+        params.clear();
+        params.put("projectId", projectId);
+    }
 
     /*
      * 申请权限
@@ -404,7 +493,6 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
         return false;
     }
 
-
     /*
      * 弹窗
      */
@@ -418,11 +506,25 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                     public void onClick(Dialog dialog, boolean confirm) {
                         if (confirm) {
                             dialog.dismiss();
+                            if(mUploadImageUrlList.size() > 0){
+                                Intent intent = new Intent();
+                                setResult(RESULT_OK, intent);
+                            }
                             finish();
                         } else {
                             dialog.dismiss();
                         }
                     }
                 }).setTitle(mTitle);
+    }
+
+    @Override
+    public void onBackPressed(){
+        Log.i(TAG, "onBackPressed");
+        if(mUploadImageUrlList.size() > 0){
+            Intent intent = new Intent();
+            setResult(RESULT_OK, intent);
+        }
+        finish();
     }
 }

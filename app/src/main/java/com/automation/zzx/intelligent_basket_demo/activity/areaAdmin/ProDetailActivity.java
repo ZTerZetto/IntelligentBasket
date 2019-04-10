@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.activity;
+package com.automation.zzx.intelligent_basket_demo.activity.areaAdmin;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProCommitActivity;
 import com.automation.zzx.intelligent_basket_demo.pdf_read.PDFStartActivity;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;

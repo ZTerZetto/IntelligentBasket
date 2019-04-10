@@ -89,6 +89,9 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                     mgBasketInfoList.addAll(parseBasketListInfo((String) msg.obj));
                     mgBasketListAdapter.notifyDataSetChanged();
                     break;
+                case GET_BASKET_LIST_INFO:
+                    rentAdminGetBasketListInfo();
+                    break;
                 default:
                     break;
             }
@@ -167,7 +170,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                 }else{
                     String content = "您申请预报停的吊篮编号为" + getApplyPreStopBasketList();
                     // 弹窗二次确认
-                    new CommonDialog(getActivity(), R.style.dialog, "您选择",
+                    new CommonDialog(getActivity(), R.style.dialog, content,
                             new CommonDialog.OnCloseListener() {
                                 @Override
                                 public void onClick(Dialog dialog, boolean confirm) {
@@ -264,6 +267,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                     @Override
                     public void onSuccess(Object o) {
                         Log.i(TAG, "预报停成功" );
+
                         JSONObject jsonObject = JSON.parseObject(o.toString());
                         if(jsonObject.getString("update").equals("申请成功")) {
                             // 申请成功

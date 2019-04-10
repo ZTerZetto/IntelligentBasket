@@ -56,7 +56,7 @@
                 android:layout_height="wrap_content"
                 android:background="@drawable/bg_white_quai">
                 <!-- 项目进度条 -->
-                <com.automation.zzx.intelligent_basket_demo.utils.TimeLineView
+                <com.automation.zzx.intelligent_basket_demo.widget.TimeLineView
                     android:id="@+id/project_schedule_timelineview"
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -139,25 +139,6 @@
                 <View
                     style="@style/me_horizontal_view_style"/>
 
-                <!-- 预验收申请 -->
-                <RelativeLayout
-                    android:id="@+id/project_pre_apply_layout"
-                    style="@style/me_common_item_relativeLayout_style"
-                    android:visibility="visible">
-                    <TextView
-                        style="@style/more_common_item_textView_style"
-                        android:text="预验收申请"/>
-                    <ImageView
-                        android:id="@+id/project_pre_apply_iv_arrow_right"
-                        style="@style/me_common_item_arrow_right_imageView_style"/>
-                    <TextView
-                        android:id="@+id/project_pre_apply_tv_count"
-                        android:layout_toLeftOf="@+id/project_pre_apply_iv_arrow_right"
-                        style="@style/me_common_item_count_with_organgered_bg_textView_style"
-                        android:text="!"/>
-                </RelativeLayout>
-                <View style="@style/me_horizontal_view_style"/>
-
                 <!-- 查看/上传安监证书 -->
                 <RelativeLayout
                     android:id="@+id/send_examine_certificate_layout"
@@ -172,6 +153,25 @@
                     <TextView
                         android:id="@+id/send_examine_certificate_tv_count"
                         android:layout_toLeftOf="@+id/send_examine_certificate_iv_arrow_right"
+                        style="@style/me_common_item_count_with_organgered_bg_textView_style"
+                        android:text="!"/>
+                </RelativeLayout>
+                <View style="@style/me_horizontal_view_style"/>
+
+                <!-- 预验收申请 -->
+                <RelativeLayout
+                    android:id="@+id/project_pre_apply_layout"
+                    style="@style/me_common_item_relativeLayout_style"
+                    android:visibility="visible">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="预验收申请"/>
+                    <ImageView
+                        android:id="@+id/project_pre_apply_iv_arrow_right"
+                        style="@style/me_common_item_arrow_right_imageView_style"/>
+                    <TextView
+                        android:id="@+id/project_pre_apply_tv_count"
+                        android:layout_toLeftOf="@+id/project_pre_apply_iv_arrow_right"
                         style="@style/me_common_item_count_with_organgered_bg_textView_style"
                         android:text="!"/>
                 </RelativeLayout>

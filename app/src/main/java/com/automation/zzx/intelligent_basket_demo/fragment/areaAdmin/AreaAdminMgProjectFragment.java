@@ -41,7 +41,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.ProDetailActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadImageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
@@ -50,7 +50,7 @@ import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapt
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
 import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
-import com.automation.zzx.intelligent_basket_demo.utils.TimeLineView;
+import com.automation.zzx.intelligent_basket_demo.widget.TimeLineView;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
@@ -92,7 +92,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private final static int CAPTURE_ACTIVITY_RESULT = 1;  // 扫码返回
     private final static int UPLOAD_BASKET_IMAGE_RESULT = 2;  // 上传预验收图片
     private final static int UPLOAD_CERTIFICATE_IMAGE_RESULT = 3;  // 上传安监证书页面
-    private final static String PROJECT_ID = "project_id";
+
+    // intent 消息参数
+    public final static String PROJECT_ID = "projectId";  // 上传图片的项目Id
+    public final static String UPLOAD_IMAGE_TYPE  = "uploadImageType"; // 上传图片的类型
+    public final static String UPLOAD_BASKETS_PRESTOP_IMAGE = "basketsPrestop"; // 预报停
+    public final static String UPLOAD_CERTIFICATE_IMAGE = "certificate"; // 安监证书
 
     // 控件
     // 顶部导航栏
@@ -103,7 +108,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private List<ProjectInfo> mProjectInfoList; // 项目详情列表
     private int currentSelectedProject = 0; // 当前项目号位置
     private int tmpSelectedProject = 0; // 临时项目号
-    private String mProjectId;// 当前项目号
+    private String mLastProjectId;// 上次退出时项目号
 
     // 吊篮状态选择栏
     private GridView mBasketStateGv; // 吊篮状态
@@ -179,7 +184,8 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     mProjectNameList.clear();
                     mProjectInfoList.clear();
                     parseProjectListInfo((String)msg.obj);  // 解析数据
-                    currentSelectedProject = 0; // 项目位置
+                    setLastLoginProjectId();  // 设置默认项目
+                    //currentSelectedProject = 0; // 项目位置
                     pre_selectedPosition = 0;  // 筛选框位置
 
                     if(mProjectNameList.size()<=0) { // 没有项目
@@ -215,13 +221,6 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
 
         View view = inflater.inflate(R.layout.fragment_area_admin_manage_project,
                 container, false);
-
-        //sharedPreference读取
-        mPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-       if(mPref.getString("projectId","") != null){
-           mProjectId = mPref.getString("projectId","");
-       }
-
 
         // 顶部toolbar
         mProjectMoreTb = (Toolbar) view.findViewById(R.id.project_more_toolbar);
@@ -349,12 +348,14 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 Log.i(TAG, "You have clicked the pre_apply compact button");
                 intent = new Intent(getActivity(), UploadImageActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRESTOP_IMAGE);
                 startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
                 break;
             case R.id.send_examine_certificate_layout: // 上传/查看安监证书
                 Log.i(TAG, "You have clicked the examine certification button");
                 intent = new Intent(getActivity(), UploadImageActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
                 startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
                 break;
         }
@@ -419,6 +420,15 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                         areaAdminAddBasketIntoProject(basketId);
                 }
                 break;
+            case UPLOAD_BASKET_IMAGE_RESULT:  // 上传预验收图片返回
+                if(resultCode == RESULT_OK) {
+                    // 更新进度页面
+                    mLastProjectId = mProjectInfoList.get(currentSelectedProject).getProjectId();
+                    areaAdminGetAllProject();
+                }
+                break;
+            case UPLOAD_CERTIFICATE_IMAGE_RESULT:  // 上传安监证书返回值
+                break;
             default:
                 break;
         }
@@ -468,6 +478,16 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             mProjectNameList.add(projectInfoJsonObject.getString("projectName"));
             mProjectInfoList.add(projectInfoJsonObject.toJavaObject(ProjectInfo.class));
         }
+    }
+    // 默认登录上次项目号
+    private void setLastLoginProjectId(){
+        for(int i=0; i<mProjectInfoList.size(); i++){
+            if(mLastProjectId.equals(mProjectInfoList.get(i).getProjectId())){
+                currentSelectedProject = i;
+                return;
+            }
+        }
+        currentSelectedProject = 0;
     }
 
     // 获取项目对应的所有吊篮信息
@@ -768,7 +788,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             }
         }
     }
-    // 项目页面更新
+    // 项目进度页面更新
     public void updateProjectContentView(){
         ProjectInfo projectInfo = mProjectInfoList.get(currentSelectedProject);
 
@@ -777,38 +797,40 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mProjectNameTextView.setText(projectInfo.getProjectName());
         switch(projectInfo.getProjectState()){
             case "0": // 立项
-                //mProjectStartRelativeLayout.setVisibility(View.GONE);
                 mProjectStartTextView.setText("暂未开始");
                 if(projectInfo.getBoxList()==null || projectInfo.getBoxList().equals("")){
                     currentProjectScheduleFlag = 1;
                     mProjectScheduleTimeLine.setStep(1);  //
                     mSendOrExamineCertificateTextView.setText("上传安监证书");
                     mSendOrExamineCertificateCountTextView.setVisibility(View.VISIBLE);
+                    mPreApplyCountTextView.setVisibility(View.VISIBLE);
                     break;
                 }
                 if(projectInfo.getProjectCertUrl()==null || projectInfo.getProjectCertUrl().equals("")){ // 尚未上传安监证书
                     mSendOrExamineCertificateTextView.setText("上传安监证书");
                     mSendOrExamineCertificateCountTextView.setVisibility(View.VISIBLE);
+                    mPreApplyCountTextView.setVisibility(View.VISIBLE);
                     currentProjectScheduleFlag = 2;
                     mProjectScheduleTimeLine.setStep(2);
                 }else{
                     mSendOrExamineCertificateTextView.setText("查看安监证书");
                     mSendOrExamineCertificateCountTextView.setVisibility(View.GONE);
+                    mPreApplyCountTextView.setVisibility(View.GONE);
                     currentProjectScheduleFlag = 3;
                     mProjectScheduleTimeLine.setStep(3);
                 }
                 break;
             case "1": // 使用
-                //mProjectStartRelativeLayout.setVisibility(View.VISIBLE);
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
+                mPreApplyCountTextView.setVisibility(View.GONE);
                 mSendOrExamineCertificateTextView.setText("查看安监证书");
                 mSendOrExamineCertificateCountTextView.setVisibility(View.GONE);
                 currentProjectScheduleFlag = 4;
                 mProjectScheduleTimeLine.setStep(4);
                 break;
             case "2": // 结束
-                //mProjectStartRelativeLayout.setVisibility(View.VISIBLE);
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
+                mPreApplyCountTextView.setVisibility(View.GONE);
                 mSendOrExamineCertificateTextView.setText("查看安监证书");
                 mSendOrExamineCertificateCountTextView.setVisibility(View.GONE);
                 currentProjectScheduleFlag = 5;
@@ -852,9 +874,10 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
      * 生命周期函数
      */
     protected void onAttachToContext(Context context) {
-        //do something
+        //d o something
         mUserInfo = ((AreaAdminPrimaryActivity) context).pushUserInfo();
         mToken = ((AreaAdminPrimaryActivity) context).pushToken();
+        mLastProjectId = ((AreaAdminPrimaryActivity) context).pushProjectId();
     }
     @TargetApi(23)
     @Override
@@ -874,11 +897,11 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     @Override
     public void onDestroy() {
         super.onDestroy();
+        mPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         editor = mPref.edit();
-        editor.putString("projectId",mProjectInfoList.get(currentSelectedProject).getProjectId());
+        editor.putString("projectId", mProjectInfoList.get(currentSelectedProject).getProjectId());
         editor.commit();
         ((AreaAdminPrimaryActivity) getActivity()).unregisterMyOnTouchListener(myOnTouchListener);
-
     }
 
     /*

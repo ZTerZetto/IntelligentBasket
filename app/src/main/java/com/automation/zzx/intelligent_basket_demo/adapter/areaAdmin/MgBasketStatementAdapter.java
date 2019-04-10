@@ -115,10 +115,10 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
                 break;
             case "4":
                 viewHolder.basketStatementTextView.setText("待报停");
+                viewHolder.basketPreApplyStop.setVisibility(View.VISIBLE);
                 break;
             case "5":
                 viewHolder.basketStatementTextView.setText("报停审核");
-                viewHolder.basketPreApplyStop.setVisibility(View.VISIBLE);
                 break;
             default:
                 break;

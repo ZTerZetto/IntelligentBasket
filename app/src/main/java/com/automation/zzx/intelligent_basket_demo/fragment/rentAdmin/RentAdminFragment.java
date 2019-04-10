@@ -22,11 +22,10 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.ProDetailActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 

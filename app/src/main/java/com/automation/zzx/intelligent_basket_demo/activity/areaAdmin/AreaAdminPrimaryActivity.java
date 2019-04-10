@@ -38,6 +38,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity {
 
     // 用户登录信息相关
     private UserInfo mUserInfo;
+    private String mProjectId;
     private String mToken;
     private SharedPreferences mPref;
 
@@ -89,6 +90,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity {
         mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
         mUserInfo.setUserRole(mPref.getString("userRole", ""));
         mToken = mPref.getString("loginToken","");
+        mProjectId = mPref.getString("projectId","");
     }
     // 将用户信息传递给子Fragment
     public UserInfo pushUserInfo(){
@@ -97,6 +99,10 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity {
     // 将用户token传递给子Fragment
     public String pushToken(){
         return mToken;
+    }
+    // 将用户token传递给子Fragment
+    public String pushProjectId(){
+        return mProjectId;
     }
 
     /*

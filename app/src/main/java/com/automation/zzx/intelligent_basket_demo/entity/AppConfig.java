@@ -31,10 +31,6 @@ public class AppConfig {
     //上传单个文件
     public final static String CREATE_FILE = ANDROID_URL_PATH.concat("/createFtpFile");
 
-    //上传多个文件
-    public final static String CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");
-
-
     /* 获取当前登录者的用户名和角色
    * Authorization：TOKEN
    * POST
@@ -113,6 +109,12 @@ public class AppConfig {
     public static final String AREA_ADMIN_GET_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/getBasketList");
     // 区域管理员请求特定项目添加指定吊篮
     public static final String AREA_ADMIN_ADD_BASKET_INTO_PROJECT = ANDROID_URL_PATH.concat("/androidIncreaseBasket");
+    // 上传安监证书文件
+    public final static String AREA_ADMIN_CREATE_PRESTOP_FILE = ANDROID_URL_PATH.concat("/createProjectFile");
+    // 上传安监证书文件
+    public final static String AREA_ADMIN_CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");
+    // 项目启动申请
+    public final static String AREA_ADMIN_BEGIN_PROJECT = ANDROID_URL_PATH.concat("/beginProject");
 
     /*
     * 常量

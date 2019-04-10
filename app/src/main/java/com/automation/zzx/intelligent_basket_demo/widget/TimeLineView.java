@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.utils;
+package com.automation.zzx.intelligent_basket_demo.widget;
 
 import android.content.Context;
 import android.content.res.TypedArray;

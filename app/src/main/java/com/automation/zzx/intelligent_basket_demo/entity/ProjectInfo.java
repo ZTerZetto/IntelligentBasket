@@ -8,27 +8,29 @@ import java.io.Serializable;
 public class ProjectInfo implements Serializable {
     public String projectId;
     public String projectName;
-
     // 当前状态，0：立项； 1：进行中； 2：已结束
     public String projectState;
-
-    // 负责的租方管理员ID
-    public String projectContractUrl;
-    // 负责的区域管理员
-    public String projectCertUrl;
+    // 开始、结束时间
+    public String projectStart;
+    public String projectEnd;
     // 电子合同地址
-    public String adminAreaId;
+    public String projectContractUrl;
     // 安检证书地址
+    public String projectCertUrl;
+    // 负责的区域管理员
+    public String adminAreaId;
+    // 负责的租方管理员ID
     public String adminRentId;
     // 本项目中用到的电柜
     public String boxList;
     // 本项目中涉及的工人
-    public String projectBuilders;
+    private String worker;
+    // 项目发起者
+    private String projectBuilders;
+    // 出库照片
+    private String storeOut;
     // 本项目区域管理员基本信息
     public UserInfo adminAreaUser;
-    // 开始、结束时间
-    public String projectStart;
-    public String projectEnd;
 
     /*
      * 构造函数
@@ -146,12 +148,28 @@ public class ProjectInfo implements Serializable {
         this.boxList = boxList;
     }
 
+    public String getWorker() {
+        return worker;
+    }
+
+    public void setWorker(String worker) {
+        this.worker = worker;
+    }
+
     public String getProjectBuilders() {
         return projectBuilders;
     }
 
     public void setProjectBuilders(String projectBuilders) {
         this.projectBuilders = projectBuilders;
+    }
+
+    public String getStoreOut() {
+        return storeOut;
+    }
+
+    public void setStoreOut(String storeOut) {
+        this.storeOut = storeOut;
     }
 
     public UserInfo getAdminAreaUser() {

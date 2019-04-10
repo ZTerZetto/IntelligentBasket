@@ -342,7 +342,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
                 hint="打开吊篮成功";
             } else {
-                hint="打开吊篮失败";
+                hint="打开吊篮失败,您不在项目中";
             }
         }else if(mWorkState == 1){ // 等待下工
             boolean endWork = jsonObject.getBoolean("endWork");
@@ -351,7 +351,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
                 hint="关闭吊篮成功";
             } else {
-                hint="关闭吊篮失败";
+                hint="关闭吊篮失败，此吊篮不是您工作的吊篮";
             }
         }
         Looper.prepare();

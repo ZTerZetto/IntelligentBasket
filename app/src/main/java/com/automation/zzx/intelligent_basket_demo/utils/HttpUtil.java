@@ -8,6 +8,7 @@ import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Map;
 
 import okhttp3.FormBody;
 import okhttp3.MediaType;
@@ -20,6 +21,10 @@ import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.REAL_T
 
 // Created by $USER_NAME on 2018/11/28/028.
 public class HttpUtil {
+    /*
+     * 文件上传文件服务器
+     */
+    // 单文件上传
     public static void uploadSinglePicOkHttpRequest(okhttp3.Callback callback, File file,String phoneNum) {
         OkHttpClient client = new OkHttpClient();
         RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"), file);
@@ -34,11 +39,17 @@ public class HttpUtil {
                 .build();
         client.newCall(request).enqueue(callback);
     }
-    public static void uploadPicOkHttpRequest(okhttp3.Callback callback, final ArrayList<String> fileList, String projectId, String token) {
+    // 多文件上传(文件+参数)
+    public static void uploadPicOkHttpRequest(okhttp3.Callback callback, final ArrayList<String> fileList,
+                                              Map<String, String> params , String token, String URL) {
         OkHttpClient client = new OkHttpClient();
         MultipartBody.Builder MultipartBodyBuilder = new MultipartBody.Builder()
-                .setType(MultipartBody.FORM)
-                .addFormDataPart("projectId", projectId);
+                .setType(MultipartBody.FORM);
+        // 添加参数清单
+        for(Map.Entry<String, String> entry : params.entrySet()){
+            MultipartBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
+        }
+        // 添加文件清单
         for(int i = 0; i < fileList.size();i++){
             File file = new File(fileList.get(i));
             RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"),file);
@@ -46,7 +57,7 @@ public class HttpUtil {
         }
         MultipartBody builder = MultipartBodyBuilder.build();
         final Request request = new Request.Builder()
-                .url(AppConfig.CREATE_CERT_FILE)
+                .url(URL)
                 .addHeader("Authorization",token)
                 .post(builder)
                 .build();

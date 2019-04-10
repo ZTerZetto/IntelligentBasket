@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.activity;
+package com.automation.zzx.intelligent_basket_demo.activity.common;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
-import com.baidu.mapapi.SDKInitializer;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;

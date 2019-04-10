@@ -38,7 +38,6 @@ import com.baidu.mapapi.map.MyLocationData;
 import com.baidu.mapapi.model.LatLng;
 import com.baidu.mapapi.model.LatLngBounds;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.ManageMainActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
@@ -215,25 +214,6 @@ public class MgBasketMapFragment extends Fragment implements SensorEventListener
                 return false;
             }
         });
-    }
-    // 初始化触摸监听
-    private void initOnTouchEvent(){
-        /*
-         * Fragment中，注册
-         * 接收MainActivity的Touch回调的对象
-         * 重写其中的onTouchEvent函数，并进行该Fragment的逻辑处理
-         */
-        ManageMainActivity.MyTouchListener myTouchListener = new ManageMainActivity.MyTouchListener() {
-            @Override
-            public void onTouchEvent(MotionEvent event) {
-                // 处理手势事件
-                mBaiduMap.hideInfoWindow();
-                Log.d(TAG, "点击空白");
-            }
-        };
-
-        // 将myTouchListener注册到分发列表
-        ((ManageMainActivity) getActivity()).registerMyTouchListener(myTouchListener);
     }
 
     /*

@@ -11,7 +11,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.adapter.ScaleImageAdapter;
+import com.automation.zzx.intelligent_basket_demo.adapter.common.ScaleImageAdapter;
 import com.github.chrisbanes.photoview.PhotoView;
 
 import java.util.ArrayList;

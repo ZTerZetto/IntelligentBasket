@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.adapter;
+package com.automation.zzx.intelligent_basket_demo.adapter.common;
 
 import android.app.Dialog;
 import android.support.v4.view.PagerAdapter;

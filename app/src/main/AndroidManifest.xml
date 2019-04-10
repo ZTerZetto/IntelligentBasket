@@ -44,7 +44,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" /> <!-- 欢迎页面 -->
-        <activity android:name=".activity.WelcomeActivity">
+        <activity android:name=".activity.common.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -65,15 +65,11 @@
             android:name=".activity.worker.WorkerPrimaryActivity"
             android:label="@string/title_activity_woker_primary"
             android:theme="@style/AppTheme.NoActionBar" />
-        <activity
-            android:name=".activity.ManageMainActivity"
-            android:configChanges="orientation|keyboardHidden|screenSize"
-            android:screenOrientation="portrait" />
-        <activity android:name=".activity.ProDetailActivity" />
+        <activity android:name=".activity.areaAdmin.ProDetailActivity" />
         <activity android:name=".activity.areaAdmin.ProCommitActivity" />
         <activity android:name=".activity.basket.BasketListActivity" />
-        <activity android:name=".activity.WorkerListActivity" />
-        <activity android:name=".activity.ProListActivity" />
+        <activity android:name=".activity.oldversion.WorkerListActivity" />
+        <activity android:name=".activity.oldversion.ProListActivity" />
         <activity android:name=".activity.loginRegist.RegistWorkerActivity" />
         <activity android:name=".activity.loginRegist.RegistRentManActivity" />
         <activity android:name=".activity.loginRegist.RegisterPreActivity" />
