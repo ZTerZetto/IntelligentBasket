@@ -56,10 +56,8 @@ public class RegisterPreActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(intent,1);
                 break;
             case R.id.btn_regist_region_manager:
-                if (mCommonDialog == null) {
-                    mCommonDialog = initDialog(getString(R.string.dialog_register_fail));
-                }
-                mCommonDialog.show();
+                intent = new Intent(this,RegistAreaManActivity.class);
+                startActivityForResult(intent,1);
                 break;
                 default:
         }

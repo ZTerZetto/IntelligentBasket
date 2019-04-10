@@ -72,6 +72,7 @@
         <activity android:name=".activity.oldversion.ProListActivity" />
         <activity android:name=".activity.loginRegist.RegistWorkerActivity" />
         <activity android:name=".activity.loginRegist.RegistRentManActivity" />
+        <activity android:name=".activity.loginRegist.RegistAreaManActivity" />
         <activity android:name=".activity.loginRegist.RegisterPreActivity" />
         <activity android:name=".activity.loginRegist.LoginActivity" /> <!-- 多图片选择器 -->
         <activity
