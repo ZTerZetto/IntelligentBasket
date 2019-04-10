@@ -39,6 +39,7 @@
     <string name="pic_failNotice">图片上传失败，请重新上传！</string>
     <string name="register_success">注册成功！请等待审核！</string>
     <string name="register_exist">注册失败，手机号已注册</string>
+    <string name="register_back_fail">注册失败，服务器异常</string>
 
     <!-- ManageMainActivity-->
     <string name="dialog_main_fail_login">您的登录状态已失效，请重新登录！</string>

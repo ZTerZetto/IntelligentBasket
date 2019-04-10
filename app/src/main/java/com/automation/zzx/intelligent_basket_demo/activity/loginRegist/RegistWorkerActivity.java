@@ -65,8 +65,6 @@ public class RegistWorkerActivity extends AppCompatActivity {
     private File photo_file;
     private Boolean photo_exist;
 
-    private TextView uploadResult;
-
     private EditText edt_userName;
     private EditText edt_userPhone;
     private EditText edt_userPwd;
@@ -91,13 +89,14 @@ public class RegistWorkerActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1: {
-                    uploadResult.setText("图片上传成功！");
                     sendRegister();
-
                     break;
                 }
                 case 2: {
-                    uploadResult.setText("图片上传失败，请重新上传！");
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.pic_failNotice));
+                    }
+                    mCommonDialog.show();
                     handler.removeCallbacksAndMessages(null);
                     break;
                 }
@@ -111,6 +110,13 @@ public class RegistWorkerActivity extends AppCompatActivity {
                 case 4: {
                     if (mCommonDialog == null) {
                         mCommonDialog = initDialog(getString(R.string.register_exist));
+                    }
+                    mCommonDialog.show();
+                    break;
+                }
+                case 5:{
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.register_back_fail));
                     }
                     mCommonDialog.show();
                     break;
@@ -139,7 +145,6 @@ public class RegistWorkerActivity extends AppCompatActivity {
         chooseFromAlbum = (Button) findViewById(R.id.choose_from_album);
         register = findViewById(R.id.btn_regist);
 
-        uploadResult = findViewById(R.id.tv_upload_result);
         picture = (ImageView) findViewById(R.id.picture);
         spinner = (Spinner) findViewById(R.id.spinner_type_choose);
 
@@ -202,7 +207,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
                 String password = edt_userPwd.getText().toString();
                 String password_2 = edt_userPwd_again.getText().toString();
 
-                if (workerType.equals(null)) {
+                if (workerType == null) {
                     Toast.makeText(getApplicationContext(), "请选择您的工种！", Toast.LENGTH_LONG).show();
                 } else if (photo_exist.equals(false)) {
                     Toast.makeText(getApplicationContext(), "请上传身份证图片！", Toast.LENGTH_LONG).show();
@@ -395,11 +400,15 @@ public class RegistWorkerActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = JSON.parseObject(responseData);
                     String result = jsonObject.getString("error");
-                    switch (result){
-                        case "0":
-                            message.what = 1;break;
-                        default:
-                            message.what = 2;break;
+                    if(result != null){
+                        switch (result){
+                            case "0":
+                                message.what = 1;break;
+                            default:
+                                message.what = 2;break;
+                        }
+                    } else {
+                        message.what = 5;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -430,10 +439,14 @@ public class RegistWorkerActivity extends AppCompatActivity {
                     JSONObject jsonObject = JSON.parseObject(responseData);
                     String mMessage = jsonObject.getString("message");
                     Message message = new Message();
-                    if(mMessage.equals("success")){
-                        message.what = 3;
-                    }else if(mMessage.equals("exist")){
-                        message.what = 4;
+                    if(mMessage!=null){
+                        if(mMessage.equals("success")){
+                            message.what = 3;
+                        }else if(mMessage.equals("exist")){
+                            message.what = 4;
+                        }
+                    } else {
+                        message.what = 5;
                     }
                     handler.sendMessage(message);
                 }catch (JSONException e) {

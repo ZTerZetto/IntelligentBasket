@@ -29,7 +29,7 @@ public class AppConfig {
     public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
 
     //上传单个文件
-    public final static String CREATE_FILE = ANDROID_URL_PATH.concat("/createFtpFile");
+    public final static String CREATE_FILE = ANDROID_URL_PATH.concat("/createImageFile");
 
     //上传多个文件
     public final static String CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");

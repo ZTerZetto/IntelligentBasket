@@ -60,7 +60,6 @@ public class RegistRentManActivity extends AppCompatActivity {
     private File photo_file;
     private Boolean photo_exist;
 
-    private TextView uploadResult;
 
     private EditText edt_userName;
     private EditText edt_userPhone;
@@ -81,13 +80,15 @@ public class RegistRentManActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1: {
-                    uploadResult.setText("图片上传成功！");
                     sendRegister();
 
                     break;
                 }
                 case 2: {
-                    uploadResult.setText("图片上传失败，请重新上传！");
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.pic_failNotice));
+                    }
+                    mCommonDialog.show();
                     handler.removeCallbacksAndMessages(null);
                     break;
                 }
@@ -105,6 +106,14 @@ public class RegistRentManActivity extends AppCompatActivity {
                     mCommonDialog.show();
                     break;
                 }
+                case 5: {
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.register_back_fail));
+                    }
+                    mCommonDialog.show();
+                    break;
+                }
+                default: break;
             }
         }
     };
@@ -126,7 +135,6 @@ public class RegistRentManActivity extends AppCompatActivity {
         chooseFromAlbum = (Button) findViewById(R.id.choose_from_album);
         register = findViewById(R.id.btn_regist);
 
-        uploadResult = findViewById(R.id.tv_upload_result);
         picture = (ImageView) findViewById(R.id.picture);
 
         edt_userName = findViewById(R.id.edt_register_userName);
@@ -334,11 +342,15 @@ public class RegistRentManActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = JSON.parseObject(responseData);
                     String result = jsonObject.getString("error");
-                    switch (result){
-                        case "0":
-                            message.what = 1;break;
-                        default:
-                            message.what = 2;break;
+                    if(result != null){
+                        switch (result){
+                            case "0":
+                                message.what = 1;break;
+                            default:
+                                message.what = 2;break;
+                        }
+                    } else {
+                        message.what = 5;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -369,10 +381,14 @@ public class RegistRentManActivity extends AppCompatActivity {
                         JSONObject jsonObject = JSON.parseObject(responseData);
                         String mMessage = jsonObject.getString("message");
                         Message message = new Message();
-                        if(mMessage.equals("success")){
-                            message.what = 3;
-                        }else if(mMessage.equals("exist")){
-                            message.what = 4;
+                        if(mMessage!=null){
+                            if(mMessage.equals("success")){
+                                message.what = 3;
+                            }else if(mMessage.equals("exist")){
+                                message.what = 4;
+                            }
+                        } else {
+                            message.what = 5;
                         }
                         handler.sendMessage(message);
                     }catch (JSONException e) {
