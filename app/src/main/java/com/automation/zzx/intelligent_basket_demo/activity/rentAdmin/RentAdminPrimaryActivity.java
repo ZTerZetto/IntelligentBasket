@@ -6,6 +6,7 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
+import android.view.KeyEvent;
 import android.view.View;
 
 import com.automation.zzx.intelligent_basket_demo.R;
@@ -124,6 +125,15 @@ public class RentAdminPrimaryActivity extends AppCompatActivity {
     protected void onDestroy(){
         super.onDestroy();
         CustomApplication.setMainActivity(null);
+    }
+    // 退出但不销毁
+    @Override
+    public boolean onKeyDown(int keyCode, KeyEvent event) {
+        if (keyCode == KeyEvent.KEYCODE_BACK) {
+            moveTaskToBack(false);
+            return true;
+        }
+        return super.onKeyDown(keyCode, event);
     }
 
 }

@@ -28,7 +28,7 @@ import com.automation.zzx.intelligent_basket_demo.adapter.BasketAdapter;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.BasketInfo;
-import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 
 
 import java.io.IOException;

@@ -20,16 +20,20 @@ public class MessageInfo extends DataSupport {
     private String mWorkerPhone; // 施工人员联系方式
     private String mRentAdminPhone; // 租方管理员联系方式
 
+    private boolean mIsChecked; // 是否查看过该信息
+
     /**
      *  构造函数
      */
     public MessageInfo() {
+
     }
 
     public MessageInfo(String mTime, String mTitle, String mDescription) {
         this.mTime = mTime;
         this.mTitle = mTitle;
         this.mDescription = mDescription;
+        this.mIsChecked = false;
     }
 
 
@@ -98,6 +102,14 @@ public class MessageInfo extends DataSupport {
 
     public void setmRentAdminPhone(String mRentAdminPhone) {
         this.mRentAdminPhone = mRentAdminPhone;
+    }
+
+    public boolean ismIsChecked() {
+        return mIsChecked;
+    }
+
+    public void setmIsChecked(boolean mIsChecked) {
+        this.mIsChecked = mIsChecked;
     }
 }
 

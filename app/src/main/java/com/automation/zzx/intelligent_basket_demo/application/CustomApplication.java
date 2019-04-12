@@ -4,6 +4,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Application;
+import android.app.KeyguardManager;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -62,6 +63,7 @@ public class CustomApplication extends Application {
     private static Activity mainActivity = null;
 
     // 仅使用震动+提示音
+    private static KeyguardManager keyguardManager;
     private static Vibrator vibrator;//震动
     private static MediaPlayer mediaplayer;//提示音
     private static int ID_LED = 19960428; // 呼吸灯
@@ -88,14 +90,7 @@ public class CustomApplication extends Application {
 
         // 判断用户是否已经打开App，详细见下面方法定
         if (shouldInit()) {
-            // 注册推送服务
-            // 注册成功后会向DemoMessageReceiver发送广播
-            // 可以从DemoMessageReceiver的onCommandResult方法中MiPushCommandMessage对象参数中获取注册信息
             MiPushClient.registerPush(this, APP_ID, APP_KEY);
-            // 参数说明
-            // context：Android平台上app的上下文，建议传入当前app的application context
-            // appID：在开发者网站上注册时生成的，MiPush推送服务颁发给app的唯一认证标识
-            // appKey:在开发者网站上注册时生成的，与appID相对应，用于验证appID是否合法
         }
 
         // 下面是与测试相关的日志设置
@@ -124,6 +119,7 @@ public class CustomApplication extends Application {
         }
 
         // 下面与震动+提示音有关
+        keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         vibrator = (Vibrator) getSystemService(Context.VIBRATOR_SERVICE);  // 震动
         releaseMediaPlayer(); // 铃声(这里先释放内存)
         mediaplayer = new MediaPlayer();
@@ -215,8 +211,10 @@ public class CustomApplication extends Application {
      * 提示音 + 震动
      */
     public void onMessageNotify(){
-        // 震动
-        vibrator.vibrate(new long[]{500, 1000, 500, 1000}, 1);
+        // 黑屏震动
+        if(isScreenOff(this)) {
+            vibrator.vibrate(new long[]{100, 500, 100, 500}, 2);
+        }
 
         // 提示音
         mediaplayer.start();
@@ -236,6 +234,13 @@ public class CustomApplication extends Application {
 //        notification.flags = Notification.FLAG_SHOW_LIGHTS;
 //        notificationManager.notify(ID_LED, notification);
     }
+    /*
+    * 停止震动
+    */
+    public void stopMessageNotify(){
+        vibrator.cancel();
+        //notificationManager.cancel(ID_LED);
+    }
 
     /*
     *  消息解析
@@ -245,12 +250,12 @@ public class CustomApplication extends Application {
                 message.getTitle(), message.getDescription());
         Map<String, String> keyValuePair = message.getExtra();
         messageInfo.setmType(keyValuePair.get("type"));
-        messageInfo.setmProjectId(keyValuePair.get("projectId"));
-        messageInfo.setmProjectName(keyValuePair.get("projectName"));
+        //messageInfo.setmProjectId(keyValuePair.get("projectId"));
+        //messageInfo.setmProjectName(keyValuePair.get("projectName"));
         switch (messageInfo.getmType()){
             case "1":  // 报警消息
-                messageInfo.setmWorkerPhone(keyValuePair.get("workerPhone"));
-                messageInfo.setmRentAdminPhone(keyValuePair.get("rentAdminPhone"));
+                //messageInfo.setmWorkerPhone(keyValuePair.get("workerPhone"));
+                //messageInfo.setmRentAdminPhone(keyValuePair.get("rentAdminPhone"));
                 break;
             case "2": // 验收申请
                 break;
@@ -258,11 +263,6 @@ public class CustomApplication extends Application {
                 break;
         }
         messageInfo.save(); // 保存数据库
-    }
-
-    public void stopMessageNotify(){
-        vibrator.cancel();
-        //notificationManager.cancel(ID_LED);
     }
 
     /*
@@ -360,4 +360,10 @@ public class CustomApplication extends Application {
      * 生命周期
      */
 
+    /*
+     * 屏幕相关
+     */
+    public static boolean isScreenOff(Context context) {
+        return keyguardManager.inKeyguardRestrictedInputMode();
+    }
 }

@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.utils;
+package com.automation.zzx.intelligent_basket_demo.utils.http;
 
 import android.net.Uri;
 
@@ -63,7 +63,6 @@ public class HttpUtil {
                 .build();
         client.newCall(request).enqueue(callback);
     }
-
 
     public static void sendRegistOkHttpRequest(okhttp3.Callback callback, String json) {
         OkHttpClient client = new OkHttpClient();

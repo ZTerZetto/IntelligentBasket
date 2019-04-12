@@ -19,7 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.pldroid.CustomMediaController;
 import com.pili.pldroid.player.AVOptions;

@@ -31,7 +31,6 @@ import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPr
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketListAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
-import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
@@ -44,8 +43,6 @@ import java.util.List;
 import java.util.Map;
 
 import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.Response;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_APPLY_PRE_STOP_BASKETS;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_MG_ALL_BASKET_INFO;

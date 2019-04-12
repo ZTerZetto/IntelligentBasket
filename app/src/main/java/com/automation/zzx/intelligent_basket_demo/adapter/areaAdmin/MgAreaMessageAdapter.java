@@ -1,44 +1,64 @@
 package com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin;
 
 
+import android.content.Context;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 
 import java.util.List;
 
-
+/*
+ * 区域管理员消息适配器
+ */
 public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdapter.ViewHolder> {
 
+    private Context mContext;
     private List<MessageInfo> mMessageInfoList;
+    private OnItemClickListener mOnItemClickListener;  // 消息监听
 
-    public class ViewHolder extends RecyclerView.ViewHolder{
+    public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener {
         View mView;
         TextView tvTime;//消息时间
         LinearLayout llMessage;
         TextView tvTitle;//消息标题
+        ImageView ivChecked; // 消息未读提示
         TextView tvContent;//消息内容
 
-        public ViewHolder(View itemView) {
+        private OnItemClickListener onItemClickListener;
+
+        public ViewHolder(View itemView, final MgAreaMessageAdapter.OnItemClickListener onItemClickListener) {
             super(itemView);
             // 控件初始化
             mView = itemView;
             tvTime = itemView.findViewById(R.id.tv_message_time);
             llMessage = itemView.findViewById(R.id.ll_message);
             tvTitle = itemView.findViewById(R.id.tv_message_title);
+            ivChecked = itemView.findViewById(R.id.iv_message_no_read);
             tvContent = itemView.findViewById(R.id.tv_message_description);
+
+            // 消息监听
+            this.onItemClickListener = onItemClickListener;
+            itemView.setOnClickListener(this);
+        }
+
+        @Override
+        public void onClick(View v) {
+            // getpostion()为Viewholder自带的一个方法，用来获取RecyclerView当前的位置，将此作为参数，传出去
+            onItemClickListener.onItemClick(v, getAdapterPosition());
         }
     }
 
-    public MgAreaMessageAdapter(List<MessageInfo> messageInfoList){
+    public MgAreaMessageAdapter(Context mContext, List<MessageInfo> messageInfoList){
+        this.mContext = mContext;
         mMessageInfoList = messageInfoList;
     }
 
@@ -46,15 +66,7 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_message_info,viewGroup,false);
-        final ViewHolder holder = new ViewHolder(view);
-        holder.llMessage.setOnClickListener(new View.OnClickListener(){
-            @Override
-            public void onClick(View v) {
-                int position = holder.getAdapterPosition();
-                MessageInfo mMessageInfo = mMessageInfoList.get(position);
-                Toast.makeText(v.getContext(),"AreaAdmin报警提示："+mMessageInfo.getmDescription(),Toast.LENGTH_SHORT).show();
-            }
-        });
+        final ViewHolder holder = new ViewHolder(view, mOnItemClickListener);
         return holder;
     }
 
@@ -63,12 +75,33 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
         MessageInfo mMessageInfo = mMessageInfoList.get(i);
         viewHolder.tvTime.setText(mMessageInfo.getmTime());
         viewHolder.tvTitle.setText(mMessageInfo.getmTitle());
+        if(mMessageInfo.ismIsChecked()) viewHolder.ivChecked.setVisibility(View.GONE);
+        else viewHolder.ivChecked.setVisibility(View.VISIBLE);
         viewHolder.tvContent.setText(mMessageInfo.getmDescription());
     }
 
     @Override
     public int getItemCount() {
         return mMessageInfoList.size();
+    }
+
+    /*
+     * 设置监听
+     */
+    public void setOnItemClickListener(MgAreaMessageAdapter.OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+
+    /*
+     * 点击接口函数
+     */
+    public interface OnItemClickListener {
+        /**
+         * 当RecyclerView某个被点击的时候回调
+         * @param view 点击item的视图
+         * @param position 点击得到位置
+         */
+        public void onItemClick(View view, int position);
     }
 
 }

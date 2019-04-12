@@ -39,8 +39,9 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
-import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -73,7 +74,8 @@ public class RegistAreaManActivity extends AppCompatActivity {
     private Button chooseFromAlbum;
     private Button register;
 
-    private CommonDialog mCommonDialog;
+    private LoadingDialog mLoadingDialog;  // 加载弹窗
+    private CommonDialog mCommonDialog; // 普通提示弹窗
     private UserInfo userinfo;
 
     @SuppressLint("HandlerLeak")
@@ -82,12 +84,13 @@ public class RegistAreaManActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 1: {
                     uploadResult.setText("图片上传成功！");
+                    mLoadingDialog.dismiss();
                     sendRegister();
-
                     break;
                 }
                 case 2: {
                     uploadResult.setText("图片上传失败，请重新上传！");
+                    mLoadingDialog.dismiss();
                     handler.removeCallbacksAndMessages(null);
                     break;
                 }
@@ -137,7 +140,6 @@ public class RegistAreaManActivity extends AppCompatActivity {
         llSpinner.setVisibility(View.GONE);
 
         photo_exist = false;
-
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -199,7 +201,12 @@ public class RegistAreaManActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "请填写用户名！", Toast.LENGTH_LONG).show();
                     edt_userPhone.getText().clear();
                 } else {
-                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), "areaAdmin");
+                    userinfo = new UserInfo(edt_userName.getText().toString(),
+                            edt_userPhone.getText().toString(), edt_userPwd.getText().toString(),
+                            "areaAdmin");
+                    mLoadingDialog = new LoadingDialog(RegistAreaManActivity.this, "正在上传....");
+                    mLoadingDialog.setCancelable(false);
+                    mLoadingDialog.show();
                     uploadPhoto();
                 }
             }

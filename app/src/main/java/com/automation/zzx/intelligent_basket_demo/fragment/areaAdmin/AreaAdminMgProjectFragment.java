@@ -176,7 +176,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     mgBasketStatementList.clear();
                     mgBasketStatementClassifiedList.clear();
                     parseBasketListInfo((String)msg.obj);  // 更新吊篮
-                    pre_selectedPosition = 0;
+                    //pre_selectedPosition = 0;
                     mgStateAdapter.setSelectedPosition(pre_selectedPosition);
                     sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);
                     break;
@@ -577,11 +577,11 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                         String isIncrease = jsonObject.getString("increase");
                         if(isIncrease.equals("新增吊篮成功")) {
                             Log.i(TAG, "添加吊篮成功");
-                            DialogToast("提示", "您已成功添加该吊篮").show();
+                            DialogToast("提示", "您已成功添加该吊篮！").show();
                             mHandler.sendEmptyMessage(UPDATE_PROJECT_LIST_FROM_INTERNET_MSG);
                         }else{
-                            Log.i(TAG, isIncrease);
-                            DialogToast("提示", isIncrease).show();
+                            Log.i(TAG, "新增吊篮失败");
+                            DialogToast("提示", "该吊篮已存在于其他项目中！").show();
                         }
                     }
 
@@ -645,7 +645,6 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mProjectScheduleList.add("进行中");
         mProjectScheduleList.add("结束");
     }
-
 
     /*
      * 设置手势监听
@@ -897,10 +896,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     @Override
     public void onDestroy() {
         super.onDestroy();
-        mPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
-        editor = mPref.edit();
-        editor.putString("projectId", mProjectInfoList.get(currentSelectedProject).getProjectId());
-        editor.commit();
+        if(mProjectInfoList.size()>0) {
+            mPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+            editor = mPref.edit();
+            editor.putString("projectId", mProjectInfoList.get(currentSelectedProject).getProjectId());
+            editor.commit();
+        }
         ((AreaAdminPrimaryActivity) getActivity()).unregisterMyOnTouchListener(myOnTouchListener);
     }
 

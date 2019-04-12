@@ -9,20 +9,15 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:padding="@dimen/size_17"
+        android:padding="20dp"
         android:orientation="vertical">
         <TextView
             android:id="@+id/tv_message_time"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="3dp"
-            android:paddingTop="3dp"
-            android:paddingLeft="7dp"
-            android:paddingRight="7dp"
-            android:background="@drawable/bg_ellipse_with_gray_solid"
             android:layout_gravity="center_horizontal"
-            android:textSize="@dimen/textSize_10"
-            android:textColor="@color/colorTextDark"
+            android:textSize="@dimen/textSize_12"
+            android:textColor="@color/sliver"
             android:text="2019年4月1日 19:32" />
     </LinearLayout>
 
@@ -30,32 +25,40 @@
         android:id="@+id/ll_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginLeft="@dimen/size_17"
-        android:layout_marginRight="@dimen/size_17"
-        android:layout_marginBottom="@dimen/size_17"
-        android:background="@drawable/bg_ellipse_with_gray_solid"
+        android:background="@color/white"
+        android:padding="15dp"
         android:orientation="vertical">
-        <TextView
-            android:id="@+id/tv_message_title"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="3dp"
-            android:paddingTop="10dp"
-            android:paddingLeft="15dp"
-            android:textColor="@color/colorTextDark"
-            android:textSize="@dimen/textSize_16"
-            android:textStyle="bold"
-            android:text="报警消息"/>
 
-        <View
-            style="@style/me_horizontal_view_style"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_message_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorTextDark"
+                android:textSize="@dimen/textSize_18"
+                android:textStyle="bold"
+                android:text="报警消息"/>
+            <ImageView
+                android:id="@+id/iv_message_no_read"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginLeft="5dp"
+                android:src="@mipmap/bg_num_organge_red"
+                android:layout_toRightOf="@+id/tv_message_title"
+                android:layout_alignParentTop="true"/>
+
+        </RelativeLayout>
+
         <TextView
             android:id="@+id/tv_message_description"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="15dp"
+            android:layout_marginTop="10dp"
             android:textColor="@color/colorGradText"
-            android:textSize="@dimen/textSize_14"
+            android:textSize="@dimen/textSize_16"
             android:text="施工人员违规操作"/>
 
     </LinearLayout>

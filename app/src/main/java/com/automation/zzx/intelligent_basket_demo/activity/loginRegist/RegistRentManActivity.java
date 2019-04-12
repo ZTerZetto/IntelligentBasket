@@ -38,9 +38,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -73,6 +74,7 @@ public class RegistRentManActivity extends AppCompatActivity {
     private Button chooseFromAlbum;
     private Button register;
 
+    private LoadingDialog mLoadingDialog;  // 加载弹窗
     private CommonDialog mCommonDialog;
     private UserInfo userinfo;
 
@@ -82,12 +84,13 @@ public class RegistRentManActivity extends AppCompatActivity {
             switch (msg.what) {
                 case 1: {
                     uploadResult.setText("图片上传成功！");
+                    mLoadingDialog.dismiss();
                     sendRegister();
-
                     break;
                 }
                 case 2: {
                     uploadResult.setText("图片上传失败，请重新上传！");
+                    mLoadingDialog.dismiss();
                     handler.removeCallbacksAndMessages(null);
                     break;
                 }
@@ -199,7 +202,11 @@ public class RegistRentManActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "请填写用户名！", Toast.LENGTH_LONG).show();
                     edt_userPhone.getText().clear();
                 } else {
-                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), "rentAdmin");
+                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(),
+                            edt_userPwd.getText().toString(), "rentAdmin");
+                    mLoadingDialog = new LoadingDialog(RegistRentManActivity.this, "正在上传....");
+                    mLoadingDialog.setCancelable(false);
+                    mLoadingDialog.show();
                     uploadPhoto();
                 }
             }
@@ -348,8 +355,8 @@ public class RegistRentManActivity extends AppCompatActivity {
         }, photo_file, userinfo.getUserPhone());
     }
 
-        //注册
-        private void sendRegister() {
+    //注册
+    private void sendRegister() {
             handler.removeMessages(1);
             handler.removeMessages(2);
             String json = new Gson().toJson(userinfo);

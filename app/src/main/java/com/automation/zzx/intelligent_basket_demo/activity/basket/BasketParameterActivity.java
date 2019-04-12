@@ -19,7 +19,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.VarSwitchAdapter;
 import com.automation.zzx.intelligent_basket_demo.utils.CustomTimeTask;
-import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.entity.VarSwitch;
 import com.automation.zzx.intelligent_basket_demo.widget.SmartGridView;
 import com.scwang.smartrefresh.header.BezierCircleHeader;

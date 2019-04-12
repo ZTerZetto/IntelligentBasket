@@ -31,11 +31,13 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.UploadImageLikeWxAdapter;
-import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.http.ProgressRequestBody;
+import com.automation.zzx.intelligent_basket_demo.utils.http.ProgressRequestListener;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.ProgressAlertDialog;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -51,12 +53,16 @@ import java.util.Map;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.Call;
+import okhttp3.MediaType;
+import okhttp3.MultipartBody;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.RequestBody;
 import okhttp3.Response;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_BEGIN_PROJECT;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_CREATE_CERT_FILE;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_CREATE_PRESTOP_FILE;
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_GET_ALL_PROJECT_INFO;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.PROJECT_ID;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRESTOP_IMAGE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_CERTIFICATE_IMAGE;
@@ -71,8 +77,11 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     public static final int TAKE_PHOTO_FROM_CAMERA= 2;  // 照相机
 
     // Handler消息
-    private final static int GET_UPLOAD_INFO = 100;
-    private final static int GET_UPLOAD_WRONG = 101;
+    private final static int GET_UPLOAD_INFO = 100;  // 上传图片成功
+    private final static int GET_UPLOAD_WRONG = 101;  // 上传图片失败
+    private final static int APPLY_BEGIN_PROJECT = 102; // 申请开始项目
+    public final static int UPLOAD_PROGRESS_PARAMS = 103; // 上传文件进度
+
 
     //相册位置
     public static final String CAMERA_PATH= Environment.getExternalStorageDirectory() +
@@ -108,16 +117,26 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
     private String uploadUrl; // 上传地址
     private Map<String, String> params = new HashMap<String, String>(); // 上传参数
 
+    // 弹窗
+    private ProgressAlertDialog mProgressDialog; // 文件加载进度
 
     @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
+    public Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case GET_UPLOAD_INFO:
+                case GET_UPLOAD_INFO:  // 上传图片成功
                     DialogToast("提示", "您已成功上传" + uploadHint).show();
+                    mProgressDialog.dismiss();
                     break;
-                case GET_UPLOAD_WRONG:
+                case GET_UPLOAD_WRONG: // 上传图片失败
                     DialogToast("提示", uploadHint + "上传失败！").show();
+                    mProgressDialog.dismiss();
+                    break;
+                case APPLY_BEGIN_PROJECT:  // 申请开始
+                    beginProject();
+                    break;
+                case UPLOAD_PROGRESS_PARAMS:  // 更新参数
+                    mProgressDialog.setProgress(msg.arg1);
                     break;
                 default:
                     break;
@@ -197,9 +216,8 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
             case R.id.toolbar_send_textview:  // 发送监听
                 break;
             case R.id.toolbar_send_imageview: // 发送监听
+                showUploadProgressDialog();
                 startSendImage();
-                // 上传预验收申请同时申请启动项目-》待管理员审核
-                if(uploadType.equals(UPLOAD_BASKETS_PRESTOP_IMAGE)) beginProject();
                 break;
         }
     }
@@ -287,7 +305,7 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
      * 跳转照相机页面
      */
     //跳转至cameraactivity
-    public void startCameraActivity(){
+    public void startCameraActivity() {
         Intent intent =  new Intent(MediaStore.ACTION_IMAGE_CAPTURE);   //跳转至拍照页面
         SimpleDateFormat format = new SimpleDateFormat("yyyyMMddHHmmss");
         Date date = new Date(System.currentTimeMillis());
@@ -326,8 +344,44 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
      * 后台通信
      */
     // 上传图片
+    public void uploadPicWithProgressOkHttpRequest(okhttp3.Callback callback, final ArrayList<String> fileList,
+                                                          Map<String, String> params , String token, String URL) {
+        OkHttpClient client = new OkHttpClient();
+        MultipartBody.Builder MultipartBodyBuilder = new MultipartBody.Builder()
+                .setType(MultipartBody.FORM);
+        // 添加参数清单
+        for(Map.Entry<String, String> entry : params.entrySet()){
+            MultipartBodyBuilder.addFormDataPart(entry.getKey(), entry.getValue());
+        }
+        // 添加文件清单
+        for(int i = 0; i < fileList.size();i++){
+            final int index = i;
+            File file = new File(fileList.get(i));
+            RequestBody fileBody = RequestBody.create(MediaType.parse("image/jpg"),file);
+            MultipartBodyBuilder.addFormDataPart("file", file.getName(),
+                    new ProgressRequestBody(fileBody, new ProgressRequestListener() {
+                        @Override
+                        public void onRequestProgress(long bytesWritten, long contentLength, boolean done) {
+                            Log.i(TAG, "file:"+index+" bytesWritten:"+bytesWritten+
+                                    " contentLength:"+contentLength);
+                            Message message = new Message();
+                            message.what = UPLOAD_PROGRESS_PARAMS;
+                            message.arg1 = index;
+                            //message.obj = (float) bytesWritten / contentLength;
+                            handler.sendMessage(message);
+                        }
+                    }));
+        }
+        MultipartBody builder = MultipartBodyBuilder.build();
+        final Request request = new Request.Builder()
+                .url(URL)
+                .addHeader("Authorization",token)
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
     private void startSendImage(){
-        HttpUtil.uploadPicOkHttpRequest(new okhttp3.Callback() {
+        uploadPicWithProgressOkHttpRequest(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
             //异常情况处理
@@ -346,14 +400,15 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                     Message msg = new Message();
                     switch (error){
                         case "0":
-                            msg.what = GET_UPLOAD_INFO;
-                            //上传成功操作
+                            if(uploadType.equals(UPLOAD_BASKETS_PRESTOP_IMAGE))
+                                handler.sendEmptyMessage(APPLY_BEGIN_PROJECT);  // 提出开始项目申请
+                            else
+                                handler.sendEmptyMessage(GET_UPLOAD_INFO);
                             break;
                         case "1":
-                            msg.what = GET_UPLOAD_WRONG;
+                            handler.sendEmptyMessage(GET_UPLOAD_WRONG);
                             break;
                     }
-                    handler.sendEmptyMessage(msg.what);
                 } else {
                     int errorCode = response.code();
                     switch (errorCode){
@@ -392,12 +447,12 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                     @Override
                     public void onSuccess(Object o) {
                         Log.d(TAG, "成功提交开始项目申请");
+                        handler.sendEmptyMessage(GET_UPLOAD_INFO);
                     }
 
                     @Override
                     public void onError(int code) {
                         Log.d(TAG, "提交开始项目申请错误，错误编码："+code);
-
                     }
 
                     @Override
@@ -517,6 +572,17 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                     }
                 }).setTitle(mTitle);
     }
+    /*
+     * 上传弹窗
+     */
+    private void showUploadProgressDialog(){
+        mProgressDialog = new ProgressAlertDialog(this);
+        mProgressDialog.setMessage("正在上传，请稍后...");
+        mProgressDialog.setMax(mUploadImageUrlList.size());
+        mProgressDialog.setProgress(0);
+        mProgressDialog.show();
+    }
+
 
     @Override
     public void onBackPressed(){

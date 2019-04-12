@@ -9,6 +9,7 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -78,7 +79,23 @@ public class WorkerMessageActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.rv_message);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        mgWorkerMessageAdapter = new WorkerMessageAdapter(mMessageInfoList);
+        mgWorkerMessageAdapter = new WorkerMessageAdapter(this,mMessageInfoList);
+        mgWorkerMessageAdapter.setOnItemClickListener(new WorkerMessageAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(View view, int position) {
+                MessageInfo messageInfo = mMessageInfoList.get(position);
+                // do something
+
+                // 更新页面与数据库
+                if(!messageInfo.ismIsChecked()) {
+                    // 更新页面
+                    mMessageInfoList.get(position).setmIsChecked(true);
+                    mgWorkerMessageAdapter.notifyDataSetChanged();
+                    // 更新数据库
+                    messageInfo.updateAll("mTime = ?", messageInfo.getmTime());
+                }
+            }
+        });
         recyclerView.setAdapter(mgWorkerMessageAdapter);
         mHandler.sendEmptyMessage(UPDATE_HISTORY_MESSAGE_INFO);
     }
@@ -101,7 +118,8 @@ public class WorkerMessageActivity extends AppCompatActivity {
      */
     private void getHistoryMessageInfo(){
         if(!isHasPermission()) requestPermission();
-        List<MessageInfo> messageInfos = DataSupport.findAll(MessageInfo.class);
+        List<MessageInfo> messageInfos = DataSupport.where("mType = ?", "1")
+                .find(MessageInfo.class);
         mMessageInfoList.clear();
         mMessageInfoList.addAll(messageInfos);
     }

@@ -41,9 +41,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -85,29 +86,32 @@ public class RegistWorkerActivity extends AppCompatActivity {
     private String workerType;
 
     private CommonDialog mCommonDialog;
+    private LoadingDialog mLoadingDialog;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 1: {
+                case 1: {  // 图片上传成功
                     uploadResult.setText("图片上传成功！");
+                    mLoadingDialog.dismiss();
                     sendRegister();
                     break;
                 }
-                case 2: {
+                case 2: { // 图片上传失败
                     uploadResult.setText("图片上传失败，请重新上传！");
+                    mLoadingDialog.dismiss();
                     handler.removeCallbacksAndMessages(null);
                     break;
                 }
-                case 3: {
+                case 3: { // 注册成功
                     if (mCommonDialog == null) {
                         mCommonDialog = initDialog(getString(R.string.register_success));
                     }
                     mCommonDialog.show();
                     break;
                 }
-                case 4: {
+                case 4: { // 注册失败
                     if (mCommonDialog == null) {
                         mCommonDialog = initDialog(getString(R.string.register_exist));
                     }
@@ -193,7 +197,6 @@ public class RegistWorkerActivity extends AppCompatActivity {
             }
         });
 
-
        register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -218,6 +221,9 @@ public class RegistWorkerActivity extends AppCompatActivity {
                 } else {
                     userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(),
                             edt_userPwd.getText().toString(), workerType);
+                    mLoadingDialog = new LoadingDialog(RegistWorkerActivity.this, "正在上传....");
+                    mLoadingDialog.setCancelable(false);
+                    mLoadingDialog.show();
                     uploadPhoto();
                 }
             }
