@@ -29,7 +29,11 @@ public class AppConfig {
     public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
 
     //上传单个文件
-    public final static String CREATE_IDENTITY_CARD_IMAGE = ANDROID_URL_PATH.concat("/createImageFile");
+    public final static String CREATE_FILE = ANDROID_URL_PATH.concat("/createImageFile");
+
+    //上传多个文件
+    public final static String CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");
+
 
     /* 获取当前登录者的用户名和角色
    * Authorization：TOKEN
@@ -93,8 +97,6 @@ public class AppConfig {
      */
     // 租方管理员请求所有吊篮信息
     public static final String RENT_ADMIN_MG_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/forecastStop");
-    // 租方管理员请求吊篮预报停
-    public static final String RENT_ADMIN_APPLY_PRE_STOP_BASKETS = ANDROID_URL_PATH.concat("/prepareEnd");
     // 租方管理员请求所有施工人员
     public static final String RENT_ADMIN_GET_ALL_WORKER_INFO = ANDROID_URL_PATH.concat("/getUserList");
     // 租方管理员添加施工人员
@@ -109,12 +111,6 @@ public class AppConfig {
     public static final String AREA_ADMIN_GET_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/getBasketList");
     // 区域管理员请求特定项目添加指定吊篮
     public static final String AREA_ADMIN_ADD_BASKET_INTO_PROJECT = ANDROID_URL_PATH.concat("/androidIncreaseBasket");
-    // 上传安监证书文件
-    public final static String AREA_ADMIN_CREATE_PRESTOP_FILE = ANDROID_URL_PATH.concat("/createProjectFile");
-    // 上传安监证书文件
-    public final static String AREA_ADMIN_CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");
-    // 项目启动申请
-    public final static String AREA_ADMIN_BEGIN_PROJECT = ANDROID_URL_PATH.concat("/beginProject");
 
     /*
     * 常量

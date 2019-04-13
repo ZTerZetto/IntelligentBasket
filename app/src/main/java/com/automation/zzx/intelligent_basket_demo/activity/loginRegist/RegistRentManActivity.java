@@ -38,10 +38,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
-import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -61,7 +60,6 @@ public class RegistRentManActivity extends AppCompatActivity {
     private File photo_file;
     private Boolean photo_exist;
 
-    private TextView uploadResult;
 
     private EditText edt_userName;
     private EditText edt_userPhone;
@@ -74,7 +72,6 @@ public class RegistRentManActivity extends AppCompatActivity {
     private Button chooseFromAlbum;
     private Button register;
 
-    private LoadingDialog mLoadingDialog;  // 加载弹窗
     private CommonDialog mCommonDialog;
     private UserInfo userinfo;
 
@@ -83,14 +80,15 @@ public class RegistRentManActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1: {
-                    uploadResult.setText("图片上传成功！");
-                    mLoadingDialog.dismiss();
                     sendRegister();
+
                     break;
                 }
                 case 2: {
-                    uploadResult.setText("图片上传失败，请重新上传！");
-                    mLoadingDialog.dismiss();
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.pic_failNotice));
+                    }
+                    mCommonDialog.show();
                     handler.removeCallbacksAndMessages(null);
                     break;
                 }
@@ -108,6 +106,14 @@ public class RegistRentManActivity extends AppCompatActivity {
                     mCommonDialog.show();
                     break;
                 }
+                case 5: {
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.register_back_fail));
+                    }
+                    mCommonDialog.show();
+                    break;
+                }
+                default: break;
             }
         }
     };
@@ -129,7 +135,6 @@ public class RegistRentManActivity extends AppCompatActivity {
         chooseFromAlbum = (Button) findViewById(R.id.choose_from_album);
         register = findViewById(R.id.btn_regist);
 
-        uploadResult = findViewById(R.id.tv_upload_result);
         picture = (ImageView) findViewById(R.id.picture);
 
         edt_userName = findViewById(R.id.edt_register_userName);
@@ -202,11 +207,7 @@ public class RegistRentManActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "请填写用户名！", Toast.LENGTH_LONG).show();
                     edt_userPhone.getText().clear();
                 } else {
-                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(),
-                            edt_userPwd.getText().toString(), "rentAdmin");
-                    mLoadingDialog = new LoadingDialog(RegistRentManActivity.this, "正在上传....");
-                    mLoadingDialog.setCancelable(false);
-                    mLoadingDialog.show();
+                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), "rentAdmin");
                     uploadPhoto();
                 }
             }
@@ -341,11 +342,15 @@ public class RegistRentManActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = JSON.parseObject(responseData);
                     String result = jsonObject.getString("error");
-                    switch (result){
-                        case "0":
-                            message.what = 1;break;
-                        default:
-                            message.what = 2;break;
+                    if(result != null){
+                        switch (result){
+                            case "0":
+                                message.what = 1;break;
+                            default:
+                                message.what = 2;break;
+                        }
+                    } else {
+                        message.what = 5;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -355,8 +360,8 @@ public class RegistRentManActivity extends AppCompatActivity {
         }, photo_file, userinfo.getUserPhone());
     }
 
-    //注册
-    private void sendRegister() {
+        //注册
+        private void sendRegister() {
             handler.removeMessages(1);
             handler.removeMessages(2);
             String json = new Gson().toJson(userinfo);
@@ -376,10 +381,14 @@ public class RegistRentManActivity extends AppCompatActivity {
                         JSONObject jsonObject = JSON.parseObject(responseData);
                         String mMessage = jsonObject.getString("message");
                         Message message = new Message();
-                        if(mMessage.equals("success")){
-                            message.what = 3;
-                        }else if(mMessage.equals("exist")){
-                            message.what = 4;
+                        if(mMessage!=null){
+                            if(mMessage.equals("success")){
+                                message.what = 3;
+                            }else if(mMessage.equals("exist")){
+                                message.what = 4;
+                            }
+                        } else {
+                            message.what = 5;
                         }
                         handler.sendMessage(message);
                     }catch (JSONException e) {

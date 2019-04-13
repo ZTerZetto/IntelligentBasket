@@ -41,10 +41,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
-import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -66,8 +65,6 @@ public class RegistWorkerActivity extends AppCompatActivity {
     private File photo_file;
     private Boolean photo_exist;
 
-    private TextView uploadResult;
-
     private EditText edt_userName;
     private EditText edt_userPhone;
     private EditText edt_userPwd;
@@ -86,34 +83,40 @@ public class RegistWorkerActivity extends AppCompatActivity {
     private String workerType;
 
     private CommonDialog mCommonDialog;
-    private LoadingDialog mLoadingDialog;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case 1: {  // 图片上传成功
-                    uploadResult.setText("图片上传成功！");
-                    mLoadingDialog.dismiss();
+                case 1: {
                     sendRegister();
                     break;
                 }
-                case 2: { // 图片上传失败
-                    uploadResult.setText("图片上传失败，请重新上传！");
-                    mLoadingDialog.dismiss();
+                case 2: {
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.pic_failNotice));
+                    }
+                    mCommonDialog.show();
                     handler.removeCallbacksAndMessages(null);
                     break;
                 }
-                case 3: { // 注册成功
+                case 3: {
                     if (mCommonDialog == null) {
                         mCommonDialog = initDialog(getString(R.string.register_success));
                     }
                     mCommonDialog.show();
                     break;
                 }
-                case 4: { // 注册失败
+                case 4: {
                     if (mCommonDialog == null) {
                         mCommonDialog = initDialog(getString(R.string.register_exist));
+                    }
+                    mCommonDialog.show();
+                    break;
+                }
+                case 5:{
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.register_back_fail));
                     }
                     mCommonDialog.show();
                     break;
@@ -142,7 +145,6 @@ public class RegistWorkerActivity extends AppCompatActivity {
         chooseFromAlbum = (Button) findViewById(R.id.choose_from_album);
         register = findViewById(R.id.btn_regist);
 
-        uploadResult = (TextView) findViewById(R.id.tv_upload_result);
         picture = (ImageView) findViewById(R.id.picture);
         spinner = (Spinner) findViewById(R.id.spinner_type_choose);
 
@@ -156,6 +158,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
         photo_exist = false;
 
         initRegister();
+
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -197,13 +200,14 @@ public class RegistWorkerActivity extends AppCompatActivity {
             }
         });
 
+
        register.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 String password = edt_userPwd.getText().toString();
                 String password_2 = edt_userPwd_again.getText().toString();
 
-                if (workerType.equals(null)) {
+                if (workerType == null) {
                     Toast.makeText(getApplicationContext(), "请选择您的工种！", Toast.LENGTH_LONG).show();
                 } else if (photo_exist.equals(false)) {
                     Toast.makeText(getApplicationContext(), "请上传身份证图片！", Toast.LENGTH_LONG).show();
@@ -219,11 +223,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "请填写用户名！", Toast.LENGTH_LONG).show();
                     edt_userPhone.getText().clear();
                 } else {
-                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(),
-                            edt_userPwd.getText().toString(), workerType);
-                    mLoadingDialog = new LoadingDialog(RegistWorkerActivity.this, "正在上传....");
-                    mLoadingDialog.setCancelable(false);
-                    mLoadingDialog.show();
+                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), workerType);
                     uploadPhoto();
                 }
             }
@@ -242,7 +242,6 @@ public class RegistWorkerActivity extends AppCompatActivity {
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinner.setAdapter(typeAdapter);
         spinner.setSelection(4, true); // 设置默认值为:其它
-        workerType = "worker";
 
         spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
@@ -401,13 +400,15 @@ public class RegistWorkerActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = JSON.parseObject(responseData);
                     String result = jsonObject.getString("error");
-                    switch (result){
-                        case "0":
-                            message.what = 1;
-                            break;
-                        default:
-                            message.what = 2;
-                            break;
+                    if(result != null){
+                        switch (result){
+                            case "0":
+                                message.what = 1;break;
+                            default:
+                                message.what = 2;break;
+                        }
+                    } else {
+                        message.what = 5;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -438,10 +439,14 @@ public class RegistWorkerActivity extends AppCompatActivity {
                     JSONObject jsonObject = JSON.parseObject(responseData);
                     String mMessage = jsonObject.getString("message");
                     Message message = new Message();
-                    if(mMessage.equals("success")){
-                        message.what = 3;
-                    }else if(mMessage.equals("exist")){
-                        message.what = 4;
+                    if(mMessage!=null){
+                        if(mMessage.equals("success")){
+                            message.what = 3;
+                        }else if(mMessage.equals("exist")){
+                            message.what = 4;
+                        }
+                    } else {
+                        message.what = 5;
                     }
                     handler.sendMessage(message);
                 }catch (JSONException e) {

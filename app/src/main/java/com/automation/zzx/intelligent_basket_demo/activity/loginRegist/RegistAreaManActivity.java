@@ -39,9 +39,8 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
-import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
-import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -74,8 +73,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
     private Button chooseFromAlbum;
     private Button register;
 
-    private LoadingDialog mLoadingDialog;  // 加载弹窗
-    private CommonDialog mCommonDialog; // 普通提示弹窗
+    private CommonDialog mCommonDialog;
     private UserInfo userinfo;
 
     @SuppressLint("HandlerLeak")
@@ -83,14 +81,14 @@ public class RegistAreaManActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case 1: {
-                    uploadResult.setText("图片上传成功！");
-                    mLoadingDialog.dismiss();
                     sendRegister();
                     break;
                 }
                 case 2: {
-                    uploadResult.setText("图片上传失败，请重新上传！");
-                    mLoadingDialog.dismiss();
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.pic_failNotice));
+                    }
+                    mCommonDialog.show();
                     handler.removeCallbacksAndMessages(null);
                     break;
                 }
@@ -108,6 +106,14 @@ public class RegistAreaManActivity extends AppCompatActivity {
                     mCommonDialog.show();
                     break;
                 }
+                case 5:{
+                    if (mCommonDialog == null) {
+                        mCommonDialog = initDialog(getString(R.string.register_back_fail));
+                    }
+                    mCommonDialog.show();
+                    break;
+                }
+                default: break;
             }
         }
     };
@@ -140,6 +146,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
         llSpinner.setVisibility(View.GONE);
 
         photo_exist = false;
+
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -201,12 +208,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "请填写用户名！", Toast.LENGTH_LONG).show();
                     edt_userPhone.getText().clear();
                 } else {
-                    userinfo = new UserInfo(edt_userName.getText().toString(),
-                            edt_userPhone.getText().toString(), edt_userPwd.getText().toString(),
-                            "areaAdmin");
-                    mLoadingDialog = new LoadingDialog(RegistAreaManActivity.this, "正在上传....");
-                    mLoadingDialog.setCancelable(false);
-                    mLoadingDialog.show();
+                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), "areaAdmin");
                     uploadPhoto();
                 }
             }
@@ -341,11 +343,15 @@ public class RegistAreaManActivity extends AppCompatActivity {
                 try {
                     JSONObject jsonObject = JSON.parseObject(responseData);
                     String result = jsonObject.getString("error");
-                    switch (result){
-                        case "0":
-                            message.what = 1;break;
-                        default:
-                            message.what = 2;break;
+                    if(result != null){
+                        switch (result){
+                            case "0":
+                                message.what = 1;break;
+                            default:
+                                message.what = 2;break;
+                        }
+                    } else {
+                        message.what = 5;
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -376,10 +382,14 @@ public class RegistAreaManActivity extends AppCompatActivity {
                         JSONObject jsonObject = JSON.parseObject(responseData);
                         String mMessage = jsonObject.getString("message");
                         Message message = new Message();
-                        if(mMessage.equals("success")){
-                            message.what = 3;
-                        }else if(mMessage.equals("exist")){
-                            message.what = 4;
+                        if(mMessage!=null){
+                            if(mMessage.equals("success")){
+                                message.what = 3;
+                            }else if(mMessage.equals("exist")){
+                                message.what = 4;
+                            }
+                        } else {
+                            message.what = 5;
                         }
                         handler.sendMessage(message);
                     }catch (JSONException e) {
