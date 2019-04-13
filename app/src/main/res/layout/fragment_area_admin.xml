@@ -61,18 +61,20 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/me_login_balance_layout_marginTop"
-                android:layout_marginStart="@dimen/me_login_profile_layout_marginStart">
+                android:layout_marginStart="@dimen/me_login_profile_layout_marginStart"
+                android:visibility="visible">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/worker_project_state"
+                    android:text="@string/user_type"
                     android:textSize="@dimen/me_login_balance_size"/>
                 <TextView
                     android:id="@+id/worker_project_state"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="无"
-                    android:textSize="@dimen/textSize_16"/>
+                    android:textSize="@dimen/textSize_16"
+                    android:visibility="gone"/>
             </LinearLayout>
         </LinearLayout>
 

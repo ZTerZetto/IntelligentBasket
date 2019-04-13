@@ -20,6 +20,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
@@ -35,6 +36,10 @@ import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
+import com.scwang.smartrefresh.header.BezierCircleHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -61,10 +66,13 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
     private final static int MG_BASKET_LIST_INFO = 1;  // 吊篮消息列表视图更新显示
     private final static int GET_BASKET_LIST_INFO = 2; // 从后台获取吊篮列表数据
 
-    // 吊篮列表
+    // 主体
+    private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private RecyclerView basketRv; // 吊篮列表
     private List<MgBasketInfo> mgBasketInfoList;
     private MgBasketListAdapter mgBasketListAdapter;
+    private RelativeLayout noBasketListRelativeLayout; // 空空如也
+    private TextView noBasketListTextView;
 
     // 底部合计
     private CheckBox basketAllSelected;  // 全选复选框
@@ -81,13 +89,22 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch(msg.what) {
-                case MG_BASKET_LIST_INFO:  // 吊篮列表更新
+                case MG_BASKET_LIST_INFO:  // 吊篮列表页面更新
                     mgBasketInfoList.clear();
                     mgBasketInfoList.addAll(parseBasketListInfo((String) msg.obj));
                     mgBasketListAdapter.notifyDataSetChanged();
+                    updateContentView();
                     break;
-                case GET_BASKET_LIST_INFO:
-                    rentAdminGetBasketListInfo();
+                case GET_BASKET_LIST_INFO: // 获取吊篮列表信息
+                    if(projectId == null || projectId.equals("")) {  // 无项目
+                        basketRv.setVisibility(View.GONE);
+                        noBasketListRelativeLayout.setVisibility(View.VISIBLE);
+                        noBasketListTextView.setText("您还没有相关的项目");
+
+                        mSmartRefreshLayout.finishRefresh(500, false); // 刷新失败
+                    }else {  // 获取吊篮列表
+                        rentAdminGetBasketListInfo();
+                    }
                     break;
                 default:
                     break;
@@ -99,9 +116,19 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_rent_mg_basket_list, container, false);
 
+        // 下拉刷新
+        mSmartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smart_refresh_layout);
+        mSmartRefreshLayout.setRefreshHeader(  //设置 Header 为 贝塞尔雷达 样式
+                new BezierCircleHeader(getActivity()));
+        mSmartRefreshLayout.setPrimaryColorsId(R.color.smart_loading_background_color);
+        mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                handler.sendEmptyMessage(GET_BASKET_LIST_INFO);
+            }
+        });
         // 初始化吊篮列表
         basketRv = (RecyclerView) view.findViewById(R.id.basket_recycler_view);
-        //initBaksetList();
         mgBasketInfoList = new ArrayList<>();
         rentAdminGetBasketListInfo();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
@@ -127,6 +154,9 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                 basketAllSelected.setChecked(basketNumberSelected == mgBasketInfoList.size());
             }
         });
+        // 空空如也
+        noBasketListRelativeLayout = (RelativeLayout) view.findViewById(R.id.basket_no_avaliable);
+        noBasketListTextView = (TextView) view.findViewById(R.id.no_basket_hint);
 
         // 底部合计
         // 控件初始化
@@ -204,6 +234,8 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                         message.what = MG_BASKET_LIST_INFO;
                         message.obj = responseData;
                         handler.sendMessage(message);
+
+                        mSmartRefreshLayout.finishRefresh(500); // 刷新成功
                     }
 
                     @Override
@@ -220,11 +252,15 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                             case 404: // 404
                                 break;
                         }
+
+                        mSmartRefreshLayout.finishRefresh(500, false); // 刷新失败
                     }
 
                     @Override
                     public void onFailure(Call call, IOException e) {
                         Log.i(TAG, "失败：" + e.toString());
+
+                        mSmartRefreshLayout.finishRefresh(500, false); // 刷新失败
                     }
                 });
     }
@@ -234,8 +270,11 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
 
         JSONObject jsonObject = JSON.parseObject(responseDate);
 
-        ((RentAdminPrimaryActivity) getActivity()).getProjectId(  // 解析获取项目Id
-                jsonObject.getString("projectId"));
+        if(projectId == null || projectId.equals("")) { // 解析获取项目Id
+            ((RentAdminPrimaryActivity) getActivity()).getProjectId(
+                    jsonObject.getString("projectId"));
+            projectId = ((RentAdminPrimaryActivity) getActivity()).pushProjectId();
+        }
 
         Iterator<String> iterator = jsonObject.keySet().iterator();  // 迭代获取吊篮信息
         while(iterator.hasNext()){
@@ -310,6 +349,26 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
         }
         results = results.substring(0, results.length()-1);
         return results;
+    }
+
+    /*
+     * UI 更新相关
+     */
+    private void updateContentView(){
+        if(projectId == null || projectId.equals("")) {
+            basketRv.setVisibility(View.GONE);
+            noBasketListRelativeLayout.setVisibility(View.VISIBLE);
+            noBasketListTextView.setText("您还没有相关的项目");
+        }else {
+            if (mgBasketInfoList.size() < 1) { // 暂无吊篮
+                basketRv.setVisibility(View.GONE);
+                noBasketListRelativeLayout.setVisibility(View.VISIBLE);
+                noBasketListTextView.setText("您还没有相关的吊篮");
+            } else {  // 好多吊篮
+                noBasketListRelativeLayout.setVisibility(View.GONE);
+                basketRv.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     /*

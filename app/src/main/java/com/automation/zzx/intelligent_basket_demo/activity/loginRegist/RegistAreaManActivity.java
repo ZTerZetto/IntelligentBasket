@@ -39,8 +39,10 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
-import com.automation.zzx.intelligent_basket_demo.utils.HttpUtil;
+
+import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
 import com.google.gson.Gson;
 
 import java.io.File;
@@ -74,6 +76,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
     private Button register;
 
     private CommonDialog mCommonDialog;
+    private LoadingDialog mLoadingDialog;
     private UserInfo userinfo;
 
     @SuppressLint("HandlerLeak")
@@ -88,6 +91,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
                     if (mCommonDialog == null) {
                         mCommonDialog = initDialog(getString(R.string.pic_failNotice));
                     }
+                    mLoadingDialog.dismiss();
                     mCommonDialog.show();
                     handler.removeCallbacksAndMessages(null);
                     break;
@@ -96,6 +100,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
                     if (mCommonDialog == null) {
                         mCommonDialog = initDialog(getString(R.string.register_success));
                     }
+                    mLoadingDialog.dismiss();
                     mCommonDialog.show();
                     break;
                 }
@@ -103,6 +108,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
                     if (mCommonDialog == null) {
                         mCommonDialog = initDialog(getString(R.string.register_exist));
                     }
+                    mLoadingDialog.dismiss();
                     mCommonDialog.show();
                     break;
                 }
@@ -110,6 +116,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
                     if (mCommonDialog == null) {
                         mCommonDialog = initDialog(getString(R.string.register_back_fail));
                     }
+                    mLoadingDialog.dismiss();
                     mCommonDialog.show();
                     break;
                 }
@@ -147,41 +154,30 @@ public class RegistAreaManActivity extends AppCompatActivity {
 
         photo_exist = false;
 
+        initLoadingDialog();
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 // 创建File对象，用于存储拍照后的图片；
                 //应用关联缓存目录“/sdcard/Android/data/<package name>/cache”
-                photo_file = new File(getExternalCacheDir(), "output_image.jpg");
-                try {
-                    if (photo_file.exists()) {
-                        photo_file.delete();
-                    }
-                    photo_file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
+                if (ContextCompat.checkSelfPermission(RegistAreaManActivity.this,
+                        Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(RegistAreaManActivity.this,
+                            new String[]{Manifest.permission.CAMERA}, 2);
+                }else {
+                    openCamera();
                 }
-                if (Build.VERSION.SDK_INT < 24) {
-                    //低于Android 7.0 ，将file转换为uri对象
-                    imageUri = Uri.fromFile(photo_file);
-                } else {
-                    //转换为封装过的uri对象
-                    //FileProvider —— 内容提供器
-                    imageUri = FileProvider.getUriForFile(RegistAreaManActivity.this, "com.example.cameraalbumtest.fileprovider", photo_file);
-                }
-                // 启动相机程序
-                Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
-                intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
-                startActivityForResult(intent, TAKE_PHOTO);
             }
         });
 
         chooseFromAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(RegistAreaManActivity.this, Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(RegistAreaManActivity.this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
+                if (ContextCompat.checkSelfPermission(RegistAreaManActivity.this,
+                        Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
+                    ActivityCompat.requestPermissions(RegistAreaManActivity.this,
+                            new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 } else {
                     openAlbum();
                 }
@@ -208,7 +204,9 @@ public class RegistAreaManActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "请填写用户名！", Toast.LENGTH_LONG).show();
                     edt_userPhone.getText().clear();
                 } else {
-                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(), edt_userPwd.getText().toString(), "areaAdmin");
+                    userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(),
+                            edt_userPwd.getText().toString(), "areaAdmin");
+                    mLoadingDialog.show();
                     uploadPhoto();
                 }
             }
@@ -221,12 +219,46 @@ public class RegistAreaManActivity extends AppCompatActivity {
         startActivityForResult(intent, CHOOSE_PHOTO); // 打开相册
     }
 
+    private void openCamera(){
+        photo_file = new File(getExternalCacheDir(), "output_image.jpg");
+
+        try {
+            if (photo_file.exists()) {
+                photo_file.delete();
+            }
+            photo_file.createNewFile();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (Build.VERSION.SDK_INT < 24) {
+            //低于Android 7.0 ，将file转换为uri对象
+            imageUri = Uri.fromFile(photo_file);
+        } else {
+            //转换为封装过的uri对象
+            //FileProvider —— 内容提供器
+            imageUri = FileProvider.getUriForFile(RegistAreaManActivity.this,
+                    "com.automation.zzx.intelligent_basket_demo.fileprovider", photo_file);
+        }
+        // 启动相机程序
+        Intent intent = new Intent("android.media.action.IMAGE_CAPTURE");
+        intent.putExtra(MediaStore.EXTRA_OUTPUT, imageUri);
+        startActivityForResult(intent, TAKE_PHOTO);
+    }
+
     @Override
     public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
         switch (requestCode) {
             case 1:
                 if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
                     openAlbum();
+                } else {
+                    Toast.makeText(this, "You denied the permission", Toast.LENGTH_SHORT).show();
+                }
+                break;
+            case 2:
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+                    //openAlbum();
+                    openCamera();
                 } else {
                     Toast.makeText(this, "You denied the permission", Toast.LENGTH_SHORT).show();
                 }
@@ -418,6 +450,12 @@ public class RegistAreaManActivity extends AppCompatActivity {
                     }
                 }).setTitle("提示");
     }
+    // 加载弹窗
+    private void initLoadingDialog(){
+        mLoadingDialog = new LoadingDialog(RegistAreaManActivity.this, "正在上传...");
+        mLoadingDialog.setCancelable(false);
+    }
+
         // 顶部导航栏消息响应
         @Override
         public boolean onOptionsItemSelected(MenuItem item) {

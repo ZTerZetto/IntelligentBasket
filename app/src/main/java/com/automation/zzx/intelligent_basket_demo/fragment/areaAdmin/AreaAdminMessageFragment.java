@@ -24,6 +24,10 @@ import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.scwang.smartrefresh.header.BezierCircleHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.litepal.crud.DataSupport;
 
@@ -43,18 +47,19 @@ public class AreaAdminMessageFragment extends Fragment {
     private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;;
 
     private View mView;
+    private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private MgAreaMessageAdapter mgAreaMessageAdapter;
     private List<MessageInfo> mMessageInfoList = new ArrayList<>();
     private RecyclerView recyclerView;
 
 
     @SuppressLint("HandlerLeak")
-    private Handler mHandler = new Handler() {
+    public final Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what){
                 case UPDATE_HISTORY_MESSAGE_INFO:
                     getHistoryMessageInfo();
-                    mgAreaMessageAdapter.notifyDataSetChanged();
+                    mSmartRefreshLayout.finishRefresh(100);
                     break;
             }
         }
@@ -75,6 +80,16 @@ public class AreaAdminMessageFragment extends Fragment {
             //隐藏返回箭头
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
+            mSmartRefreshLayout = (SmartRefreshLayout) mView.findViewById(R.id.smart_refresh_layout);
+            mSmartRefreshLayout.setRefreshHeader(  //设置 Header 为 贝塞尔雷达 样式
+                    new BezierCircleHeader(getActivity()));
+            mSmartRefreshLayout.setPrimaryColorsId(R.color.smart_loading_background_color);
+            mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
+                @Override
+                public void onRefresh(RefreshLayout refreshlayout) {
+                    mHandler.sendEmptyMessage(UPDATE_HISTORY_MESSAGE_INFO);
+                }
+            });
             recyclerView = mView.findViewById(R.id.rv_message);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(linearLayoutManager);
@@ -111,6 +126,7 @@ public class AreaAdminMessageFragment extends Fragment {
                                                     .find(MessageInfo.class);
         mMessageInfoList.clear();
         mMessageInfoList.addAll(messageInfos);
+        mgAreaMessageAdapter.notifyDataSetChanged();
     }
 
     /*

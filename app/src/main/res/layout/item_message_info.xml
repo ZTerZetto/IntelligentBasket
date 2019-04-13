@@ -38,7 +38,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorTextDark"
-                android:textSize="@dimen/textSize_18"
+                android:textSize="@dimen/textSize_16"
                 android:textStyle="bold"
                 android:text="报警消息"/>
             <ImageView
@@ -58,7 +58,7 @@
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
             android:textColor="@color/colorGradText"
-            android:textSize="@dimen/textSize_16"
+            android:textSize="@dimen/textSize_15"
             android:text="施工人员违规操作"/>
 
     </LinearLayout>

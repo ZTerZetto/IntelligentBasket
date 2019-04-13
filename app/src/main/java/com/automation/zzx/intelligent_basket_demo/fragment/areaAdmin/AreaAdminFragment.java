@@ -20,12 +20,23 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_PATH;
 
 /**
  * Created by pengchenghu on 2019/3/27.
@@ -35,6 +46,9 @@ import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 public class AreaAdminFragment extends Fragment implements View.OnClickListener {
 
     private final static String TAG = "AreaAdminFragment";
+
+    // Handler消息
+    private final static int UPDATE_USER_DISPLAY_MSG = 101;
 
     // header
     private RelativeLayout mWorkerLoginLayout; // 登录总布局
@@ -52,22 +66,30 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
     // 退出登录
     private RelativeLayout mLogout; // 退出登录
 
+    // 页面信息
+    private String mUserHeadUrl = FILE_SERVER_PATH + "/head/default_user_head.png";
+
     // 用户信息
     private UserInfo mUserInfo;
     private String mToken;
     private SharedPreferences mPref;
 
     @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
+    private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-
+                case UPDATE_USER_DISPLAY_MSG:
+                    mWorkerHead.setImageUrl(mUserHeadUrl); // 头像
+                    mWorkerName.setText(mUserInfo.getUserName());
+                    break;
             }
         }
     };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        getRentAdminInfoFromInternet();
+
         View view = inflater.inflate(R.layout.fragment_area_admin, container, false);
 
         // header
@@ -131,6 +153,44 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
                 logoutHttp();
                 break;
         }
+    }
+
+    /*
+     * 网络相关
+     */
+    // 从网络获取用户信息
+    private void getRentAdminInfoFromInternet(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("userId", mUserInfo.getUserId())
+                .post()
+                .url(AppConfig.AREA_ADMIN_ALL_INFO)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        parseUserInfoFromInternet(data);
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+    // 解析后台返回数据
+    private void parseUserInfoFromInternet(String data){
+        Log.d(TAG, "parse data:" + data);
+        JSONObject jsonObject = JSON.parseObject(data);
+        String userInfo = jsonObject.getString("userInfo");
+        mUserInfo = JSON.parseObject(userInfo, UserInfo.class);
+        mHandler.sendEmptyMessage(UPDATE_USER_DISPLAY_MSG);  // 更新人员信息状态
     }
 
     /*

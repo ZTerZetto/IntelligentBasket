@@ -21,13 +21,24 @@ import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
+
+import java.io.IOException;
+
+import okhttp3.Call;
+
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_PATH;
 
 /**
  * Created by pengchenghu on 2019/3/22.
@@ -37,6 +48,9 @@ import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 public class RentAdminFragment extends Fragment implements View.OnClickListener {
 
     private final static String TAG = "RentAdminFragment";
+
+    // Handler消息
+    private final static int UPDATE_USER_DISPLAY_MSG = 101;
 
     // header
     private RelativeLayout mWorkerLoginLayout; // 登录总布局
@@ -57,6 +71,11 @@ public class RentAdminFragment extends Fragment implements View.OnClickListener 
     // 退出登录
     private RelativeLayout mLogout; // 退出登录
 
+    // 页面信息
+    private String mWorkProjectId;  // 项目ID
+    private String mWorkProjectName; // 项目名称
+    private String mUserHeadUrl = FILE_SERVER_PATH + "/head/default_user_head.png";
+
     // 用户信息
     private UserInfo mUserInfo;
     private String mToken;
@@ -66,18 +85,21 @@ public class RentAdminFragment extends Fragment implements View.OnClickListener 
     private String mProjectId;
 
     @SuppressLint("HandlerLeak")
-    private Handler handler = new Handler() {
+    private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-
+                case UPDATE_USER_DISPLAY_MSG:
+                    updateUserDisplayView();
+                    break;
             }
         }
     };
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_rent_admin, container, false);
+        getRentAdminInfoFromInternet();  // 从网络获取其余信息
 
+        View view = inflater.inflate(R.layout.fragment_rent_admin, container, false);
         // header
         mWorkerLoginLayout = (RelativeLayout) view.findViewById(R.id.login_layout);
         mWorkerLoginLayout.setOnClickListener(this);
@@ -106,7 +128,6 @@ public class RentAdminFragment extends Fragment implements View.OnClickListener 
         // logout
         mLogout = (RelativeLayout) view.findViewById(R.id.more_item_log_out_layout); // 退出登录
         mLogout.setOnClickListener(this);
-
         return view;
     }
 
@@ -151,12 +172,54 @@ public class RentAdminFragment extends Fragment implements View.OnClickListener 
     }
 
     /*
+     * 网络相关
+     */
+    // 从网络获取用户信息
+    private void getRentAdminInfoFromInternet(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("userId", mUserInfo.getUserId())
+                .post()
+                .url(AppConfig.RENT_ADMIN_ALL_INFO)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        parseUserInfoFromInternet(data);
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+    // 解析后台返回数据
+    private void parseUserInfoFromInternet(String data){
+        Log.d(TAG, "parse data:" + data);
+        JSONObject jsonObject = JSON.parseObject(data);
+        String userInfo = jsonObject.getString("userInfo");
+        mUserInfo = JSON.parseObject(userInfo, UserInfo.class);
+        mWorkProjectId = jsonObject.getString("inProject");
+        mWorkProjectName = jsonObject.getString("projectName");
+        mHandler.sendEmptyMessage(UPDATE_USER_DISPLAY_MSG);  // 更新人员信息状态
+    }
+
+    /*
      * 登录相关
      */
+    // 从本地获取用户信息
     protected void onAttachToContext(Context context) {
         //do something
         mUserInfo = ((RentAdminPrimaryActivity) context).pushUserInfo();
         mProjectId = ((RentAdminPrimaryActivity) context).pushProjectId();
+        mToken = ((RentAdminPrimaryActivity) context).pushToken();
     }
     @TargetApi(23)
     @Override
@@ -181,5 +244,22 @@ public class RentAdminFragment extends Fragment implements View.OnClickListener 
         editor.commit();
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
+    }
+
+    /*
+     * UI 更新相关
+     */
+    // 更新页面个人信息显示
+    private void updateUserDisplayView(){
+        mWorkerHead.setImageUrl(mUserHeadUrl); // 头像
+        mWorkerName.setText(mUserInfo.getUserName()); // 用户名
+        if(mWorkProjectId == null || mWorkProjectId.equals("")) // 项目状态
+            mWorkerProjectState.setText(R.string.worker_no_project);
+        else {
+            if (mWorkProjectName == null || mWorkProjectName.equals(""))
+                mWorkerProjectState.setText(mWorkProjectId);
+            else
+                mWorkerProjectState.setText(mWorkProjectName);
+        }
     }
 }

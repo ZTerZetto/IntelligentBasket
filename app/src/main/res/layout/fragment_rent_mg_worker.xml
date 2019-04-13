@@ -25,15 +25,48 @@
 
     </RelativeLayout>
 
-        <!-- 吊篮主体 -->
-    <android.support.v7.widget.RecyclerView
-        android:id="@+id/worker_recycler_view"
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@+id/navi_header"
-        android:layout_above="@+id/worker_controller">
+        android:layout_above="@+id/worker_controller"
+        android:orientation="vertical">
 
-    </android.support.v7.widget.RecyclerView>
+        <!-- 工人主体 -->
+        <android.support.v7.widget.RecyclerView
+            android:id="@+id/worker_recycler_view"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="visible">
+
+        </android.support.v7.widget.RecyclerView>
+
+        <!-- 空空如也 -->
+        <RelativeLayout
+            android:id="@+id/worker_no_avaliable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+
+            <ImageView
+                android:id="@+id/no_worker_iv"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_above="@+id/no_worker_hint"
+                android:layout_centerHorizontal="true"
+                android:src="@mipmap/ic_workers_man_128px" />
+            <TextView
+                android:id="@+id/no_worker_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
+                android:text="尚未添加工人"
+                android:textSize="16sp"/>
+
+        </RelativeLayout>
+
+    </LinearLayout>
 
     <!-- 控制栏 -->
     <RelativeLayout

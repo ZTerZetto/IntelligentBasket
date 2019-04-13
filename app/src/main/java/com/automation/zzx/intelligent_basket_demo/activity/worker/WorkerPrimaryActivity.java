@@ -94,7 +94,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private RelativeLayout mLogout; // 退出登录
 
     // 页面信息
-    private String mWorkProject;  // 项目ID
+    private String mWorkProjectId;  // 项目ID
+    private String mWorkProjectName; // 项目名称
     private int mWorkState = 0; // 0:等待上工 1:等待下工
     //private String mBasketId; //s 吊篮ID
     private String mUserHeadUrl = FILE_SERVER_PATH + "/head/hdImg_default.jpg";
@@ -141,10 +142,14 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 case UPDATE_USER_DISPLAY_MSG:  // 更新状态
                     mWorkerHead.setImageUrl(mUserHeadUrl); // 头像
                     mWorkerName.setText(mUserInfo.getUserName()); // 用户名
-                    if(mWorkProject == null || mWorkProject.equals("")) // 项目状态
+                    if(mWorkProjectId == null || mWorkProjectId.equals("")) // 项目状态
                         mWorkerProjectState.setText(R.string.worker_no_project);
-                    else
-                        mWorkerProjectState.setText(mWorkProject);
+                    else {
+                        if (mWorkProjectName == null || mWorkProjectName.equals(""))
+                            mWorkerProjectState.setText(mWorkProjectId);
+                        else
+                            mWorkerProjectState.setText(mWorkProjectName);
+                    }
                     break;
             }
         }
@@ -217,7 +222,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.work_layout:  // 开工/下工
                 Log.i(TAG, "You have clicked open/close work button");
-                if(mWorkProject == null || mWorkProject.equals("")){
+                if(mWorkProjectId == null || mWorkProjectId.equals("")){
                     if(mCommonDialog == null){
                         mCommonDialog = initDialog();
                     }
@@ -340,8 +345,10 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     Log.d(TAG, "Http Server Error" + response.code());
                 }
             }
-        }, url, mToken, mUserInfo.getUserId(), basketId, mWorkProject);
+        }, url, mToken, mUserInfo.getUserId(), basketId, mWorkProjectId);
     }
+
+    // 解析上下工消息
     private void parseBeginOrEndWork(String data){
         JSONObject jsonObject = JSON.parseObject(data);
         String hint = "";
@@ -352,7 +359,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
                 hint="打开吊篮成功";
             } else {
-                hint="打开吊篮失败,您不在项目中";
+                hint="打开吊篮失败,吊篮不在您的工作项目中";
             }
         }else if(mWorkState == 1){ // 等待下工
             boolean endWork = jsonObject.getBoolean("endWork");
@@ -424,11 +431,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         JSONObject jsonObject = JSON.parseObject(data);
         String userInfo = jsonObject.getString("userInfo");
         mUserInfo = JSON.parseObject(userInfo, UserInfo.class);
-        mWorkProject = jsonObject.getString("inProject");
+        mWorkProjectId = jsonObject.getString("inProject");
+        mWorkProjectName = jsonObject.getString("projectName");
         mWorkState = jsonObject.getIntValue("userState");
         mHandler.sendEmptyMessage(UPDATE_USER_DISPLAY_MSG);  // 更新人员信息状态
         mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);    // 更新上/下工状态
-
     }
     //退出登录
     private void logoutHttp() {
@@ -448,10 +455,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     @Override
                     public void onClick(Dialog dialog, boolean confirm) {
                         if(confirm){
-                            //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击确定");
                             dialog.dismiss();
                         }else{
-                            //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击取消");
                             dialog.dismiss();
                         }
                     }

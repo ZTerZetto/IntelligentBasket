@@ -22,6 +22,7 @@ import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.ImageView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -79,6 +80,8 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
     private RecyclerView workerRv;
     private List<MgWorkerInfo> mgWorkerInfoList;
     private MgWorkerListAdapter mgWorkerListAdapter;
+    private RelativeLayout noWorkerListRelativeLayout;
+    private TextView noWorkerListTextView;
 
     // 底部统计
     private CheckBox workerAllCheckBox;
@@ -100,9 +103,16 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                     mgWorkerInfoList.clear();
                     mgWorkerInfoList.addAll(parseWorkerListInfo((String) msg.obj));
                     mgWorkerListAdapter.notifyDataSetChanged();
+                    updateContentView();
                     break;
                 case UPDATE_WORKER_LIST_MSG:
-                    rentAdminGetWorkerInfo();
+                    if(projectId == null || projectId.equals("")) {  // 无项目
+                        workerRv.setVisibility(View.GONE);
+                        noWorkerListRelativeLayout.setVisibility(View.VISIBLE);
+                        noWorkerListTextView.setText("您还没有相关的项目");
+                    }else {  // 获取吊篮列表
+                        rentAdminGetWorkerInfo();
+                    }
                     break;
                 default:
                     break;
@@ -124,8 +134,6 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
         // 列表初始化
         workerRv = (RecyclerView) view.findViewById(R.id.worker_recycler_view);
         mgWorkerInfoList = new ArrayList<>();
-        //initWorkerInfoList();
-        rentAdminGetWorkerInfo();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         workerRv.setLayoutManager(layoutManager);
         mgWorkerListAdapter = new MgWorkerListAdapter(getContext(), mgWorkerInfoList);
@@ -158,6 +166,8 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                 startActivity(intent);
             }
         });
+        noWorkerListRelativeLayout = (RelativeLayout)  view.findViewById(R.id.worker_no_avaliable);
+        noWorkerListTextView = (TextView) view.findViewById(R.id.no_worker_hint);
 
         // 底部合计
         // 控件初始化
@@ -184,6 +194,8 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
         workerAddIv = (ImageView) view.findViewById(R.id.worker_add_image_view);
         workerAddIv.setOnClickListener(this);  // 添加工人
 
+        handler.sendEmptyMessage(UPDATE_WORKER_LIST_MSG);  // 获取工人列表信息
+
         return view;
     }
 
@@ -202,6 +214,10 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                 break;
             case R.id.worker_add_image_view:
                 Log.i(TAG, "You have clicked the add_worker button");
+                if(projectId==null || projectId.equals("")){
+                    DialogToast("提示", "您尚未参与任何项目");
+                    break;
+                }
                 startActivityForResult(new Intent(getActivity(), CaptureActivity.class), CAPTURE_ACTIVITY_RESULT);
                 break;
 
@@ -223,7 +239,7 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                     String workerId = userInfo.substring(colon+1);
                     if(userInfo.contains("worker")){  // 是工人Id
                         if(isWorkerInProject(workerId))  // 已存在于项目中
-                            DialogToast("提示", "施工人员已经在项目中").show();
+                            DialogToast("提示", "施工人员已经在本项目中").show();
                         else  // 待添加
                             rentAdminAddWorkerIntoProject(workerId);
                     }else // 非施工人员Id
@@ -303,9 +319,17 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                 .enqueue(new BaseCallBack() {
                     @Override
                     public void onSuccess(Object o) {
-                        Log.i(TAG, "添加施工人员成功");
-                        DialogToast("提示", "您已成功添加该施工人员").show();
-                        handler.sendEmptyMessage(UPDATE_WORKER_LIST_MSG);  // 更新本地列表
+                        String response = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(response);
+                        String increase = jsonObject.getString("increase");
+                        if(increase.contains("成功")) {
+                            Log.i(TAG, "添加施工人员成功");
+                            DialogToast("提示", "您已成功添加该施工人员").show();
+                            handler.sendEmptyMessage(UPDATE_WORKER_LIST_MSG);  // 更新本地列表
+                        }else if(increase.contains("存在项目中")){
+                            Log.i(TAG, "工人员已存在其它项目中");
+                            DialogToast("提示", "施工人员已存在其它项目中").show();
+                        }
                     }
 
                     @Override
@@ -327,6 +351,26 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
 
                     }
                 });
+    }
+
+    /*
+     * UI 更新相关
+     */
+    private void updateContentView(){
+        if(projectId == null || projectId.equals("")) {
+            workerRv.setVisibility(View.GONE);
+            noWorkerListRelativeLayout.setVisibility(View.VISIBLE);
+            noWorkerListTextView.setText("您还没有相关的项目");
+        }else {
+            if (mgWorkerInfoList.size() < 1) { // 暂无吊篮
+                workerRv.setVisibility(View.GONE);
+                noWorkerListRelativeLayout.setVisibility(View.VISIBLE);
+                noWorkerListTextView.setText("尚未添加工人至项目");
+            } else {  // 好多吊篮
+                noWorkerListRelativeLayout.setVisibility(View.GONE);
+                workerRv.setVisibility(View.VISIBLE);
+            }
+        }
     }
 
     /*

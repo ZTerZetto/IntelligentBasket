@@ -29,7 +29,7 @@ public class AppConfig {
     public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
 
     //上传单个文件
-    public final static String CREATE_FILE = ANDROID_URL_PATH.concat("/createImageFile");
+    public final static String CREATE_IDENTITY_CARD_IMAGE = ANDROID_URL_PATH.concat("/createImageFile");
 
     //上传多个文件
     public final static String CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");
@@ -86,7 +86,7 @@ public class AppConfig {
      * 施工人员活动请求
      */
     // 施工人员基本信息
-    public static final String WORKER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetWorker");
+    public static final String WORKER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
     // 施工人员上工
     public static final String WORKER_BEGIN_WORK = ANDROID_URL_PATH.concat("/androidBeginWork");
     // 施工人员下工
@@ -95,8 +95,12 @@ public class AppConfig {
     /*
      * 租方管理员活动请求
      */
+    // 施工人员基本信息
+    public static final String RENT_ADMIN_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
     // 租方管理员请求所有吊篮信息
     public static final String RENT_ADMIN_MG_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/forecastStop");
+    // 租方管理员请求预报停
+    public static final String RENT_ADMIN_APPLY_PRE_STOP_BASKETS = ANDROID_URL_PATH.concat("/prepareEnd");
     // 租方管理员请求所有施工人员
     public static final String RENT_ADMIN_GET_ALL_WORKER_INFO = ANDROID_URL_PATH.concat("/getUserList");
     // 租方管理员添加施工人员
@@ -105,12 +109,20 @@ public class AppConfig {
     /*
      * 区域管理员请求
      */
+    // 施工人员基本信息
+    public static final String AREA_ADMIN_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
     // 区域管理员请求所有的项目信息
     public static final String AREA_ADMIN_GET_ALL_PROJECT_INFO = ANDROID_URL_PATH.concat("/getAllProject");
     // 区域管理员请求特定项目的所有吊篮
     public static final String AREA_ADMIN_GET_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/getBasketList");
     // 区域管理员请求特定项目添加指定吊篮
     public static final String AREA_ADMIN_ADD_BASKET_INTO_PROJECT = ANDROID_URL_PATH.concat("/androidIncreaseBasket");
+    // 区域管理员请求开始项目
+    public static final String AREA_ADMIN_BEGIN_PROJECT = ANDROID_URL_PATH.concat("/beginProject");
+    // 区域管理员上传安监证书
+    public static final String AREA_ADMIN_CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");
+    // 区域管理员上传项目预安装验收启动图片
+    public static final String AREA_ADMIN_CREATE_PRESTOP_FILE = ANDROID_URL_PATH.concat("/createProjectFile");
 
     /*
     * 常量

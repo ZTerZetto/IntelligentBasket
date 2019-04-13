@@ -26,6 +26,7 @@ import android.util.Log;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
+import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMessageFragment;
 import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiMessageReceiver;
 import com.baidu.mapapi.SDKInitializer;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
