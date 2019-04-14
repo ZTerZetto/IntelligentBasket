@@ -251,6 +251,7 @@ public class CustomApplication extends Application {
                 message.getTitle(), message.getDescription());
         Map<String, String> keyValuePair = message.getExtra();
         messageInfo.setmType(keyValuePair.get("type"));
+        if(messageInfo.getmType()==null || messageInfo.getmType().equals("")) return;
         //messageInfo.setmProjectId(keyValuePair.get("projectId"));
         //messageInfo.setmProjectName(keyValuePair.get("projectName"));
         switch (messageInfo.getmType()){

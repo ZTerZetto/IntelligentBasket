@@ -391,11 +391,13 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.current_project:
+            case R.id.current_project:  // 当前项目详情
                 Log.i(TAG, "You have clicked the project more");
-                startActivity(new Intent(getActivity(), ProDetailActivity.class));
+                Intent intent = new Intent(getActivity(), ProDetailActivity.class);
+                intent.putExtra("projectId", mProjectInfoList.get(currentSelectedProject).getProjectId());
+                startActivity(intent);
                 break;
-            case R.id.switch_project:
+            case R.id.switch_project:  // 切换项目
                 Log.i(TAG, "You have clicked the switch project");
                 showSingleAlertDialog();
                 break;
