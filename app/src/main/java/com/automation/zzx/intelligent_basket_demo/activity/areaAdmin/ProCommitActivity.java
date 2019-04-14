@@ -26,7 +26,7 @@ import com.automation.zzx.intelligent_basket_demo.widget.image.WebImage;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_PATH;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_HPC_PATH;
 
 
 public class ProCommitActivity extends AppCompatActivity {
@@ -150,7 +150,7 @@ public class ProCommitActivity extends AppCompatActivity {
 
     // 初始化图片地址
     private void initWorkPhotoUrls(){
-        String root_url = FILE_SERVER_PATH + "/basket/001/";
+        String root_url = FILE_SERVER_HPC_PATH + "/basket/001/";
         mPicList.add(root_url + "201902251424.jpg");
         mPicList.add(root_url + "201902251425.jpg");
     }

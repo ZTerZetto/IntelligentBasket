@@ -20,7 +20,6 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.automation.zzx.intelligent_basket_demo.pdf_read.PDFStartActivity;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
@@ -169,7 +168,7 @@ public class ProDetailActivity extends AppCompatActivity {
         llProContract.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                Intent intent = new Intent(ProDetailActivity.this,PDFStartActivity.class);
+                Intent intent = new Intent(ProDetailActivity.this,CheckCompactActivity.class);
                 startActivity(intent);
             }
         });

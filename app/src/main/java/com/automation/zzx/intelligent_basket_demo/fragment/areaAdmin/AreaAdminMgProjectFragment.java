@@ -41,6 +41,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.CheckCompactActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadImageActivity;
@@ -59,6 +60,10 @@ import com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureA
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.scwang.smartrefresh.header.BezierCircleHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
 import java.lang.reflect.Method;
@@ -83,21 +88,24 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
 
     private final static String TAG = "AreaAdminMgProject";
     // Handler 消息类型
-    private final static int UPDATE_BASKET_STATEMENT_MSG = 1;  // 更新吊篮状态列表
-    private final static int UPDATE_PROJECT_AND_BASKET_MSG = 2; // 更换项目，重新获取吊篮列表
-    private final static int UPDATE_AREA_ADMIN_PROJECT_LIST_MSG = 3; // 更新区域管理员的项目列表
-    private final static int UPDATE_PROJECT_LIST_FROM_INTERNET_MSG = 4; // 从网络重新获取指定项目的吊篮信息
+    private final static int UPDATE_BASKET_STATEMENT_MSG = 101;  // 更新吊篮状态列表
+    private final static int UPDATE_PROJECT_AND_BASKET_MSG = 102; // 更换项目，重新获取吊篮列表
+    private final static int UPDATE_AREA_ADMIN_PROJECT_LIST_MSG = 103; // 更新区域管理员的项目列表
+    private final static int UPDATE_PROJECT_LIST_FROM_INTERNET_MSG = 104; // 从网络重新获取指定项目的吊篮信息
 
     // 页面跳转
     private final static int CAPTURE_ACTIVITY_RESULT = 1;  // 扫码返回
     private final static int UPLOAD_BASKET_IMAGE_RESULT = 2;  // 上传预验收图片
     private final static int UPLOAD_CERTIFICATE_IMAGE_RESULT = 3;  // 上传安监证书页面
+    private final static int UPLOAD_PRE_STOP_BASKET_IMAGE_RESULT = 4;  // 上传吊篮预报停图片页面
 
     // intent 消息参数
     public final static String PROJECT_ID = "projectId";  // 上传图片的项目Id
     public final static String UPLOAD_IMAGE_TYPE  = "uploadImageType"; // 上传图片的类型
-    public final static String UPLOAD_BASKETS_PRESTOP_IMAGE = "basketsPrestop"; // 预报停
+    public final static String UPLOAD_BASKETS_PRE_INSTALL_IMAGE = "basketsPreInstall"; // 预验收
     public final static String UPLOAD_CERTIFICATE_IMAGE = "certificate"; // 安监证书
+    public final static String BASKET_ID = "basketId"; // 上传图片的吊篮ID
+    public final static String UPLOAD_BASKETS_PRE_STOP_IMAGE = "basketsPreStop"; // 预验收
 
     // 控件
     // 顶部导航栏
@@ -117,6 +125,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private int pre_selectedPosition = 0;
 
     /* 主体内容部分*/
+    private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     // 吊篮列表视图
     private RelativeLayout mListRelativeLayout;
     private RecyclerView mBasketListRecyclerView;
@@ -186,7 +195,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     parseProjectListInfo((String)msg.obj);  // 解析数据
                     setLastLoginProjectId();  // 设置默认项目
                     //currentSelectedProject = 0; // 项目位置
-                    pre_selectedPosition = 0;  // 筛选框位置
+                    //pre_selectedPosition = 0;  // 筛选框位置
 
                     if(mProjectNameList.size()<=0) { // 没有项目
                         mProjectTitleTv.setText("暂无项目");
@@ -230,7 +239,6 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mProjectNameList = new ArrayList<>();
         mProjectInfoList = new ArrayList<>();
         areaAdminGetAllProject();
-        //initProjectList();        // 初始化项目列表
 
         // 状态选择栏初
         // 初始化
@@ -254,8 +262,20 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         /*
          主体内容部分
           */
-        mListRelativeLayout = (RelativeLayout) view.findViewById(R.id.basket_avaliable);
+        // 下拉刷新
+        mSmartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smart_refresh_layout);
+        mSmartRefreshLayout.setRefreshHeader(  //设置 Header 为 贝塞尔雷达 样式
+                new BezierCircleHeader(getActivity()));
+        mSmartRefreshLayout.setPrimaryColorsId(R.color.smart_loading_background_color);
+        mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                mLastProjectId = mProjectInfoList.get(currentSelectedProject).getProjectId();
+                areaAdminGetAllProject();
+            }
+        });
         // 吊篮列表
+        mListRelativeLayout = (RelativeLayout) view.findViewById(R.id.basket_avaliable);
         mBasketListRecyclerView = (RecyclerView) view.findViewById(R.id.basket_recycler_view);
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         mBasketListRecyclerView.setLayoutManager(layoutManager);
@@ -272,17 +292,22 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
 
             @Override
             public void onPreAssAndAceptClick(View view, int position) {
-                // 点击预安装
+                // 点击预安装申请
                 Log.i(TAG, "You have clicked the "+ position+" item's PreAssAndAcept");
                 startActivity(new Intent(getActivity(), UploadImageActivity.class));
             }
 
             @Override
             public void onPreApplyStopClick(View view, int position) {
-                // 点击预报停
+                // 点击预报停申请
                 Log.i(TAG, "You have clicked the "+ position+" item's PreApplyStop");
-                startActivity(new Intent(getActivity(), UploadImageActivity.class));
-
+                Intent intent;
+                intent = new Intent(getActivity(), UploadImageActivity.class);
+                intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                intent.putExtra(BASKET_ID, mgBasketStatementList.get(position).getBasketId());
+                intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_STOP_IMAGE);
+                startActivityForResult(new Intent(getActivity(), UploadImageActivity.class),
+                        UPLOAD_PRE_STOP_BASKET_IMAGE_RESULT);
             }
         });
 
@@ -343,12 +368,14 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         switch (v.getId()){
             case R.id.examine_compact_layout:  // 查看合同
                 Log.i(TAG, "You have clicked the examine compact button");
+                intent = new Intent(getActivity(), CheckCompactActivity.class);
+                startActivity(intent);
                 break;
             case R.id.project_pre_apply_layout:  // 预验收申请
                 Log.i(TAG, "You have clicked the pre_apply compact button");
                 intent = new Intent(getActivity(), UploadImageActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
-                intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRESTOP_IMAGE);
+                intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
                 startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
                 break;
             case R.id.send_examine_certificate_layout: // 上传/查看安监证书
@@ -380,11 +407,11 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     // 初始化溢出栏弹窗
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        //这里设置另外的menu
+        // 这里设置另外的menu
         menu.clear();
         inflater.inflate(R.menu.area_admin_project_more, menu);
 
-        //通过反射让menu的图标可见
+        // 通过反射让menu的图标可见
         if (menu != null) {
             if (menu.getClass() == MenuBuilder.class) {
                 try {
@@ -508,6 +535,8 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                         message.what = UPDATE_PROJECT_AND_BASKET_MSG;
                         message.obj = responseData;
                         mHandler.sendMessage(message);
+
+                        mSmartRefreshLayout.finishRefresh(100);
                     }
 
                     @Override

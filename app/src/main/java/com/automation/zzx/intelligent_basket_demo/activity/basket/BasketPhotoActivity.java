@@ -30,7 +30,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_PATH;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_HPC_PATH;
 
 /**
  * Created by pengchenghu on 2019/2/23.
@@ -156,7 +156,7 @@ public class BasketPhotoActivity extends AppCompatActivity {
     private void initWorkPhotoUrls(){
         mWorkPtotoUrls = new ArrayList<>();
 
-        String root_url = FILE_SERVER_PATH + "/basket/001/";
+        String root_url = FILE_SERVER_HPC_PATH + "/basket/001/";
 
         mWorkPtotoUrls.add(root_url + "201902251424.jpg");
         mWorkPtotoUrls.add(root_url + "201902251425.jpg");

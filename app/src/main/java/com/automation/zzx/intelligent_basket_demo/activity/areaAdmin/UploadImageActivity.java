@@ -62,9 +62,10 @@ import okhttp3.Response;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_BEGIN_PROJECT;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_CREATE_CERT_FILE;
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_CREATE_PRESTOP_FILE;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_CREATE_PREINSTALL_FILE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.PROJECT_ID;
-import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRESTOP_IMAGE;
+import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRE_INSTALL_IMAGE;
+import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRE_STOP_IMAGE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_CERTIFICATE_IMAGE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_IMAGE_TYPE;
 
@@ -84,7 +85,7 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
 
 
     //相册位置
-    public static final String CAMERA_PATH= Environment.getExternalStorageDirectory() +
+    public static final String CAMERA_PATH = Environment.getExternalStorageDirectory() +
             File.separator + Environment.DIRECTORY_DCIM + File.separator+"Camera"+ File.separator;
 
     // 控件
@@ -400,7 +401,7 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                     Message msg = new Message();
                     switch (error){
                         case "0":
-                            if(uploadType.equals(UPLOAD_BASKETS_PRESTOP_IMAGE))
+                            if(uploadType.equals(UPLOAD_BASKETS_PRE_INSTALL_IMAGE))
                                 handler.sendEmptyMessage(APPLY_BEGIN_PROJECT);  // 提出开始项目申请
                             else
                                 handler.sendEmptyMessage(GET_UPLOAD_INFO);
@@ -488,18 +489,24 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                 uploadHint = "安监证书";
                 maxUploadImageNumer = 1;
                 break;
-            case UPLOAD_BASKETS_PRESTOP_IMAGE: // 预验收申请图片地址
-                uploadUrl = AREA_ADMIN_CREATE_PRESTOP_FILE;
+            case UPLOAD_BASKETS_PRE_INSTALL_IMAGE: // 预验收申请图片地址
+                uploadUrl = AREA_ADMIN_CREATE_PREINSTALL_FILE;
                 mToolbar.setTitle("上传安装预验收图片");
                 uploadHint = "安装预验收图片";
                 maxUploadImageNumer = 9;
                 break;
-            default: // 默认预验收申请地址
-                uploadUrl = AREA_ADMIN_CREATE_PRESTOP_FILE;
-                mToolbar.setTitle("上传安装预验收图片");
-                uploadHint = "安装预验收图片";
+            case UPLOAD_BASKETS_PRE_STOP_IMAGE:
+                uploadUrl = AREA_ADMIN_CREATE_PREINSTALL_FILE;
+                mToolbar.setTitle("上传吊篮预报停图片");
+                uploadHint = "吊篮预报停图片";
                 maxUploadImageNumer = 9;
                 break;
+//            default: // 默认预验收申请地址
+//                uploadUrl = AREA_ADMIN_CREATE_PREINSTALL_FILE;
+//                mToolbar.setTitle("上传安装预验收图片");
+//                uploadHint = "安装预验收图片";
+//                maxUploadImageNumer = 9;
+//                break;
         }
         params.clear();
         params.put("projectId", projectId);

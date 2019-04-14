@@ -50,4 +50,5 @@ dependencies {
     implementation 'org.litepal.android:core:1.6.1'
     implementation files('libs/zxing.jar')
     implementation files('libs/MiPush_SDK_Client_3_6_15.jar')
+    implementation files('libs/commons-net-3.6.jar')
 }
