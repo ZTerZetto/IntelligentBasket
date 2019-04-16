@@ -608,14 +608,22 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     public void onSuccess(Object o) {
                         JSONObject jsonObject = JSON.parseObject(o.toString());
                         String isIncrease = jsonObject.getString("increase");
-                        if(isIncrease.equals("新增吊篮成功")) {
+                        if(isIncrease.contains("失败")){
+                            Log.i(TAG, "新增吊篮失败");
+                            DialogToast("提示", "该吊篮已存在于其他项目中！").show();
+                        }else{
                             Log.i(TAG, "添加吊篮成功");
                             DialogToast("提示", "您已成功添加该吊篮！").show();
                             mHandler.sendEmptyMessage(UPDATE_PROJECT_LIST_FROM_INTERNET_MSG);
-                        }else{
-                            Log.i(TAG, "新增吊篮失败");
-                            DialogToast("提示", "该吊篮已存在于其他项目中！").show();
                         }
+//                        if(isIncrease.equals("新增吊篮成功")) {
+//                            Log.i(TAG, "添加吊篮成功");
+//                            DialogToast("提示", "您已成功添加该吊篮！").show();
+//                            mHandler.sendEmptyMessage(UPDATE_PROJECT_LIST_FROM_INTERNET_MSG);
+//                        }else{
+//                            Log.i(TAG, "新增吊篮失败");
+//                            DialogToast("提示", "该吊篮已存在于其他项目中！").show();
+//                        }
                     }
 
                     @Override

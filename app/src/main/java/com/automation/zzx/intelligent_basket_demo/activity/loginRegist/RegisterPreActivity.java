@@ -50,16 +50,19 @@ public class RegisterPreActivity extends AppCompatActivity implements View.OnCli
             case R.id.btn_regist_worker:
                 intent = new Intent(this,RegistWorkerActivity.class);
                 startActivityForResult(intent,1);
+                finish();
                 break;
             case R.id.btn_regist_rent_manager:
                 intent = new Intent(this,RegistRentManActivity.class);
                 startActivityForResult(intent,1);
+                finish();
                 break;
             case R.id.btn_regist_region_manager:
                 intent = new Intent(this,RegistAreaManActivity.class);
                 startActivityForResult(intent,1);
+                finish();
                 break;
-                default:
+                default: finish(); break;
         }
     }
 

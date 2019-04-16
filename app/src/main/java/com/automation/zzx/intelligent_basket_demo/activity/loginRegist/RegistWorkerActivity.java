@@ -527,6 +527,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
                         if(confirm){
                             Intent intent = new Intent(RegistWorkerActivity.this,LoginActivity.class);
                             startActivity(intent);
+                            finish();
                         }else{
                             dialog.dismiss();
                         }

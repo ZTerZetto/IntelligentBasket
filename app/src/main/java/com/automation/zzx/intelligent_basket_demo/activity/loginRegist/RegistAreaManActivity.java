@@ -471,6 +471,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
                             //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击确定");
                             Intent intent = new Intent(RegistAreaManActivity.this,LoginActivity.class);
                             startActivity(intent);
+                            finish();
                         }else{
                             //ToastUtil.showToastTips(WorkerPrimaryActivity.this, "点击取消");
                             dialog.dismiss();
