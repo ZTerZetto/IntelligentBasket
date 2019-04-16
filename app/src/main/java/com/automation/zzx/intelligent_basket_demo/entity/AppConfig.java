@@ -9,7 +9,7 @@ public class AppConfig {
     //public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
     //public final static String ANDROID_URL_PATH = "http://10.193.1.44:8080";  // 师姐
     public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080"; // 老刘
-    public final static String FILE_SERVER_YBLIU_IP = "10.193.0.20";  // 刘跃博FTP文件服务器
+    public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
     public final static String FILE_SERVER_HPC_PATH = "http://10.193.0.20:8089"; // 胡鹏程文件服务器地址
     public final static String COMMUNICATION_SERVER_PATH = "http://47.100.1.211:8081"; // 通讯服务器地址
@@ -18,8 +18,8 @@ public class AppConfig {
     /*
      * 账户和密码
      */
-    public final static String FILE_SERVER_USERNAME = "ybliu";
-    public final static String FILE_SERVER_PASSWORD = "liuyuebo123";
+    public final static String FILE_SERVER_USERNAME = "root";
+    public final static String FILE_SERVER_PASSWORD = "nishipig2/";
 
     /* 登陆
     * userId、userPassword
@@ -124,12 +124,14 @@ public class AppConfig {
     public static final String AREA_ADMIN_GET_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/getBasketList");
     // 区域管理员请求特定项目添加指定吊篮
     public static final String AREA_ADMIN_ADD_BASKET_INTO_PROJECT = ANDROID_URL_PATH.concat("/androidIncreaseBasket");
-    // 区域管理员请求开始项目
-    public static final String AREA_ADMIN_BEGIN_PROJECT = ANDROID_URL_PATH.concat("/beginProject");
     // 区域管理员上传安监证书
     public static final String AREA_ADMIN_CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");
     // 区域管理员上传项目预安装验收启动图片
     public static final String AREA_ADMIN_CREATE_PREINSTALL_FILE = ANDROID_URL_PATH.concat("/createProjectFile");
+    // 区域管理员请求开始项目
+    public static final String AREA_ADMIN_BEGIN_PROJECT = ANDROID_URL_PATH.concat("/beginProject");
+    // 区域管理员请求吊篮预报停
+    public static final String AREA_ADMIN_PREPARE_STOP_DEVICE = ANDROID_URL_PATH.concat("/storageControl");
 
     /*
     * 常量

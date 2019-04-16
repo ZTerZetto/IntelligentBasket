@@ -68,7 +68,7 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
 
     private final static String TAG = "ManageWorkerFragment";
 
-    // handler 消息列表
+    // mHandler 消息列表
     private final static int MG_WORKER_LIST_MSG = 1; // 更新施工人员列表->视图更新
     private final static int UPDATE_WORKER_LIST_MSG = 2; // 更新施工人员列表->网络获取
 

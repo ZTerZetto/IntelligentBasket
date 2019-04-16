@@ -61,7 +61,7 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
             basketPreApplyStop.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.onPreAssAndAceptClick(v, getAdapterPosition());
+                    onItemClickListener.onPreApplyStopClick(v, getAdapterPosition());
                 }
             });
             itemView.setOnClickListener(this);

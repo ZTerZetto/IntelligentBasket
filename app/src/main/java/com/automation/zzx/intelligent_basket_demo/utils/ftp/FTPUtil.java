@@ -27,7 +27,7 @@ import javax.xml.transform.Result;
  */
 
 public class FTPUtil {
-
+    private final static String TAG = "FTPUtil";
     /**
      * 服务器名.
      */
@@ -61,8 +61,7 @@ public class FTPUtil {
     /**
      * FTP根目录.
      */
-    public static final String REMOTE_PATH = "\\";
-    public static final String REMOTE_PATH2 = "\\bbb\\";
+    public static final String BASE_REMOTE_PATH = "../var/ftp/nacelleRent";
 
     /**
      * FTP当前目录.
@@ -128,7 +127,12 @@ public class FTPUtil {
             ftpClient.enterLocalPassiveMode();
             // 二进制文件支持
             ftpClient.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
-            System.out.println("login");
+            // 更换当前工作目录到根目录下
+            if(!ftpClient.changeWorkingDirectory(BASE_REMOTE_PATH)) {
+                Log.i(TAG, "更换至根目录失败");
+                return false;
+            }
+            Log.i(TAG, "更换至根目录成功：" + ftpClient.printWorkingDirectory());
         }
 
         return login;
@@ -190,14 +194,13 @@ public class FTPUtil {
      * @throws IOException
      */
     public void download(String remotePath, String fileName, String localPath) throws IOException {
-        boolean flag = true;
-        Result result = null;
         // 初始化FTP当前目录
         currentPath = remotePath;
         // 初始化当前流量
         response = 0;
-        // 更改FTP目录
-        ftpClient.changeWorkingDirectory(remotePath);
+        // 更换当前工作目录到工作目录下
+        ftpClient.changeWorkingDirectory(currentPath);
+        Log.i(TAG, "更换至工作目录：" + ftpClient.printWorkingDirectory());
         // 得到FTP当前目录下所有文件
         FTPFile[] ftpFiles = ftpClient.listFiles();
         // 循环遍历
@@ -207,24 +210,16 @@ public class FTPUtil {
                 System.out.println("download...");
                 // 创建本地目录
                 File file = new File(localPath + "/" + fileName);
-                //if(!file.exists()) file.mkdirs();
                 // 下载前时间
-                Date startTime = new Date();
                 if (ftpFile.isDirectory()) {
                     // 下载多个文件
-                    flag = downloadMany(file);
+                    //downloadMany(file);
                 } else {
                     // 下载当个文件
-                    flag = downloadSingle(file, ftpFile);
+                    downloadSingle(file, ftpFile);
                 }
-                // 下载完时间
-                Date endTime = new Date();
-                // 返回值
-                //result = new Result(flag, Util.getFormatTime(endTime.getTime() - startTime.getTime()),
-                //       Util.getFormatSize(response));
             }
         }
-        //return result;
     }
 
     /**
@@ -250,56 +245,12 @@ public class FTPUtil {
         return flag;
     }
 
-    /**
-     * 下载多个文件.
-     *
-     * @param localFile
-     *            本地目录
-     * @return true下载成功, false下载失败
-     * @throws IOException
-     */
-    private boolean downloadMany(File localFile) throws IOException {
-        boolean flag = true;
-        // FTP当前目录
-        if (!currentPath.equals(REMOTE_PATH)) {
-            currentPath = currentPath + REMOTE_PATH + localFile.getName();
-        } else {
-            currentPath = currentPath + localFile.getName();
-        }
-        // 创建本地文件夹
-        localFile.mkdir();
-        // 更改FTP当前目录
-        ftpClient.changeWorkingDirectory(currentPath);
-        // 得到FTP当前目录下所有文件
-        FTPFile[] ftpFiles = ftpClient.listFiles();
-        // 循环遍历
-        for (FTPFile ftpFile : ftpFiles) {
-            // 创建文件
-            File file = new File(localFile.getPath() + "/" + ftpFile.getName());
-            if (ftpFile.isDirectory()) {
-                // 下载多个文件
-                flag = downloadMany(file);
-            } else {
-                // 下载单个文件
-                flag = downloadSingle(file, ftpFile);
-            }
-        }
-        return flag;
-    }
 
-    /**
-     * 上传.
-     *
-     * @param localFile
-     *            本地文件
-     * @param remotePath
-     *            FTP目录
-     * @return Result
-     * @throws IOException
+    /*
+     * pengchenghu 定制功能
      */
-    public void uploading(File localFile, String remotePath) throws IOException {
-        boolean flag = true;
-        Result result = null;
+    // 初始化上传文件环境
+    public void uploadingInit(String remotePath) throws IOException {
         // 初始化FTP当前目录
         currentPath = remotePath;
         // 初始化当前流量
@@ -311,24 +262,9 @@ public class FTPUtil {
         // 设置模式
         ftpClient.setFileTransferMode(org.apache.commons.net.ftp.FTP.STREAM_TRANSFER_MODE);
         // 改变FTP目录
-        ftpClient.changeWorkingDirectory(REMOTE_PATH);
-        // 获取上传前时间
-        Date startTime = new Date();
-        if (localFile.isDirectory()) {
-            // 上传多个文件
-            flag = uploadingMany(localFile);
-        } else {
-            // 上传单个文件
-            flag = uploadingSingle(localFile);
-        }
-        // 获取上传后时间
-        Date endTime = new Date();
-        // 返回值
-        //result = new Result(flag, Util.getFormatTime(endTime.getTime() - startTime.getTime()),
-        //        Util.getFormatSize(response));
-        //return result;
+        ftpClient.changeWorkingDirectory(currentPath);
+        Log.i(TAG, "更换至工作目录：" + ftpClient.printWorkingDirectory());
     }
-
     /**
      * 上传单个文件.
      *
@@ -337,54 +273,13 @@ public class FTPUtil {
      * @return true上传成功, false上传失败
      * @throws IOException
      */
-    private boolean uploadingSingle(File localFile) throws IOException {
-        boolean flag = true;
+    public void uploadingSingleRenameFile(File localFile, String fileName) throws IOException {
         // 创建输入流
         InputStream inputStream = new FileInputStream(localFile);
         // 统计流量
         response += (double) inputStream.available() / 1;
         // 上传单个文件
-        flag = ftpClient.storeFile(localFile.getName(), inputStream);
-        // 关闭文件流
+        ftpClient.storeFile(fileName, inputStream);
         inputStream.close();
-        return flag;
-    }
-
-    /**
-     * 上传多个文件.
-     *
-     * @param localFile
-     *            本地文件夹
-     * @return true上传成功, false上传失败
-     * @throws IOException
-     */
-    private boolean uploadingMany(File localFile) throws IOException {
-        boolean flag = true;
-        // FTP当前目录
-        if (!currentPath.equals(REMOTE_PATH)) {
-            currentPath = currentPath + REMOTE_PATH + localFile.getName();
-        } else {
-            currentPath = currentPath + localFile.getName();
-        }
-        // FTP下创建文件夹
-        ftpClient.makeDirectory(currentPath);
-        // 更改FTP目录
-        ftpClient.changeWorkingDirectory(currentPath);
-        // 得到当前目录下所有文件
-        File[] files = localFile.listFiles();
-        // 遍历得到每个文件并上传
-        for (File file : files) {
-            if (file.isHidden()) {
-                continue;
-            }
-            if (file.isDirectory()) {
-                // 上传多个文件
-                flag = uploadingMany(file);
-            } else {
-                // 上传单个文件
-                flag = uploadingSingle(file);
-            }
-        }
-        return flag;
     }
 }

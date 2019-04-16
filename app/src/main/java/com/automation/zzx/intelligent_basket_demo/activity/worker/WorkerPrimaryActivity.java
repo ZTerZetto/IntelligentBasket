@@ -109,7 +109,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private String mToken;
     private SharedPreferences mPref;
 
-    // handler 处理消息
+    // mHandler 处理消息
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         @Override
