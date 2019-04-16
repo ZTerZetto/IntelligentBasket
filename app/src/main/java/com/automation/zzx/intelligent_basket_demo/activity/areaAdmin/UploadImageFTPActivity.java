@@ -331,9 +331,9 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                         message.what = UPLOAD_PROGRESS_PARAMS;
                         message.arg1 = i;
                         mHandler.sendMessage(message);
-                        String tempFileName = projectId;
+                        String tempFileName = projectId + "_";
                         if(uploadType.equals(UPLOAD_BASKETS_PRE_STOP_IMAGE))  // 预报停图片需要特殊命名
-                            tempFileName = tempFileName + "_" + deviceId + "_";
+                            tempFileName = tempFileName + deviceId + "_";
                         tempFileName = tempFileName + (i+1) + ".jpg";
                         mFTPClient.uploadingSingleRenameFile(new File(mUploadImageUrlList.get(i)), tempFileName);
                     }

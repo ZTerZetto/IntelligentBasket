@@ -38,6 +38,8 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
+import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
@@ -202,7 +204,8 @@ public class RegistRentManActivity extends AppCompatActivity {
                     userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(),
                             edt_userPwd.getText().toString(), "rentAdmin");
                     mLoadingDialog.show();
-                    uploadPhoto();
+                    //uploadPhoto();
+                    uploadIdentityCardImage();
                 }
             }
         });
@@ -350,6 +353,31 @@ public class RegistRentManActivity extends AppCompatActivity {
         }
     }
 
+    /*
+     * 上传身份证图片至服务器
+     */
+    // FTP直接上传
+    private void uploadIdentityCardImage(){
+        final FTPUtil mFTPClient = new FTPUtil(AppConfig.FILE_SERVER_YBLIU_IP, AppConfig.FILE_SERVER_YBLIU_PORT,
+                AppConfig.FILE_SERVER_USERNAME, AppConfig.FILE_SERVER_PASSWORD);
+        final String mRemotePath = "photo";
+        new Thread(){
+            public void run() {
+                try {
+                    mFTPClient.openConnect();  // 建立连接
+                    mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
+                    String fileName = userinfo.getUserPhone() + ".jpg";
+                    mFTPClient.uploadingSingleRenameFile(photo_file, fileName);
+                    mFTPClient.closeConnect();  // 关闭连接
+                    handler.sendEmptyMessage(1);
+                }catch (IOException e){
+                    // 上传文件失败
+                    e.printStackTrace();
+                    handler.sendEmptyMessage(5);
+                }
+            }
+        }.start();
+    }
     //上传照片文件至服务器
     private void uploadPhoto() {
         HttpUtil.uploadSinglePicOkHttpRequest(new okhttp3.Callback() {
@@ -387,7 +415,7 @@ public class RegistRentManActivity extends AppCompatActivity {
         }, photo_file, userinfo.getUserPhone());
     }
 
-        //注册
+    //注册
         private void sendRegister() {
             handler.removeMessages(1);
             handler.removeMessages(2);

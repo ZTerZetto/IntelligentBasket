@@ -83,7 +83,8 @@
         <Button
             android:id="@+id/Test_Button"
             style="@style/btnStyle"
-            android:text="不联网测试" />
+            android:text="不联网测试"
+            android:visibility="gone"/>
 
     </LinearLayout>
 

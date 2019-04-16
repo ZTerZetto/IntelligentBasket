@@ -147,8 +147,6 @@ public class LoginActivity extends AppCompatActivity {
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //StartAndFinishActicity(WorkerPrimaryActivity.class); // 跳转到施工人员界面
-                //StartAndFinishActicity(RentAdminPrimaryActivity.class); // 跳转到租方管理人员界面
                 StartAndFinishActicity(AreaAdminPrimaryActivity.class); // 跳转到区域管理人员界面
             }
         });
