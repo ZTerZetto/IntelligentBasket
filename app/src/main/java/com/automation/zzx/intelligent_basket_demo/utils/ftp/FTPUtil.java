@@ -249,6 +249,93 @@ public class FTPUtil {
     /*
      * pengchenghu 定制功能
      */
+    /*
+     * 下载
+     */
+    // 初始化下载文件环境
+    public void downloadingInit(String remotePath) throws IOException {
+        // 初始化FTP当前目录
+        currentPath = remotePath;
+        // 初始化当前流量
+        response = 0;
+        // 二进制文件支持
+        ftpClient.setFileType(org.apache.commons.net.ftp.FTP.BINARY_FILE_TYPE);
+        // 使用被动模式设为默认
+        ftpClient.enterLocalPassiveMode();
+        // 设置模式
+        ftpClient.setFileTransferMode(org.apache.commons.net.ftp.FTP.STREAM_TRANSFER_MODE);
+        // 改变FTP目录
+        if(ftpClient.changeWorkingDirectory(currentPath))
+            Log.i(TAG, "更换至工作目录：" + ftpClient.printWorkingDirectory());
+    }
+    // 刷新文件
+    // direction: 0 寻找最新的num的图片 1 从最新的文件递归到当前文件 2 从当前文件递归12张图片
+    public List<String> getDownloadFileName(int direction, String filename) throws IOException {
+        List<String> filenames = new ArrayList<>();
+        // 得到FTP当前目录下所有文件
+        FTPFile[] ftpFiles = ftpClient.listFiles();
+        // 循环遍历
+        int fileLength = ftpFiles.length;  // 文件总数
+        int num = 0; // 更新的文件数目
+        switch(direction){
+            case 0:  // 首次进来选取20张吊篮图片
+                while((fileLength-num-1) >= 0 && (num < 20)){
+                    if(!ftpFiles[fileLength-num-1].getName().contains(".jpg")) {
+                        num++;
+                        continue;
+                    }
+                    filenames.add(ftpFiles[fileLength-num-1].getName());
+                    num++;
+                }
+                break;
+            case 1:  // 最新的照片找目前的位置
+                while((fileLength-num-1) > 0 && !ftpFiles[fileLength-num-1].getName().equals(filename)){
+                    if(!ftpFiles[fileLength-num-1].getName().contains(".jpg")) {
+                        num++;
+                        continue;
+                    }
+                    filenames.add(ftpFiles[fileLength-num-1].getName());
+                    num++;
+                }
+                break;
+            case 2:  // 寻找历史的20张图片
+                int index = 0;
+                for(int i=0; i < fileLength; i++){
+                    if(filename.equals(ftpFiles[i].getName())){
+                        index = i;
+                        break;
+                    }
+                }
+                while((index-num-1) > 0 && (num < 20)){
+                    if(!ftpFiles[fileLength-num-1].getName().contains(".jpg")) {
+                        num++;
+                        continue;
+                    }
+                    filenames.add(ftpFiles[index-num-1].getName());
+                    num++;
+                }
+                break;
+        }
+        Log.i(TAG, filenames.toString());
+        return filenames;
+    }
+    // 下载文件
+    public void downloadFile(String fileName, String localPath) throws IOException {
+        // 得到FTP当前目录下所有文件
+        FTPFile[] ftpFiles = ftpClient.listFiles();
+        // 反向循环遍历
+        for (int i=ftpFiles.length-1; i>=0; i--) {
+            // 找到需要下载的文件
+            if (ftpFiles[i].getName().equals(fileName)) {
+                // 创建本地目录
+                File file = new File(localPath + "/" + fileName);
+                downloadSingle(file, ftpFiles[i]);
+            }
+        }
+    }
+    /*
+     * 上传
+     */
     // 初始化上传文件环境
     public void uploadingInit(String remotePath) throws IOException {
         // 初始化FTP当前目录

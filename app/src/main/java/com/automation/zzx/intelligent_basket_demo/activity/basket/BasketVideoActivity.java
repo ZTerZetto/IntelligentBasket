@@ -105,7 +105,7 @@ public class BasketVideoActivity extends AppCompatActivity {
         if(mBasketId==null || mBasketId.equals("")){
             //ToastUtil.showToastTips(VideoMonitor2Activity.this, "没有吊篮ID");
             //this.finish();
-            mBasketId = "2";
+            mBasketId = "1";
         }
 
         getToken();
