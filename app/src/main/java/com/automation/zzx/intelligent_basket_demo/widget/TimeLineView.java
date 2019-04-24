@@ -141,6 +141,12 @@ public class TimeLineView extends View {
         invalidate();
     }
 
+    public void setStep(float step) {
+        if(step < 1) step = 1;
+        this.mStep = Math.min(step, this.mPointTxt.size());
+        invalidate();
+    }
+
     public boolean nextStep() {
         if (mStep + 1 > mPointTxt.size()) {
             return false;

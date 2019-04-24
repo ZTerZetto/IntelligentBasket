@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/colorMainBackground"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/upload_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:navigationIcon="@mipmap/ic_navi_back_48px">
+        <TextView
+            android:id="@+id/toolbar_send_textview"
+            android:layout_width="80dp"
+            android:layout_height="30dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="20dp"
+            android:background="@drawable/bg_round_white"
+            android:gravity="center"
+            android:textColor="@color/colorPrimary"
+            android:textSize="16sp"
+            android:text="发送" />
+    </android.support.v7.widget.Toolbar>
+
+    <!-- 项目号 -->
+    <LinearLayout
+        style="@style/horizontal_linearlayout_item">
+        <TextView
+            style="@style/horizontal_linearlayout_item_tv"
+            android:text="项目编号:"/>
+        <EditText
+            android:id="@+id/project_id"
+            style="@style/horizontal_linearlayout_item_ev"
+            android:focusable="false"
+            android:focusableInTouchMode="false" />
+    </LinearLayout>
+
+    <!-- 项目名称 -->
+    <LinearLayout
+        style="@style/horizontal_linearlayout_item">
+        <TextView
+            style="@style/horizontal_linearlayout_item_tv"
+            android:text="项目名称:"/>
+        <EditText
+            android:id="@+id/project_name"
+            style="@style/horizontal_linearlayout_item_ev" />
+    </LinearLayout>
+
+    <!-- 预计报停数目 -->
+    <LinearLayout
+        style="@style/horizontal_linearlayout_item">
+        <TextView
+            style="@style/horizontal_linearlayout_item_tv"
+            android:text="预报停数目:" />
+        <EditText
+            android:id="@+id/pre_stop_number"
+            style="@style/horizontal_linearlayout_item_ev"
+            android:inputType="number"/>
+        <TextView
+            style="@style/horizontal_linearlayout_item_tv"
+            android:text="个" />
+    </LinearLayout>
+
+    <!-- 预计报停时间 -->
+    <LinearLayout
+        style="@style/horizontal_linearlayout_item">
+        <TextView
+            style="@style/horizontal_linearlayout_item_tv"
+            android:text="预报停时间:"/>
+        <EditText
+            android:id="@+id/pre_stop_days"
+            style="@style/horizontal_linearlayout_item_ev"
+            android:inputType="number"/>
+        <TextView
+            style="@style/horizontal_linearlayout_item_tv"
+            android:text="天" />
+    </LinearLayout>
+
+</LinearLayout>

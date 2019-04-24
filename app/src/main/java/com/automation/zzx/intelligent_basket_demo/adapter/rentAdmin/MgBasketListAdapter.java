@@ -120,10 +120,11 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
                 }
                 break;
             case "4":
-                viewHolder.basketState.setText("预报停申请中");
+                //viewHolder.basketState.setText("预报停申请中");
+                //viewHolder.basketState.setText("报停申请中");
                 break;
             case "5":
-                viewHolder.basketState.setText("预报停审核中");
+                viewHolder.basketState.setText("报停审核中");
                 break;
         }
         viewHolder.basketOutStorage.setText(mgBasketInfo.getOutStorage().substring(0,10));

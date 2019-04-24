@@ -6,9 +6,9 @@ public class AppConfig {
      * 服务器地址
      */
     public final static String BASE_URL_PATH = "http://47.100.1.211";// 后台地址
-    public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
+    //public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
     //public final static String ANDROID_URL_PATH = "http://10.193.1.44:8080";  // 师姐
-    //public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080"; // 老刘
+    public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080"; // 老刘
     public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
     public final static String FILE_SERVER_HPC_PATH = "http://10.193.0.20:8089"; // 胡鹏程文件服务器地址
@@ -108,6 +108,8 @@ public class AppConfig {
     public static final String RENT_ADMIN_MG_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/forecastStop");
     // 租方管理员请求预报停
     public static final String RENT_ADMIN_APPLY_PRE_STOP_BASKETS = ANDROID_URL_PATH.concat("/prepareEnd");
+    // 租方管理员请求报停
+    public static final String RENT_ADMIN_APPLY_STOP_BASKETS = ANDROID_URL_PATH.concat("/storageEnd");
     // 租方管理员请求所有施工人员
     public static final String RENT_ADMIN_GET_ALL_WORKER_INFO = ANDROID_URL_PATH.concat("/getUserList");
     // 租方管理员添加施工人员
@@ -128,10 +130,14 @@ public class AppConfig {
     public static final String AREA_ADMIN_CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");
     // 区域管理员上传项目预安装验收启动图片
     public static final String AREA_ADMIN_CREATE_PREINSTALL_FILE = ANDROID_URL_PATH.concat("/createProjectFile");
-    // 区域管理员请求开始项目
+    // 区域管理员请求预验收申请
+    public static final String AREA_ADMIN_APPLY_INSTALL = ANDROID_URL_PATH.concat("/installApply");
+    // 区域管理员请求项目开始
     public static final String AREA_ADMIN_BEGIN_PROJECT = ANDROID_URL_PATH.concat("/beginProject");
-    // 区域管理员请求吊篮预报停
+    // 区域管理员请求吊篮预报停(丢弃)
     public static final String AREA_ADMIN_PREPARE_STOP_DEVICE = ANDROID_URL_PATH.concat("/storageControl");
+    // 区域管理员上传预报停信息
+    public static final String AREA_ADMIN_SEND_PRE_STOP_INFO = ANDROID_URL_PATH.concat("/createPreStop");
 
     /*
     * 常量

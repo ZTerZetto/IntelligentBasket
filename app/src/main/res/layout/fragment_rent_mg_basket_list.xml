@@ -100,7 +100,7 @@
         <!-- 预报停 -->
         <TextView
             android:id="@+id/basket_apply_stop"
-            android:text="预报停"
+            android:text="报停"
             style="@style/ApplyOperateTextView"/>
 
     </RelativeLayout>

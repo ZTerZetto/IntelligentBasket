@@ -60,7 +60,7 @@ import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
 
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_BEGIN_PROJECT;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_APPLY_INSTALL;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_CREATE_CERT_FILE;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_CREATE_PREINSTALL_FILE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.PROJECT_ID;
@@ -442,7 +442,7 @@ public class UploadImageActivity extends AppCompatActivity implements View.OnCli
                 .addParam("picNum", mUploadImageUrlList.size())
                 .addParam("managerId", managerId)
                 .post()
-                .url(AREA_ADMIN_BEGIN_PROJECT)
+                .url(AREA_ADMIN_APPLY_INSTALL)
                 .build()
                 .enqueue(new BaseCallBack() {
                     @Override

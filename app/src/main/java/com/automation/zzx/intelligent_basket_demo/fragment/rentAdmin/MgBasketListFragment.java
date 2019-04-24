@@ -30,6 +30,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailAc
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketListAdapter;
+import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
@@ -57,6 +58,7 @@ import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_A
  * Author Email: 15651851181@163.com
  * Describe: 租方管理员列表管理吊篮
  * Extra: 本页HTTP请求使用BaseOkHttpClient
+ * Update: 租方管理员由yu报停->
  */
 public class MgBasketListFragment extends Fragment implements View.OnClickListener {
 
@@ -178,7 +180,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                 mgBasketListAdapter.notifyDataSetChanged();
             }
         });
-        // 预报停按钮点击
+        // 报停按钮点击
         basketApplyStop.setOnClickListener(this);
 
         return view;
@@ -202,7 +204,8 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                                 @Override
                                 public void onClick(Dialog dialog, boolean confirm) {
                                     if(confirm){
-                                        rentAdminApplyPreStopBasket();  // 预报停申请
+                                        //rentAdminApplyPreStopBasket();  // 预报停申请
+                                        rentAdminApplyStopBasket();   // 报停申请
                                         dialog.dismiss();
                                     }else{
                                         dialog.dismiss();
@@ -351,6 +354,59 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
         return results;
     }
 
+    // 报停申请
+    private void rentAdminApplyStopBasket(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", token)
+                .addParam("projectId", projectId)
+                .addParam("storageList", getApplyStopBasketList())
+                .addParam("manageId", userInfo.getUserId())
+                .post()
+                .url(AppConfig.RENT_ADMIN_APPLY_STOP_BASKETS)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.i(TAG, "报停成功" );
+
+                        JSONObject jsonObject = JSON.parseObject(o.toString());
+                        if(jsonObject.getString("update").equals("申请成功")) {
+                            // 申请成功
+                            handler.sendEmptyMessage(GET_BASKET_LIST_INFO);
+                            DialogToast("提示", "报停申请成功，待公司管理员审核!");
+                        }else{
+                            // 申请失败
+                            DialogToast("错误", "未知错误，报停申请失败！");
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "报停错误：" + code);
+                        switch (code){
+                            case 401: // 未授权
+                                ToastUtil.showToastTips(getActivity(), "登录已过期，请重新登陆");
+                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                                getActivity().finish();
+                                break;
+                            case 403: // 禁止
+                                break;
+                            case 404: // 404
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "报停失败：" + e.toString());
+                    }
+                });
+    }
+    // 报停列表
+    private String getApplyStopBasketList(){
+        return getApplyPreStopBasketList();
+    }
+
     /*
      * UI 更新相关
      */
@@ -372,7 +428,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
     }
 
     /*
-     * 生命周期函数
+     *  生命周期函数
      */
     /*
      * 登录相关

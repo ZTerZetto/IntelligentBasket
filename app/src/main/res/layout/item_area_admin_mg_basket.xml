@@ -93,7 +93,7 @@
         <TextView
             android:id="@+id/pre_assessment_acceptance"
             style="@style/MgBasketOperationTextView"
-            android:text="预验收申请"
+            android:text="上传安监证书"
             android:visibility="gone"/>
 
         <!-- 预验收申请 -->

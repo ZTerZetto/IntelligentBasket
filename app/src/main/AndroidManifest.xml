@@ -36,7 +36,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.areaAdmin.CheckCompactActivity"></activity>
+        <activity android:name=".activity.areaAdmin.UploadPreStopInfoActivity"></activity>
+        <activity android:name=".activity.areaAdmin.CheckCompactActivity" />
         <activity android:name=".activity.worker.WorkerMessageActivity" />
         <activity android:name=".activity.areaAdmin.UploadImageActivity" />
         <activity android:name=".activity.areaAdmin.UploadImageFTPActivity" />
@@ -72,16 +73,21 @@
         <activity android:name=".activity.basket.BasketListActivity" />
         <activity android:name=".activity.oldversion.WorkerListActivity" />
         <activity android:name=".activity.oldversion.ProListActivity" />
-        <activity android:name=".activity.loginRegist.RegistWorkerActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.loginRegist.RegistRentManActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.loginRegist.RegistAreaManActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.loginRegist.RegisterPreActivity"
-            android:launchMode="singleTask"/>
-        <activity android:name=".activity.loginRegist.LoginActivity"
-            android:launchMode="singleTask"/> <!-- 多图片选择器 -->
+        <activity
+            android:name=".activity.loginRegist.RegistWorkerActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.loginRegist.RegistRentManActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.loginRegist.RegistAreaManActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.loginRegist.RegisterPreActivity"
+            android:launchMode="singleTask" />
+        <activity
+            android:name=".activity.loginRegist.LoginActivity"
+            android:launchMode="singleTask" /> <!-- 多图片选择器 -->
         <activity
             android:name="me.nereo.multi_image_selector.MultiImageSelectorActivity"
             android:configChanges="orientation|screenSize" /> <!-- Zxing -->

@@ -54,7 +54,7 @@ import java.util.Map;
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.Call;
 
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_BEGIN_PROJECT;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_APPLY_INSTALL;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.PROJECT_ID;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRE_INSTALL_IMAGE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRE_STOP_IMAGE;
@@ -73,8 +73,9 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
     private final static int GET_UPLOAD_INFO = 100;  // 上传图片成功
     private final static int GET_UPLOAD_WRONG = 101;  // 上传图片失败
     private final static int UPLOAD_PROGRESS_PARAMS = 102; // 更新文件进度条
-    private final static int APPLY_BEGIN_PROJECT = 103; // 申请开始项目
-    private final static int APPLY_PREPARE_STOP_DEVICE = 104; // 申请预报停
+    private final static int APPLY_INSTALL_BASKET = 103;
+    private final static int APPLY_BEGIN_PROJECT = 104; // 申请开始项目
+    private final static int APPLY_PREPARE_STOP_DEVICE = 105; // 申请预报停
 
 
     //相册位置
@@ -133,8 +134,11 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 case UPLOAD_PROGRESS_PARAMS:  // 更新文件上传进度轴参数
                     mProgressDialog.setProgress(msg.arg1);
                     break;
-                case APPLY_BEGIN_PROJECT:  // 开始项目
-                    beginProject();
+                case APPLY_INSTALL_BASKET:  // 预验收申请
+                    applyInstallBasket();
+                    break;
+                case APPLY_BEGIN_PROJECT:  // 开始项目申请
+                    beginBasket();
                     break;
                 case APPLY_PREPARE_STOP_DEVICE:  // 吊篮预报停
                     prepareDeviceStop();
@@ -321,9 +325,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
         new Thread() {
             public void run() {
                 try {
-                    /*
-                     * 上传文件
-                     */
+                    // 上传文件
                     mFTPClient.openConnect();  // 建立连接
                     mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
                     for(int i=0; i < mUploadImageUrlList.size(); i++){
@@ -331,22 +333,25 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                         message.what = UPLOAD_PROGRESS_PARAMS;
                         message.arg1 = i;
                         mHandler.sendMessage(message);
-                        String tempFileName = projectId + "_";
-                        if(uploadType.equals(UPLOAD_BASKETS_PRE_STOP_IMAGE))  // 预报停图片需要特殊命名
-                            tempFileName = tempFileName + deviceId + "_";
-                        tempFileName = tempFileName + (i+1) + ".jpg";
+                        String tempFileName = "";
+                        if(uploadType.equals(UPLOAD_BASKETS_PRE_STOP_IMAGE)) {  // 预报停命名 projectId_deviceId_num.jpg
+                            tempFileName = projectId + "_" + deviceId + "_" + (i+1) + ".jpg";
+                        }else if(uploadType.equals(UPLOAD_CERTIFICATE_IMAGE)){  // 安监证书
+                            tempFileName = projectId + "_" + deviceId  + ".jpg";
+                        }else if(uploadType.equals(UPLOAD_BASKETS_PRE_INSTALL_IMAGE)){  // 预安装验收
+                            tempFileName = projectId + "_" + (i+1) + ".jpg";
+                        }
                         mFTPClient.uploadingSingleRenameFile(new File(mUploadImageUrlList.get(i)), tempFileName);
                     }
                     mFTPClient.closeConnect();  // 关闭连接
-                    /*
-                     * 文件上传成功后操作
-                     */
+
+                    // 文件上传成功后操作
                     switch(uploadType){
                         case UPLOAD_CERTIFICATE_IMAGE:  // 安监证书
-                            mHandler.sendEmptyMessage(GET_UPLOAD_INFO);
+                            mHandler.sendEmptyMessage(APPLY_BEGIN_PROJECT);
                             break;
                         case UPLOAD_BASKETS_PRE_INSTALL_IMAGE:  // 预安装申请
-                            mHandler.sendEmptyMessage(APPLY_BEGIN_PROJECT);
+                            mHandler.sendEmptyMessage(APPLY_INSTALL_BASKET);
                             break;
                         case UPLOAD_BASKETS_PRE_STOP_IMAGE: // 预报停
                             //mHandler.sendEmptyMessage(GET_UPLOAD_INFO);
@@ -367,32 +372,63 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 AppConfig.FILE_SERVER_USERNAME, AppConfig.FILE_SERVER_PASSWORD);
     }
 
-    // 开始项目申请
-    private void beginProject(){
+    // 安装预验收申请
+    private void applyInstallBasket(){
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization", token)
                 .addParam("projectId", projectId)
                 .addParam("picNum", mUploadImageUrlList.size())
                 .addParam("managerId", managerId)
                 .post()
-                .url(AREA_ADMIN_BEGIN_PROJECT)
+                .url(AREA_ADMIN_APPLY_INSTALL)
                 .build()
                 .enqueue(new BaseCallBack() {
                     @Override
                     public void onSuccess(Object o) {
-                        Log.d(TAG, "成功提交开始项目申请");
+                        Log.d(TAG, "成功提交安装预验收申请");
                         mHandler.sendEmptyMessage(GET_UPLOAD_INFO);
                     }
 
                     @Override
                     public void onError(int code) {
-                        Log.d(TAG, "提交开始项目申请错误，错误编码："+code);
+                        Log.d(TAG, "安装预验收申请错误，错误编码："+code);
                         mHandler.sendEmptyMessage(GET_UPLOAD_WRONG);
                     }
 
                     @Override
                     public void onFailure(Call call, IOException e) {
-                        Log.d(TAG, "提交开始项目申请失败");
+                        Log.d(TAG, "安装预验收申请失败");
+                        mHandler.sendEmptyMessage(GET_UPLOAD_WRONG);
+                    }
+                });
+    }
+
+    // 吊篮上传安监证书，开始项目
+    private void beginBasket(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", token)
+                .addParam("projectId", projectId)
+                .addParam("storageList", deviceId)
+                .addParam("managerId", managerId)
+                .post()
+                .url(AppConfig.AREA_ADMIN_BEGIN_PROJECT)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.d(TAG, "成功提交安监证书申请");
+                        mHandler.sendEmptyMessage(GET_UPLOAD_INFO);
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.d(TAG, "安监证书申请错误，错误编码："+code);
+                        mHandler.sendEmptyMessage(GET_UPLOAD_WRONG);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.d(TAG, "安监证书申请失败");
                         mHandler.sendEmptyMessage(GET_UPLOAD_WRONG);
                     }
                 });
@@ -458,7 +494,8 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 mRemotePath = "cert";
                 mToolbar.setTitle("上传安监证书");
                 uploadHint = "安监证书";
-                maxUploadImageNumer = 9;
+                maxUploadImageNumer = 1;
+                deviceId = getIntent().getStringExtra(AreaAdminMgProjectFragment.BASKET_ID);
                 break;
             case UPLOAD_BASKETS_PRE_INSTALL_IMAGE: // 预验收申请图片地址
                 mRemotePath = "project";

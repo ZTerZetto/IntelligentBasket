@@ -46,6 +46,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProDetailAc
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadImageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadImageFTPActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadPreStopInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
@@ -102,6 +103,8 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
 
     // intent 消息参数
     public final static String PROJECT_ID = "projectId";  // 上传图片的项目Id
+    public final static String PROJECT_NAME = "projectName";  // 上传图片的项目Id
+    public final static String BASKETS_NUM = "basketsNumber";  // 吊篮数目
     public final static String UPLOAD_IMAGE_TYPE  = "uploadImageType"; // 上传图片的类型
     public final static String UPLOAD_BASKETS_PRE_INSTALL_IMAGE = "basketsPreInstall"; // 预验收
     public final static String UPLOAD_CERTIFICATE_IMAGE = "certificate"; // 安监证书
@@ -139,7 +142,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     // 项目管理视图
     private LinearLayout mMgProjectLinearLayout;
     private TimeLineView mProjectScheduleTimeLine;  // 时间进度条
-    private int currentProjectScheduleFlag = 0;
+    private float currentProjectScheduleFlag = 0;
     private List<String> mProjectScheduleList;
     private TextView mProjectIdTextView; // 项目id
     private TextView mProjectNameTextView; //项目名称
@@ -151,6 +154,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private RelativeLayout mSendOrExamineCertificateRelativeLayout; // 上传或查看安监证书
     private TextView mSendOrExamineCertificateTextView; //
     private TextView mSendOrExamineCertificateCountTextView;
+    private RelativeLayout mUploadPreStopInfoRelativeLayout; // 预报停信息上传
 
     // 悬浮按钮
     private ImageView mAddBasketImageView; // 添加吊篮
@@ -292,22 +296,27 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             }
 
             @Override
-            public void onPreAssAndAceptClick(View view, int position) {
-                // 点击预安装申请
+            public void onUploadCertClick(View view, int position) {
+                // 点击安监证书
                 Log.i(TAG, "You have clicked the "+ position+" item's PreAssAndAcept");
-                //startActivity(new Intent(getActivity(), UploadImageFTPActivity.class));
+                Intent intent;
+                intent = new Intent(getActivity(), UploadImageFTPActivity.class);
+                intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                intent.putExtra(BASKET_ID, mgBasketStatementList.get(position).getBasketId());
+                intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
+                startActivityForResult(intent, UPLOAD_PRE_STOP_BASKET_IMAGE_RESULT);
             }
 
             @Override
             public void onPreApplyStopClick(View view, int position) {
                 // 点击预报停申请
-                Log.i(TAG, "You have clicked the "+ position+" item's PreApplyStop");
-                Intent intent;
-                intent = new Intent(getActivity(), UploadImageFTPActivity.class);
-                intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
-                intent.putExtra(BASKET_ID, mgBasketStatementList.get(position).getBasketId());
-                intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_STOP_IMAGE);
-                startActivityForResult(intent, UPLOAD_PRE_STOP_BASKET_IMAGE_RESULT);
+                Log.i(TAG, "You have clicked the "+ position +" item's PreApplyStop");
+//                Intent intent;
+//                intent = new Intent(getActivity(), UploadImageFTPActivity.class);
+//                intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+//                intent.putExtra(BASKET_ID, mgBasketStatementList.get(position).getBasketId());
+//                intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_STOP_IMAGE);
+//                startActivityForResult(intent, UPLOAD_PRE_STOP_BASKET_IMAGE_RESULT);
             }
         });
 
@@ -320,7 +329,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mProjectScheduleTimeLine = (TimeLineView) view.findViewById(R.id.project_schedule_timelineview);
         mProjectScheduleList = new ArrayList<>();
         initProjectScheduleList();
-        mProjectScheduleTimeLine.setPointStrings(mProjectScheduleList, 2);
+        mProjectScheduleTimeLine.setPointStrings(mProjectScheduleList, currentProjectScheduleFlag);
         mProjectIdTextView = (TextView) view.findViewById(R.id.project_id_textview);
         mProjectNameTextView = (TextView) view.findViewById(R.id.project_name_textview);
         mProjectStartRelativeLayout = (RelativeLayout) view.findViewById(R.id.project_start_time_layout);
@@ -334,6 +343,8 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mSendOrExamineCertificateRelativeLayout.setOnClickListener(this);
         mSendOrExamineCertificateTextView = (TextView) view.findViewById(R.id.send_examine_certification_tv);
         mSendOrExamineCertificateCountTextView = (TextView) view.findViewById(R.id.send_examine_certificate_tv_count);
+        mUploadPreStopInfoRelativeLayout = (RelativeLayout) view.findViewById(R.id.pre_stop_info_layout);  // 上传预报停信息
+        mUploadPreStopInfoRelativeLayout.setOnClickListener(this);
 
         /*
          * 悬浮框
@@ -378,12 +389,20 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
                 startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
                 break;
-            case R.id.send_examine_certificate_layout: // 上传/查看安监证书
+            case R.id.send_examine_certificate_layout: // 上传/查看安监证书(已放弃)
                 Log.i(TAG, "You have clicked the examine certification button");
                 intent = new Intent(getActivity(), UploadImageFTPActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
                 intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
                 startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
+                break;
+            case R.id.pre_stop_info_layout:
+                Log.i(TAG, "You have clicked the pre stop info button");
+                intent = new Intent(getActivity(), UploadPreStopInfoActivity.class);
+                intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                intent.putExtra(PROJECT_NAME, mProjectNameList.get(currentSelectedProject));
+                intent.putExtra(BASKETS_NUM, mgBasketStatementClassifiedList.get(3).size());
+                startActivity(intent);
                 break;
         }
     }
@@ -845,45 +864,76 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 mProjectStartTextView.setText("暂未开始");
                 if(projectInfo.getBoxList()==null || projectInfo.getBoxList().equals("")){ // 无吊篮
                     currentProjectScheduleFlag = 1;
-                    mProjectScheduleTimeLine.setStep(1);  //
+                    mProjectScheduleTimeLine.setPointStrings(mProjectScheduleList, currentProjectScheduleFlag);  //
+                    mPreApplyRelativeLayout.setVisibility(View.GONE);
                 }else{  // 很多吊篮
                     currentProjectScheduleFlag = 2;
-                    mProjectScheduleTimeLine.setStep(2);  //
+                    mProjectScheduleTimeLine.setPointStrings(mProjectScheduleList, currentProjectScheduleFlag);   //
+                    mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
+                    mPreApplyCountTextView.setVisibility(View.VISIBLE);
                 }
-                mSendOrExamineCertificateTextView.setText("上传安监证书");
-                mSendOrExamineCertificateCountTextView.setVisibility(View.VISIBLE);
-                mPreApplyCountTextView.setVisibility(View.VISIBLE);
+                mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                 break;
-            case "2": /* 安监证书 */
-                if(projectInfo.getProjectCertUrl()==null || projectInfo.getProjectCertUrl().equals("")){ // 尚未上传安监证书
+            case "2": /*  预安装申请图片 */
+                if(projectInfo.getStoreOut() == null || projectInfo.getStoreOut().equals("")){
+                    // 尚未上传预申请图片
+                    currentProjectScheduleFlag = 2;
+                    mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
+                    mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
+                    mPreApplyCountTextView.setVisibility(View.VISIBLE);
+                    mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
+                }else{
+                    // 已经上传预验收申请图片
+                    currentProjectScheduleFlag = (float)2.5;
+                    mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
+                    mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
+                    mPreApplyCountTextView.setVisibility(View.GONE);
+                    //mPreApplyRelativeLayout.setClickable(false);
+                    mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                     mSendOrExamineCertificateTextView.setText("上传安监证书");
                     mSendOrExamineCertificateCountTextView.setVisibility(View.VISIBLE);
-                    mPreApplyCountTextView.setVisibility(View.VISIBLE);
-                    currentProjectScheduleFlag = 2;
-                    mProjectScheduleTimeLine.setStep(2);
+                }
+                break;
+            case "21": /* 上传安监证书 */
+                if(projectInfo.getProjectCertUrl()==null || projectInfo.getProjectCertUrl().equals("")){ // 尚未上传安监证书
+                    // 尚未上传
+                    currentProjectScheduleFlag = (float)2.5;
+                    mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
+                    mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
+                    mPreApplyCountTextView.setVisibility(View.GONE);
+                    //mPreApplyRelativeLayout.setClickable(false);
+                    mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
+                    mSendOrExamineCertificateTextView.setText("上传安监证书");
+                    mSendOrExamineCertificateCountTextView.setVisibility(View.VISIBLE);
                 }else{
+                    currentProjectScheduleFlag = (float)3;
+                    mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
+                    mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
+                    mPreApplyCountTextView.setVisibility(View.GONE);
+                    //mPreApplyRelativeLayout.setClickable(false);
+                    mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                     mSendOrExamineCertificateTextView.setText("查看安监证书");
                     mSendOrExamineCertificateCountTextView.setVisibility(View.GONE);
-                    mPreApplyCountTextView.setVisibility(View.GONE);
-                    currentProjectScheduleFlag = 3;
-                    mProjectScheduleTimeLine.setStep(3);
                 }
                 break;
             case "3": /* 使用中 */
-                mProjectStartTextView.setText(projectInfo.getProjectStart());
-                mPreApplyCountTextView.setVisibility(View.GONE);
-                mSendOrExamineCertificateTextView.setText("查看安监证书");
-                mSendOrExamineCertificateCountTextView.setVisibility(View.GONE);
                 currentProjectScheduleFlag = 4;
                 mProjectScheduleTimeLine.setStep(4);
-                break;
-            case "4": /* 结束 */
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
                 mPreApplyCountTextView.setVisibility(View.GONE);
+                mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                 mSendOrExamineCertificateTextView.setText("查看安监证书");
                 mSendOrExamineCertificateCountTextView.setVisibility(View.GONE);
+                mUploadPreStopInfoRelativeLayout.setVisibility(View.VISIBLE);
+                break;
+            case "4": /* 结束 */
                 currentProjectScheduleFlag = 5;
                 mProjectScheduleTimeLine.setStep(5);
+                mProjectStartTextView.setText(projectInfo.getProjectStart());
+                mPreApplyCountTextView.setVisibility(View.GONE);
+                mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
+                mSendOrExamineCertificateTextView.setText("查看安监证书");
+                mSendOrExamineCertificateCountTextView.setVisibility(View.GONE);
                 break;
         }
     }

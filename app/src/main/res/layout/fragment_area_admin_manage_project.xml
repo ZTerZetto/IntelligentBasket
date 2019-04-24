@@ -145,25 +145,6 @@
                     <View
                         style="@style/me_horizontal_view_style"/>
 
-                    <!-- 查看/上传安监证书 -->
-                    <RelativeLayout
-                        android:id="@+id/send_examine_certificate_layout"
-                        style="@style/me_common_item_relativeLayout_style">
-                        <TextView
-                            android:id="@+id/send_examine_certification_tv"
-                            style="@style/more_common_item_textView_style"
-                            android:text="安监证书"/>
-                        <ImageView
-                            android:id="@+id/send_examine_certificate_iv_arrow_right"
-                            style="@style/me_common_item_arrow_right_imageView_style"/>
-                        <TextView
-                            android:id="@+id/send_examine_certificate_tv_count"
-                            android:layout_toLeftOf="@+id/send_examine_certificate_iv_arrow_right"
-                            style="@style/me_common_item_count_with_organgered_bg_textView_style"
-                            android:text="!"/>
-                    </RelativeLayout>
-                    <View style="@style/me_horizontal_view_style"/>
-
                     <!-- 预验收申请 -->
                     <RelativeLayout
                         android:id="@+id/project_pre_apply_layout"
@@ -181,7 +162,48 @@
                             style="@style/me_common_item_count_with_organgered_bg_textView_style"
                             android:text="!"/>
                     </RelativeLayout>
-                    <!--<View style="@style/me_horizontal_view_style"/>-->
+
+                    <View style="@style/me_horizontal_view_style"
+                        android:visibility="gone"/>
+
+                    <!-- 查看/上传安监证书 -->
+                    <RelativeLayout
+                        android:id="@+id/send_examine_certificate_layout"
+                        style="@style/me_common_item_relativeLayout_style">
+                        <TextView
+                            android:id="@+id/send_examine_certification_tv"
+                            style="@style/more_common_item_textView_style"
+                            android:text="安监证书"/>
+                        <ImageView
+                            android:id="@+id/send_examine_certificate_iv_arrow_right"
+                            style="@style/me_common_item_arrow_right_imageView_style"/>
+                        <TextView
+                            android:id="@+id/send_examine_certificate_tv_count"
+                            android:layout_toLeftOf="@+id/send_examine_certificate_iv_arrow_right"
+                            style="@style/me_common_item_count_with_organgered_bg_textView_style"
+                            android:text="!"/>
+                    </RelativeLayout>
+
+                    <View style="@style/me_horizontal_view_style"/>
+
+                    <!-- 预报停信息采集 -->
+                    <RelativeLayout
+                        android:id="@+id/pre_stop_info_layout"
+                        style="@style/me_common_item_relativeLayout_style">
+                        <TextView
+                            android:id="@+id/pre_stop_info_tv"
+                            style="@style/more_common_item_textView_style"
+                            android:text="预报停信息"/>
+                        <ImageView
+                            android:id="@+id/pre_stop_info_iv_arrow_right"
+                            style="@style/me_common_item_arrow_right_imageView_style"/>
+                        <TextView
+                            android:id="@+id/pre_stop_info_tv_count"
+                            android:layout_toLeftOf="@+id/pre_stop_info_iv_arrow_right"
+                            style="@style/me_common_item_count_with_organgered_bg_textView_style"
+                            android:text="!"
+                            android:visibility="gone"/>
+                    </RelativeLayout>
                 </LinearLayout>
 
             </LinearLayout>
