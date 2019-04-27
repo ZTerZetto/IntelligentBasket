@@ -246,7 +246,7 @@ public class BasketPhotoActivity extends AppCompatActivity {
     /*
      * 其他函数
      */
-    /*
+
     // 初始化图片地址
     private void initWorkPhotoUrls(){
         mWorkPtotoUrls = new ArrayList<>();
@@ -266,11 +266,11 @@ public class BasketPhotoActivity extends AppCompatActivity {
     // 初始化图片位图:直接从缓存中获取
     private void getBitmaps(){
         mWorkPhotos = new ArrayList<>();
-        for(int i=0; i<mWorkPtotoUrls.size(); i++){
+        for(int i=0; i < mWorkPtotoUrls.size(); i++){
             String url = mWorkPtotoUrls.get(i);
             mWorkPhotos.add(null);
             mWorkPhotos.set(i, WebImage.webImageCache.get(url));
         }
-    }*/
+    }
 
 }
