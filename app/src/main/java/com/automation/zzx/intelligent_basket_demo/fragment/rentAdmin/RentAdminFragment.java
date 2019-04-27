@@ -38,8 +38,6 @@ import java.io.IOException;
 
 import okhttp3.Call;
 
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_HPC_PATH;
-
 /**
  * Created by pengchenghu on 2019/3/22.
  * Author Email: 15651851181@163.com
@@ -74,7 +72,7 @@ public class RentAdminFragment extends Fragment implements View.OnClickListener 
     // 页面信息
     private String mWorkProjectId;  // 项目ID
     private String mWorkProjectName; // 项目名称
-    private String mUserHeadUrl = FILE_SERVER_HPC_PATH + "/head/default_user_head.png";
+    private String mUserHeadUrl = AppConfig.FILE_SERVER_YBLIU_PATH + "/head/default_user_head.png";
 
     // 用户信息
     private UserInfo mUserInfo;

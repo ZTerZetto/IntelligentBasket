@@ -26,6 +26,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.application.CustomApplication;
@@ -46,7 +47,6 @@ import okhttp3.Call;
 import okhttp3.Callback;
 import okhttp3.Response;
 
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_HPC_PATH;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.WORKER_BEGIN_WORK;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.WORKER_ENG_WORK;
 import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
@@ -98,7 +98,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private String mWorkProjectName; // 项目名称
     private int mWorkState = 0; // 0:等待上工 1:等待下工
     //private String mBasketId; //s 吊篮ID
-    private String mUserHeadUrl = FILE_SERVER_HPC_PATH + "/head/hdImg_default.jpg";
+    private String mUserHeadUrl = AppConfig.FILE_SERVER_YBLIU_PATH + "/head/hdImg_default.jpg";
 
     // dialog
     private CommonDialog mCommonDialog;

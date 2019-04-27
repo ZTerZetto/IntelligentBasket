@@ -37,8 +37,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_HPC_PATH;
-
 /**
  * Created by pengchenghu on 2019/2/23.
  * Author Email: 15651851181@163.com
@@ -60,8 +58,9 @@ public class BasketPhotoActivity extends AppCompatActivity {
     private GridView mWorkPhotoGv;  // 网格布局
 
     // work photo gridview
-    private List<Bitmap> mWorkPhotos = new ArrayList<>();
-    private List<String> mFileNameList = new ArrayList<>();
+    private List<Bitmap> mWorkPhotos = new ArrayList<>();  // bitmap 位图
+    private List<String> mWorkPtotoUrls = new ArrayList<>(); // 文件Url
+    private List<String> mFileNameList = new ArrayList<>(); // 文件名
     private WorkPhotoAdapter mWorkPhotoAdapter;
 
     // 吊篮相关
@@ -80,24 +79,24 @@ public class BasketPhotoActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case PULL_UP:  // 上拉加载更多
-                    downloadWorkPhoto(2, mFileNameList.get(mFileNameList.size()-1));
+                    //downloadWorkPhoto(2, mFileNameList.get(mFileNameList.size()-1));
+                    displayWorkPhoto(2, mFileNameList.get(mFileNameList.size()-1));
                     break;
                 case PULL_DOWN:  // 下拉刷新
-                    downloadWorkPhoto(1, mFileNameList.get(0));
+                    //downloadWorkPhoto(1, mFileNameList.get(0));
+                    displayWorkPhoto(1, mFileNameList.get(0));
                     break;
                 case UPDATE_IMAGE:  // 更新图片
-                    if(msg.what==1){
+                    if(msg.arg1==1){
                         // 下拉刷新：加载最新图片，并且定位在第一行
-                        mFileNameList.add(0, (String)msg.obj);
-                        mWorkPhotos.add(0, (Bitmap) BitmapFactory.decodeFile(
-                                LOCAL_WORK_PHOTO_PATH + mBasketId + File.separator +  (String)msg.obj));
+                        mFileNameList.addAll(0, (List<String>)msg.obj);
+                        generateWorkPhotoUrls((List<String>)msg.obj, msg.arg1);
                         mWorkPhotoAdapter.notifyDataSetChanged();
                         mWorkPhotoGv.smoothScrollToPosition(0);
                     }else{
                         // 上拉加载更多：加载历史图片，并且定位在最后一行
-                        mFileNameList.add((String)msg.obj);
-                        mWorkPhotos.add((Bitmap) BitmapFactory.decodeFile(LOCAL_WORK_PHOTO_PATH
-                                + mBasketId + File.separator +  (String)msg.obj));
+                        mFileNameList.addAll((List<String>)msg.obj);
+                        generateWorkPhotoUrls((List<String>)msg.obj, msg.arg1);
                         mWorkPhotoAdapter.notifyDataSetChanged();
                         mWorkPhotoGv.smoothScrollToPosition(mFileNameList.size());
                     }
@@ -129,10 +128,11 @@ public class BasketPhotoActivity extends AppCompatActivity {
         //mBasketId = intent.getStringExtra(HANGING_BASKET_ID);  // 获取吊篮ID
         if(mBasketId==null || mBasketId.equals("")) mBasketId = "js_nj_00003";
 
-        initLocalDir();  // 初始化本地资源目录
+        //initLocalDir();  // 初始化本地资源目录
         initFTPClient();  // 初始化FTP连接
         initWidgetResource(); // 初始化控件资源
-        downloadWorkPhoto(0, "");  // 获取相关图片
+        //downloadWorkPhoto(0, "");  // 获取相关图片
+        displayWorkPhoto(0, "");  // 获取相关图片
     }
 
     // 控件初始化
@@ -170,11 +170,13 @@ public class BasketPhotoActivity extends AppCompatActivity {
         // work photo gridview
         mWorkPhotoGv = (GridView) findViewById(R.id.work_photo_gv);
         mWorkPhotoAdapter = new WorkPhotoAdapter(BasketPhotoActivity.this,
-                R.layout.item_work_photo, mWorkPhotos);
+                R.layout.item_work_photo, mWorkPtotoUrls);
         mWorkPhotoGv.setAdapter(mWorkPhotoAdapter);
         mWorkPhotoGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {  // 点击图片响应
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                getBitmaps();
+
                 // 显示dislog
                 ScaleImageView scaleImageView = new ScaleImageView(BasketPhotoActivity.this);
                 scaleImageView.setUrls_and_Bitmaps(mFileNameList, mWorkPhotos, position);
@@ -209,8 +211,9 @@ public class BasketPhotoActivity extends AppCompatActivity {
                 AppConfig.FILE_SERVER_USERNAME, AppConfig.FILE_SERVER_PASSWORD);
     }
 
-    // 下载图片
-    private void downloadWorkPhoto(final int direction, final String filename){
+
+    // 获取要显示图片的url
+    private void displayWorkPhoto(final int direction, final String filename){
         new Thread(){
             public void run(){
                 try{
@@ -219,16 +222,11 @@ public class BasketPhotoActivity extends AppCompatActivity {
                     List<String> newFileNames = mFTPClient.getDownloadFileName(direction, filename);
                     if(newFileNames.size() == 0){  // 没有更多的图片
                         mHandler.sendEmptyMessage(NO_MORE_IMAGE);
-                        return;
-                    }
-                    for(String filename: newFileNames){
-                        if(! new File(LOCAL_WORK_PHOTO_PATH + mBasketId, filename).exists()){
-                            // 文件不存在
-                            mFTPClient.downloadFile(filename, LOCAL_WORK_PHOTO_PATH + mBasketId);
-                        }
+                    }else {   // 图片更新
                         Message msg = new Message();  // 通知页面更新
                         msg.what = UPDATE_IMAGE;
-                        msg.obj = filename;
+                        msg.arg1 = direction;
+                        msg.obj = newFileNames;
                         mHandler.sendMessage(msg);
                     }
                     mFTPClient.closeConnect();  // 关闭连接
@@ -242,30 +240,28 @@ public class BasketPhotoActivity extends AppCompatActivity {
     }
 
 
-
     /*
      * 其他函数
      */
 
     // 初始化图片地址
-    private void initWorkPhotoUrls(){
-        mWorkPtotoUrls = new ArrayList<>();
+    private void generateWorkPhotoUrls(List<String> newAddFileName, int direction){
+        String root_url = AppConfig.FILE_SERVER_YBLIU_PATH + File.separator + REMOTE_WORK_PHOTO_PATH +
+                File.separator + mBasketId + File.separator;
 
-        String root_url = FILE_SERVER_HPC_PATH + "/basket/001/";
-
-        mWorkPtotoUrls.add(root_url + "201902251424.jpg");
-        mWorkPtotoUrls.add(root_url + "201902251425.jpg");
-        mWorkPtotoUrls.add(root_url + "201902251426.jpg");
-        mWorkPtotoUrls.add(root_url + "201902251427.jpg");
-        mWorkPtotoUrls.add(root_url + "201902251428.jpg");
-        mWorkPtotoUrls.add(root_url + "201902251429.jpg");
-        mWorkPtotoUrls.add(root_url + "201902251430.jpg");
-        mWorkPtotoUrls.add(root_url + "201902251431.jpg");
+        if(direction==1){
+            for(String filename : newAddFileName)
+                mWorkPtotoUrls.add(0, root_url + filename);
+        }else{
+            for(String filename : newAddFileName)
+                mWorkPtotoUrls.add(root_url + filename);
+        }
     }
 
     // 初始化图片位图:直接从缓存中获取
     private void getBitmaps(){
-        mWorkPhotos = new ArrayList<>();
+        mWorkPhotos.clear();
+
         for(int i=0; i < mWorkPtotoUrls.size(); i++){
             String url = mWorkPtotoUrls.get(i);
             mWorkPhotos.add(null);

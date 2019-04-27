@@ -36,7 +36,6 @@ import java.io.IOException;
 
 import okhttp3.Call;
 
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.FILE_SERVER_HPC_PATH;
 
 /**
  * Created by pengchenghu on 2019/3/27.
@@ -67,7 +66,7 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
     private RelativeLayout mLogout; // 退出登录
 
     // 页面信息
-    private String mUserHeadUrl = FILE_SERVER_HPC_PATH + "/head/default_user_head.png";
+    private String mUserHeadUrl = AppConfig.FILE_SERVER_YBLIU_PATH + "/head/default_user_head.png";
 
     // 用户信息
     private UserInfo mUserInfo;
