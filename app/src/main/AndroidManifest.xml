@@ -40,7 +40,7 @@
         <activity android:name=".activity.areaAdmin.CheckCompactActivity" />
         <activity android:name=".activity.worker.WorkerMessageActivity" />
         <activity android:name=".activity.areaAdmin.UploadImageActivity" />
-        <activity android:name=".activity.areaAdmin.UploadImageFTPActivity" />
+        <activity android:name=".activity.common.UploadImageFTPActivity" />
         <activity android:name=".activity.common.QRcodeCardActivity" />
         <activity android:name=".activity.common.PersonalInformationActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />

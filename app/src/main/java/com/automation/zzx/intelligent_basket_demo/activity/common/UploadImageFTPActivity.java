@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.activity.areaAdmin;
+package com.automation.zzx.intelligent_basket_demo.activity.common;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -29,9 +29,12 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.UploadImageLikeWxAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment;
+import com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.MgBasketListFragment;
+import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
@@ -60,6 +63,7 @@ import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.Area
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRE_STOP_IMAGE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_CERTIFICATE_IMAGE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_IMAGE_TYPE;
+import static com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.MgBasketListFragment.UPLOAD_BASKETS_APPLY_STOP_IMAGE;
 
 
 public class UploadImageFTPActivity extends AppCompatActivity implements View.OnClickListener {
@@ -76,7 +80,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
     private final static int APPLY_INSTALL_BASKET = 103;
     private final static int APPLY_BEGIN_PROJECT = 104; // 申请开始项目
     private final static int APPLY_PREPARE_STOP_DEVICE = 105; // 申请预报停
-
+    private final static int APPLY_STOP_DEVICE = 106;  // 申请报停
 
     //相册位置
     public static final String CAMERA_PATH = Environment.getExternalStorageDirectory() +
@@ -108,6 +112,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
     private String projectId;  // 上传的项目编号
     private String uploadType; // 上传图片类型
     private String deviceId;   // 吊篮编号
+    private String deviceList; // 吊篮列表
     private int maxUploadImageNumer; // 最大上传图片数量
     private String uploadHint; // 上传提示信息
     private Map<String, String> params = new HashMap<String, String>(); // 上传参数
@@ -142,6 +147,9 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                     break;
                 case APPLY_PREPARE_STOP_DEVICE:  // 吊篮预报停
                     prepareDeviceStop();
+                    break;
+                case APPLY_STOP_DEVICE: // 申请报停
+                    rentAdminApplyStopBasket();
                     break;
                 default:
                     break;
@@ -338,8 +346,10 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                             tempFileName = projectId + "_" + deviceId + "_" + (i+1) + ".jpg";
                         }else if(uploadType.equals(UPLOAD_CERTIFICATE_IMAGE)){  // 安监证书
                             tempFileName = projectId + "_" + deviceId  + ".jpg";
-                        }else if(uploadType.equals(UPLOAD_BASKETS_PRE_INSTALL_IMAGE)){  // 预安装验收
+                        }else if(uploadType.equals(UPLOAD_BASKETS_PRE_INSTALL_IMAGE)){ // 预安装验收
                             tempFileName = projectId + "_" + (i+1) + ".jpg";
+                        }else if(uploadType.equals(UPLOAD_BASKETS_APPLY_STOP_IMAGE)){  // 报停
+                            tempFileName = projectId + "_" + deviceList + "_" + (i+1) + ".jpg";
                         }
                         mFTPClient.uploadingSingleRenameFile(new File(mUploadImageUrlList.get(i)), tempFileName);
                     }
@@ -356,6 +366,9 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                         case UPLOAD_BASKETS_PRE_STOP_IMAGE: // 预报停
                             //mHandler.sendEmptyMessage(GET_UPLOAD_INFO);
                             mHandler.sendEmptyMessage(APPLY_PREPARE_STOP_DEVICE);
+                            break;
+                        case UPLOAD_BASKETS_APPLY_STOP_IMAGE:  // 报停
+                            mHandler.sendEmptyMessage(APPLY_STOP_DEVICE);
                             break;
                     }
                 } catch (IOException e) {
@@ -470,6 +483,55 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 });
     }
 
+    // 报停申请
+    private void rentAdminApplyStopBasket(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", token)
+                .addParam("projectId", projectId)
+                .addParam("deviceList", deviceList)
+                .addParam("managerId", managerId)
+                .post()
+                .url(AppConfig.RENT_ADMIN_APPLY_STOP_BASKETS)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.i(TAG, "报停成功" );
+
+                        JSONObject jsonObject = JSON.parseObject(o.toString());
+                        if(jsonObject.getString("update").contains("成功")) {
+                            // 申请成功
+                            mHandler.sendEmptyMessage(GET_UPLOAD_INFO);
+                        }else{
+                            // 申请失败
+                            mHandler.sendEmptyMessage(GET_UPLOAD_WRONG);
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "报停错误：" + code);
+                        switch (code){
+                            case 401: // 未授权
+                                ToastUtil.showToastTips(UploadImageFTPActivity.this, "登录已过期，请重新登陆");
+                                startActivity(new Intent(UploadImageFTPActivity.this, LoginActivity.class));
+                                finish();
+                                break;
+                            case 403: // 禁止
+                                break;
+                            case 404: // 404
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "报停失败：" + e.toString());
+                        mHandler.sendEmptyMessage(GET_UPLOAD_WRONG);
+                    }
+                });
+    }
+
     /*
      * 获取基本信息
      */
@@ -509,6 +571,13 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 uploadHint = "吊篮预报停图片";
                 maxUploadImageNumer = 9;
                 deviceId = getIntent().getStringExtra(AreaAdminMgProjectFragment.BASKET_ID);
+                break;
+            case UPLOAD_BASKETS_APPLY_STOP_IMAGE: // 报停
+                mRemotePath = "storeIn";
+                mToolbar.setTitle("上传吊篮报停图片");
+                uploadHint = "吊篮报停图片";
+                maxUploadImageNumer = 9;
+                deviceList = getIntent().getStringExtra(MgBasketListFragment.DEVICES_LIST);
                 break;
         }
     }

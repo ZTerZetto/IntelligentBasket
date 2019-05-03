@@ -85,7 +85,7 @@
             android:id="@+id/basket_number"
             android:layout_toLeftOf="@id/ge"
             android:text="0"
-            android:textSize="@dimen/textSize_20"
+            android:textSize="@dimen/textSize_18"
             android:textStyle="bold"
             android:textColor="@color/dark_red"
             style="@style/ApplyTotalTextView"/>
@@ -97,7 +97,7 @@
             style="@style/ApplyTotalTextView"/>
 
 
-        <!-- 预报停 -->
+        <!-- 报停 -->
         <TextView
             android:id="@+id/basket_apply_stop"
             android:text="报停"

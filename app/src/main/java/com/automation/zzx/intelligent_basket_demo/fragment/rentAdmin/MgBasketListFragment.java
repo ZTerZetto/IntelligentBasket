@@ -26,7 +26,9 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadPreStopInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketListAdapter;
@@ -63,6 +65,11 @@ import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_A
 public class MgBasketListFragment extends Fragment implements View.OnClickListener {
 
     private final static String TAG = "MgBasketListFragment";
+    // intent 消息参数
+    public final static String PROJECT_ID = "projectId";  // 上传图片的项目Id
+    public final static String UPLOAD_IMAGE_TYPE  = "uploadImageType";
+    public final static String DEVICES_LIST = "devicesList";  // 吊篮列表
+    public final static String UPLOAD_BASKETS_APPLY_STOP_IMAGE = "basketsApplyStop"; // 预验收
 
     // Handler消息
     private final static int MG_BASKET_LIST_INFO = 1;  // 吊篮消息列表视图更新显示
@@ -194,10 +201,12 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
         switch (v.getId()){
             case R.id.basket_apply_stop:
                 Log.i(TAG, "You have clicked the apply_stop button");
-                if(Integer.parseInt(basketNumber.getText().toString()) == 0) {
+                if(Integer.parseInt(basketNumber.getText().toString()) == 0) {  // 尚未选择吊篮
                     ToastUtil.showToastTips(getActivity(), "您尚未选择任何吊篮");
+                }else if(!checkBasketsState()){ // 选择的吊篮状态问题
+                    ToastUtil.showToastTips(getActivity(), "请勿提交尚未审核通过的吊篮或已申请报停的吊篮！");
                 }else{
-                    String content = "您申请预报停的吊篮编号为" + getApplyPreStopBasketList();
+                    String content = "您申请预报停的吊篮编号为" + getApplyStopBasketList();
                     // 弹窗二次确认
                     new CommonDialog(getActivity(), R.style.dialog, content,
                             new CommonDialog.OnCloseListener() {
@@ -205,7 +214,13 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                                 public void onClick(Dialog dialog, boolean confirm) {
                                     if(confirm){
                                         //rentAdminApplyPreStopBasket();  // 预报停申请
-                                        rentAdminApplyStopBasket();   // 报停申请
+                                        //rentAdminApplyStopBasket();   // 报停申请
+                                        Log.i(TAG, "You have clicked the pre stop info button");
+                                        Intent intent = new Intent(getActivity(), UploadImageFTPActivity.class);
+                                        intent.putExtra(PROJECT_ID, projectId);
+                                        intent.putExtra(DEVICES_LIST, getApplyStopBasketList());
+                                        intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_APPLY_STOP_IMAGE);
+                                        startActivity(intent);
                                         dialog.dismiss();
                                     }else{
                                         dialog.dismiss();
@@ -354,13 +369,25 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
         return results;
     }
 
+    // 保亭吊篮状态审核
+    private boolean checkBasketsState(){
+        Map<Integer,Boolean> isCheck = mgBasketListAdapter.getMap();
+        for(int i=0; i<isCheck.size(); i++){
+            if(isCheck.get(i)){  // 吊篮选中
+                if(!mgBasketInfoList.get(i).getStorageState().equals("3")){ // 吊篮状态
+                    return false;
+                }
+            }
+        }
+        return true;
+    }
     // 报停申请
     private void rentAdminApplyStopBasket(){
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization", token)
                 .addParam("projectId", projectId)
-                .addParam("storageList", getApplyStopBasketList())
-                .addParam("manageId", userInfo.getUserId())
+                .addParam("deviceList", getApplyStopBasketList())
+                .addParam("managerId", userInfo.getUserId())
                 .post()
                 .url(AppConfig.RENT_ADMIN_APPLY_STOP_BASKETS)
                 .build()
@@ -370,7 +397,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                         Log.i(TAG, "报停成功" );
 
                         JSONObject jsonObject = JSON.parseObject(o.toString());
-                        if(jsonObject.getString("update").equals("申请成功")) {
+                        if(jsonObject.getString("update").contains("成功")) {
                             // 申请成功
                             handler.sendEmptyMessage(GET_BASKET_LIST_INFO);
                             DialogToast("提示", "报停申请成功，待公司管理员审核!");
