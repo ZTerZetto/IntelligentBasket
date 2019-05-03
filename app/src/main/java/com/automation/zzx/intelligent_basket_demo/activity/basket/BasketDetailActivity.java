@@ -48,7 +48,6 @@ public class BasketDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
-
         initWidgetResource();
     }
 
@@ -86,6 +85,8 @@ public class BasketDetailActivity extends AppCompatActivity {
                         intent = new Intent(BasketDetailActivity.this, BasketVideoActivity.class);
                         startActivity(intent);
                         break;
+                    case 3:  // 设置页面
+                        break;
                     default:break;
                 }
             }
@@ -116,6 +117,9 @@ public class BasketDetailActivity extends AppCompatActivity {
         Function video = new Function("监控", R.mipmap.ic_video_192);
         //Function video = new Function("监控", R.mipmap.ic_video);
         mFunctions.add(video);
+        Function setting = new Function("设置", R.mipmap.ic_setting_192);
+        //Function video = new Function("监控", R.mipmap.ic_video);
+        mFunctions.add(setting);
     }
 
     @Override

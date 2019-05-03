@@ -44,6 +44,7 @@ import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.CheckCompactActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadPreStopInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
@@ -292,6 +293,9 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             public void onItemClick(View view, int position) {
                 // 点击item响应
                 Log.i(TAG, "You have clicked the "+position+" item");
+                // 跳转至吊篮详情页面
+                Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
+                startActivity(intent);
             }
 
             @Override
