@@ -12,7 +12,8 @@ public class AppConfig {
     public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
     public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082"; // 刘跃博HTTP文件服务器地址
-    public final static String COMMUNICATION_SERVER_PATH = "http://47.100.1.211:8081"; // 通讯服务器地址
+    //public final static String COMMUNICATION_SERVER_PATH = "http://47.100.1.211:8081"; // 通讯服务器地址
+    public final static String COMMUNICATION_SERVER_PATH = "http://10.193.6.159:8081"; // 通讯服务器地址-老刘暂时
     public final static String VIDEO_STREAM_PATH = "rtmp://47.96.103.244:1935"; // 流媒体服务器地址
 
     /*
@@ -87,7 +88,10 @@ public class AppConfig {
     public static final float ASPECT_RATIO = (float)1.7777777777777777;  // 16:9
     // 视频纵横比
     public static final float ASPECT_RATIO_VIDEO = (float)1.333333333333;  // 4:3
+    //视频推流地址+电柜参数设置
     public static final String HANGING_BASKET_VIDEO = COMMUNICATION_SERVER_PATH.concat("/sendToDevice");
+    //电柜参数获取
+    public static final String HANGING_BASKET_PARAM = COMMUNICATION_SERVER_PATH.concat("/getSetUpData");
 
     /*
      * 施工人员活动请求

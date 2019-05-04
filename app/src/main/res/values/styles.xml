@@ -100,6 +100,19 @@
         <item name="android:layout_width">match_parent</item>
         <item name="android:background">@color/colorParameterBackground</item>
     </style>
+    <!-- settle activity -->
+    <!--设置项目TV-->
+    <style name="settleItemTextView" parent="@android:style/TextAppearance">
+        <item name= "android:layout_width">wrap_content</item>
+        <item name= "android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/colorBlackText</item>
+        <item name="android:textSize">16sp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+        <item name="android:layout_marginRight">10dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+    </style>
+
+
 
     <!-- 按钮样式-->
     <style name="btnStyle">
@@ -117,6 +130,7 @@
         <item name="android:background">@drawable/shape_button_dark</item>
     </style>
 
+
     <!-- 文本编辑框样式-->
     <style name="editStyle">
         <item name="android:layout_width">match_parent</item>
@@ -126,6 +140,14 @@
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">15dp</item>
         <item name="android:textSize">16sp</item>
+    </style>
+
+    <!-- 文本编辑框样式-->
+    <style name="editSettleStyle" parent="@style/editStyle">
+        <item name="android:layout_height">40dp</item>
+        <item name="android:layout_gravity">center_vertical</item>
+        <item name="android:layout_marginRight">20dp</item>
+        <item name="android:background">@color/bg_common_gray</item>
     </style>
 
     <!-- 底部菜单栏样式-->

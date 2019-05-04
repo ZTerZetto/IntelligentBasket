@@ -1,0 +1,102 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <LinearLayout
+            style="@style/more_common_linearlayout_style">
+            <RelativeLayout
+                android:id="@+id/item_current_layout"
+                style="@style/me_common_item_relativeLayout_style">
+                <TextView
+                    style="@style/more_common_item_textView_style"
+                    android:text="@string/overweight_current"/>
+                <TextView
+                    android:id="@+id/txt_current_content"
+                    style="@style/more_common_desc_textView_style"
+                    android:layout_alignParentEnd="false"
+                    android:layout_toLeftOf="@+id/txt_current_content_unit"
+                    android:text="10"/>
+                <TextView
+                    android:id="@+id/txt_current_content_unit"
+                    style="@style/more_common_desc_textView_style"
+                    android:textColor="@color/colorGradText"
+                    android:text="安培"/>
+            </RelativeLayout>
+            <View
+                style="@style/me_horizontal_view_style"/>
+            <RelativeLayout
+                android:id="@+id/item_upper_layout"
+                style="@style/me_common_item_relativeLayout_style">
+                <TextView
+                    style="@style/more_common_item_textView_style"
+                    android:text="@string/angel_upperLimit"/>
+                <TextView
+                    android:id="@+id/txt_upper_content"
+                    style="@style/more_common_desc_textView_style"
+                    android:layout_alignParentEnd="false"
+                    android:layout_toLeftOf="@+id/txt_upper_content_unit"
+                    android:text="10"/>
+                <TextView
+                    android:id="@+id/txt_upper_content_unit"
+                    style="@style/more_common_desc_textView_style"
+                    android:textColor="@color/colorGradText"
+                    android:text="  度  "/>
+            </RelativeLayout>
+            <View
+                style="@style/me_horizontal_view_style"/>
+            <RelativeLayout
+                android:id="@+id/item_lower_layout"
+                style="@style/me_common_item_relativeLayout_style">
+                <TextView
+                    style="@style/more_common_item_textView_style"
+                    android:text="@string/angel_lowerLimit"/>
+                <TextView
+                    android:id="@+id/txt_lower_content"
+                    style="@style/more_common_desc_textView_style"
+                    android:layout_alignParentEnd="false"
+                    android:layout_toLeftOf="@+id/txt_lower_content_unit"
+                    android:text="10"/>
+                <TextView
+                    android:id="@+id/txt_lower_content_unit"
+                    style="@style/more_common_desc_textView_style"
+                    android:textColor="@color/colorGradText"
+                    android:text="  度  "/>
+            </RelativeLayout>
+            <View
+                style="@style/me_horizontal_view_style"/>
+            <RelativeLayout
+                android:id="@+id/item_snapshot_layout"
+                style="@style/me_common_item_relativeLayout_style">
+                <TextView
+                    style="@style/more_common_item_textView_style"
+                    android:text="@string/interval_snapshot"/>
+                <TextView
+                    android:id="@+id/txt_snapshot_content"
+                    style="@style/more_common_desc_textView_style"
+                    android:layout_alignParentEnd="false"
+                    android:layout_toLeftOf="@+id/txt_snapshot_content_unit"
+                    android:text="10"/>
+                <TextView
+                    android:id="@+id/txt_snapshot_content_unit"
+                    style="@style/more_common_desc_textView_style"
+                    android:textColor="@color/colorGradText"
+                    android:text="  秒  "/>
+            </RelativeLayout>
+        </LinearLayout>
+
+       <!-- <Button
+            android:id="@+id/btn_confirm"
+            android:layout_alignParentBottom="true"
+            android:layout_marginBottom="@dimen/size_20"
+            style="@style/btnStyle"
+            android:text="确定修改"/>-->
+    </RelativeLayout>
+</LinearLayout>

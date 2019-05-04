@@ -81,6 +81,12 @@
     <string name="work_photo_title">设备截图</string>
     <!-- video monitor activity -->
     <string name="video_buffering">正在缓冲</string>
+    <!-- settle activity -->
+    <string name="settle_title">设置参数</string>
+    <string name="overweight_current">超载电流</string>
+    <string name="angel_upperLimit">倾斜角上限位</string>
+    <string name="angel_lowerLimit">倾斜角下限位</string>
+    <string name="interval_snapshot">截图时间间隔</string>
 
     <!-- Info fragment -->
     <string name="info_noMessage">暂无消息</string>
