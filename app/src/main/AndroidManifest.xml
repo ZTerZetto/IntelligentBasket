@@ -36,7 +36,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.areaAdmin.UploadPreStopInfoActivity"></activity>
+        <activity android:name=".activity.basket.BasketSettleActivity"></activity>
+        <activity android:name=".activity.common.UserNameActivity" />
+        <activity android:name=".activity.areaAdmin.UploadPreStopInfoActivity" />
         <activity android:name=".activity.areaAdmin.CheckCompactActivity" />
         <activity android:name=".activity.worker.WorkerMessageActivity" />
         <activity android:name=".activity.areaAdmin.UploadImageActivity" />

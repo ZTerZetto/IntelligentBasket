@@ -165,6 +165,7 @@
                         android:text="当前版本V1.0"/>
                 </RelativeLayout>
                 <View
+
                     style="@style/me_horizontal_view_style"/>
                 <RelativeLayout
                     android:id="@+id/more_item_about_layout"

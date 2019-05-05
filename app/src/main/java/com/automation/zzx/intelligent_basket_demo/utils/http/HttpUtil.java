@@ -200,6 +200,50 @@ public class HttpUtil {
     }
 
     /*
+     * 设置参数获取请求
+     * /get
+     * get token deviceId
+     */
+    public static void getParameOkHttpRequest(okhttp3.Callback callback,
+                                              String deviceId) {
+        OkHttpClient client = new OkHttpClient();
+        FormBody builder = new FormBody.Builder()
+                 .add("deviceId",deviceId)
+                .build();
+        final Request request = new Request.Builder()
+                .url(AppConfig.HANGING_BASKET_PARAM)
+                .addHeader("Authorization","null")
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+    /*
+     * 设置参数更改请求
+     * /set
+     * get token deviceId
+     */
+    public static void setParameOkHttpRequest(okhttp3.Callback callback,
+                                                      String key,String value,String device_id) {
+        OkHttpClient client = new OkHttpClient();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", "setParam");
+        jsonObject.put("key", key);
+        jsonObject.put("value", value);
+        jsonObject.put("device_id",device_id);
+        String json = jsonObject.toJSONString();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = new Request.Builder()
+                .url(AppConfig.HANGING_BASKET_VIDEO)
+                .addHeader("Authorization", "null")
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
+
+    /*
      * 施工人员请求开始
      */
     /*

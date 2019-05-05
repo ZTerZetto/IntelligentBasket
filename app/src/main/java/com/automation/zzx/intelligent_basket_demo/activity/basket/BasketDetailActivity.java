@@ -86,6 +86,8 @@ public class BasketDetailActivity extends AppCompatActivity {
                         startActivity(intent);
                         break;
                     case 3:  // 设置页面
+                        intent = new Intent(BasketDetailActivity.this, BasketSettleActivity.class);
+                        startActivity(intent);
                         break;
                     default:break;
                 }
