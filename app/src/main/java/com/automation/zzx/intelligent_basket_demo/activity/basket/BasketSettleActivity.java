@@ -44,6 +44,7 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
 
     private static final int GETINFO_DEFAULT = 8;
     private static final int REFRESH_DEFAULT = 9;
+    private static final int REFRESH_SETTING = 10;//正在设置中
 
     //布局控件
     private RelativeLayout rlCurrent;
@@ -54,10 +55,12 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
     private TextView tvUpper;
     private TextView tvLower;
     private TextView tvSnapshot;
-    private Button btnConfirm;
 
     //修改对话框
     private EditAlertDialog mEditAlertDialog;
+
+    //提交次数
+    private Integer submitNum;
 
     // 吊篮相关
     private String mDeviceId; // 吊篮ID
@@ -71,12 +74,13 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
                     JSONObject jsonObject = JSON.parseObject(msg.obj.toString());
                     if(jsonObject.getString("deviceId").equals(mDeviceId)){
                         tvCurrent.setText(jsonObject.getString("overweight_current"));
-                        tvUpper.setText(jsonObject.getString("angel_upperlimit"));
-                        tvLower.setText(jsonObject.getString("angel_lowerlimit"));
+                        tvUpper.setText(jsonObject.getString("angle_upperlimit"));
+                        tvLower.setText(jsonObject.getString("angle_lowerlimit"));
                         tvSnapshot.setText(jsonObject.getString("interval_snapshot"));
                     }
                     break;
                 case REFRESH_CURRENT: //控件更新——超载电流
+                    mEditAlertDialog.dismiss();
                     tvCurrent.setText(msg.obj.toString());
                     break;
                 case REFRESH_UPPER: //控件更新——上限位
@@ -91,9 +95,13 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
                 case REFRESH_DEFAULT:
                     Toast.makeText(BasketSettleActivity.this, "提交参数失败,请稍后重试！", Toast.LENGTH_SHORT).show();
                     break;
+                case REFRESH_SETTING:
+                    Toast.makeText(BasketSettleActivity.this, "正在设置中，请稍后！" , Toast.LENGTH_SHORT).show();
+                    mEditAlertDialog.countDownTimer.start();
+                    break;
                 case GETINFO_DEFAULT:
                     Toast.makeText(BasketSettleActivity.this, "获取参数失败,请稍后重试！", Toast.LENGTH_SHORT).show();
-                    finish();
+                    mEditAlertDialog.dismiss();
                     break;
             }
         }
@@ -104,6 +112,7 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basket_settle);
 
+        submitNum = 0;
         initWidgetResource();  // 初始化控件
 
         //Intent intent = getIntent();
@@ -111,6 +120,7 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
         if(mDeviceId==null || mDeviceId.equals("")) mDeviceId = "1";
 
         initParam();//初始化参数
+
     }
 
     private void initWidgetResource(){
@@ -164,8 +174,8 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
                         msg.what = GET_INFORM;
                         msg.obj = jsonObject.getString("data");
                         mHandler.sendMessage(msg);
-                    } else {
-                        msg.what = REFRESH_DEFAULT;
+                    } else if(isGet.equals("failed")) {
+                        msg.what = GETINFO_DEFAULT;
                         mHandler.sendMessage(msg);
                     }
                 } catch (JSONException e) {
@@ -184,11 +194,11 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
                 mEditAlertDialog.show();
                 break;
             case R.id.item_upper_layout:
-                mEditAlertDialog =initDialog(tvUpper.getText().toString(), REFRESH_UPPER,"Angel_UpperLimit",getString(R.string.angel_upperLimit));
+                mEditAlertDialog =initDialog(tvUpper.getText().toString(), REFRESH_UPPER,"Angle_UpperLimit",getString(R.string.angel_upperLimit));
                 mEditAlertDialog.show();
                 break;
             case R.id.item_lower_layout:
-                mEditAlertDialog = initDialog(tvLower.getText().toString(), REFRESH_LOWER,"Angel_LowerLimit",getString(R.string.angel_lowerLimit));
+                mEditAlertDialog = initDialog(tvLower.getText().toString(), REFRESH_LOWER,"Angle_LowerLimit",getString(R.string.angel_lowerLimit));
                 mEditAlertDialog.show();
                 break;
             case R.id.item_snapshot_layout:
@@ -209,8 +219,15 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void onClick(Dialog dialog, boolean confirm,String result) {
                         if(confirm){
-                            httpSubmitParam(key,result,i);
-                            dialog.dismiss();
+                            //判断提交次数
+                            if(submitNum >= 3){
+                                Message msg = new Message();
+                                msg.what = REFRESH_DEFAULT;
+                                mHandler.sendMessage(msg);
+                                dialog.dismiss();
+                            } else {
+                                httpSubmitParam(key, result, i);
+                            }
                         }else{
                             dialog.dismiss();
                         }
@@ -242,9 +259,11 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
                     if(responseData.equals("success")){
                         msg.what = i;
                         msg.obj = value;
+                        submitNum = 0;                                //清零提交次数
                         mHandler.sendMessage(msg);
-                    } else {
-                        msg.what = REFRESH_DEFAULT;
+                    } else if(responseData.equals("setting")){
+                        msg.what = REFRESH_SETTING;
+                        submitNum = submitNum + 1;                                //增加提交次数
                         mHandler.sendMessage(msg);
                     }
                 } catch (JSONException e) {
@@ -252,6 +271,20 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
                 }
             }
         },key,value,mDeviceId);
+    }
+
+
+    //页面销毁前,清理计时器
+    @Override
+    protected void onDestroy() {
+        //销毁计时器
+        if(mEditAlertDialog.countDownTimer != null){
+            mEditAlertDialog.countDownTimer.cancel();
+            mEditAlertDialog.countDownTimer.onFinish();
+            mEditAlertDialog.countDownTimer = null;
+        }
+        submitNum = 0;
+        super.onDestroy();
     }
 
     // 顶部导航栏消息响应

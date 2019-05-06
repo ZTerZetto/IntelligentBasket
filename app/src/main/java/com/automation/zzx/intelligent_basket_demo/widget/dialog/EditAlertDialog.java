@@ -3,6 +3,7 @@ package com.automation.zzx.intelligent_basket_demo.widget.dialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.text.TextUtils;
 import android.view.View;
 import android.widget.EditText;
@@ -11,8 +12,7 @@ import android.widget.TextView;
 import com.automation.zzx.intelligent_basket_demo.R;
 
 /**
- * Created by pengchenghu on 2019/3/18.
- * Author Email: 15651851181@163.com
+ * Created by zzx on 2019/5/4.
  * Describe:
  */
 public class EditAlertDialog extends Dialog implements View.OnClickListener{
@@ -73,6 +73,22 @@ public class EditAlertDialog extends Dialog implements View.OnClickListener{
         setCanceledOnTouchOutside(false);
         initView();
     }
+
+
+    public CountDownTimer countDownTimer = new CountDownTimer(4000,1000) {
+        @Override
+        public void onTick(long millisUntilFinished) {
+            long time = millisUntilFinished /1000;
+            submitTxt.setText(time+"秒");
+            submitTxt.setClickable(false);
+        }
+
+        @Override
+        public void onFinish() {
+            submitTxt.setText("重新提交");
+            submitTxt.setClickable(true);
+        }
+    };
 
     private void initView(){
         contentTxt = (EditText) findViewById(R.id.content);
