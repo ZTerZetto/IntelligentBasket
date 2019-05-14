@@ -1,6 +1,5 @@
 package com.automation.zzx.intelligent_basket_demo.entity;
 
-// Created by $USER_NAME on 2018/11/28/028.
 public class AppConfig {
     /*
      * 服务器地址
@@ -30,10 +29,7 @@ public class AppConfig {
     public final static String LOGIN_USER = ANDROID_URL_PATH.concat("/login");
 
     /* 注册
-    * userId、userName、userPassword、userRole、userPhone、userImage;
-    * Authorization：NULL
-    * POST
-    * */
+    */
     public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
 
     //上传单个文件
@@ -148,9 +144,4 @@ public class AppConfig {
     * */
     public static final String INTENT_USER = "Intent_userInfo";
     public static final Integer MAX_SELECT_PIC_NUM = 5;
-
-    /*
-     * 公/局域 网切换
-     * 默认是局域网
-     */
 }
