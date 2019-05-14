@@ -302,7 +302,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
             JSONObject basketObj = JSON.parseObject(value);
             MgBasketInfo mgBasketInfo = new MgBasketInfo(null, basketObj.getString("deviceId"),
                     String.valueOf(basketObj.getIntValue("workingState")), basketObj.getString("date"),
-                    basketObj.getString("managerId"), basketObj.getString("storageState"));
+                    basketObj.getString("projectId"), basketObj.getString("storageState"));
             mgBasketInfos.add(mgBasketInfo);
         }
         return mgBasketInfos;

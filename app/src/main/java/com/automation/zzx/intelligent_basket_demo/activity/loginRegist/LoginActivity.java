@@ -205,6 +205,9 @@ public class LoginActivity extends AppCompatActivity {
                             case "areaAdmin":  // 区域管理员
                                 StartAndFinishActicity(AreaAdminPrimaryActivity.class);
                                 break;
+                            case "inspector":  // 巡检人员
+                                StartAndFinishActicity(InspectPersonPrimaryActivity.class);
+                                break;
                         }
                     } else {
                         switch (state) {

@@ -90,6 +90,9 @@
             android:name=".activity.loginRegist.RegisterPreActivity"
             android:launchMode="singleTask" />
         <activity
+            android:name=".activity.loginRegist.RegistInspectorActivity"
+            android:launchMode="singleTask" />
+        <activity
             android:name=".activity.loginRegist.LoginActivity"
             android:launchMode="singleTask" /> <!-- 多图片选择器 -->
         <activity

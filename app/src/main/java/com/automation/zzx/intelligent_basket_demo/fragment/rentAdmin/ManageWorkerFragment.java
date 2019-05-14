@@ -55,7 +55,6 @@ import okhttp3.Call;
 import static android.app.Activity.RESULT_OK;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_ADD_WORKER;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_GET_ALL_WORKER_INFO;
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_MG_ALL_BASKET_INFO;
 import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
 
 /**

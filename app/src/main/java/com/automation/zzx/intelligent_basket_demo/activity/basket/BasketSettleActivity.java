@@ -84,12 +84,15 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
                     tvCurrent.setText(msg.obj.toString());
                     break;
                 case REFRESH_UPPER: //控件更新——上限位
+                    mEditAlertDialog.dismiss();
                     tvUpper.setText(msg.obj.toString());
                     break;
                 case REFRESH_LOWER: //控件更新——下限位
+                    mEditAlertDialog.dismiss();
                     tvLower.setText(msg.obj.toString());
                     break;
                 case REFRESH_SNAPSHOT: //控件更新——截图时间
+                    mEditAlertDialog.dismiss();
                     tvSnapshot.setText(msg.obj.toString());
                     break;
                 case REFRESH_DEFAULT:

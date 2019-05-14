@@ -30,6 +30,7 @@
     <string name="registWorker_title">注册-施工人员</string>
     <string name="registRent_title">注册-租方管理员</string>
     <string name="registArea_title">注册-区域管理员</string>
+    <string name="registInspector_title">注册-巡检人员</string>
 
     <string name="basic_info">基本信息</string>
     <string name="type_info">选择工种</string>

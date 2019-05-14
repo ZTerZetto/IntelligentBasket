@@ -11,6 +11,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 
 public class RegisterPreActivity extends AppCompatActivity implements View.OnClickListener{
@@ -18,6 +19,8 @@ public class RegisterPreActivity extends AppCompatActivity implements View.OnCli
     private Button btnWorker;
     private Button btnRent;
     private Button btnRegion;
+    private Button btnInspector;
+
     private CommonDialog mCommonDialog;
 
     @Override
@@ -36,10 +39,11 @@ public class RegisterPreActivity extends AppCompatActivity implements View.OnCli
         btnWorker = findViewById(R.id.btn_regist_worker);
         btnRent = findViewById(R.id.btn_regist_rent_manager);
         btnRegion = findViewById(R.id.btn_regist_region_manager);
-
+        btnInspector = findViewById(R.id.btn_regist_inspector);
         btnWorker.setOnClickListener(this);
         btnRent.setOnClickListener(this);
         btnRegion.setOnClickListener(this);
+        btnInspector.setOnClickListener(this);
 
     }
 
@@ -62,6 +66,10 @@ public class RegisterPreActivity extends AppCompatActivity implements View.OnCli
                 startActivityForResult(intent,1);
                 finish();
                 break;
+            case R.id.btn_regist_inspector:
+                intent = new Intent(this, RegistInspectorActivity.class);
+                startActivityForResult(intent,1);
+                finish();
                 default: finish(); break;
         }
     }
