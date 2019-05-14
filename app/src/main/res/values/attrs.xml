@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <!--TimeLineView-->
     <declare-styleable name="TimeLineView">
         <attr name="startedLineColor" format="color"/>
         <attr name="preLineColor" format="color"/>
@@ -12,5 +13,14 @@
         <attr name="textSize" format="dimension"/>
         <attr name="tlradius" format="dimension"/>
         <attr name="lineWidth" format="dimension"/>
+    </declare-styleable>
+
+    <!--SearchView-->
+    <declare-styleable name="Search_View">
+        <attr name="textSizeSearch" format="dimension"  />
+        <attr name="textColorSearch" format="color" />
+        <attr name="textHintSearch" format="string" />
+        <attr name="searchBlockHeight" format="integer" />
+        <attr name="searchBlockColor" format="color" />
     </declare-styleable>
 </resources>

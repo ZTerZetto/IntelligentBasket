@@ -6,10 +6,9 @@ import android.os.Bundle;
 
 
 import com.automation.zzx.intelligent_basket_demo.R;
-
-import scut.carson_ho.searchview.ICallBack;
-import scut.carson_ho.searchview.SearchView;
-import scut.carson_ho.searchview.bCallBack;
+import com.automation.zzx.intelligent_basket_demo.widget.searchview.ICallBack;
+import com.automation.zzx.intelligent_basket_demo.widget.searchview.SearchView;
+import com.automation.zzx.intelligent_basket_demo.widget.searchview.bCallBack;
 
 /**
  * Created by pengchenghu on 2019/5/14.

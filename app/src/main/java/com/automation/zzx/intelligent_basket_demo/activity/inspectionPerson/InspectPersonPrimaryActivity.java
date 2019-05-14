@@ -87,8 +87,11 @@ public class InspectPersonPrimaryActivity extends AppCompatActivity implements V
 
         // function choose
         mOutStorageLayout  = (LinearLayout) findViewById(R.id.outStorage_layout);
+        mOutStorageLayout.setOnClickListener(this);
         mInStorageLayout = (LinearLayout) findViewById(R.id.inStorage_layout);
+        mInStorageLayout.setOnClickListener(this);
         mMessageLayout = (LinearLayout) findViewById(R.id.message_layout);
+        mMessageLayout.setOnClickListener(this);
 
         mGiveHighPrice = (RelativeLayout) findViewById(R.id.more_item_comment_layout); // 给个好评
         mGiveHighPrice.setOnClickListener(this);

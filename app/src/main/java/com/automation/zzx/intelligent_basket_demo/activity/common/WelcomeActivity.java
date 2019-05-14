@@ -11,6 +11,7 @@ import android.view.WindowManager;
 
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
@@ -66,7 +67,7 @@ public class WelcomeActivity extends AppCompatActivity {
                         mainIntent = new Intent(WelcomeActivity.this,  // 租方管理员页面
                                 RentAdminPrimaryActivity.class);
                     }else if(userRole.equals("areaAdmin")){
-                        mainIntent = new Intent(WelcomeActivity.this,  // 施工人员管理员页面
+                        mainIntent = new Intent(WelcomeActivity.this,  // 区域管理员页面
                                 AreaAdminPrimaryActivity.class);
                     }else {
                         mainIntent = new Intent(WelcomeActivity.this,LoginActivity.class);

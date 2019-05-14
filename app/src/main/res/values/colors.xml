@@ -62,4 +62,9 @@
     <color name="font_blue">#42369a</color>
     <color name="commom_background">#f3f3f3</color>
 
+    <!-- SearchView -->
+    <color name="colorDefault">#ffffff</color>
+    <color name="colorBackground">#f1f0f6</color>
+    <color name="colorText">#9b9b9b</color>
+
 </resources>
