@@ -12,6 +12,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Build;
+import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -21,7 +22,6 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.FileProvider;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
 import android.util.Log;
@@ -41,7 +41,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
@@ -58,7 +57,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class RegistWorkerActivity extends AppCompatActivity {
+public class RegistInspectorActivity extends AppCompatActivity {
 
     public static final int TAKE_PHOTO = 1;
     public static final int CHOOSE_PHOTO = 2;
@@ -81,11 +80,6 @@ public class RegistWorkerActivity extends AppCompatActivity {
     private Button register;
 
     private UserInfo userinfo;
-    private Spinner spinner;
-    private List<String> type_list;
-    private ArrayAdapter<String> typeAdapter;
-    private String workerType;
-
     private CommonDialog mCommonDialog;
     private LoadingDialog mLoadingDialog;
 
@@ -146,7 +140,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
         toolbar.setTitle("");
-        titleText.setText(getString(R.string.registWorker_title));
+        titleText.setText(getString(R.string.registInspector_title));
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
@@ -155,18 +149,16 @@ public class RegistWorkerActivity extends AppCompatActivity {
         register = findViewById(R.id.btn_regist);
 
         picture = (ImageView) findViewById(R.id.picture);
-        spinner = (Spinner) findViewById(R.id.spinner_type_choose);
 
         edt_userName = findViewById(R.id.edt_register_userName);
         edt_userPhone = findViewById(R.id.edt_register_userPhone);
         edt_userPwd = findViewById(R.id.edt_register_pwd);
         edt_userPwd_again = findViewById(R.id.edt_register_pwd_again);
         llSpinner = findViewById(R.id.ll_spinner);
-        llSpinner.setVisibility(View.VISIBLE);
+        llSpinner.setVisibility(View.GONE);
 
         photo_exist = false;
 
-        initRegister();
         initLoadingDialog();
 
         takePhoto.setOnClickListener(new View.OnClickListener() {
@@ -174,9 +166,9 @@ public class RegistWorkerActivity extends AppCompatActivity {
             public void onClick(View v) {
                 // 创建File对象，用于存储拍照后的图片；
                 //应用关联缓存目录“/sdcard/Android/data/<package name>/cache”
-                if (ContextCompat.checkSelfPermission(RegistWorkerActivity.this,
+                if (ContextCompat.checkSelfPermission(RegistInspectorActivity.this,
                         Manifest.permission.CAMERA) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(RegistWorkerActivity.this,
+                    ActivityCompat.requestPermissions(RegistInspectorActivity.this,
                             new String[]{Manifest.permission.CAMERA}, 2);
                 }else {
                     openCamera();
@@ -187,9 +179,9 @@ public class RegistWorkerActivity extends AppCompatActivity {
         chooseFromAlbum.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (ContextCompat.checkSelfPermission(RegistWorkerActivity.this,
+                if (ContextCompat.checkSelfPermission(RegistInspectorActivity.this,
                         Manifest.permission.WRITE_EXTERNAL_STORAGE) != PackageManager.PERMISSION_GRANTED) {
-                    ActivityCompat.requestPermissions(RegistWorkerActivity.this,
+                    ActivityCompat.requestPermissions(RegistInspectorActivity.this,
                             new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, 1);
                 } else {
                     openAlbum();
@@ -204,9 +196,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
                 String password = edt_userPwd.getText().toString();
                 String password_2 = edt_userPwd_again.getText().toString();
 
-                if (workerType == null) {
-                    Toast.makeText(getApplicationContext(), "请选择您的工种！", Toast.LENGTH_LONG).show();
-                } else if (photo_exist.equals(false)) {
+                if (photo_exist.equals(false)) {
                     Toast.makeText(getApplicationContext(), "请上传身份证图片！", Toast.LENGTH_LONG).show();
                 } else if (!password.equals(password_2) || password.equals(" ") || password == null) {
                     Toast.makeText(getApplicationContext(), "两次密码输入不一致！", Toast.LENGTH_LONG).show();
@@ -221,7 +211,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
                     edt_userPhone.getText().clear();
                 } else {
                     userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPhone.getText().toString(),
-                            edt_userPwd.getText().toString(), workerType);
+                            edt_userPwd.getText().toString(), "inspector");
                     mLoadingDialog.show();
                     //uploadPhoto();
                     uploadIdentityCardImage();
@@ -230,50 +220,6 @@ public class RegistWorkerActivity extends AppCompatActivity {
         });
     }
 
-    private void initRegister() {
-        initSpinner();
-        workerType = null;
-        if (type_list == null || type_list.isEmpty()) {
-            return;
-        }
-        //适配器初始化
-        spinner.setDropDownVerticalOffset(50); //下拉的纵向偏移
-        typeAdapter = new ArrayAdapter<String>(this,R.layout.spinner_simple_item,type_list);
-        typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        spinner.setAdapter(typeAdapter);
-        spinner.setSelection(5, true); // 设置默认值为:其它
-
-        spinner.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String type = (String) spinner.getSelectedItem();
-                switch (type){
-                    case "涂料": workerType = "worker_1";break;
-                    case "幕墙": workerType = "worker_2";break;
-                    case "内装": workerType = "worker_3";break;
-                    case "土建": workerType = "worker_4";break;
-                    case "车辆": workerType = "worker_5";break;
-                    default: workerType = "worker";break;
-                }
-            }
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                workerType = "worker";
-            }
-        });
-
-
-    }
-    private void initSpinner() {
-        type_list = new ArrayList<String>();
-        type_list.add("涂料");
-        type_list.add("幕墙");
-        type_list.add("内装");
-        type_list.add("土建");
-        type_list.add("车辆");
-        type_list.add("其他");
-
-    }
 
     private void openAlbum() {
         Intent intent = new Intent("android.intent.action.GET_CONTENT");
@@ -298,7 +244,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
         } else {
             //转换为封装过的uri对象
             //FileProvider —— 内容提供器
-            imageUri = FileProvider.getUriForFile(RegistWorkerActivity.this,
+            imageUri = FileProvider.getUriForFile(RegistInspectorActivity.this,
                     "com.automation.zzx.intelligent_basket_demo.fileprovider", photo_file);
         }
         // 启动相机程序
@@ -450,7 +396,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
                 Looper.prepare();
-                Toast.makeText(RegistWorkerActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegistInspectorActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
             @Override
@@ -489,7 +435,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
                 Looper.prepare();
-                Toast.makeText(RegistWorkerActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
+                Toast.makeText(RegistInspectorActivity.this, "网络连接失败！", Toast.LENGTH_LONG).show();
                 Looper.loop();
             }
 
@@ -527,7 +473,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
                     @Override
                     public void onClick(Dialog dialog, boolean confirm) {
                         if(confirm){
-                            Intent intent = new Intent(RegistWorkerActivity.this,LoginActivity.class);
+                            Intent intent = new Intent(RegistInspectorActivity.this,LoginActivity.class);
                             startActivity(intent);
                             finish();
                         }else{
@@ -538,7 +484,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
     }
     // 加载弹窗
     private void initLoadingDialog(){
-        mLoadingDialog = new LoadingDialog(RegistWorkerActivity.this, "正在上传...");
+        mLoadingDialog = new LoadingDialog(RegistInspectorActivity.this, "正在上传...");
         mLoadingDialog.setCancelable(false);
     }
 

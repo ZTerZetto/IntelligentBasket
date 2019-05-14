@@ -40,6 +40,13 @@
         android:layout_width="150dp"
         android:layout_gravity="center"
         android:text="区域管理员" />
+    <Button
+        android:id="@+id/btn_regist_inspector"
+        android:layout_marginTop="10dp"
+        style="@style/btnStyle"
+        android:layout_width="150dp"
+        android:layout_gravity="center"
+        android:text="巡检人员" />
 
 
 </LinearLayout>

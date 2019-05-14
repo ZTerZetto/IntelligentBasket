@@ -30,6 +30,24 @@
                 android:orientation="vertical"
                 android:background="#FFF">
 
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <ImageView
+                        android:layout_width="32dp"
+                        android:layout_height="32dp"
+                        android:layout_gravity="center_vertical"
+                        android:layout_marginLeft="10dp"
+                        android:src="@mipmap/icon_phone" />
+                    <EditText
+                        android:id="@+id/edt_register_userPhone"
+                        style="@style/editStyle"
+                        android:hint="手机号" />
+                </LinearLayout>
+
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="50dp"
@@ -49,22 +67,6 @@
 
                 </LinearLayout>
 
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal">
-
-                    <ImageView
-                        android:layout_width="32dp"
-                        android:layout_height="32dp"
-                        android:layout_gravity="center_vertical"
-                        android:layout_marginLeft="10dp"
-                        android:src="@mipmap/icon_phone" />
-                    <EditText
-                        android:id="@+id/edt_register_userPhone"
-                        style="@style/editStyle"
-                        android:hint="手机号" />
-                </LinearLayout>
 
                 <LinearLayout
                     android:layout_width="match_parent"
@@ -135,23 +137,23 @@
                 android:layout_marginBottom="10dp"
                 android:layout_marginTop="20dp"
                 android:background="#FFF"
-                android:orientation="horizontal">
+                android:orientation="vertical">
 
                 <ImageView
                     android:id="@+id/picture"
                     android:layout_width="150dp"
                     android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
+                    android:layout_gravity="center_horizontal"
                     android:layout_margin="20dp"
                     android:src="@mipmap/ic_launcher" />
 
-                <TextView
+                <!--<TextView
                     android:id="@+id/tv_upload_result"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:padding="10dp"
                     android:hint="@string/pic_upNotice"
-                    android:layout_gravity="center_vertical"/>
+                    android:layout_gravity="center_vertical"/>-->
             </LinearLayout>
 
             <!-- 选择照片 -->
