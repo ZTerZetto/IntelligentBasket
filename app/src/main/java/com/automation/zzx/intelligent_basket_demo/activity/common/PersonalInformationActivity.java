@@ -99,6 +99,9 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
             case "areaAdmin":
                 mUserRoleTv.setText("区域管理员");
                 break;
+            case "inspector":
+                mUserRoleTv.setText("巡检人员");
+                break;
         }
         mUserPhoneTv.setText(mUserInfo.getUserPhone());
     }

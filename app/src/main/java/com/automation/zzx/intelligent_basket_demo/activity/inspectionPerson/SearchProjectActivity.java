@@ -13,22 +13,27 @@ import com.automation.zzx.intelligent_basket_demo.widget.searchview.bCallBack;
 /**
  * Created by pengchenghu on 2019/5/14.
  * Author Email: 15651851181@163.com
- * Describe: 巡检人员扫码出库界面
+ * Describe: 巡检人员搜索项目
  * limits:
  */
 
-public class OutStorageActivity extends AppCompatActivity {
+public class SearchProjectActivity extends AppCompatActivity {
 
-    private final static String TAG = "OutStorageActivity";
+    private final static String TAG = "SearchProjectActivity";
 
+    // 页面参数
+    public final static String PROJECT_ID = "project_id";
+    public final static String OPERATE_TYPE = "operate_type";
+    private int operateType;  // 操作类型
     // 搜索框
     private SearchView searchView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_out_storage);
+        setContentView(R.layout.activity_search_project);
 
+        operateType = getIntent().getIntExtra(OPERATE_TYPE, 0);  // 获取操作类型
         initWidget();
     }
 
@@ -43,7 +48,16 @@ public class OutStorageActivity extends AppCompatActivity {
         searchView.setOnClickSearch(new ICallBack() {
             @Override
             public void SearchAciton(String string) {
-
+                // 点击搜索框后
+                String projectId = string;
+                /*
+                 * 这边需要添加对字符串的一些检查
+                 */
+                Intent intent = new Intent(SearchProjectActivity.this,
+                        OutAndInStorageActivity.class);
+                intent.putExtra(PROJECT_ID, projectId);
+                intent.putExtra(OPERATE_TYPE, operateType);
+                startActivity(intent);
             }
         });
         // 设置点击返回按键后的操作（通过回调接口）

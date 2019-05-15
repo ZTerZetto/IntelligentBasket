@@ -140,6 +140,18 @@ public class AppConfig {
     public static final String AREA_ADMIN_SEND_PRE_STOP_INFO = ANDROID_URL_PATH.concat("/createPreStop");
 
     /*
+     * 巡检人员请求
+     */
+    // 巡检人员获取项目信息
+    public static final String INSPECTION_PERSON_GET_PRO_INFO = ANDROID_URL_PATH.concat("/projectDetailInfo");
+    // 巡检人员获取项目吊篮列表
+    public static final String INSPECTION_PERSON_GET_BASKET_LIST_INFO = ANDROID_URL_PATH.concat("/getBasketList");
+    // 巡检人员将吊篮出库
+    public static final String INSPECTION_PERSON_OUT_STORAGE = ANDROID_URL_PATH.concat("/androidIncreaseBasket");
+    // 巡检人员将吊篮入库
+    public static final String INSPECTION_PERSON_IN_STORAGE = ANDROID_URL_PATH.concat("/storageIn");
+
+    /*
     * 常量
     * */
     public static final String INTENT_USER = "Intent_userInfo";

@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -14,10 +15,20 @@ import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
+
+import java.io.IOException;
+
+import okhttp3.Call;
 
 /**
  * Created by pengchenghu on 2019/5/14.
@@ -29,6 +40,9 @@ import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 public class InspectPersonPrimaryActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "InspectPersonPrimary";
+
+    // 消息处理Flag
+    private final static int UPDATE_USER_DISPLAY_MSG = 101;
 
     // header
     private RelativeLayout mUserLoginLayout; // 登录总布局
@@ -52,6 +66,7 @@ public class InspectPersonPrimaryActivity extends AppCompatActivity implements V
 
     // 用户信息
     private UserInfo mUserInfo;
+    private String mUserHeadUrl = AppConfig.FILE_SERVER_YBLIU_PATH + "/head/default_user_head.png";
     private String mToken;
     private SharedPreferences mPref;
 
@@ -60,7 +75,12 @@ public class InspectPersonPrimaryActivity extends AppCompatActivity implements V
     private Handler mHandler = new Handler() {
         @Override
         public void handleMessage(Message msg) {
-
+            switch(msg.what){
+                case UPDATE_USER_DISPLAY_MSG:
+                    mUserHead.setImageUrl(mUserHeadUrl); // 头像
+                    mUserName.setText(mUserInfo.getUserName());
+                    break;
+            }
         }
     };
 
@@ -118,14 +138,21 @@ public class InspectPersonPrimaryActivity extends AppCompatActivity implements V
         switch (v.getId()){
             case R.id.login_layout:  // 跳转至个人信息页面
                 Log.i(TAG, "You have clicked login layout");
+                intent = new Intent(InspectPersonPrimaryActivity.this, PersonalInformationActivity.class);
+                intent.putExtra("userInfo", (Parcelable) mUserInfo);
+                startActivity(intent);
                 break;
             case R.id.outStorage_layout:  // 出库页面
                 Log.i(TAG, "You have clicked open/close work button");
-                intent = new Intent(InspectPersonPrimaryActivity.this, OutStorageActivity.class);
+                intent = new Intent(InspectPersonPrimaryActivity.this, SearchProjectActivity.class);
+                intent.putExtra(SearchProjectActivity.OPERATE_TYPE, 0);
                 startActivity(intent);
                 break;
             case R.id.inStorage_layout:  // 入库页面
                 Log.i(TAG, "You have clicked order button");
+                intent = new Intent(InspectPersonPrimaryActivity.this, SearchProjectActivity.class);
+                intent.putExtra(SearchProjectActivity.OPERATE_TYPE, 1);
+                startActivity(intent);
                 break;
             case R.id.message_layout:  // 消息
                 Log.i(TAG, "You have clicked message button");
@@ -166,6 +193,42 @@ public class InspectPersonPrimaryActivity extends AppCompatActivity implements V
         mToken = mPref.getString("loginToken","");
 
         // 从后台获取其他数据
+        getUserInfoFromInternet();
+    }
+
+    // 从网络获取用户信息
+    private void getUserInfoFromInternet(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("userId", mUserInfo.getUserId())
+                .post()
+                .url(AppConfig.AREA_ADMIN_ALL_INFO)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        parseUserInfoFromInternet(data);
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+    // 解析后台返回数据
+    private void parseUserInfoFromInternet(String data){
+        Log.d(TAG, "parse data:" + data);
+        JSONObject jsonObject = JSON.parseObject(data);
+        String userInfo = jsonObject.getString("userInfo");
+        mUserInfo = JSON.parseObject(userInfo, UserInfo.class);
+        mHandler.sendEmptyMessage(UPDATE_USER_DISPLAY_MSG);  // 更新人员信息状态
     }
 
     //退出登录

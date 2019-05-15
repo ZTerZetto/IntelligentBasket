@@ -2,6 +2,10 @@ package com.automation.zzx.intelligent_basket_demo.entity;
 
 // Created by $USER_NAME on 2018/12/12/012.
 public class BasketInfo {
+    String basketId;
+    String state;
+    String workerId;
+
     public BasketInfo(String basketId, String state, String workerId) {
         this.basketId = basketId;
         this.state= state;
@@ -13,8 +17,6 @@ public class BasketInfo {
     public BasketInfo(String basketId) {
         this.basketId = basketId;
     }
-
-    String basketId;
 
     public String getBasketId() {
         return basketId;
@@ -39,10 +41,5 @@ public class BasketInfo {
     public void setWorkerId(String workerId) {
         this.workerId = workerId;
     }
-
-    String state;
-    String workerId;
-
-
 
 }

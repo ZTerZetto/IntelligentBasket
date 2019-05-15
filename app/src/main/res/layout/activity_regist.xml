@@ -125,7 +125,7 @@
                     android:padding="5dp"
                     android:hint="@string/type_info"/>
 
-                <include layout = "@layout/dropdownmenu"/>
+                <include layout = "@layout/drop_down_menu"/>
 
             </LinearLayout>
 

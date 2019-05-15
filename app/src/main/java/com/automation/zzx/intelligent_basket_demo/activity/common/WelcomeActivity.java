@@ -69,6 +69,9 @@ public class WelcomeActivity extends AppCompatActivity {
                     }else if(userRole.equals("areaAdmin")){
                         mainIntent = new Intent(WelcomeActivity.this,  // 区域管理员页面
                                 AreaAdminPrimaryActivity.class);
+                    }else if(userRole.equals("inspector")){
+                        mainIntent = new Intent(WelcomeActivity.this,  // 巡检人员主页面
+                                InspectPersonPrimaryActivity.class);
                     }else {
                         mainIntent = new Intent(WelcomeActivity.this,LoginActivity.class);
                     }

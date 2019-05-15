@@ -593,6 +593,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             String key = iterator.next();
             if(!key.contains("storage")) continue;
             String value = jsonObject.getString(key);
+            if(value==null || value.equals("")) continue;
             JSONObject basketObj = JSON.parseObject(value);
             String deviceId = basketObj.getString("deviceId");
             if(deviceId==null || deviceId.equals("")) continue;

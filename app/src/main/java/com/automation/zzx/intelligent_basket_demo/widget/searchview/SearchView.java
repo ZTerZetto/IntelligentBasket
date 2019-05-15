@@ -210,7 +210,7 @@ public class SearchView extends LinearLayout {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
                 // 获取用户点击列表里的文字,并自动填充到搜索框内
-                TextView textView = (TextView) view.findViewById(android.R.id.text1);
+                TextView textView = (TextView) view.findViewById(R.id.text1);
                 String name = textView.getText().toString();
                 et_search.setText(name);
                 et_search.setSelection(name.length());  // 光标定位到最后位置
