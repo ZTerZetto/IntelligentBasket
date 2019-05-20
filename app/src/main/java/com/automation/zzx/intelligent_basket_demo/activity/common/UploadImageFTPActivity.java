@@ -490,6 +490,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 .addParam("projectId", projectId)
                 .addParam("deviceList", deviceList)
                 .addParam("managerId", managerId)
+                .addParam("picNum", mUploadImageUrlList.size())
                 .post()
                 .url(AppConfig.RENT_ADMIN_APPLY_STOP_BASKETS)
                 .build()

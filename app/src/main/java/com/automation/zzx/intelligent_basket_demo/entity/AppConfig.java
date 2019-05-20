@@ -150,6 +150,8 @@ public class AppConfig {
     public static final String INSPECTION_PERSON_OUT_STORAGE = ANDROID_URL_PATH.concat("/androidIncreaseBasket");
     // 巡检人员将吊篮入库
     public static final String INSPECTION_PERSON_IN_STORAGE = ANDROID_URL_PATH.concat("/storageIn");
+    // 巡检人员上传异常吊篮信息
+    public static final String INSPECTION_PERSON_EXCEPTION_REPORT = ANDROID_URL_PATH.concat("/createExceptionBox");
 
     /*
     * 常量

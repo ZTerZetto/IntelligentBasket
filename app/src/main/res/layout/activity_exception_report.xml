@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/colorParameterBackground">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
+    <!-- 变频器 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:orientation="horizontal">
+        <!-- 吊篮编号 -->
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="吊篮编号："
+            android:textSize="@dimen/textSize_16" />
+        <!-- 编号输入框 -->
+        <EditText
+            android:id="@+id/basket_id_editview"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:maxLines="1"
+            android:gravity="center"
+            android:textSize="@dimen/textSize_14"
+            android:textColor="@color/black"
+            android:hint="输入吊篮编号或扫码自动填充"/>
+        <ImageView
+            android:id="@+id/scan_imageview"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:src="@mipmap/ic_scan_qrcode"
+            android:layout_alignParentRight="true" />
+    </LinearLayout>
+
+    <!--评价内容框-->
+    <EditText
+        android:id="@+id/exception_content_editview"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@drawable/bg_editview_border_gray"
+        android:layout_margin="10dp"
+        android:padding="5dp"
+        android:inputType="textMultiLine"
+        android:minLines="5"
+        android:maxLines="5"
+        android:textSize="@dimen/textSize_14"
+        android:textColor="@color/black"
+        android:hint="填写吊篮异常现象或原因，至少10个字"
+        android:gravity="left|top" />
+
+    <!-- 提交按钮 -->
+    <Button
+        android:id="@+id/confirm_button"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:text="提交异常"
+        android:textColor="#ffffff"
+        android:textSize="16sp"
+        android:background="#009688" />
+
+</LinearLayout>

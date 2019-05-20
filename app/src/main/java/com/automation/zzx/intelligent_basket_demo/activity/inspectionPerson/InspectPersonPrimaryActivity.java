@@ -52,6 +52,7 @@ public class InspectPersonPrimaryActivity extends AppCompatActivity implements V
     // function choose
     private LinearLayout mOutStorageLayout; // 出库
     private LinearLayout mInStorageLayout;  // 入库
+    private LinearLayout mExceptionReportLayout; // 异常信息上报
     private LinearLayout mMessageLayout; // 消息
 
     // 其它功能
@@ -108,6 +109,8 @@ public class InspectPersonPrimaryActivity extends AppCompatActivity implements V
         // function choose
         mOutStorageLayout  = (LinearLayout) findViewById(R.id.outStorage_layout);
         mOutStorageLayout.setOnClickListener(this);
+        mExceptionReportLayout = (LinearLayout) findViewById(R.id.exception_report_layout);
+        mExceptionReportLayout.setOnClickListener(this);
         mInStorageLayout = (LinearLayout) findViewById(R.id.inStorage_layout);
         mInStorageLayout.setOnClickListener(this);
         mMessageLayout = (LinearLayout) findViewById(R.id.message_layout);
@@ -152,6 +155,11 @@ public class InspectPersonPrimaryActivity extends AppCompatActivity implements V
                 Log.i(TAG, "You have clicked order button");
                 intent = new Intent(InspectPersonPrimaryActivity.this, SearchProjectActivity.class);
                 intent.putExtra(SearchProjectActivity.OPERATE_TYPE, 1);
+                startActivity(intent);
+                break;
+            case R.id.exception_report_layout:
+                Log.i(TAG, "You have clicked exception report button");
+                intent = new Intent(InspectPersonPrimaryActivity.this, ExceptionReportActivity.class);
                 startActivity(intent);
                 break;
             case R.id.message_layout:  // 消息

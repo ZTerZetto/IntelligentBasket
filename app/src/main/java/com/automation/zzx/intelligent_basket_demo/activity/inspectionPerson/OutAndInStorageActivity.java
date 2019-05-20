@@ -422,7 +422,7 @@ public class OutAndInStorageActivity extends AppCompatActivity {
                 });
     }
 
-    // 是否有权限：摄像头、拨打电话
+    // 是否有权限：摄像头
     private boolean isHasPermission() {
         if (XXPermissions.isHasPermission(OutAndInStorageActivity.this, Permission.CAMERA))
             return true;

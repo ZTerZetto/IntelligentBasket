@@ -36,7 +36,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.inspectionPerson.OutAndInStorageActivity"></activity>
+        <activity android:name=".activity.inspectionPerson.ExceptionReportActivity"></activity>
+        <activity android:name=".activity.inspectionPerson.OutAndInStorageActivity" />
         <activity android:name=".activity.inspectionPerson.SearchProjectActivity" />
         <activity android:name=".activity.inspectionPerson.InspectPersonPrimaryActivity" />
         <activity android:name=".activity.basket.BasketSettleActivity" />

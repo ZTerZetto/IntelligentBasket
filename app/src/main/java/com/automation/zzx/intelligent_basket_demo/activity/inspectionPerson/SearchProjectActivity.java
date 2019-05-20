@@ -67,6 +67,5 @@ public class SearchProjectActivity extends AppCompatActivity {
                 finish();
             }
         });
-
     }
 }

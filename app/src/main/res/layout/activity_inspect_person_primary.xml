@@ -134,19 +134,19 @@
                 </LinearLayout>
                 <View
                     style="@style/me_vertical_view_style"/>
-                <!--&lt;!&ndash; 吊篮异常上报 &ndash;&gt;-->
-                <!--<LinearLayout-->
-                    <!--android:id="@+id/warning_layout"-->
-                    <!--style="@style/me_userLayout_linearLayout_style">-->
-                    <!--<ImageView-->
-                        <!--style="@style/me_userLayout_imageView_style"-->
-                        <!--android:src="@mipmap/ic_worker_warning"/>-->
-                    <!--<TextView-->
-                        <!--style="@style/me_userLayout_textView_style1"-->
-                        <!--android:text="@string/worker_warning"/>-->
-                <!--</LinearLayout>-->
-                <!--<View-->
-                    <!--style="@style/me_vertical_view_style"/>-->
+                <!-- 吊篮异常上报 -->
+                <LinearLayout
+                    android:id="@+id/exception_report_layout"
+                    style="@style/me_userLayout_linearLayout_style">
+                    <ImageView
+                        style="@style/me_userLayout_imageView_style"
+                        android:src="@mipmap/ic_exception_report"/>
+                    <TextView
+                        style="@style/me_userLayout_textView_style1"
+                        android:text="异常"/>
+                </LinearLayout>
+                <View
+                    style="@style/me_vertical_view_style"/>
                 <!-- 消息 -->
                 <LinearLayout
                     android:id="@+id/message_layout"
