@@ -49,7 +49,8 @@
         <activity android:name=".activity.common.QRcodeCardActivity" />
         <activity android:name=".activity.common.PersonalInformationActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
-        <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" /> <!-- 百度地图Ket -->
+        <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" />
+        <activity android:name=".activity.proAdmin.ProAdminPrimaryActivity" /><!-- 百度地图Ket -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" /> <!-- 欢迎页面 -->

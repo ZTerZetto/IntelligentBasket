@@ -28,6 +28,13 @@ public class AppConfig {
     * */
     public final static String LOGIN_USER = ANDROID_URL_PATH.concat("/login");
 
+    /* 判断是否是项目管理员
+     * userId
+     * Authorization：token
+     * POST
+     * */
+    public final static String JUDGE_PROADMIN = ANDROID_URL_PATH.concat("/judgeProAdmin");
+
     /* 注册
     */
     public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
@@ -138,6 +145,16 @@ public class AppConfig {
     public static final String AREA_ADMIN_PREPARE_STOP_DEVICE = ANDROID_URL_PATH.concat("/storageControl");
     // 区域管理员上传预报停信息
     public static final String AREA_ADMIN_SEND_PRE_STOP_INFO = ANDROID_URL_PATH.concat("/createPreStop");
+
+    /*
+     * 项目负责人请求
+     */
+    // 项目负责人基本信息
+    public static final String PRO_ADMIN_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
+    // 项目负责人请求项目信息
+    public static final String PRO_ADMIN_GET_PROINFO = ANDROID_URL_PATH.concat("/getProjectByProAdmin");
+
+
 
     /*
      * 巡检人员请求

@@ -3,12 +3,14 @@ package com.automation.zzx.intelligent_basket_demo.activity.loginRegist;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -26,13 +28,17 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.google.gson.Gson;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
@@ -54,13 +60,19 @@ public class LoginActivity extends AppCompatActivity {
     private Button test;
 
     private CheckBox rememberPass;
+    private CheckBox autoLogin;
 
     private UserInfo userInfo;
     private UserInfo mUserInfo;
     private String account;
     private String password;
 
+    private String[] mProAdminRoleList;  // 项管登录角色列表
+    private int currentSelected = 0; // 当前角色位置
+    private int tmpSelected = 0; // 临时角色位置
+
     private CommonDialog mCommonDialog;
+    private AlertDialog mSelectProjectDialog;  // 选择角色弹窗
 
 
     @SuppressLint("HandlerLeak")
@@ -74,7 +86,6 @@ public class LoginActivity extends AppCompatActivity {
                     mCommonDialog.show();
                 break;
                 case 2:
-
                     if (mCommonDialog == null) {
                         mCommonDialog = initDialog(getString(R.string.dialog_login_audit_fail));
                     }
@@ -85,6 +96,10 @@ public class LoginActivity extends AppCompatActivity {
                         mCommonDialog = initDialog(getString(R.string.dialog_login_fail));
                     }
                     mCommonDialog.show();
+                    break;
+                case 4:
+                    //弹出选择框
+                    showSelectDialog();
                     break;
                 default:
                     break;
@@ -110,9 +125,12 @@ public class LoginActivity extends AppCompatActivity {
         accountEdit =  findViewById(R.id.text_input_username);
         passwordEdit = findViewById(R.id.text_input_password);
         rememberPass = findViewById(R.id.remember_pass);
+        autoLogin = findViewById(R.id.auto_login);
         login =  findViewById(R.id.Login_Button);
         to_register = findViewById(R.id.To_Register);
         test = findViewById(R.id.Test_Button);
+
+        initProAdminRoleList();
 
         boolean isRemember = pref.getBoolean("remember_password", false);
         if (isRemember) {
@@ -157,6 +175,12 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    private void initProAdminRoleList(){
+        mProAdminRoleList = new String[2];
+        mProAdminRoleList[0] = "施工人员";
+        mProAdminRoleList[1] = "项目负责人";
+    }
+
     //登录请求连接
     private void loginHttp( ){
         final String json = new Gson().toJson(userInfo);
@@ -197,7 +221,8 @@ public class LoginActivity extends AppCompatActivity {
                             case "worker_3":
                             case "worker_4":
                             case "worker_5":
-                                StartAndFinishActicity(WorkerPrimaryActivity.class);
+                                //判断是否为项目管理员
+                                judgeProAdminHttp(token);
                                 break;
                             case "rentAdmin":  // 租房管理员
                                 StartAndFinishActicity(RentAdminPrimaryActivity.class);
@@ -240,6 +265,51 @@ public class LoginActivity extends AppCompatActivity {
         }, json);
     }
 
+    //判断是否为项管请求连接
+    private void judgeProAdminHttp(String token){
+        HttpUtil.sendIsProAdminOkHttpRequest(new okhttp3.Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                //异常情况处理
+                Looper.prepare();
+                Toast.makeText(LoginActivity.this, "网络连接失败！", Toast.LENGTH_SHORT).show();
+                Looper.loop();
+            }
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                if(response.code() != 200){
+                    Looper.prepare();
+                    Toast.makeText(LoginActivity.this, "网络连接超时,请稍后重试！", Toast.LENGTH_SHORT).show();
+                    Looper.loop();
+                }
+                // 返回服务器数据
+                String responseData = response.body().string();
+                try {
+                    JSONObject jsonObject = JSON.parseObject(responseData);
+                    String isProAdmin = jsonObject.getString("projectAdmin");
+                    //保存至本地pref
+                    SharedPreferences sp = getSharedPreferences("loginToken",0);
+                    editor = sp.edit();
+                    editor = pref.edit();
+                    editor.putString("isProAdmin", isProAdmin);
+                    editor.commit();
+                    if(isProAdmin.equals("1")){
+                        //审核中
+                        Message msg = new Message();
+                        msg.what = 4;
+                        handler.sendMessage(msg);
+                    } else {
+                        StartAndFinishActicity(WorkerPrimaryActivity.class);
+                    }
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+
+
+        }, mUserInfo.getUserId(),token);
+    }
+
     //保存Token
     private void savePref(String token) {
         SharedPreferences sp = getSharedPreferences("loginToken",0);
@@ -260,6 +330,7 @@ public class LoginActivity extends AppCompatActivity {
         }
         editor.commit();
     }
+
 
     //跳转到用户主界面
     public void StartAndFinishActicity( Class<?> cls ) {
@@ -290,6 +361,46 @@ public class LoginActivity extends AppCompatActivity {
                     }
                 }).setTitle("提示");
     }
+
+
+
+    // 弹出身份选择框
+    public void showSelectDialog(){
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setTitle("登录角色选择");
+        alertBuilder.setSingleChoiceItems(mProAdminRoleList, currentSelected, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int position) {
+                tmpSelected = position;
+            }
+        });
+
+        alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                currentSelected = tmpSelected;
+                //跳转至所选择的角色主界面
+                if(currentSelected == 0){
+                    StartAndFinishActicity(WorkerPrimaryActivity.class);
+                } else {
+                    StartAndFinishActicity(ProAdminPrimaryActivity.class);
+                }
+                mSelectProjectDialog.dismiss();
+            }
+        });
+
+        alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mSelectProjectDialog.dismiss();
+            }
+        });
+
+        mSelectProjectDialog = alertBuilder.create();
+        mSelectProjectDialog.show();
+    }
+
+
 
     @Override
     protected void onActivityResult(int requestCode,int resultCode,Intent data){

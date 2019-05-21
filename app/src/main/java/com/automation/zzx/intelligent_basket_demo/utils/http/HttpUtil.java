@@ -64,6 +64,7 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
+    //注册请求
     public static void sendRegistOkHttpRequest(okhttp3.Callback callback, String json) {
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
@@ -75,6 +76,7 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
+    //登录请求
     public static void sendLoginOkHttpRequest(okhttp3.Callback callback, String json) {
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
@@ -86,6 +88,20 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
+    //判断项管请求
+    public static void sendIsProAdminOkHttpRequest(okhttp3.Callback callback, String userId,String token) {
+        OkHttpClient client = new OkHttpClient();
+        FormBody builder = new FormBody.Builder()
+                /* .add(jsonObject)*/
+                .add("userId", userId)
+                .build();
+        final Request request = new Request.Builder()
+                .url(AppConfig.JUDGE_PROADMIN)
+                .addHeader("Authorization", token)
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
 
     public static void getUserInfoOkHttpRequest(okhttp3.Callback callback, String token) {
         OkHttpClient client = new OkHttpClient();

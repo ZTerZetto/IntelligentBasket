@@ -234,6 +234,20 @@
                 </RelativeLayout>
             </LinearLayout>
 
+            <!-- 切换角色 -->
+            <LinearLayout
+                android:id="@+id/switch_layout"
+                style="@style/more_common_linearlayout_style"
+                android:visibility="gone">
+                <RelativeLayout
+                    android:id="@+id/more_item_switch_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="切换至项目管理员"/>
+                </RelativeLayout>
+            </LinearLayout>
+
             <!-- 退出登录等 -->
             <LinearLayout
                 style="@style/more_common_linearlayout_style">
