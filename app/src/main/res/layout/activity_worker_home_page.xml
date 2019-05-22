@@ -1,0 +1,189 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorParameterBackground"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
+    <!-- header 登录状态 -->
+    <RelativeLayout
+        android:id="@+id/login_layout"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/me_login_layout_height"
+        android:paddingLeft="@dimen/me_login_layout_paddingLeft"
+        android:background="#5a6276">
+
+        <!-- 头像 -->
+        <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
+            android:id="@+id/login_head"
+            android:layout_width="@dimen/me_login_head_width"
+            android:layout_height="@dimen/me_login_head_width"
+            android:layout_marginEnd="@dimen/me_login_head_marginEnd"
+            android:layout_centerVertical="true"
+            android:scaleType="fitXY"
+            android:src="@mipmap/ic_default_user_head"/>
+
+        <!-- 账户信息 -->
+        <LinearLayout
+            android:id="@+id/login_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@+id/login_head"
+            android:layout_centerVertical="true"
+            android:layout_marginLeft="5dp"
+            android:orientation="vertical">
+            <!-- 用户姓名 -->
+            <TextView
+                android:id="@+id/login_user_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:singleLine="true"
+                android:ellipsize="end"
+                android:textColor="@color/colorWhiteText"
+                android:text="张晓明"
+                android:textSize="20sp"
+                android:textStyle="bold" />
+
+            <!-- 信息 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginTop="5dp">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="工种:"
+                    android:textColor="@color/colorWhiteText"
+                    android:textSize="@dimen/me_login_balance_size"/>
+                <TextView
+                    android:id="@+id/login_user_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="其它"
+                    android:textColor="@color/colorWhiteText"
+                    android:textSize="@dimen/me_login_balance_size"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 联系电话 -->
+        <LinearLayout
+            android:id="@+id/login_call_phone"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:layout_marginRight="20dp">
+            <ImageView
+                android:layout_width="34dp"
+                android:layout_height="34dp"
+                android:src="@mipmap/ic_call_phone"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center_horizontal"
+                android:layout_marginTop="5dp"
+                android:text="电话"
+                android:textColor="#ffd161"/>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <!-- 工作相关数据统计 -->
+    <!--总时长/好评率/违规操作次数-->
+    <LinearLayout
+        style="@style/horizontal_linearlayout_outside">
+        <!-- 总时长 -->
+        <LinearLayout
+            style="@style/vertical_linearlayout_inside">
+
+            <LinearLayout
+                style="@style/horizontal_linearlayout_inside">
+                <TextView
+                    android:id="@+id/login_work_time"
+                    style="@style/data_textview"
+                    android:text="175.3"/>
+                <TextView
+                    style="@style/unit_textview"
+                    android:text="小时"/>
+            </LinearLayout>
+            <TextView
+                style="@style/instructions_textview"
+                android:text="总时长"/>
+        </LinearLayout>
+        <!-- 分割线 -->
+        <View
+            style="@style/vertical_lineview"/>
+        <!-- 好评率 -->
+        <LinearLayout
+            style="@style/vertical_linearlayout_inside">
+
+            <LinearLayout
+                style="@style/horizontal_linearlayout_inside">
+                <TextView
+                    android:id="@+id/login_good_rate"
+                    style="@style/data_textview"
+                    android:text="99.6"/>
+                <TextView
+                    style="@style/unit_textview"
+                    android:text="%"/>
+            </LinearLayout>
+            <TextView
+                style="@style/instructions_textview"
+                android:text="好评率"/>
+        </LinearLayout>
+        <!-- 分割线 -->
+        <View
+            style="@style/vertical_lineview"/>
+        <!-- 违规次数 -->
+        <LinearLayout
+            style="@style/vertical_linearlayout_inside">
+
+            <LinearLayout
+                style="@style/horizontal_linearlayout_inside">
+                <TextView
+                    android:id="@+id/login_violate_times"
+                    style="@style/data_textview"
+                    android:text="0"/>
+                <TextView
+                    style="@style/unit_textview"
+                    android:text="次"/>
+            </LinearLayout>
+            <TextView
+                style="@style/instructions_textview"
+                android:text="违规次数"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- 技能展示区 -->
+    <TextView
+        android:text="技能展示区"
+        style="@style/content_title_textview"/>
+    <GridView
+        android:id="@+id/login_capacity_display"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="3"
+        android:verticalSpacing="5dp"
+        android:horizontalSpacing="5dp"
+        android:paddingLeft="8dp"
+        android:paddingRight="8dp"
+        android:visibility="visible">
+    </GridView>
+
+    <!-- 空空如也 -->
+    <TextView
+        android:id="@+id/login_no_content"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="主人很懒，啥也没留下~"
+        android:textColor="@color/sliver"
+        android:visibility="gone"/>
+
+
+</LinearLayout>

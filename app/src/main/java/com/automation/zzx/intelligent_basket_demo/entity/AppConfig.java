@@ -97,7 +97,11 @@ public class AppConfig {
     // 施工人员上工
     public static final String WORKER_BEGIN_WORK = ANDROID_URL_PATH.concat("/androidBeginWork");
     // 施工人员下工
-    public static final String WORKER_ENG_WORK = ANDROID_URL_PATH.concat("/androidEndWork");
+    public static final String WORKER_END_WORK = ANDROID_URL_PATH.concat("/androidEndWork");
+    // 施工人员更新资质证书
+    public static final String WORKER_UPDATE_CAPACITY_IMAGE = ANDROID_URL_PATH.concat("/updateQualifications");
+    // 施工人员资质证书URL
+    public static final String WORKER_GET_CAPACITY_IMAGE = ANDROID_URL_PATH.concat("/getQualifications");
 
     /*
      * 租方管理员活动请求

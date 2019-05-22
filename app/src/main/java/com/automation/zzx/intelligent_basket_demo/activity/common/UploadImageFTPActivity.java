@@ -30,6 +30,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerMoreActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.UploadImageLikeWxAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment;
@@ -43,6 +44,8 @@ import com.automation.zzx.intelligent_basket_demo.widget.dialog.ProgressAlertDia
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+
+import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -81,6 +84,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
     private final static int APPLY_BEGIN_PROJECT = 104; // 申请开始项目
     private final static int APPLY_PREPARE_STOP_DEVICE = 105; // 申请预报停
     private final static int APPLY_STOP_DEVICE = 106;  // 申请报停
+    private final static int UPDATE_CAPACITY_IMAGE = 107;  // 更新资质证书
 
     //相册位置
     public static final String CAMERA_PATH = Environment.getExternalStorageDirectory() +
@@ -107,12 +111,14 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
     private SharedPreferences pref;
     private SharedPreferences.Editor editor;
 
+    // 上传基本参数
     private String token; // 验证token
     private String managerId; // 申请人Id
     private String projectId;  // 上传的项目编号
     private String uploadType; // 上传图片类型
     private String deviceId;   // 吊篮编号
     private String deviceList; // 吊篮列表
+    private String workerId; // 工人Id
     private int maxUploadImageNumer; // 最大上传图片数量
     private String uploadHint; // 上传提示信息
     private Map<String, String> params = new HashMap<String, String>(); // 上传参数
@@ -150,6 +156,9 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                     break;
                 case APPLY_STOP_DEVICE: // 申请报停
                     rentAdminApplyStopBasket();
+                    break;
+                case UPDATE_CAPACITY_IMAGE:
+                    workerUpdateCapacityImage();
                     break;
                 default:
                     break;
@@ -336,20 +345,24 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                     // 上传文件
                     mFTPClient.openConnect();  // 建立连接
                     mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
+                    int startIndex = 0; // 图片命名起始编号
                     for(int i=0; i < mUploadImageUrlList.size(); i++){
                         Message message = new Message();
                         message.what = UPLOAD_PROGRESS_PARAMS;
                         message.arg1 = i;
                         mHandler.sendMessage(message);
                         String tempFileName = "";
-                        if(uploadType.equals(UPLOAD_BASKETS_PRE_STOP_IMAGE)) {  // 预报停命名 projectId_deviceId_num.jpg
+                        if(uploadType.equals(UPLOAD_BASKETS_PRE_STOP_IMAGE)) {  // 预报停命名
                             tempFileName = projectId + "_" + deviceId + "_" + (i+1) + ".jpg";
-                        }else if(uploadType.equals(UPLOAD_CERTIFICATE_IMAGE)){  // 安监证书
+                        }else if(uploadType.equals(UPLOAD_CERTIFICATE_IMAGE)){  // 区域管理员->安监证书
                             tempFileName = projectId + "_" + deviceId  + ".jpg";
-                        }else if(uploadType.equals(UPLOAD_BASKETS_PRE_INSTALL_IMAGE)){ // 预安装验收
+                        }else if(uploadType.equals(UPLOAD_BASKETS_PRE_INSTALL_IMAGE)){ // 区域管理员->预安装验收
                             tempFileName = projectId + "_" + (i+1) + ".jpg";
-                        }else if(uploadType.equals(UPLOAD_BASKETS_APPLY_STOP_IMAGE)){  // 报停
+                        }else if(uploadType.equals(UPLOAD_BASKETS_APPLY_STOP_IMAGE)){  // 租方管理员->报停
                             tempFileName = projectId + "_" + deviceList + "_" + (i+1) + ".jpg";
+                        }else if(uploadType.equals(WorkerMoreActivity.UPLOAD_WORKER_CAPACITY_IMAGE)){  // 施工人员->资质证书
+                            if(i==0) startIndex = getCapacityIndex();
+                            tempFileName = workerId + "_" + (i+1+startIndex) + ".jpg";
                         }
                         mFTPClient.uploadingSingleRenameFile(new File(mUploadImageUrlList.get(i)), tempFileName);
                     }
@@ -369,6 +382,9 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                             break;
                         case UPLOAD_BASKETS_APPLY_STOP_IMAGE:  // 报停
                             mHandler.sendEmptyMessage(APPLY_STOP_DEVICE);
+                            break;
+                        case WorkerMoreActivity.UPLOAD_WORKER_CAPACITY_IMAGE:  // 资质证书
+                            mHandler.sendEmptyMessage(UPDATE_CAPACITY_IMAGE);
                             break;
                     }
                 } catch (IOException e) {
@@ -533,6 +549,65 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 });
     }
 
+    // 获取当前资质证书
+    private int getCapacityIndex(){
+        try {
+            List<FTPFile> files = mFTPClient.listCurrentFiles();
+            if(files.size()==0) return 0;
+            String lastFileName = files.get(files.size()-1).getName();
+            return Integer.parseInt(lastFileName.substring(lastFileName.indexOf('_')+1, lastFileName.indexOf('.')));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    // 工人更新资质证书
+    private void workerUpdateCapacityImage(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", token)
+                .addParam("userId", workerId)
+                .addParam("picNum", mUploadImageUrlList.size())
+                .post()
+                .url(AppConfig.WORKER_UPDATE_CAPACITY_IMAGE)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.i(TAG, "更新资质证书成功" );
+                        JSONObject jsonObject = JSON.parseObject(o.toString());
+                        if(jsonObject.getString("update").equals("success")) {
+                            // 申请成功
+                            mHandler.sendEmptyMessage(GET_UPLOAD_INFO);
+                        }else{
+                            // 申请失败
+                            mHandler.sendEmptyMessage(GET_UPLOAD_WRONG);
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "更新资质证书错误：" + code);
+                        switch (code){
+                            case 401: // 未授权
+                                ToastUtil.showToastTips(UploadImageFTPActivity.this, "登录已过期，请重新登陆");
+                                startActivity(new Intent(UploadImageFTPActivity.this, LoginActivity.class));
+                                finish();
+                                break;
+                            case 403: // 禁止
+                                break;
+                            case 404: // 404
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "更新资质证书失败：" + e.toString());
+                        mHandler.sendEmptyMessage(GET_UPLOAD_WRONG);
+                    }
+                });
+    }
+
     /*
      * 获取基本信息
      */
@@ -579,6 +654,13 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 uploadHint = "吊篮报停图片";
                 maxUploadImageNumer = 9;
                 deviceList = getIntent().getStringExtra(MgBasketListFragment.DEVICES_LIST);
+                break;
+            case WorkerMoreActivity.UPLOAD_WORKER_CAPACITY_IMAGE:  // 施工人员上传资质证书
+                workerId = getIntent().getStringExtra(WorkerMoreActivity.WORKER_ID);
+                mRemotePath = "userImage/" + workerId;
+                mToolbar.setTitle("更新资质证书");
+                uploadHint = "资质证书";
+                maxUploadImageNumer = 9;
                 break;
         }
     }

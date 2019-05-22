@@ -32,6 +32,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerHomePageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgWorkerListAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MgWorkerInfo;
@@ -142,6 +143,9 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
             public void onItemClick(View view, int position) {
                 // 点击Item响应
                 Log.i(TAG, "You have clicked the "+ position +" item");
+                Intent intent = new Intent(getActivity(), WorkerHomePageActivity.class);
+                intent.putExtra("worker_id", mgWorkerInfoList.get(position).getId());
+                startActivity(intent);
             }
 
             @Override
@@ -295,7 +299,7 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
         Iterator<Object> iterator = userList.iterator();  // 迭代获取工人信息
         while(iterator.hasNext()) {
             JSONObject workerInfoJsonObject = (JSONObject) iterator.next();
-            if(workerInfoJsonObject==null || workerInfoJsonObject.equals("null")) continue;
+            if(workerInfoJsonObject==null || workerInfoJsonObject.equals("")) continue;
             if(workerInfoJsonObject.getString("userRole").contains("worker")) {
                 MgWorkerInfo mgWorkerInfo = new MgWorkerInfo();
                 mgWorkerInfo.setId(workerInfoJsonObject.getString("userId"));

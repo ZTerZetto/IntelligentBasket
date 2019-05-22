@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerMoreActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 
 /**
@@ -90,9 +91,6 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
         mUserIdTv.setText(mUserInfo.getUserId());
         mUserNameTv.setText(mUserInfo.getUserName());
         switch(mUserInfo.getUserRole()){
-            case "worker":
-                mUserRoleTv.setText("施工人员");
-                break;
             case "rentAdmin":
                 mUserRoleTv.setText("租方管理员");
                 break;
@@ -102,6 +100,13 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
             case "inspector":
                 mUserRoleTv.setText("巡检人员");
                 break;
+            case "worker":
+                mUserRoleTv.setText("施工人员");
+                break;
+            default:
+                mUserRoleTv.setText("施工人员");
+                break;
+
         }
         mUserPhoneTv.setText(mUserInfo.getUserPhone());
     }
@@ -146,6 +151,11 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
                 break;
             case R.id.user_more_layout:  // 更多按钮
                 Log.i(TAG, "You have clicked the user_more_layout");
+                if(mUserInfo.getUserRole().contains("worker")){
+                    intent = new Intent(PersonalInformationActivity.this, WorkerMoreActivity.class);
+                    intent.putExtra("worker_id", mUserInfo.getUserId());
+                    startActivity(intent);
+                }
                 break;
         }
     }

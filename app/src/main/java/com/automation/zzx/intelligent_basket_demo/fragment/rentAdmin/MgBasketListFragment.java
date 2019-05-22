@@ -93,6 +93,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
     private UserInfo userInfo; // 个人信息
     private String token; //
     private String projectId;
+    private boolean getProjectId = false;
 
     @SuppressLint("HandlerLeak")
     private Handler handler = new Handler() {

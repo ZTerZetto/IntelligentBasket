@@ -48,7 +48,7 @@ import okhttp3.Callback;
 import okhttp3.Response;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.WORKER_BEGIN_WORK;
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.WORKER_ENG_WORK;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.WORKER_END_WORK;
 import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
 
 /**
@@ -98,7 +98,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private String mWorkProjectName; // 项目名称
     private int mWorkState = 0; // 0:等待上工 1:等待下工
     //private String mBasketId; //s 吊篮ID
-    private String mUserHeadUrl = AppConfig.FILE_SERVER_YBLIU_PATH + "/head/hdImg_default.jpg";
+    private String mUserHeadUrl;
 
     // dialog
     private CommonDialog mCommonDialog;
@@ -140,7 +140,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     mVerifyWorkDialog.show();
 
                 case UPDATE_USER_DISPLAY_MSG:  // 更新状态
-                    mWorkerHead.setImageUrl(mUserHeadUrl); // 头像
+                    mUserHeadUrl = AppConfig.FILE_SERVER_YBLIU_PATH + "/userImage/" + mUserInfo.getUserId() + "/head.png";
+                    mWorkerHead.setImageUrl(mUserHeadUrl, R.mipmap.ic_default_user_head); // 头像
                     mWorkerName.setText(mUserInfo.getUserName()); // 用户名
                     if(mWorkProjectId == null || mWorkProjectId.equals("")) // 项目状态
                         mWorkerProjectState.setText(R.string.worker_no_project);
@@ -323,7 +324,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         }
         else if(mWorkState == 1) { //等待下工
             Log.i(TAG, "Now, you can close the basket");
-            url = WORKER_ENG_WORK;
+            url = WORKER_END_WORK;
         }
         else
             return;

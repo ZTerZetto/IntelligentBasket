@@ -182,6 +182,29 @@ public class FTPUtil {
     }
 
     /**
+     * 列出FTP当前目录下所有文件.
+     * @return FTPFile集合
+     * @throws IOException
+     */
+    public List<FTPFile> listCurrentFiles() throws IOException {
+        if (ftpClient != null) {
+            // 获取文件
+            try {
+                FTPFile[] files = ftpClient.listFiles();
+                if (files != null && files.length > 0) {
+                    // 遍历并且添加到集合
+                    for (FTPFile file : files) {
+                        list.add(file);
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("TAG", "请稍等...");
+            }
+        }
+        return list;
+    }
+
+    /**
      * 下载.
      *
      * @param remotePath
@@ -349,7 +372,17 @@ public class FTPUtil {
         // 设置模式
         ftpClient.setFileTransferMode(org.apache.commons.net.ftp.FTP.STREAM_TRANSFER_MODE);
         // 改变FTP目录
-        ftpClient.changeWorkingDirectory(currentPath);
+        if(!ftpClient.changeWorkingDirectory(currentPath)){
+            Log.i(TAG, "更换至工作目录：" + ftpClient.printWorkingDirectory());
+            String[] directoryStrArray = currentPath.split("/");
+            for(int i=0; i<directoryStrArray.length; i++){
+                if(!ftpClient.changeWorkingDirectory(directoryStrArray[i])){
+                    ftpClient.makeDirectory(directoryStrArray[i]);
+                    ftpClient.changeWorkingDirectory(directoryStrArray[i]);
+                }
+                Log.i(TAG, "更换至工作目录：" + ftpClient.printWorkingDirectory());
+            }
+        }
         Log.i(TAG, "更换至工作目录：" + ftpClient.printWorkingDirectory());
     }
     /**
