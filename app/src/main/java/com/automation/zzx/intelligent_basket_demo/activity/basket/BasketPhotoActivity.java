@@ -125,7 +125,7 @@ public class BasketPhotoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_basket_photo);
 
         Intent intent = getIntent();
-        //mBasketId = intent.getStringExtra(HANGING_BASKET_ID);  // 获取吊篮ID
+        mBasketId = intent.getStringExtra(BasketDetailActivity.BASKET_ID);  // 获取吊篮ID
         if(mBasketId==null || mBasketId.equals("")) mBasketId = "js_nj_00003";
 
         //initLocalDir();  // 初始化本地资源目录

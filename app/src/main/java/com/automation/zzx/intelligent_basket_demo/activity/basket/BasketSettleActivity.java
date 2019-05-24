@@ -20,6 +20,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.EditAlertDialog;
 
@@ -71,6 +72,10 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_INFORM:  //获取默认参数
+                    if(msg.obj.toString() == null || msg.obj.toString().equals("")){
+                        ToastUtil.showToastTips(BasketSettleActivity.this, "无法连接到设备");
+                        finish();
+                    }
                     JSONObject jsonObject = JSON.parseObject(msg.obj.toString());
                     if(jsonObject.getString("deviceId").equals(mDeviceId)){
                         tvCurrent.setText(jsonObject.getString("overweight_current"));

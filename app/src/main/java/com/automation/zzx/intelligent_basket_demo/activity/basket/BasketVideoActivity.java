@@ -101,10 +101,8 @@ public class BasketVideoActivity extends AppCompatActivity {
         setContentView(R.layout.activity_basket_video);
 
         Intent intent = getIntent();
-        //mBasketId = intent.getStringExtra(HANGING_BASKET_ID);  // 获取吊篮id
+        mBasketId = intent.getStringExtra(BasketDetailActivity.BASKET_ID);  // 获取吊篮id
         if(mBasketId==null || mBasketId.equals("")){
-            //ToastUtil.showToastTips(VideoMonitor2Activity.this, "没有吊篮ID");
-            //this.finish();
             mBasketId = "1";
         }
 

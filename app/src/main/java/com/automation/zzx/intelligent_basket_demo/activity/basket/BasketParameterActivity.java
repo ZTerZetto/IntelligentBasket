@@ -98,7 +98,7 @@ public class BasketParameterActivity extends AppCompatActivity {
         setContentView(R.layout.activity_basket_parameter);
 
         Intent intent = getIntent();
-        //mBasketId = intent.getStringExtra(HANGING_BASKET_ID);  // 获取吊篮id
+        mBasketId = intent.getStringExtra(BasketDetailActivity.BASKET_ID);  // 获取吊篮id
         if(mBasketId==null || mBasketId.equals("")) mBasketId = "js_nj_00003";
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);

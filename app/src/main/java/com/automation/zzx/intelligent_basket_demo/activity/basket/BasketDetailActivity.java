@@ -4,9 +4,12 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.TextView;
 
@@ -23,9 +26,13 @@ import java.util.List;
  * Describe: 选择测试功能
  */
 
-public class BasketDetailActivity extends AppCompatActivity {
+public class BasketDetailActivity extends AppCompatActivity implements View.OnClickListener {
+
+    // 页面跳转消息
+    public final static String BASKET_ID = "basket_id";
 
     // 控件声明
+    private EditText mSetBasketIdEv;
     private GridView mFunctionGridView;  // 功能测试
 
     // function gridview
@@ -54,20 +61,31 @@ public class BasketDetailActivity extends AppCompatActivity {
     // 资源句柄初始化及监听
     public void initWidgetResource(){
         // 获取控件句柄
+        mSetBasketIdEv = (EditText) findViewById(R.id.basket_id_ev);
+        mSetBasketIdEv.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                mBasketId = s.toString();
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                mBasketId = s.toString();
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                mBasketId = s.toString();
+            }
+        });
         mFunctionGridView = (GridView) findViewById(R.id.function_gridview);
 
         // 初始化功能列表
         initFunctionList();
-
-        // 初始化适配器
         mFunctionAdapter = new FunctionAdapter(BasketDetailActivity.this,
-                R.layout.item_function, mFunctions);
-
-        // 装载适配器
-        mFunctionGridView.setAdapter(mFunctionAdapter);
-
-        // GridView 监听
-        mFunctionGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                R.layout.item_function, mFunctions); // 初始化适配器
+        mFunctionGridView.setAdapter(mFunctionAdapter); // 装载适配器
+        mFunctionGridView.setOnItemClickListener(new AdapterView.OnItemClickListener() { // GridView 监听
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // do something
@@ -75,18 +93,22 @@ public class BasketDetailActivity extends AppCompatActivity {
                 switch(position){
                     case 0:  // 参数页面
                         intent = new Intent(BasketDetailActivity.this, BasketParameterActivity.class);
+                        intent.putExtra(BASKET_ID, mBasketId);
                         startActivity(intent);
                         break;
                     case 1:  // 图片页面
                         intent = new Intent(BasketDetailActivity.this, BasketPhotoActivity.class);
+                        intent.putExtra(BASKET_ID, mBasketId);
                         startActivity(intent);
                         break;
                     case 2:  // 视频页面
                         intent = new Intent(BasketDetailActivity.this, BasketVideoActivity.class);
+                        intent.putExtra(BASKET_ID, mBasketId);
                         startActivity(intent);
                         break;
                     case 3:  // 设置页面
                         intent = new Intent(BasketDetailActivity.this, BasketSettleActivity.class);
+                        intent.putExtra(BASKET_ID, mBasketId);
                         startActivity(intent);
                         break;
                     default:break;
@@ -96,6 +118,14 @@ public class BasketDetailActivity extends AppCompatActivity {
 
     }
 
+    /*
+     * 消息响应
+     */
+    // 消息想要
+    @Override
+    public void onClick(View v) {
+
+    }
     // 顶部导航栏消息响应
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {

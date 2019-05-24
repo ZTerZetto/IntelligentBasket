@@ -48,7 +48,7 @@ public class WorkerMoreActivity extends AppCompatActivity implements View.OnClic
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle("个人信息");
+        toolbar.setTitle("更多");
         titleText.setText("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
