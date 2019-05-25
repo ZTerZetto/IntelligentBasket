@@ -28,6 +28,7 @@ public class EditAlertDialog extends Dialog implements View.OnClickListener{
     private String negativeName;
     private String title;
 
+
     public EditAlertDialog(Context context) {
         super(context);
         this.mContext = context;

@@ -88,6 +88,8 @@
     <string name="angel_upperLimit">倾斜角上限位</string>
     <string name="angel_lowerLimit">倾斜角下限位</string>
     <string name="interval_snapshot">截图时间间隔</string>
+    <!-- repair activity -->
+    <string name="fix_describe">请输入报修情況描述...</string>
 
     <!-- Info fragment -->
     <string name="info_noMessage">暂无消息</string>

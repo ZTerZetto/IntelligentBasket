@@ -63,6 +63,8 @@
         </activity>
         <activity android:name=".activity.basket.BasketDetailActivity" />
         <activity android:name=".activity.basket.BasketParameterActivity" />
+        <activity android:name=".activity.basket.BasketRepairActivity" />
+
         <activity
             android:name=".activity.basket.BasketVideoActivity"
             android:configChanges="orientation|screenSize"

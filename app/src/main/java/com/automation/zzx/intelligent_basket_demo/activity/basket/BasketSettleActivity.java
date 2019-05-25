@@ -150,6 +150,8 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
         rlSnapshot  = findViewById(R.id.item_snapshot_layout);//截图时间间隔
         rlSnapshot.setOnClickListener(this);
 
+        mEditAlertDialog = new EditAlertDialog(this);
+
     }
     private void initParam() {
         HttpUtil.getParameOkHttpRequest(new okhttp3.Callback() {
@@ -283,9 +285,8 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
         //销毁计时器
         if(mEditAlertDialog.countDownTimer != null){
             mEditAlertDialog.countDownTimer.cancel();
-            mEditAlertDialog.countDownTimer.onFinish();
-            mEditAlertDialog.countDownTimer = null;
         }
+        mEditAlertDialog.countDownTimer = null;
         submitNum = 0;
         super.onDestroy();
     }

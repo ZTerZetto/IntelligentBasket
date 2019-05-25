@@ -9,6 +9,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.FunctionAdapter;
@@ -33,7 +34,18 @@ public class BasketDetailActivity extends AppCompatActivity {
     private FunctionAdapter mFunctionAdapter;  // 功能适配器
 
     // others
+    private String mProjectId;  //項目ID
     private String mBasketId;  // 吊篮id
+
+    public final static String UPLOAD_PROJECT_ID  = "project_id"; // 項目ID
+    public final static String UPLOAD_BASKET_ID = "basket_id"; // 報修操作
+    public final static String UPLOAD_IMAGE_TEXT_TYPE  = "uploadImageTextType"; // 上传图片的类型
+    public final static String UPLOAD_BASKET_REPAIR_IMAGE = "basketRepair"; // 報修操作
+
+    //返回結果
+    public final static int UPLOAD_BASKET_REPAIR_RESULT = 101; //報修返回
+
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,9 +60,17 @@ public class BasketDetailActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
+        getBaseInfoFromPred();
         initWidgetResource();
     }
 
+    // 項目和吊籃信息獲取
+    public void getBaseInfoFromPred() {
+        Intent intent = getIntent();
+        mProjectId = intent.getStringExtra("project_id");
+        mBasketId = intent.getStringExtra("basket_id");
+
+    }
     // 资源句柄初始化及监听
     public void initWidgetResource(){
         // 获取控件句柄
@@ -89,11 +109,18 @@ public class BasketDetailActivity extends AppCompatActivity {
                         intent = new Intent(BasketDetailActivity.this, BasketSettleActivity.class);
                         startActivity(intent);
                         break;
+                    case 4:  // 报修页面
+                        intent = new Intent(BasketDetailActivity.this, BasketRepairActivity.class);
+                        intent.putExtra(UPLOAD_PROJECT_ID, mProjectId);
+                        intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
+                        intent.putExtra(UPLOAD_IMAGE_TEXT_TYPE, UPLOAD_BASKET_REPAIR_IMAGE);
+                        startActivityForResult(intent, UPLOAD_BASKET_REPAIR_RESULT);
+                        startActivity(intent);
+                        break;
                     default:break;
                 }
             }
         });
-
     }
 
     // 顶部导航栏消息响应
@@ -122,6 +149,23 @@ public class BasketDetailActivity extends AppCompatActivity {
         Function setting = new Function("设置", R.mipmap.ic_setting_192);
         //Function video = new Function("监控", R.mipmap.ic_video);
         mFunctions.add(setting);
+        Function repair = new Function("报修", R.mipmap.ic_repair_192);
+        //Function video = new Function("监控", R.mipmap.ic_video);
+        mFunctions.add(repair);
+    }
+    /*
+     * 活动返回监听
+     */
+    //页面返回数据监听
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case UPLOAD_BASKET_REPAIR_RESULT:        //报修结果显示
+                Toast.makeText(BasketDetailActivity.this, "报修成功！", Toast.LENGTH_SHORT).show();
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

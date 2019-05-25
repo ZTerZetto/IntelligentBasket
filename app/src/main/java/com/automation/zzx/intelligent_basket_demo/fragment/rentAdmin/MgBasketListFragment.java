@@ -150,7 +150,8 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                 // item 点击响应
                 Log.i(TAG, "You have clicked the "+ position +" item");
                 Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
-                //intent.putExtra("basket_id", mgBasketInfoList.get(position).getId());
+                intent.putExtra("project_id",projectId);
+                intent.putExtra("basket_id", mgBasketInfoList.get(position).getId());
                 startActivity(intent);
             }
 
