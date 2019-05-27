@@ -62,6 +62,21 @@
                 style="@style/more_common_desc_textView_style"
                 android:text="2019-03-15 12:30"/>
         </RelativeLayout>
+        <View
+            style="@style/me_horizontal_view_style"/>
+
+        <!-- 配置清单-->
+        <RelativeLayout
+            android:id="@+id/project_configuration_list_layout"
+            style="@style/me_common_item_relativeLayout_style"
+            android:clickable="true">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="查看配置清单"/>
+            <ImageView
+                style="@style/me_common_item_arrow_right_imageView_style"/>
+        </RelativeLayout>
+
     </LinearLayout>
 
     <!-- 已添加的吊篮 -->

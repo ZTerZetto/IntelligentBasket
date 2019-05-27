@@ -5,9 +5,9 @@ public class AppConfig {
      * 服务器地址
      */
     public final static String BASE_URL_PATH = "http://47.100.1.211";// 后台地址
-    public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
+    //public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
     //public final static String ANDROID_URL_PATH = "http://10.193.1.44:8080";  // 师姐
-    //public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080"; // 老刘
+    public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080"; // 老刘
     public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
     public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082"; // 刘跃博HTTP文件服务器地址
@@ -156,6 +156,8 @@ public class AppConfig {
     public static final String INSPECTION_PERSON_IN_STORAGE = ANDROID_URL_PATH.concat("/storageIn");
     // 巡检人员上传异常吊篮信息
     public static final String INSPECTION_PERSON_EXCEPTION_REPORT = ANDROID_URL_PATH.concat("/createExceptionBox");
+    // 巡检人员查看项目清单
+    public static final String INSPECTION_PERSON_CHECK_CONFIGURATION_LIST = ANDROID_URL_PATH.concat("/getConfigurationList");
 
     /*
     * 常量

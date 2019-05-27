@@ -15,6 +15,8 @@ import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -50,7 +52,7 @@ import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.C
  * limits:
  */
 
-public class OutAndInStorageActivity extends AppCompatActivity {
+public class OutAndInStorageActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "OutStorageActivity";
 
@@ -66,6 +68,7 @@ public class OutAndInStorageActivity extends AppCompatActivity {
     private TextView mProjectIdTextView; // 项目id
     private TextView mProjectNameTextView; //项目名称
     private TextView mProjectStartTextView; // 项目开始日期
+    private RelativeLayout mProjectConfigurationListRl; // 项目配置清单
     private ImageView mAddBasketImageView; // 添加吊篮的图片按钮
     private RecyclerView mAddedBasketsRecyclerView; // 已添加吊篮列表控件
 
@@ -138,6 +141,8 @@ public class OutAndInStorageActivity extends AppCompatActivity {
         mProjectIdTextView = (TextView) findViewById(R.id.project_id_textview);
         mProjectNameTextView = (TextView) findViewById(R.id.project_name_textview);
         mProjectStartTextView = (TextView) findViewById(R.id.project_start_time_textview);
+        mProjectConfigurationListRl = (RelativeLayout) findViewById(R.id.project_configuration_list_layout);
+        mProjectConfigurationListRl.setOnClickListener(this);
 
         // 吊篮列表
         mAddedBasketsRecyclerView = (RecyclerView) findViewById(R.id.added_basket_recyclerview);
@@ -194,6 +199,16 @@ public class OutAndInStorageActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+    @Override
+    public void onClick(View v) {
+        switch(v.getId()){
+            case R.id.project_configuration_list_layout:  // 点击查看项目清单
+                Intent intent = new Intent(OutAndInStorageActivity.this, ConfigurationListActivity.class);
+                intent.putExtra(SearchProjectActivity.PROJECT_ID, mProjectId);  // 传入项目Id
+                startActivity(intent);
+                break;
+        }
     }
 
     /*
