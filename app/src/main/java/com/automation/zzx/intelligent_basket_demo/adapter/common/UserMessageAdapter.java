@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.adapter.worker;
+package com.automation.zzx.intelligent_basket_demo.adapter.common;
 
 import android.content.Context;
 import android.support.annotation.NonNull;
@@ -9,7 +9,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
@@ -21,7 +20,7 @@ import java.util.List;
  * Author Email: 15651851181@163.com
  * Describe:
  */
-public class WorkerMessageAdapter extends RecyclerView.Adapter<WorkerMessageAdapter.ViewHolder>{
+public class UserMessageAdapter extends RecyclerView.Adapter<UserMessageAdapter.ViewHolder>{
 
     private Context mContext;
     private List<MessageInfo> mMessageInfoList;
@@ -37,7 +36,7 @@ public class WorkerMessageAdapter extends RecyclerView.Adapter<WorkerMessageAdap
 
         private OnItemClickListener onItemClickListener;
 
-        public ViewHolder(View itemView, final WorkerMessageAdapter.OnItemClickListener onItemClickListener) {
+        public ViewHolder(View itemView, final UserMessageAdapter.OnItemClickListener onItemClickListener) {
             super(itemView);
             // 控件初始化
             mView = itemView;
@@ -59,7 +58,7 @@ public class WorkerMessageAdapter extends RecyclerView.Adapter<WorkerMessageAdap
         }
     }
 
-    public WorkerMessageAdapter(Context mContext, List<MessageInfo> messageInfoList){
+    public UserMessageAdapter(Context mContext, List<MessageInfo> messageInfoList){
         this.mContext = mContext;
         mMessageInfoList = messageInfoList;
     }
@@ -90,7 +89,7 @@ public class WorkerMessageAdapter extends RecyclerView.Adapter<WorkerMessageAdap
     /*
      * 设置监听
      */
-    public void setOnItemClickListener(WorkerMessageAdapter.OnItemClickListener mOnItemClickListener) {
+    public void setOnItemClickListener(UserMessageAdapter.OnItemClickListener mOnItemClickListener) {
         this.mOnItemClickListener = mOnItemClickListener;
     }
 

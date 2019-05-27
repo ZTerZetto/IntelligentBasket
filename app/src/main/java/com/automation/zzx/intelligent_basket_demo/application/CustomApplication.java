@@ -214,7 +214,7 @@ public class CustomApplication extends Application {
     public void onMessageNotify(){
         // 黑屏震动
         if(isScreenOff(this)) {
-            vibrator.vibrate(new long[]{100, 500, 100, 500}, 2);
+            //vibrator.vibrate(new long[]{100, 500, 100, 500}, 2);
         }
 
         // 提示音
@@ -252,8 +252,6 @@ public class CustomApplication extends Application {
         Map<String, String> keyValuePair = message.getExtra();
         messageInfo.setmType(keyValuePair.get("type"));
         if(messageInfo.getmType()==null || messageInfo.getmType().equals("")) return;
-        //messageInfo.setmProjectId(keyValuePair.get("projectId"));
-        //messageInfo.setmProjectName(keyValuePair.get("projectName"));
         switch (messageInfo.getmType()){
             case "1":  // 报警消息
                 //messageInfo.setmWorkerPhone(keyValuePair.get("workerPhone"));
@@ -262,6 +260,11 @@ public class CustomApplication extends Application {
             case "2": // 验收申请
                 break;
             case "3": // 项目流程
+                break;
+            case "4": // 报警消息
+                break;
+            case "5": // 配置清单
+                messageInfo.setmProjectId(keyValuePair.get("projectId"));  // 项目id
                 break;
         }
         messageInfo.save(); // 保存数据库

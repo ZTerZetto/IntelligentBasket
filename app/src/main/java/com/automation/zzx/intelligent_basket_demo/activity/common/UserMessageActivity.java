@@ -1,6 +1,7 @@
-package com.automation.zzx.intelligent_basket_demo.activity.worker;
+package com.automation.zzx.intelligent_basket_demo.activity.common;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -14,8 +15,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgRentMessageAdapter;
-import com.automation.zzx.intelligent_basket_demo.adapter.worker.WorkerMessageAdapter;
+import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.ConfigurationListActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.OutAndInStorageActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.SearchProjectActivity;
+import com.automation.zzx.intelligent_basket_demo.adapter.common.UserMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
@@ -33,15 +36,18 @@ import java.util.List;
  * limits:
  */
 
-public class WorkerMessageActivity extends AppCompatActivity {
+public class UserMessageActivity extends AppCompatActivity {
 
     // Message
     private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;;
 
     // 列表
     private RecyclerView recyclerView;
-    private WorkerMessageAdapter mgWorkerMessageAdapter;
+    private UserMessageAdapter mgUserMessageAdapter;
     private List<MessageInfo> mMessageInfoList = new ArrayList<>();
+
+    // 页面类型
+    private String mUserMessageType;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -49,7 +55,7 @@ public class WorkerMessageActivity extends AppCompatActivity {
             switch (msg.what){
                 case UPDATE_HISTORY_MESSAGE_INFO:
                     getHistoryMessageInfo();
-                    mgWorkerMessageAdapter.notifyDataSetChanged();
+                    mgUserMessageAdapter.notifyDataSetChanged();
                     break;
             }
         }
@@ -58,9 +64,12 @@ public class WorkerMessageActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_worker_message);
+        setContentView(R.layout.activity_user_message);
 
         if(!isHasPermission()) requestPermission();
+        Intent intent = getIntent();
+        mUserMessageType = intent.getStringExtra("user_type");
+
         initWidgetResource();
     }
 
@@ -79,24 +88,33 @@ public class WorkerMessageActivity extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.rv_message);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        mgWorkerMessageAdapter = new WorkerMessageAdapter(this,mMessageInfoList);
-        mgWorkerMessageAdapter.setOnItemClickListener(new WorkerMessageAdapter.OnItemClickListener() {
+        mgUserMessageAdapter = new UserMessageAdapter(this,mMessageInfoList);
+        mgUserMessageAdapter.setOnItemClickListener(new UserMessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 MessageInfo messageInfo = mMessageInfoList.get(position);
                 // do something
+                switch(messageInfo.getmType()){
+                    case "1": // 报警消息
+                        break;
+                    case "5": // 配置清单
+                        Intent intent = new Intent(UserMessageActivity.this, ConfigurationListActivity.class);
+                        intent.putExtra(SearchProjectActivity.PROJECT_ID, messageInfo.getmProjectId());  // 传入项目Id
+                        startActivity(intent);
+                        break;
+                }
 
                 // 更新页面与数据库
                 if(!messageInfo.ismIsChecked()) {
                     // 更新页面
                     mMessageInfoList.get(position).setmIsChecked(true);
-                    mgWorkerMessageAdapter.notifyDataSetChanged();
+                    mgUserMessageAdapter.notifyDataSetChanged();
                     // 更新数据库
                     messageInfo.updateAll("mTime = ?", messageInfo.getmTime());
                 }
             }
         });
-        recyclerView.setAdapter(mgWorkerMessageAdapter);
+        recyclerView.setAdapter(mgUserMessageAdapter);
         mHandler.sendEmptyMessage(UPDATE_HISTORY_MESSAGE_INFO);
     }
 
@@ -118,8 +136,21 @@ public class WorkerMessageActivity extends AppCompatActivity {
      */
     private void getHistoryMessageInfo(){
         if(!isHasPermission()) requestPermission();
-        List<MessageInfo> messageInfos = DataSupport.where("mType = ?", "1")
-                .find(MessageInfo.class);
+
+        List<MessageInfo> messageInfos = new ArrayList<>();
+        switch (mUserMessageType){
+            case "worker":
+                // 施工人员消息：报警
+                messageInfos = DataSupport.where("mType = ?", "1")
+                        .find(MessageInfo.class);
+                break;
+            case "inspect_person":
+                // 巡检人员：配置清单
+                messageInfos = DataSupport.where("mType = ?", "5")
+                        .find(MessageInfo.class);
+                break;
+        }
+
         mMessageInfoList.clear();
         mMessageInfoList.addAll(messageInfos);
     }
@@ -129,7 +160,7 @@ public class WorkerMessageActivity extends AppCompatActivity {
      */
     // 申请权限
     private void requestPermission() {
-        XXPermissions.with(WorkerMessageActivity.this)
+        XXPermissions.with(UserMessageActivity.this)
                 .constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
                 .permission(Permission.Group.STORAGE) //支持请求6.0悬浮窗权限8.0请求安装权限
                 .request(new OnPermission() {
@@ -139,7 +170,7 @@ public class WorkerMessageActivity extends AppCompatActivity {
                             //initCamera(scanPreview.getHolder());
                             onResume();
                         }else {
-                            Toast.makeText(WorkerMessageActivity.this,
+                            Toast.makeText(UserMessageActivity.this,
                                     "必须同意所有的权限才能使用本程序", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -147,12 +178,12 @@ public class WorkerMessageActivity extends AppCompatActivity {
                     @Override
                     public void noPermission(List<String> denied, boolean quick) {
                         if(quick) {
-                            Toast.makeText(WorkerMessageActivity.this, "被永久拒绝授权，请手动授予权限",
+                            Toast.makeText(UserMessageActivity.this, "被永久拒绝授权，请手动授予权限",
                                     Toast.LENGTH_SHORT).show();
                             // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                            XXPermissions.gotoPermissionSettings(WorkerMessageActivity.this);
+                            XXPermissions.gotoPermissionSettings(UserMessageActivity.this);
                         }else {
-                            Toast.makeText(WorkerMessageActivity.this, "获取权限失败",
+                            Toast.makeText(UserMessageActivity.this, "获取权限失败",
                                     Toast.LENGTH_SHORT).show();
                             finish();
                         }
@@ -162,7 +193,7 @@ public class WorkerMessageActivity extends AppCompatActivity {
 
     // 是否有权限：摄像头、拨打电话
     private boolean isHasPermission() {
-        if (XXPermissions.isHasPermission(WorkerMessageActivity.this, Permission.Group.STORAGE))
+        if (XXPermissions.isHasPermission(UserMessageActivity.this, Permission.Group.STORAGE))
             return true;
         return false;
     }

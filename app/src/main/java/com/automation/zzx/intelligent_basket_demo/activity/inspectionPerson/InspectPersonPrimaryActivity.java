@@ -18,12 +18,16 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.common.UserMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
+import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 
 import java.io.IOException;
@@ -92,6 +96,8 @@ public class InspectPersonPrimaryActivity extends AppCompatActivity implements V
 
         getUserInfo();
         initWidget();  // 初始化控件
+
+        MiPushUtil.initMiPush(InspectPersonPrimaryActivity.this, mUserInfo.getUserId(), "ConfigurationList");
     }
 
     /*
@@ -164,6 +170,9 @@ public class InspectPersonPrimaryActivity extends AppCompatActivity implements V
                 break;
             case R.id.message_layout:  // 消息
                 Log.i(TAG, "You have clicked message button");
+                intent = new Intent(InspectPersonPrimaryActivity.this, UserMessageActivity.class);
+                intent.putExtra("user_type", "inspect_person"); // 用户类型
+                startActivity(intent);
                 break;
             case R.id.more_item_comment_layout:  // 给个好评
                 Log.i(TAG, "You have clicked high price button");

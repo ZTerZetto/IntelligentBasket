@@ -25,6 +25,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.common.UserMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
@@ -240,7 +241,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.message_layout:  // 消息
                 Log.i(TAG, "You have clicked message button");
-                intent = new Intent(WorkerPrimaryActivity.this, WorkerMessageActivity.class);
+                intent = new Intent(WorkerPrimaryActivity.this, UserMessageActivity.class);
+                intent.putExtra("user_type", "worker");
                 startActivity(intent);
                 break;
             case R.id.warning_layout:  // 报警

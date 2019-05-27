@@ -36,7 +36,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.inspectionPerson.ConfigurationListActivity"></activity>
+        <activity android:name=".activity.inspectionPerson.InspectionMessageActivity"></activity>
+        <activity android:name=".activity.inspectionPerson.ConfigurationListActivity" />
         <activity android:name=".activity.worker.WorkerMoreActivity" />
         <activity android:name=".activity.worker.WorkerHomePageActivity" />
         <activity android:name=".activity.inspectionPerson.ExceptionReportActivity" />
@@ -47,7 +48,7 @@
         <activity android:name=".activity.common.UserNameActivity" />
         <activity android:name=".activity.areaAdmin.UploadPreStopInfoActivity" />
         <activity android:name=".activity.areaAdmin.CheckCompactActivity" />
-        <activity android:name=".activity.worker.WorkerMessageActivity" />
+        <activity android:name=".activity.common.UserMessageActivity" />
         <activity android:name=".activity.areaAdmin.UploadImageActivity" />
         <activity android:name=".activity.common.UploadImageFTPActivity" />
         <activity android:name=".activity.common.QRcodeCardActivity" />

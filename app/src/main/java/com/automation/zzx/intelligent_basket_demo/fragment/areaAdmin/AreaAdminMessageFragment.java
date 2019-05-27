@@ -18,7 +18,6 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgAreaMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.hjq.permissions.OnPermission;
