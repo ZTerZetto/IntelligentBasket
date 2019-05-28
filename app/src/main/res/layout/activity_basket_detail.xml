@@ -23,7 +23,7 @@
             android:orientation="horizontal">
             <TextView
                 style="@style/usertextStyle"
-                android:text="吊篮编号："
+                android:text="吊篮编号 "
                 />
             <TextView
                 android:id="@+id/basket_id"
@@ -39,11 +39,11 @@
             android:orientation="horizontal">
             <TextView
                 style="@style/usertextStyle"
-                android:text="负责人编号：" />
+                android:text="负责人     " />
             <TextView
                 android:id="@+id/basket_worker_id"
                 style="@style/usertextStyle"
-                android:hint="@string/workerId_hint" />
+                android:hint="@string/workerName_hint" />
         </LinearLayout>
 
     </LinearLayout>

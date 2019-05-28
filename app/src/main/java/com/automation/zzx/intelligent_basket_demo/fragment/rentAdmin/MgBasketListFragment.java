@@ -26,7 +26,6 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadPreStopInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
@@ -152,6 +151,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                 Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
                 intent.putExtra("project_id",projectId);
                 intent.putExtra("basket_id", mgBasketInfoList.get(position).getId());
+                intent.putExtra("principal_name", mgBasketInfoList.get(position).getPrincipal());
                 startActivity(intent);
             }
 

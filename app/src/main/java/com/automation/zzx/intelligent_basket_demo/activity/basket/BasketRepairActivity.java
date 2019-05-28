@@ -130,14 +130,16 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
     @SuppressLint("HandlerLeak")
     public Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
+            Intent intent = new Intent();
             switch (msg.what) {
                 case GET_UPLOAD_INFO:  // 上传图片成功
                     DialogToast("提示", "您已成功上传" + uploadHint).show();
+                    setResult(RESULT_OK, intent);
                     mProgressDialog.dismiss();
-                    afterRepair();
                     break;
                 case GET_UPLOAD_WRONG: // 上传图片失败
                     DialogToast("提示", uploadHint + "上传失败！").show();
+                    setResult(RESULT_CANCELED, intent);
                     mProgressDialog.dismiss();
                     break;
                 case UPLOAD_PROGRESS_PARAMS:  // 更新文件上傳進度軸參數
@@ -397,7 +399,7 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
                     mFTPClient.openConnect();  // 建立连接
                     mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
                     tempFileNameList.clear();
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");// HH:mm:ss
+                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");// HH:mm:ss
                     //获取当前时间
                     Date date = new Date(System.currentTimeMillis());
                     String time = simpleDateFormat.format(date);
@@ -599,9 +601,5 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
             setResult(RESULT_OK, intent);
         }
         finish();
-    }
-    private void afterRepair(){
-        finish();
-        //todo 显示详细报修信息
     }
 }

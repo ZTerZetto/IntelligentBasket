@@ -42,12 +42,14 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.CheckCompactActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ConfigurationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadPreStopInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.RepairInfoListActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
@@ -100,6 +102,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private final static int UPLOAD_BASKET_IMAGE_RESULT = 2;  // 上传预验收图片
     private final static int UPLOAD_CERTIFICATE_IMAGE_RESULT = 3;  // 上传安监证书页面
     private final static int UPLOAD_PRE_STOP_BASKET_IMAGE_RESULT = 4;  // 上传吊篮预报停图片页面
+    private final static int UPLOAD_CONFIGURATION_RESULT = 5;  // 上传配置清单结果
 
     // intent 消息参数
     public final static String PROJECT_ID = "projectId";  // 上传图片的项目Id
@@ -149,11 +152,13 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private RelativeLayout mProjectStartRelativeLayout; // 项目开始日期
     private TextView mProjectStartTextView;
     private RelativeLayout mExamineCompactRelativeLayout; // 查看合同
+    private RelativeLayout mConfigurationRelativeLayout; // 配置清单
     private RelativeLayout mPreApplyRelativeLayout; // 预验收申请
     private TextView mPreApplyCountTextView;
     private RelativeLayout mSendOrExamineCertificateRelativeLayout; // 上传或查看安监证书
     private TextView mSendOrExamineCertificateTextView; //
     private TextView mSendOrExamineCertificateCountTextView;
+    private RelativeLayout rlGetRepairInfo; //获取报修历史
     private RelativeLayout mUploadPreStopInfoRelativeLayout; // 预报停信息上传
 
     // 悬浮按钮
@@ -339,6 +344,8 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mProjectStartTextView = (TextView) view.findViewById(R.id.project_start_time_textview);
         mExamineCompactRelativeLayout = (RelativeLayout) view.findViewById(R.id.examine_compact_layout);
         mExamineCompactRelativeLayout.setOnClickListener(this);  // 查看合同
+        mConfigurationRelativeLayout = (RelativeLayout) view.findViewById(R.id.configuration_apply_layout);
+        mConfigurationRelativeLayout.setOnClickListener(this);  // 配置清单
         mPreApplyRelativeLayout = (RelativeLayout) view.findViewById(R.id.project_pre_apply_layout); // 预验收
         mPreApplyRelativeLayout.setOnClickListener(this);
         mPreApplyCountTextView = (TextView) view.findViewById(R.id.project_pre_apply_tv_count);
@@ -346,6 +353,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mSendOrExamineCertificateRelativeLayout.setOnClickListener(this);
         mSendOrExamineCertificateTextView = (TextView) view.findViewById(R.id.send_examine_certification_tv);
         mSendOrExamineCertificateCountTextView = (TextView) view.findViewById(R.id.send_examine_certificate_tv_count);
+        rlGetRepairInfo   = (RelativeLayout) view.findViewById(R.id.rl_get_repair_info);
         mUploadPreStopInfoRelativeLayout = (RelativeLayout) view.findViewById(R.id.pre_stop_info_layout);  // 上传预报停信息
         mUploadPreStopInfoRelativeLayout.setOnClickListener(this);
 
@@ -385,6 +393,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 intent = new Intent(getActivity(), CheckCompactActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.configuration_apply_layout:
+                Log.i(TAG, "You have clicked the configuration button");
+                intent = new Intent(getActivity(), ConfigurationActivity.class);
+                intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                startActivityForResult(intent, UPLOAD_CONFIGURATION_RESULT);
+                break;
             case R.id.project_pre_apply_layout:  // 预验收申请
                 Log.i(TAG, "You have clicked the pre_apply compact button");
                 intent = new Intent(getActivity(), UploadImageFTPActivity.class);
@@ -398,6 +412,13 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
                 intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
                 startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
+                break;
+
+            case R.id.rl_get_repair_info:
+                Log.i(TAG, "You have clicked the repair information button");
+                intent = new Intent(getActivity(), RepairInfoListActivity.class);
+                //intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                startActivity(intent);
                 break;
             case R.id.pre_stop_info_layout:
                 Log.i(TAG, "You have clicked the pre stop info button");
@@ -479,6 +500,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 }
                 break;
             case UPLOAD_CERTIFICATE_IMAGE_RESULT:  // 上传安监证书返回值
+                break;
+
+            case UPLOAD_CONFIGURATION_RESULT: // 上传配置清单返回值
+                if(resultCode == RESULT_OK) {
+                    // 更新进度页面
+                }
                 break;
             default:
                 break;

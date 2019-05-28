@@ -36,7 +36,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.inspectionPerson.OutAndInStorageActivity"></activity>
+        <activity android:name=".activity.areaAdmin.RepairInfoListActivity"></activity>
+        <activity android:name=".activity.areaAdmin.ConfigurationActivity" />
+        <activity android:name=".activity.inspectionPerson.OutAndInStorageActivity" />
         <activity android:name=".activity.inspectionPerson.SearchProjectActivity" />
         <activity android:name=".activity.inspectionPerson.InspectPersonPrimaryActivity" />
         <activity android:name=".activity.basket.BasketSettleActivity" />
@@ -50,7 +52,7 @@
         <activity android:name=".activity.common.PersonalInformationActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
         <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" />
-        <activity android:name=".activity.proAdmin.ProAdminPrimaryActivity" /><!-- 百度地图Ket -->
+        <activity android:name=".activity.proAdmin.ProAdminPrimaryActivity" /> <!-- 百度地图Ket -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" /> <!-- 欢迎页面 -->
@@ -63,8 +65,9 @@
         </activity>
         <activity android:name=".activity.basket.BasketDetailActivity" />
         <activity android:name=".activity.basket.BasketParameterActivity" />
-        <activity android:name=".activity.basket.BasketRepairActivity" />
-
+        <activity
+            android:name=".activity.basket.BasketRepairActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".activity.basket.BasketVideoActivity"
             android:configChanges="orientation|screenSize"

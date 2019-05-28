@@ -315,13 +315,11 @@ public class HttpUtil {
     //登录请求
     public static void sendRentAdminRepairOkHttpRequest(okhttp3.Callback callback,String json,String token) {
         OkHttpClient client = new OkHttpClient();
-        FormBody builder = new FormBody.Builder()
-                .add("repair", json)
-                .build();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
         final Request request = new Request.Builder()
                 .url(AppConfig.RENT_ADMIN_REPARI_BASKET)
                 .addHeader("Authorization", token)
-                .post(builder)
+                .post(requestBody)
                 .build();
         client.newCall(request).enqueue(callback);
     }
@@ -330,7 +328,23 @@ public class HttpUtil {
     /*
      * 区域管理员请求开始
      */
-    // 上传安监证书/预验收申请
+    // 提交配置清单
+    /*
+     * 设置参数更改请求
+     * /set
+     * get token deviceId
+     */
+    public static void setConfigurationOkHttpRequest(okhttp3.Callback callback, String token, String json) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = new Request.Builder()
+                .url(AppConfig.AREA_ADMIN_CONFIGURATION)
+                .addHeader("Authorization", token)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
 
     /*
      * 区域管理员请求结束

@@ -29,6 +29,9 @@ public class BasketDetailActivity extends AppCompatActivity {
     // 控件声明
     private GridView mFunctionGridView;  // 功能测试
 
+    private TextView txtBasketId;  //吊篮编号
+    private TextView txtWorkerName;  //负责人姓名
+
     // function gridview
     private List<Function> mFunctions;  // 功能列表
     private FunctionAdapter mFunctionAdapter;  // 功能适配器
@@ -36,6 +39,7 @@ public class BasketDetailActivity extends AppCompatActivity {
     // others
     private String mProjectId;  //項目ID
     private String mBasketId;  // 吊篮id
+    private String mPrincipal; //吊篮负责人姓名
 
     public final static String UPLOAD_PROJECT_ID  = "project_id"; // 項目ID
     public final static String UPLOAD_BASKET_ID = "basket_id"; // 報修操作
@@ -64,17 +68,23 @@ public class BasketDetailActivity extends AppCompatActivity {
         initWidgetResource();
     }
 
-    // 項目和吊籃信息獲取
+    // 項目和吊籃信息获取
     public void getBaseInfoFromPred() {
         Intent intent = getIntent();
         mProjectId = intent.getStringExtra("project_id");
         mBasketId = intent.getStringExtra("basket_id");
-
+        mPrincipal = intent.getStringExtra("principal_name");
     }
     // 资源句柄初始化及监听
     public void initWidgetResource(){
         // 获取控件句柄
         mFunctionGridView = (GridView) findViewById(R.id.function_gridview);
+
+        //初始化控件并显示内容
+        txtBasketId = (TextView) findViewById(R.id.basket_id);
+        txtBasketId.setText(mBasketId);
+        txtWorkerName = (TextView) findViewById(R.id.basket_worker_id);
+        txtWorkerName.setText(mPrincipal);
 
         // 初始化功能列表
         initFunctionList();
@@ -161,7 +171,9 @@ public class BasketDetailActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         switch (requestCode) {
             case UPLOAD_BASKET_REPAIR_RESULT:        //报修结果显示
-                Toast.makeText(BasketDetailActivity.this, "报修成功！", Toast.LENGTH_SHORT).show();
+                if(resultCode ==RESULT_OK ) {
+                    Toast.makeText(BasketDetailActivity.this, "报修成功！", Toast.LENGTH_SHORT).show();
+                }
                 break;
             default:
                 break;

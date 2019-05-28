@@ -137,6 +137,8 @@ public class AppConfig {
     public static final String AREA_ADMIN_ADD_BASKET_INTO_PROJECT = ANDROID_URL_PATH.concat("/androidIncreaseBasket");
     // 区域管理员上传安监证书
     public static final String AREA_ADMIN_CREATE_CERT_FILE = ANDROID_URL_PATH.concat("/createCertFile");
+    // 区域管理员上传配置清单
+    public static final String AREA_ADMIN_CONFIGURATION = ANDROID_URL_PATH.concat("/pushConfigurationList");
     // 区域管理员上传项目预安装验收启动图片
     public static final String AREA_ADMIN_CREATE_PREINSTALL_FILE = ANDROID_URL_PATH.concat("/createProjectFile");
     // 区域管理员请求预验收申请
