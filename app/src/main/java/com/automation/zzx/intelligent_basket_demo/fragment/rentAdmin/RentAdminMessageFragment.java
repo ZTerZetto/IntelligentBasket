@@ -1,9 +1,11 @@
 package com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -16,11 +18,16 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.AlarmMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgRentMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.scwang.smartrefresh.header.BezierCircleHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.litepal.crud.DataSupport;
 
@@ -37,7 +44,11 @@ public class RentAdminMessageFragment extends Fragment {
     // Message
     private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;;
 
+    // 页面跳转
+    public final static String ALARM_MESSAGE_MSG = "alarm_message_info";
+
     private View mView;
+    private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private MgRentMessageAdapter mgRentMessageAdapter;
     private List<MessageInfo> mMessageInfoList = new ArrayList<>();
     private RecyclerView recyclerView;
@@ -48,14 +59,14 @@ public class RentAdminMessageFragment extends Fragment {
             switch (msg.what){
                 case UPDATE_HISTORY_MESSAGE_INFO:
                     getHistoryMessageInfo();
-                    mgRentMessageAdapter.notifyDataSetChanged();
+                    mSmartRefreshLayout.finishRefresh(100);
                     break;
             }
         }
     };
 
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+    public View onCreateView(final LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         if(!isHasPermission()) requestPermission();
 
         if (mView == null) {
@@ -69,6 +80,18 @@ public class RentAdminMessageFragment extends Fragment {
             //隐藏返回箭头
             ((AppCompatActivity) getActivity()).getSupportActionBar().setDisplayHomeAsUpEnabled(false);
 
+            // 下拉刷新
+            mSmartRefreshLayout = (SmartRefreshLayout) mView.findViewById(R.id.smart_refresh_layout);
+            mSmartRefreshLayout.setRefreshHeader(  //设置 Header 为 贝塞尔雷达 样式
+                    new BezierCircleHeader(getActivity()));
+            mSmartRefreshLayout.setPrimaryColorsId(R.color.smart_loading_background_color);
+            mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
+                @Override
+                public void onRefresh(RefreshLayout refreshlayout) {
+                    mHandler.sendEmptyMessage(UPDATE_HISTORY_MESSAGE_INFO);
+                }
+            });
+
             recyclerView = mView.findViewById(R.id.rv_message);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
             recyclerView.setLayoutManager(linearLayoutManager);
@@ -79,6 +102,13 @@ public class RentAdminMessageFragment extends Fragment {
                 public void onItemClick(View view, int position) {
                     MessageInfo messageInfo = mMessageInfoList.get(position);
                     // do something
+                    switch(messageInfo.getmType()){
+                        case "1":  // 报警消息
+                            Intent intent = new Intent(getContext(), AlarmMessageActivity.class);
+                            intent.putExtra(ALARM_MESSAGE_MSG, (Parcelable) messageInfo);
+                            startActivity(intent);
+                            break;
+                    }
 
                     // 更新页面与数据库
                     if(!messageInfo.ismIsChecked()) {
@@ -101,10 +131,11 @@ public class RentAdminMessageFragment extends Fragment {
      */
     private void getHistoryMessageInfo(){
         if(!isHasPermission()) requestPermission();
-        List<MessageInfo> messageInfos = DataSupport.where("mType = ?", "3")
+        List<MessageInfo> messageInfos = DataSupport.where("mType = 3 or mType = 1")
                 .find(MessageInfo.class);
         mMessageInfoList.clear();
         mMessageInfoList.addAll(messageInfos);
+        mgRentMessageAdapter.notifyDataSetChanged();
     }
 
     /*

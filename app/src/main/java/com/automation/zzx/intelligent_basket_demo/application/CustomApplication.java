@@ -49,9 +49,9 @@ import java.util.Map;
  */
 public class CustomApplication extends Application {
     // user your appid the key.
-    private static final String APP_ID = "2882303761517965064";
+    private static final String APP_ID = "2882303761517987207";
     // user your appid the key.
-    private static final String APP_KEY = "5241796590064";
+    private static final String APP_KEY = "5971798771207";
 
     // 此TAG在adb logcat中检索自己所需要的信息， 只需在命令行终端输入 adb logcat | grep
     // com.xiaomi.mipushdemo
@@ -254,14 +254,12 @@ public class CustomApplication extends Application {
         if(messageInfo.getmType()==null || messageInfo.getmType().equals("")) return;
         switch (messageInfo.getmType()){
             case "1":  // 报警消息
-                //messageInfo.setmWorkerPhone(keyValuePair.get("workerPhone"));
-                //messageInfo.setmRentAdminPhone(keyValuePair.get("rentAdminPhone"));
+                messageInfo.setmWorkerPhone(keyValuePair.get("deviceId"));
+                messageInfo.setmWorkerList(keyValuePair.get("worker"));
                 break;
             case "2": // 验收申请
                 break;
             case "3": // 项目流程
-                break;
-            case "4": // 报警消息
                 break;
             case "5": // 配置清单
                 messageInfo.setmProjectId(keyValuePair.get("projectId"));  // 项目id

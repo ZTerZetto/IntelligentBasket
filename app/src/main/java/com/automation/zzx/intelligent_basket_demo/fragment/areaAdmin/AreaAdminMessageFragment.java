@@ -121,7 +121,7 @@ public class AreaAdminMessageFragment extends Fragment {
      */
     private void getHistoryMessageInfo(){
         if(!isHasPermission()) requestPermission();
-        List<MessageInfo> messageInfos = DataSupport.where("mType = ?", "3")
+        List<MessageInfo> messageInfos = DataSupport.where("mType = 3 or mType = 2")
                                                     .find(MessageInfo.class);
         mMessageInfoList.clear();
         mMessageInfoList.addAll(messageInfos);

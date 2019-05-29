@@ -136,7 +136,7 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
         mgWorkerInfoList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         workerRv.setLayoutManager(layoutManager);
-        mgWorkerListAdapter = new MgWorkerListAdapter(getContext(), mgWorkerInfoList);
+        mgWorkerListAdapter = new MgWorkerListAdapter(getContext(), mgWorkerInfoList, true);
         workerRv.setAdapter(mgWorkerListAdapter);
         mgWorkerListAdapter.setOnItemClickListener(new MgWorkerListAdapter.OnItemClickListener() {
             @Override

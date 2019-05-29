@@ -28,6 +28,7 @@ public class MgWorkerListAdapter extends RecyclerView.Adapter<MgWorkerListAdapte
 
     private Context mContext;
     private List<MgWorkerInfo> mgWorkerInfoList;
+    private boolean checkBox;
     private static Map<Integer, Boolean> isCheck = new HashMap<Integer, Boolean>();
     private OnItemClickListener mOnItemClickListener;  // 消息监听
 
@@ -86,9 +87,10 @@ public class MgWorkerListAdapter extends RecyclerView.Adapter<MgWorkerListAdapte
     /*
      * 构造函数
      */
-    public MgWorkerListAdapter(Context mContext, List<MgWorkerInfo> mgWorkerInfoList){
+    public MgWorkerListAdapter(Context mContext, List<MgWorkerInfo> mgWorkerInfoList, boolean checkBox){
         this.mContext = mContext;
         this.mgWorkerInfoList = mgWorkerInfoList;
+        this.checkBox = checkBox;
         initCheck(false);
     }
 
@@ -108,7 +110,13 @@ public class MgWorkerListAdapter extends RecyclerView.Adapter<MgWorkerListAdapte
         if(isCheck.get(position) == null){
             isCheck.put(position, false);
         }
-        viewHolder.workerSelected.setChecked(isCheck.get(position));  // 设置状态
+
+        if(checkBox) {
+            viewHolder.workerSelected.setVisibility(View.VISIBLE);
+            viewHolder.workerSelected.setChecked(isCheck.get(position));  // 设置状态
+        }else{
+            viewHolder.workerSelected.setVisibility(View.GONE);
+        }
 
 //        viewHolder.workerHeadImg.setImageUrl(mgWorkerInfo.getHeadImg());
         viewHolder.workerHeadImg.setCircle(true);  // 圆形头像
