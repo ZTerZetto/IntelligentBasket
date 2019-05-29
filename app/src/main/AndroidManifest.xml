@@ -36,7 +36,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.inspectionPerson.InspectionMessageActivity"></activity>
+        <activity android:name=".activity.rentAdmin.AlarmMessageActivity"></activity>
+        <activity android:name=".activity.inspectionPerson.InspectionMessageActivity" />
         <activity android:name=".activity.inspectionPerson.ConfigurationListActivity" />
         <activity android:name=".activity.worker.WorkerMoreActivity" />
         <activity android:name=".activity.worker.WorkerHomePageActivity" />

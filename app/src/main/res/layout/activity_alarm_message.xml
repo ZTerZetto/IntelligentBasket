@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
+    <!-- 吊篮编号 -->
+    <TextView
+        android:text="吊篮信息"
+        style="@style/content_title_textview"/>
+    <LinearLayout
+        android:id="@+id/basket_bsae_info"
+        style="@style/more_common_linearlayout_style"
+        android:layout_marginTop="0dp">
+        <!-- 吊篮编号 -->
+        <RelativeLayout
+            android:id="@+id/basket_id_layout"
+            style="@style/me_common_item_relativeLayout_style"
+            android:clickable="false">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="吊篮编号"/>
+            <TextView
+                android:id="@+id/device_id_textview"
+                style="@style/more_common_desc_textView_style"
+                android:text="201905280001"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- 报警说明 -->
+    <TextView
+        android:text="报警说明"
+        style="@style/content_title_textview"/>
+    <LinearLayout
+        android:id="@+id/alarm_bsae_info"
+        style="@style/more_common_linearlayout_style"
+        android:layout_marginTop="0dp">
+        <!-- 吊篮编号 -->
+        <RelativeLayout
+            android:id="@+id/alarm_content_layout"
+            style="@style/me_common_item_relativeLayout_style"
+            android:clickable="false">
+            <TextView
+                android:id="@+id/alarm_content_textview"
+                style="@style/more_common_item_textView_style"
+                android:layout_marginRight="10dp"
+                android:text="变频器故障"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- 当前施工人员 -->
+    <TextView
+        android:text="施工人员"
+        style="@style/content_title_textview"/>
+    <android.support.v7.widget.RecyclerView
+        android:id="@+id/worker_recycler_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:visibility="visible">
+    </android.support.v7.widget.RecyclerView>
+
+</LinearLayout>
