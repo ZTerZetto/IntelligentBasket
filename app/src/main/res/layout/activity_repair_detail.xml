@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back" />
+
+    <!-- 基本信息 -->
+    <TextView
+        android:text="基本信息"
+        style="@style/content_title_textview"/>
+    <LinearLayout
+        android:id="@+id/project_bsae_info"
+        style="@style/more_common_linearlayout_style"
+        android:layout_marginTop="0dp">
+        <!-- 项目编号 -->
+        <RelativeLayout
+            android:id="@+id/project_id_layout"
+            style="@style/me_common_item_relativeLayout_style"
+            android:clickable="false">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="项目编号"/>
+            <TextView
+                android:id="@+id/project_id_textview"
+                style="@style/more_common_desc_textView_style"
+                android:text="NJ20180129136"/>
+        </RelativeLayout>
+        <View
+            style="@style/me_horizontal_view_style"/>
+
+        <!-- 项目名称 -->
+        <RelativeLayout
+            android:id="@+id/project_name_layout"
+            style="@style/me_common_item_relativeLayout_style"
+            android:clickable="false">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="项目名称"/>
+            <TextView
+                android:id="@+id/project_name_textview"
+                style="@style/more_common_desc_textView_style"
+                android:text="南京凤凰国际大厦"/>
+        </RelativeLayout>
+        <View
+            style="@style/me_horizontal_view_style"/>
+
+        <!-- 吊篮编号 -->
+        <RelativeLayout
+            android:id="@+id/basket_id_layout"
+            style="@style/me_common_item_relativeLayout_style"
+            android:clickable="false">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="吊篮编号"/>
+            <TextView
+                android:id="@+id/basket_id_textview"
+                style="@style/more_common_desc_textView_style"
+                android:text="10004731"/>
+        </RelativeLayout>
+    </LinearLayout>
+
+    <!-- 防止页面长度不够，添加滚动条 -->
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+            <!-- 报修描述 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:text="报修描述"
+                    style="@style/content_title_textview"/>
+                <TextView
+                    android:id="@+id/repair_describe_textview"
+                    android:text="xxxxxxxxxxxxxxxxxxx"
+                    style="@style/content_describe_gridview"/>
+                <GridView
+                    android:id="@+id/repair_describe_gridview"
+                    style="@style/content_describe_gridview">
+                </GridView>
+                <TextView
+                    android:id="@+id/repair_date_gridview"
+                    style="@style/content_date_textview"
+                    android:text="2019/06/08"/>
+            </LinearLayout>
+
+            <!-- 维修描述 -->
+            <LinearLayout
+                android:id="@+id/maintain_describe_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
+                <TextView
+                    android:text="维修描述"
+                    style="@style/content_title_textview"/>
+                <TextView
+                    android:id="@+id/maintain_describe_textview"
+                    android:text="xxxxxxxxxxxxxxxxxxx"
+                    style="@style/content_describe_gridview"/>
+                <GridView
+                    android:id="@+id/maintain_describe_gridview"
+                    style="@style/content_describe_gridview">
+                </GridView>
+                <TextView
+                    android:id="@+id/maintain_date_textview"
+                    style="@style/content_date_textview"
+                    android:text="2019/06/12"/>
+            </LinearLayout>
+
+            <!-- 报修完成 -->
+            <Button
+                android:id="@+id/repair_over_button"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:layout_marginLeft="40dp"
+                android:layout_marginRight="40dp"
+                android:text="结束报修"
+                android:background="@color/colorPrimary" />
+
+        </LinearLayout>
+    </ScrollView>
+
+</LinearLayout>

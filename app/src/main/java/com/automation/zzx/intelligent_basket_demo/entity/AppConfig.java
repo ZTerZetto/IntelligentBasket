@@ -155,13 +155,14 @@ public class AppConfig {
     public static final String AREA_ADMIN_SEND_PRE_STOP_INFO = ANDROID_URL_PATH.concat("/createPreStop");
 
     /*
-     * 项目负责人请求
+     * 项目管理员请求
      */
-    // 项目负责人基本信息
+    // 项目管理员基本信息
     public static final String PRO_ADMIN_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
-    // 项目负责人请求项目信息
+    // 项目管理员请求项目信息
     public static final String PRO_ADMIN_GET_PROINFO = ANDROID_URL_PATH.concat("/getProjectByProAdmin");
-
+    // 项目管理员请求单个吊篮单个报修事件详情
+    public static final String PRO_ADMIN_GET_REPAIR_SINGLE = ANDROID_URL_PATH.concat("/get");
 
 
     /*

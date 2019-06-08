@@ -261,6 +261,11 @@ public class CustomApplication extends Application {
                 break;
             case "3": // 项目流程
                 break;
+            case "4": // 报修信息
+                messageInfo.setmWorkerPhone(keyValuePair.get("projectId"));
+                messageInfo.setmWorkerPhone(keyValuePair.get("projectName"));
+                messageInfo.setmWorkerPhone(keyValuePair.get("deviceId"));
+                break;
             case "5": // 配置清单
                 messageInfo.setmProjectId(keyValuePair.get("projectId"));  // 项目id
                 break;

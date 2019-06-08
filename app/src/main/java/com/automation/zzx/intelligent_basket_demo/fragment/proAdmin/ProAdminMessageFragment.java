@@ -2,9 +2,11 @@ package com.automation.zzx.intelligent_basket_demo.fragment.proAdmin;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
+import android.os.Parcelable;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.common.RepairDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgAreaMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.hjq.permissions.OnPermission;
@@ -41,6 +44,9 @@ import java.util.List;
 public class ProAdminMessageFragment extends Fragment {
 
     private final static String TAG = "AreaMessageFragment";
+
+    // 页面间消息传递标识
+    public final static String REPAIR_MESSAGE_MSG = "repair_message_msg";
 
     // Message
     private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;;
@@ -99,6 +105,13 @@ public class ProAdminMessageFragment extends Fragment {
                 public void onItemClick(View view, int position) {
                     MessageInfo messageInfo = mMessageInfoList.get(position);
                     // do something
+                    switch(messageInfo.getmType()){
+                        case "4": // 报修消息
+                            Intent intent = new Intent(getActivity(), RepairDetailActivity.class); // 跳转至维修详情页面
+                            intent.putExtra(REPAIR_MESSAGE_MSG, (Parcelable) messageInfo);
+                            startActivity(intent);
+                            break;
+                    }
 
                     // 更新页面与数据库
                     if(!messageInfo.ismIsChecked()) {
@@ -117,11 +130,11 @@ public class ProAdminMessageFragment extends Fragment {
     }
 
     /*
-     * 获取历史消息
+     * 获取历史消息：报修消息
      */
     private void getHistoryMessageInfo(){
         if(!isHasPermission()) requestPermission();
-        List<MessageInfo> messageInfos = DataSupport.where("mType = ?", "3")
+        List<MessageInfo> messageInfos = DataSupport.where("mType = ?", "4")
                                                     .find(MessageInfo.class);
         mMessageInfoList.clear();
         mMessageInfoList.addAll(messageInfos);
