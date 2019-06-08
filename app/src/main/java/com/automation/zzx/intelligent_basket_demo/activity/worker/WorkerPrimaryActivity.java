@@ -27,6 +27,7 @@ import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UserMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
@@ -91,6 +92,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private RelativeLayout mCheckUpdate; // 检查更新
     private RelativeLayout mInRegardTo; //关于
 
+    //切换角色
+    private LinearLayout llSwitch;
+    private RelativeLayout rlSwitch;
+
+
     // 退出登录
     private RelativeLayout mLogout; // 退出登录
 
@@ -109,6 +115,9 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private UserInfo mUserInfo;
     private String mToken;
     private SharedPreferences mPref;
+
+    //是否为项目负责人
+    private String isProAdmin;
 
     // mHandler 处理消息
     @SuppressLint("HandlerLeak")
@@ -204,9 +213,20 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mInRegardTo = (RelativeLayout) findViewById(R.id.more_item_about_layout); // 关于
         mInRegardTo.setOnClickListener(this);
 
+        //switch to projectAdmin
+        llSwitch = (LinearLayout) findViewById(R.id.switch_layout); //切换角色
+        rlSwitch =  (RelativeLayout) findViewById(R.id.more_item_switch_layout); //切换角色
+        rlSwitch.setOnClickListener(this);
+
         // logout
         mLogout = (RelativeLayout) findViewById(R.id.more_item_log_out_layout); // 退出登录
         mLogout.setOnClickListener(this);
+
+        if(isProAdmin.equals("1")){
+            llSwitch.setVisibility(View.VISIBLE);
+        } else {
+            llSwitch.setVisibility(View.GONE);
+        }
     }
 
     /*
@@ -265,6 +285,10 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 break;
             case R.id.more_item_about_layout: // 关于
                 Log.i(TAG, "You have clicked in regard to button");
+                break;
+            case R.id.more_item_switch_layout:// 项目管理员
+                Log.i(TAG, "You have clicked switch button");
+                switchToProAdmin();
                 break;
             case R.id.more_item_log_out_layout:
                 Log.i(TAG, "You have clicked log out button");
@@ -403,6 +427,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
         mUserInfo.setUserRole(mPref.getString("userRole", ""));
         mToken = mPref.getString("loginToken","");
+        isProAdmin = mPref.getString("isProAdmin","");
 
         // 从后台获取其他数据
         getUserInfoFromInternet();
@@ -440,6 +465,13 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mHandler.sendEmptyMessage(UPDATE_USER_DISPLAY_MSG);  // 更新人员信息状态
         mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);    // 更新上/下工状态
     }
+
+    //切换角色
+    private void switchToProAdmin() {
+        startActivity(new Intent(this, ProAdminPrimaryActivity.class));
+        this.finish();
+    }
+
     //退出登录
     private void logoutHttp() {
         SharedPreferences.Editor editor = mPref.edit();

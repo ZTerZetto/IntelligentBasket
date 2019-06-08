@@ -64,6 +64,7 @@
                 android:layout_marginStart="@dimen/me_login_profile_layout_marginStart"
                 android:visibility="visible">
                 <TextView
+                    android:id="@+id/tv_role_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/user_type"
@@ -175,6 +176,20 @@
                         android:text="关于"/>
                     <ImageView
                         style="@style/me_common_item_arrow_right_imageView_style"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+            <!-- 切换角色 -->
+            <LinearLayout
+                android:id="@+id/switch_layout"
+                style="@style/more_common_linearlayout_style"
+                android:visibility="gone">
+                <RelativeLayout
+                    android:id="@+id/more_item_switch_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="切换至施工人员"/>
                 </RelativeLayout>
             </LinearLayout>
 

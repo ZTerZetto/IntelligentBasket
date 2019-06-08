@@ -44,6 +44,9 @@
         android:layout_below="@+id/mg_basket_state">
 
         <!-- body -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
         <RelativeLayout
             android:id="@+id/fragment_content"
             android:layout_width="match_parent"
@@ -145,6 +148,22 @@
                     <View
                         style="@style/me_horizontal_view_style"/>
 
+                    <!-- 配置清单 -->
+                    <RelativeLayout
+                        android:id="@+id/configuration_apply_layout"
+                        style="@style/me_common_item_relativeLayout_style"
+                        android:visibility="visible">
+                        <TextView
+                            style="@style/more_common_item_textView_style"
+                            android:text="配置清单"/>
+                        <ImageView
+                            android:id="@+id/configuration_apply_iv_arrow_right"
+                            style="@style/me_common_item_arrow_right_imageView_style"/>
+                    </RelativeLayout>
+
+                    <View
+                        style="@style/me_horizontal_view_style"/>
+
                     <!-- 预验收申请 -->
                     <RelativeLayout
                         android:id="@+id/project_pre_apply_layout"
@@ -182,6 +201,21 @@
                             android:layout_toLeftOf="@+id/send_examine_certificate_iv_arrow_right"
                             style="@style/me_common_item_count_with_organgered_bg_textView_style"
                             android:text="!"/>
+                    </RelativeLayout>
+
+                    <View style="@style/me_horizontal_view_style"/>
+
+                    <!-- 查看报修记录 -->
+                    <RelativeLayout
+                        android:id="@+id/rl_get_repair_info"
+                        style="@style/me_common_item_relativeLayout_style">
+                        <TextView
+                            android:id="@+id/tv_get_repair_info"
+                            style="@style/more_common_item_textView_style"
+                            android:text="报修记录"/>
+                        <ImageView
+                            android:id="@+id/iv_arrow_get_repair_info"
+                            style="@style/me_common_item_arrow_right_imageView_style"/>
                     </RelativeLayout>
 
                     <View style="@style/me_horizontal_view_style"/>
@@ -257,6 +291,7 @@
                 android:visibility="gone"/>
 
         </RelativeLayout>
+        </ScrollView>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 

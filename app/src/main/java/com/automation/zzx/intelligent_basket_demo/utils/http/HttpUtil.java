@@ -64,6 +64,7 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
+    //注册请求
     public static void sendRegistOkHttpRequest(okhttp3.Callback callback, String json) {
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
@@ -75,6 +76,7 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
+    //登录请求
     public static void sendLoginOkHttpRequest(okhttp3.Callback callback, String json) {
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
@@ -86,18 +88,21 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
-
-    public static void getUserInfoOkHttpRequest(okhttp3.Callback callback, String token) {
+    //判断项管请求
+    public static void sendIsProAdminOkHttpRequest(okhttp3.Callback callback, String userId,String token) {
         OkHttpClient client = new OkHttpClient();
-
-        FormBody builder = new FormBody.Builder().build();
+        FormBody builder = new FormBody.Builder()
+                /* .add(jsonObject)*/
+                .add("userId", userId)
+                .build();
         final Request request = new Request.Builder()
-                .url(AppConfig.USER_INFO)
+                .url(AppConfig.JUDGE_PROADMIN)
                 .addHeader("Authorization", token)
                 .post(builder)
                 .build();
         client.newCall(request).enqueue(callback);
     }
+
 
     public static void getProjectInfoOkHttpRequest(okhttp3.Callback callback, String token, String userFlag) {
         OkHttpClient client = new OkHttpClient();
@@ -139,20 +144,6 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
-    public static void sendLogin2OkHttpRequest(okhttp3.Callback callback, UserInfo userInfo) {
-        OkHttpClient client = new OkHttpClient();
-        JSONObject jsonObject = JSON.parseObject(userInfo.toString());
-        FormBody builder = new FormBody.Builder()
-                /* .add(jsonObject)*/
-                .add("userId", userInfo.getUserId())
-                .add("userPassword", userInfo.getUserPassword())
-                .build();
-        final Request request = new Request.Builder()
-                .url(AppConfig.LOGIN_USER)
-                .post(builder)
-                .build();
-        client.newCall(request).enqueue(callback);
-    }
 
     /*
      * 设备参数请求
@@ -314,14 +305,46 @@ public class HttpUtil {
                 .build();
         client.newCall(request).enqueue(callback);
     }
+
+
     /*
-     * 租方管理员请求结束
+     * 租方管理员报修请求
+     * deviceId、managerId、reason、picNum
+     * token
      */
+    //登录请求
+    public static void sendRentAdminRepairOkHttpRequest(okhttp3.Callback callback,String json,String token) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = new Request.Builder()
+                .url(AppConfig.RENT_ADMIN_REPARI_BASKET)
+                .addHeader("Authorization", token)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
 
     /*
      * 区域管理员请求开始
      */
-    // 上传安监证书/预验收申请
+    // 提交配置清单
+    /*
+     * 设置参数更改请求
+     * /set
+     * get token deviceId
+     */
+    public static void setConfigurationOkHttpRequest(okhttp3.Callback callback, String token, String json) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = new Request.Builder()
+                .url(AppConfig.AREA_ADMIN_CONFIGURATION)
+                .addHeader("Authorization", token)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
 
     /*
      * 区域管理员请求结束

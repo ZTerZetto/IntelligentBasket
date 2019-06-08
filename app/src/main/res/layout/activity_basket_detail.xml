@@ -23,7 +23,7 @@
             android:orientation="horizontal">
             <TextView
                 style="@style/usertextStyle"
-                android:text="吊篮编号："
+                android:text="吊篮编号 "
                 />
             <TextView
                 android:id="@+id/basket_id"
@@ -39,26 +39,11 @@
             android:orientation="horizontal">
             <TextView
                 style="@style/usertextStyle"
-                android:text="设置编号：" />
-            <EditText
-                android:id="@+id/basket_id_ev"
-                style="@style/usertextStyle"
-                android:hint="设置吊篮编号" />
-        </LinearLayout>
-
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_vertical"
-            android:padding="5dp"
-            android:orientation="horizontal">
-            <TextView
-                style="@style/usertextStyle"
-                android:text="负责人编号：" />
+                android:text="负责人     " />
             <TextView
                 android:id="@+id/basket_worker_id"
                 style="@style/usertextStyle"
-                android:hint="@string/workerId_hint" />
+                android:hint="@string/workerName_hint" />
         </LinearLayout>
 
     </LinearLayout>

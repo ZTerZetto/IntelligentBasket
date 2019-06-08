@@ -36,12 +36,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.rentAdmin.AlarmMessageActivity"></activity>
-        <activity android:name=".activity.inspectionPerson.InspectionMessageActivity" />
-        <activity android:name=".activity.inspectionPerson.ConfigurationListActivity" />
-        <activity android:name=".activity.worker.WorkerMoreActivity" />
-        <activity android:name=".activity.worker.WorkerHomePageActivity" />
-        <activity android:name=".activity.inspectionPerson.ExceptionReportActivity" />
+        <activity android:name=".activity.areaAdmin.RepairInfoListActivity"></activity>
+        <activity android:name=".activity.areaAdmin.ConfigurationActivity" />
         <activity android:name=".activity.inspectionPerson.OutAndInStorageActivity" />
         <activity android:name=".activity.inspectionPerson.SearchProjectActivity" />
         <activity android:name=".activity.inspectionPerson.InspectPersonPrimaryActivity" />
@@ -49,13 +45,14 @@
         <activity android:name=".activity.common.UserNameActivity" />
         <activity android:name=".activity.areaAdmin.UploadPreStopInfoActivity" />
         <activity android:name=".activity.areaAdmin.CheckCompactActivity" />
-        <activity android:name=".activity.common.UserMessageActivity" />
+        <activity android:name=".activity.worker.WorkerMessageActivity" />
         <activity android:name=".activity.areaAdmin.UploadImageActivity" />
         <activity android:name=".activity.common.UploadImageFTPActivity" />
         <activity android:name=".activity.common.QRcodeCardActivity" />
         <activity android:name=".activity.common.PersonalInformationActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
-        <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" /> <!-- 百度地图Ket -->
+        <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" />
+        <activity android:name=".activity.proAdmin.ProAdminPrimaryActivity" /> <!-- 百度地图Ket -->
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" /> <!-- 欢迎页面 -->
@@ -68,6 +65,9 @@
         </activity>
         <activity android:name=".activity.basket.BasketDetailActivity" />
         <activity android:name=".activity.basket.BasketParameterActivity" />
+        <activity
+            android:name=".activity.basket.BasketRepairActivity"
+            android:launchMode="singleTask" />
         <activity
             android:name=".activity.basket.BasketVideoActivity"
             android:configChanges="orientation|screenSize"
