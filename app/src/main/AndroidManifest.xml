@@ -36,7 +36,7 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.areaAdmin.RepairInfoListActivity"></activity>
+        <activity android:name=".activity.common.RepairInfoListActivity"></activity>
         <activity android:name=".activity.areaAdmin.ConfigurationActivity" />
         <activity android:name=".activity.inspectionPerson.OutAndInStorageActivity" />
         <activity android:name=".activity.inspectionPerson.SearchProjectActivity" />

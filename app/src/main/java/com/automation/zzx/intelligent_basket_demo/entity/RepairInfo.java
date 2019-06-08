@@ -8,7 +8,7 @@ public class RepairInfo {
     private String deviceId;
 
     public RepairInfo(String deviceId, String projectId, String managerId, String dealerId, String reason,
-                      String imageStart, String startTime, String imageEnd, String discription, String endTime) {
+                      String imageStart, String startTime, String imageEnd, String description, String endTime) {
         this.deviceId = deviceId;
         this.projectId = projectId;
         this.managerId = managerId;
@@ -17,7 +17,7 @@ public class RepairInfo {
         this.imageStart = imageStart;
         this.startTime = startTime;
         this.imageEnd = imageEnd;
-        this.discription = discription;
+        this.description = description;
         this.endTime = endTime;
     }
 
@@ -54,16 +54,16 @@ public class RepairInfo {
         this.imageEnd = imageEnd;
     }
 
-    public String getDiscription() {
-        return discription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDiscription(String discription) {
-        this.discription = discription;
+    public void setDescription(String description) {
+        this.description = description;
     }
 
     private String imageEnd;
-    private String discription;
+    private String description;
     private String endTime;
 
 

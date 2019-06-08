@@ -36,7 +36,7 @@
                 android:background="@color/light_red"
                 android:padding="2dp"
                 android:text=" 待报修 "
-                android:layout_marginLeft="150dp"/>
+                android:layout_marginLeft="30dp"/>
         </LinearLayout>
 
 

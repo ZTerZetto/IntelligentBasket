@@ -75,7 +75,6 @@ public class BasketRepairEndAdapter extends RecyclerView.Adapter<BasketRepairEnd
         View view = LayoutInflater.from(viewGroup.getContext()).inflate(
                 R.layout.item_basket_repair_finish, viewGroup, false);
         BasketRepairEndAdapter.ViewHolder viewHolder = new BasketRepairEndAdapter.ViewHolder(view, mOnItemClickListener);
-
         return viewHolder;
     }
 

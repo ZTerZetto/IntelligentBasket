@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin;
+package com.automation.zzx.intelligent_basket_demo.fragment;
 
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
@@ -21,13 +21,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.RepairInfoListActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.common.RepairInfoListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.BasketRepairAdapter;
-import com.automation.zzx.intelligent_basket_demo.adapter.basket.BasketRepairEndAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.RepairInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
@@ -44,14 +43,13 @@ import okhttp3.Call;
 
 import static android.content.ContentValues.TAG;
 
-public class AreaAdminRepairEndFragment extends Fragment {
+public class BasketRepairFragment extends Fragment {
 
     // intent 消息参数
     public final static String PROJECT_ID = "projectId";  // 上传图片的项目Id
-    public final static String UPLOAD_IMAGE_TYPE  = "uploadImageType";
     // Handler消息
-    //private final static int MG_REPAIR_LIST_INFO = 1;  // 获取报修列表信息(未结束）视图更新显示
-    private final static int MG_REPAIR_END_LIST_INFO = 2; // 从后台获取吊篮列表数据
+    private final static int MG_REPAIR_LIST_INFO = 1;  // 获取报修列表信息(未结束）视图更新显示
+    //private final static int MG_REPAIR_END_LIST_INFO = 2; // 从后台获取吊篮列表数据
     private final static int FAIL_REPAIR_LIST_INFO = 3; // 获取报修列表信息失败
 
     // 本地存储
@@ -63,7 +61,7 @@ public class AreaAdminRepairEndFragment extends Fragment {
     //主体
     private RecyclerView rvRepairInfo; // 报修列表recycleView
     private List<RepairInfo> mRepairInfoList; //报修信息列表
-    private BasketRepairEndAdapter mBasketRepairAdapter;
+    private BasketRepairAdapter mBasketRepairAdapter;
     // 空空如也
     private RelativeLayout noRepairListRelativeLayout;
     private TextView noRepairListTextView;
@@ -72,7 +70,7 @@ public class AreaAdminRepairEndFragment extends Fragment {
     private Handler handler = new Handler() {
         public void handleMessage(Message msg) {
             switch(msg.what) {
-                case MG_REPAIR_END_LIST_INFO: // 获取报修列表信息(未结束）
+                case MG_REPAIR_LIST_INFO: // 获取报修列表信息(未结束）
                     mRepairInfoList.clear();
                     mRepairInfoList.addAll(parseRepairListInfo((String) msg.obj));
                     mBasketRepairAdapter.notifyDataSetChanged();
@@ -97,16 +95,16 @@ public class AreaAdminRepairEndFragment extends Fragment {
     };
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_rent_repair_basket_list, container, false);
+        View view = inflater.inflate(R.layout.fragment_repair_basket_list, container, false);
 
         rvRepairInfo = (RecyclerView) view.findViewById(R.id.basket_recycler_view);
         mRepairInfoList = new ArrayList<>();
         rentAdminGetRepairInfoListInfo();
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         rvRepairInfo.setLayoutManager(layoutManager);
-        mBasketRepairAdapter = new BasketRepairEndAdapter(getContext(), mRepairInfoList);
+        mBasketRepairAdapter = new BasketRepairAdapter(getContext(), mRepairInfoList);
         rvRepairInfo.setAdapter(mBasketRepairAdapter);
-        mBasketRepairAdapter.setOnItemClickListener(new BasketRepairEndAdapter.OnItemClickListener() {
+        mBasketRepairAdapter.setOnItemClickListener(new BasketRepairAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 // item 点击响应
@@ -135,7 +133,7 @@ public class AreaAdminRepairEndFragment extends Fragment {
                 .addHeader("Authorization", token)
                 .addParam("projectId", projectId)
                 .get()
-                .url(AppConfig.AREA_ADMIN_GET_REPAIR_END_INFO)
+                .url(AppConfig.AREA_ADMIN_GET_REPAIR_INFO)
                 .build()
                 .enqueue(new BaseCallBack() {
                     @Override
@@ -143,7 +141,7 @@ public class AreaAdminRepairEndFragment extends Fragment {
                         Log.i(TAG, "成功" );
                         String responseData = o.toString();
                         Message message = new Message();
-                        message.what = MG_REPAIR_END_LIST_INFO;
+                        message.what = MG_REPAIR_LIST_INFO;
                         message.obj = responseData;
                         handler.sendMessage(message);
                     }
@@ -180,17 +178,23 @@ public class AreaAdminRepairEndFragment extends Fragment {
             projectId = ((RepairInfoListActivity) getActivity()).pushProjectId();
         }
 
-        Iterator<String> iterator = jsonObject.keySet().iterator();  // 迭代获取吊篮信息
-        while(iterator.hasNext()){
-            String key = iterator.next();
-            if(!key.contains("Box")) continue;
-            String value = jsonObject.getString(key);
-            JSONObject repairObj = JSON.parseObject(value);
+        String repairInfo =jsonObject.getString("repairInfo");
+        JSONArray jsonArray = JSON.parseArray(repairInfo);
+        if(jsonArray.size() >= 1) {
+        Iterator<Object> iterator = jsonArray.iterator();  // 迭代获取项目信息
+        while(iterator.hasNext()) {
+            JSONObject repairObj = (JSONObject) iterator.next();
+            //时间字符串处理
+            String timeDate = repairObj.getString("startTime").substring(0,10);
+            String timeHM = repairObj.getString("startTime").substring(11,19);
+            String time = timeDate + " " + timeHM;
             RepairInfo mRepairInfo = new RepairInfo(repairObj.getString("deviceId"),repairObj.getString("projectId"),
-                    repairObj.getString("managerId"),repairObj.getString("dealerId"),repairObj.getString("reason"),
-                    repairObj.getString("imageStart"), repairObj.getString("startTime"),repairObj.getString("imageEnd"),
-                    repairObj.getString("discription"),repairObj.getString("discription"));
+                    repairObj.getString("managerId"),repairObj.getString("reason"),repairObj.getString("imageStart"),
+                    time);
             mgRepairInfos.add(mRepairInfo);
+        }
+        } else {
+            mgRepairInfos.clear();
         }
         return mgRepairInfos;
     }
@@ -206,7 +210,7 @@ public class AreaAdminRepairEndFragment extends Fragment {
             if (mRepairInfoList.size() < 1) { // 暂无吊篮
                 rvRepairInfo.setVisibility(View.GONE);
                 noRepairListRelativeLayout.setVisibility(View.VISIBLE);
-                noRepairListTextView.setText("您还没有相关的吊篮");
+                noRepairListTextView.setText("暂无正在报修的吊篮！");
             } else {  // 好多吊篮
                 noRepairListRelativeLayout.setVisibility(View.GONE);
                 rvRepairInfo.setVisibility(View.VISIBLE);

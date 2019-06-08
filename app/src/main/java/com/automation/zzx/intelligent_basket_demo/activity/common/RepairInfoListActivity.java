@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.activity.areaAdmin;
+package com.automation.zzx.intelligent_basket_demo.activity.common;
 
 
 import android.content.Intent;
@@ -12,7 +12,8 @@ import android.os.Bundle;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketContentFragmentAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
-import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminRepairFragment;
+import com.automation.zzx.intelligent_basket_demo.fragment.BasketRepairEndFragment;
+import com.automation.zzx.intelligent_basket_demo.fragment.BasketRepairFragment;
 import com.automation.zzx.intelligent_basket_demo.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -41,8 +42,8 @@ public class RepairInfoListActivity extends AppCompatActivity {
         mViewPager = (NoScrollViewPager) findViewById(R.id.view_pager);
 
         List<Fragment> fragmentList = new ArrayList<>();   // 添加fragment
-        fragmentList.add(new AreaAdminRepairFragment());
-        fragmentList.add(new AreaAdminRepairFragment());
+        fragmentList.add(new BasketRepairFragment());
+        fragmentList.add(new BasketRepairEndFragment());
 
         List<String> titleList = new ArrayList<>();  // 添加fragment说明
         titleList.add("正在保修");

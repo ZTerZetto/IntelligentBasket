@@ -46,6 +46,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.CheckCompac
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadPreStopInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.common.RepairInfoListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryActivity;
@@ -155,6 +156,7 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
     private RelativeLayout mSendOrExamineCertificateRelativeLayout; // 上传或查看安监证书
     private TextView mSendOrExamineCertificateTextView; //
     private TextView mSendOrExamineCertificateCountTextView;
+    private RelativeLayout rlGetRepairInfo; //获取报修历史
     private RelativeLayout mUploadPreStopInfoRelativeLayout; // 预报停信息上传
 
     // 悬浮按钮
@@ -347,6 +349,8 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
         mSendOrExamineCertificateRelativeLayout.setOnClickListener(this);
         mSendOrExamineCertificateTextView = (TextView) view.findViewById(R.id.send_examine_certification_tv);
         mSendOrExamineCertificateCountTextView = (TextView) view.findViewById(R.id.send_examine_certificate_tv_count);
+        rlGetRepairInfo   = (RelativeLayout) view.findViewById(R.id.rl_get_repair_info);
+        rlGetRepairInfo.setOnClickListener(this);
         mUploadPreStopInfoRelativeLayout = (RelativeLayout) view.findViewById(R.id.pre_stop_info_layout);  // 上传预报停信息
         mUploadPreStopInfoRelativeLayout.setOnClickListener(this);
 
@@ -403,6 +407,12 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
                 intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
                 startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
+                break;
+            case R.id.rl_get_repair_info:
+                Log.i(TAG, "You have clicked the repair information button");
+                intent = new Intent(getActivity(), RepairInfoListActivity.class);
+                intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                startActivity(intent);
                 break;
             case R.id.pre_stop_info_layout:
                 Log.i(TAG, "You have clicked the pre stop info button");
