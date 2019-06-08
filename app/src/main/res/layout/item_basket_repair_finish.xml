@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- zzx: 吊篮报修列表页面 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_round_white"
+    android:padding="10dp"
+    android:layout_margin="10dp">
+
+    <!-- 文字信息 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center_vertical">
+
+        <!-- 吊篮编号 -->
+        <LinearLayout
+            style="@style/BasketItemLinearLayout"
+            android:padding="3dp">
+
+            <TextView
+                style="@style/BasketItemCatTextView"
+                android:text="吊篮编号："/>
+            <TextView
+                android:id="@+id/basket_id"
+                style="@style/BasketItemContentTextView"
+                android:text="10006731"/>
+            <TextView
+                android:id="@+id/send_examine_certificate_tv_count"
+                android:layout_gravity=""
+                style="@style/me_common_item_count_textView_style"
+                android:textColor="@color/white"
+                android:background="@color/gray01"
+                android:padding="2dp"
+                android:text=" 已结束 "
+                android:layout_marginLeft="150dp"/>
+        </LinearLayout>
+
+
+        <!-- 提交时间 -->
+        <LinearLayout
+            style="@style/BasketItemLinearLayout"
+            android:padding="3dp">
+            <TextView
+                style="@style/BasketItemCatTextView"
+                android:text="提交时间："/>
+            <TextView
+                android:id="@+id/basket_repair_start_time"
+                style="@style/BasketItemContentTextView"
+                android:text="2018-10-13 15:20"/>
+        </LinearLayout>
+
+        <!-- 修复时间 -->
+        <LinearLayout
+            style="@style/BasketItemLinearLayout"
+            android:padding="3dp">
+            <TextView
+                style="@style/BasketItemCatTextView"
+                android:text="修复时间："/>
+            <TextView
+                android:id="@+id/basket_repair_end_time"
+                style="@style/BasketItemContentTextView"
+                android:text="2018-10-16 15:20"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

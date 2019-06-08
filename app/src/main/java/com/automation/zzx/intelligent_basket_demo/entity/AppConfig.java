@@ -149,6 +149,10 @@ public class AppConfig {
     public static final String AREA_ADMIN_PREPARE_STOP_DEVICE = ANDROID_URL_PATH.concat("/storageControl");
     // 区域管理员上传预报停信息
     public static final String AREA_ADMIN_SEND_PRE_STOP_INFO = ANDROID_URL_PATH.concat("/createPreStop");
+    // 区域管理员请求报修信息（未结束）
+    public static final String AREA_ADMIN_GET_REPAIR_INFO = ANDROID_URL_PATH.concat("/getRepairBox");
+    // 区域管理员请求报修信息（已经结束）
+    public static final String AREA_ADMIN_GET_REPAIR_END_INFO = ANDROID_URL_PATH.concat("/getRepairEndBox");
 
     /*
      * 项目负责人请求

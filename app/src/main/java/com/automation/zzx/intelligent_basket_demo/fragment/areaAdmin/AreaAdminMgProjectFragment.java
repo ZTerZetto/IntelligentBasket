@@ -354,6 +354,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mSendOrExamineCertificateTextView = (TextView) view.findViewById(R.id.send_examine_certification_tv);
         mSendOrExamineCertificateCountTextView = (TextView) view.findViewById(R.id.send_examine_certificate_tv_count);
         rlGetRepairInfo   = (RelativeLayout) view.findViewById(R.id.rl_get_repair_info);
+        rlGetRepairInfo.setOnClickListener(this);
         mUploadPreStopInfoRelativeLayout = (RelativeLayout) view.findViewById(R.id.pre_stop_info_layout);  // 上传预报停信息
         mUploadPreStopInfoRelativeLayout.setOnClickListener(this);
 
@@ -417,7 +418,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             case R.id.rl_get_repair_info:
                 Log.i(TAG, "You have clicked the repair information button");
                 intent = new Intent(getActivity(), RepairInfoListActivity.class);
-                //intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
                 startActivity(intent);
                 break;
             case R.id.pre_stop_info_layout:
