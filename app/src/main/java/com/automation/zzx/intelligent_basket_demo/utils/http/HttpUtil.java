@@ -312,7 +312,6 @@ public class HttpUtil {
      * deviceId、managerId、reason、picNum
      * token
      */
-    //登录请求
     public static void sendRentAdminRepairOkHttpRequest(okhttp3.Callback callback,String json,String token) {
         OkHttpClient client = new OkHttpClient();
         RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
@@ -324,6 +323,22 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
+    /*
+     * 项目管理员修复请求
+     * deviceId、managerId、reason、picNum
+     * token
+     */
+    //登录请求
+    public static void sendProAdminFinishRepairOkHttpRequest(okhttp3.Callback callback,String json,String token) {
+        OkHttpClient client = new OkHttpClient();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = new Request.Builder()
+                .url(AppConfig.PRO_ADMIN_GET_REPAIR_END_SINGLE)
+                .addHeader("Authorization", token)
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
 
     /*
      * 区域管理员请求开始

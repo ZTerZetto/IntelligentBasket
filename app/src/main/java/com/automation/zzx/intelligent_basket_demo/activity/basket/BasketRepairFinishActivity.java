@@ -29,11 +29,11 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
-
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.common.RepairInfoListActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.UploadImageLikeWxAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
@@ -59,15 +59,10 @@ import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity.UPLOAD_BASKET_ID;
-import static com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity.UPLOAD_BASKET_REPAIR_IMAGE;
-import static com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity.UPLOAD_IMAGE_TEXT_TYPE;
-import static com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity.UPLOAD_PROJECT_ID;
 
+public class BasketRepairFinishActivity extends AppCompatActivity implements View.OnClickListener {
 
-public class BasketRepairActivity extends AppCompatActivity implements View.OnClickListener {
-
-    private final static  String TAG = "BasketRepairActivity";
+    private final static  String TAG = "BasketRepairFinishActivity";
 
     private final static int GET_PHOTO_FROM_ALBUM = 1;  // 相册
     public static final int TAKE_PHOTO_FROM_CAMERA= 2;  // 照相机
@@ -78,6 +73,10 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
     private final static int UPLOAD_PROGRESS_PARAMS = 102; // 更新文件进度条
     private final static int APPLY_REPAIR_BASKET = 103; // 申請報修
 
+    public final static String PROJECT_ID_MSG = "project_id";
+    public final static String PROJECT_NAME_MSG = "project_name";
+    public final static String BASKET_ID_MSG = "basket_id";
+    public final static String UPLOAD_BASKET_REPAIR_IMAGE = "basketRepairFinish"; // 報修操作
 
     //相册位置
     public static final String CAMERA_PATH = Environment.getExternalStorageDirectory() +
@@ -112,6 +111,7 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
     private String managerId; // 申请人Id
     private String mProjectId;  // 報修的项目编号
     private String mBasketId; // 報修的吊籃編號
+    private String mProjectName;
     private String uploadType; // 上传图片类型
     private int maxUploadImageNumer; // 最大上传图片数量
     private String uploadHint; // 上传提示信息
@@ -178,7 +178,7 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
     private void initWidgetResource() {
         // 顶部导航栏
         mToolbar = (Toolbar) findViewById(R.id.upload_toolbar);
-        mToolbar.setTitle("吊篮报修申请");
+        mToolbar.setTitle("吊篮修复提交");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
         mSendTextView = (TextView) findViewById(R.id.toolbar_send_textview);
@@ -233,7 +233,7 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.toolbar_send_imageview: // 发送监听
                 if(mUploadImageUrlList.size()==0 || edtCommit.getText()==null){
-                    Toast.makeText(BasketRepairActivity.this, "请上传吊篮故障图片或添加报修描述！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BasketRepairFinishActivity.this, "请上传吊篮故障图片或添加报修描述！", Toast.LENGTH_SHORT).show();
                 } else {
                     showUploadProgressDialog();
                     startSendImage();
@@ -241,7 +241,7 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
                 break;
             case R.id.btn_pro_commit:
                 if(mUploadImageUrlList.size()==0 || edtCommit.getText()==null){
-                    Toast.makeText(BasketRepairActivity.this, "请上传吊篮故障图片或添加报修描述！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BasketRepairFinishActivity.this, "请上传吊篮故障图片或添加报修描述！", Toast.LENGTH_SHORT).show();
                 } else {
                     showUploadProgressDialog();
                     startSendImage();
@@ -264,10 +264,10 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
     // 项目/图片信息
     private void getProjectInfoFromIntent(){
         Intent intent = getIntent();
-        mProjectId = intent.getStringExtra(UPLOAD_PROJECT_ID);
-        mBasketId = intent.getStringExtra(UPLOAD_BASKET_ID);
-        uploadType = intent.getStringExtra(UPLOAD_IMAGE_TEXT_TYPE);
-
+        mProjectId = intent.getStringExtra(PROJECT_ID_MSG);
+        mBasketId = intent.getStringExtra(BASKET_ID_MSG);
+        mProjectName = intent.getStringExtra(PROJECT_NAME_MSG);
+        uploadType = UPLOAD_BASKET_REPAIR_IMAGE;
         txtBasketId.setText(mBasketId);
 
     }
@@ -276,20 +276,10 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
     private void setUploadParameters(){
         if(uploadType==null || uploadType.equals(""))
             return;
-        switch (uploadType){
-            case UPLOAD_BASKET_REPAIR_IMAGE: // 预验收申请图片地址
-                mRemotePath = "storageRepair";
-                mToolbar.setTitle("申请吊篮保修");
-                uploadHint = "吊篮故障图片";
-                maxUploadImageNumer = 9;
-                break;
-//            default: // 默认预验收申请地址
-//                uploadUrl = AREA_ADMIN_CREATE_PREINSTALL_FILE;
-//                mToolbar.setTitle("上传安装预验收图片");
-//                uploadHint = "安装预验收图片";
-//                maxUploadImageNumer = 9;
-//                break;
-        }
+        mRemotePath = "storageRepairFinish";
+        mToolbar.setTitle("提交吊篮修复");
+        uploadHint = "吊篮修复情况";
+        maxUploadImageNumer = 9;
     }
 
     // FTP 初始化
@@ -308,7 +298,7 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
         switch (requestCode){
             case TAKE_PHOTO_FROM_CAMERA:        //拍摄
                 if(resultCode == RESULT_CANCELED){
-                    Toast.makeText(BasketRepairActivity.this, "取消了拍照", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BasketRepairFinishActivity.this, "取消了拍照", Toast.LENGTH_SHORT).show();
                     return;
                 }
                 Bitmap  photo = BitmapFactory.decodeFile(CAMERA_PATH + "IMAGE_"+ fileName +".jpg");
@@ -358,9 +348,7 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
         Date date = new Date(System.currentTimeMillis());
         fileName = format.format(date);
         photoFile = new File(CAMERA_PATH, "IMAGE_"+fileName+".jpg");
-        Log.i(TAG,getPackageName() + ".fileprovider");
         photoUrl = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", photoFile);
-        Log.i(TAG,photoUrl.toString());
         //拍照后的保存路径
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUrl);
         startActivityForResult(intent, TAKE_PHOTO_FROM_CAMERA);
@@ -439,18 +427,18 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
             params.clear();
         }
         params.put("deviceId",mBasketId);
-        params.put("managerId",managerId);
-        params.put("reason",reason);
+        params.put("dealerId",managerId);
+        params.put("description",reason);
         for(int i=1;i<=tempFileNameList.size();i++){
             params.put("pic_"+i,tempFileNameList.get(i-1));
         }
         String json = new Gson().toJson(params);
-        HttpUtil.sendRentAdminRepairOkHttpRequest(new okhttp3.Callback() {
+        HttpUtil.sendProAdminFinishRepairOkHttpRequest(new okhttp3.Callback() {
             @Override
             public void onFailure(Call call, IOException e) {
                 //异常情况处理
                 Looper.prepare();
-                Toast.makeText(BasketRepairActivity.this, "网络连接失败！", Toast.LENGTH_SHORT).show();
+                Toast.makeText(BasketRepairFinishActivity.this, "网络连接失败！", Toast.LENGTH_SHORT).show();
                 Looper.loop();
             }
 
@@ -458,7 +446,7 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
             public void onResponse(Call call, Response response) throws IOException {
                 if (response.code() != 200) {
                     Looper.prepare();
-                    Toast.makeText(BasketRepairActivity.this, "网络连接超时,请稍后重试！", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(BasketRepairFinishActivity.this, "网络连接超时,请稍后重试！", Toast.LENGTH_SHORT).show();
                     Looper.loop();
                 }
                 // 返回服务器数据
@@ -485,7 +473,7 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
      * 申请权限
      */
     private void requestPermission() {
-        XXPermissions.with(BasketRepairActivity.this)
+        XXPermissions.with(BasketRepairFinishActivity.this)
                 .constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
                 .permission(Permission.Group.STORAGE) //支持请求6.0悬浮窗权限8.0请求安装权限
                 .permission(Permission.CAMERA)
@@ -496,7 +484,7 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
                             onResume();
 
                         }else {
-                            Toast.makeText(BasketRepairActivity.this,
+                            Toast.makeText(BasketRepairFinishActivity.this,
                                     "必须同意所有的权限才能使用本程序", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -504,12 +492,12 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
                     @Override
                     public void noPermission(List<String> denied, boolean quick) {
                         if(quick) {
-                            Toast.makeText(BasketRepairActivity.this, "被永久拒绝授权，请手动授予权限",
+                            Toast.makeText(BasketRepairFinishActivity.this, "被永久拒绝授权，请手动授予权限",
                                     Toast.LENGTH_SHORT).show();
                             // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                            XXPermissions.gotoPermissionSettings(BasketRepairActivity.this);
+                            XXPermissions.gotoPermissionSettings(BasketRepairFinishActivity.this);
                         }else {
-                            Toast.makeText(BasketRepairActivity.this, "获取权限失败",
+                            Toast.makeText(BasketRepairFinishActivity.this, "获取权限失败",
                                     Toast.LENGTH_SHORT).show();
                             finish();
                         }
@@ -518,8 +506,8 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
     }
     // 是否有权限：摄像头、拨打电话
     private boolean isHasPermission() {
-        if (XXPermissions.isHasPermission(BasketRepairActivity.this, Permission.Group.STORAGE)
-                && XXPermissions.isHasPermission(BasketRepairActivity.this, Permission.CAMERA))
+        if (XXPermissions.isHasPermission(BasketRepairFinishActivity.this, Permission.Group.STORAGE)
+                && XXPermissions.isHasPermission(BasketRepairFinishActivity.this, Permission.CAMERA))
             return true;
         return false;
     }
@@ -531,17 +519,19 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
      * 提示弹框
      */
     private CommonDialog DialogToast(String mTitle, String mMsg){
-        return new CommonDialog(BasketRepairActivity.this, R.style.dialog, mMsg,
+        return new CommonDialog(BasketRepairFinishActivity.this, R.style.dialog, mMsg,
                 new CommonDialog.OnCloseListener() {
                     @Override
                     public void onClick(Dialog dialog, boolean confirm) {
                         if (confirm) {
                             dialog.dismiss();
-                            if(mUploadImageUrlList.size() > 0){
-                                Intent intent = new Intent();
-                                setResult(RESULT_OK, intent);
-                            }
+                            //进入列表界面
+                            Intent intent = new Intent(BasketRepairFinishActivity.this, RepairInfoListActivity.class);
+                            intent.putExtra("projectId",mProjectId);
+                            intent.putExtra("projectName",mProjectName);
+                            startActivity(intent);
                             finish();
+
                         } else {
                             dialog.dismiss();
                         }
@@ -593,11 +583,6 @@ public class BasketRepairActivity extends AppCompatActivity implements View.OnCl
 
     @Override
     public void onBackPressed(){
-        Log.i(TAG, "onBackPressed");
-        if(mUploadImageUrlList.size() > 0){
-            Intent intent = new Intent();
-            setResult(RESULT_OK, intent);
-        }
-
+        finish();
     }
 }

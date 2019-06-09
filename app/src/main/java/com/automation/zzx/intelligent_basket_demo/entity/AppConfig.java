@@ -168,7 +168,7 @@ public class AppConfig {
     // 项目管理员请求单个报修信息
     public static final String PRO_ADMIN_GET_REPAIR_SINGLE = ANDROID_URL_PATH.concat("/getRepairBoxOne");
     // 项目管理员请求单个修复信息
-    public static final String PRO_ADMIN_GET_REPAIR_END_SINGLE = ANDROID_URL_PATH.concat("/getRepairEndBoxOne");
+    public static final String PRO_ADMIN_GET_REPAIR_END_SINGLE = ANDROID_URL_PATH.concat("/createRepairEndBox");
 
 
     /*

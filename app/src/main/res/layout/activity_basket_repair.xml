@@ -114,13 +114,6 @@
                 android:horizontalSpacing="10dp">
             </GridView>
 
-            <Button
-                android:id="@+id/btn_repair_commit"
-                style="@style/btnStyle"
-                android:layout_marginTop="30dp"
-                android:layout_marginBottom="30dp"
-                android:text="提交报修申请" />
-
         </LinearLayout>
 
     </ScrollView>

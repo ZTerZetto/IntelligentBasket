@@ -75,6 +75,10 @@
             android:name=".activity.basket.BasketRepairActivity"
             android:launchMode="singleTask" />
         <activity
+            android:name=".activity.basket.BasketRepairFinishActivity"
+            android:launchMode="singleTask" />
+
+        <activity
             android:name=".activity.basket.BasketVideoActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"

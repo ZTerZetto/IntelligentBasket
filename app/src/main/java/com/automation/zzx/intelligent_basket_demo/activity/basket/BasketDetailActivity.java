@@ -147,7 +147,6 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
                         intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
                         intent.putExtra(UPLOAD_IMAGE_TEXT_TYPE, UPLOAD_BASKET_REPAIR_IMAGE);
                         startActivityForResult(intent, UPLOAD_BASKET_REPAIR_RESULT);
-                        startActivity(intent);
                         break;
                     default:break;
                 }

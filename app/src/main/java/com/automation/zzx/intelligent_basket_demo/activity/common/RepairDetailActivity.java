@@ -18,11 +18,14 @@ import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketRepairFinishActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.worker.ImageGridAdapter;
 import com.automation.zzx.intelligent_basket_demo.application.CustomApplication;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
@@ -53,6 +56,9 @@ import okhttp3.Call;
 public class RepairDetailActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "RepairDetailActivity";
+
+    //返回結果
+    public final static int FINISH_BASKET_REPAIR_RESULT = 101; //结束报修返回
 
     // Handler 消息处理
     private final static int UPDATE_VIEW_MSG = 1;
@@ -194,7 +200,13 @@ public class RepairDetailActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.repair_over_button:  // 结束报修按钮
-
+                Intent intent = new Intent(RepairDetailActivity.this, BasketRepairFinishActivity.class);
+                intent.putExtra(ProAdminMessageFragment.PROJECT_ID_MSG,mProjectId);
+                intent.putExtra(ProAdminMessageFragment.BASKET_ID_MSG,mBasketId);
+                intent.putExtra(ProAdminMessageFragment.PROJECT_NAME_MSG,mProjectName);
+                //startActivityForResult(intent, FINISH_BASKET_REPAIR_RESULT);
+                startActivity(intent);
+                finish();
                 break;
         }
     }
@@ -263,7 +275,9 @@ public class RepairDetailActivity extends AppCompatActivity implements View.OnCl
                     String endTime = repairObj.getString("endTimeS");
                     if(endTime==null || endTime.equals("")){
                     }else {
-                        mRepairInfo.setEndTime(endTime);
+                        String timeDate2 = endTime.substring(0,10);
+                        String timeHM2 = endTime.substring(11,16);
+                        mRepairInfo.setEndTime(timeDate2 + " " + timeHM2);
                         mRepairInfo.setDescription(repairObj.getString("description"));
                         mRepairInfo.setImageEnd(repairObj.getString("imageEnd"));
                     }
@@ -352,6 +366,23 @@ public class RepairDetailActivity extends AppCompatActivity implements View.OnCl
         mPref = PreferenceManager.getDefaultSharedPreferences(this);
         mToken = mPref.getString("loginToken","");
     }
+    /*
+     * 活动返回监听
+     *//*
+    //页面返回数据监听
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case FINISH_BASKET_REPAIR_RESULT:        //报修结果显示
+                if(resultCode == RESULT_OK ) {
+                    //Toast.makeText(RepairDetailActivity.this, "已提交修复信息！", Toast.LENGTH_SHORT).show();
+                    finish();
+                }
 
+                break;
+            default:
+                break;
+        }
+    }*/
 
 }

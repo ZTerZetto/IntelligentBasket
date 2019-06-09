@@ -19,6 +19,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
@@ -43,6 +44,7 @@ import java.util.List;
 
 import okhttp3.Call;
 
+import static android.app.Activity.RESULT_OK;
 import static android.content.ContentValues.TAG;
 
 public class BasketRepairFragment extends Fragment {
@@ -53,6 +55,8 @@ public class BasketRepairFragment extends Fragment {
     private final static int MG_REPAIR_LIST_INFO = 1;  // 获取报修列表信息(未结束）视图更新显示
     //private final static int MG_REPAIR_END_LIST_INFO = 2; // 从后台获取吊篮列表数据
     private final static int FAIL_REPAIR_LIST_INFO = 3; // 获取报修列表信息失败
+    //返回結果
+    public final static int FINISH_BASKET_REPAIR_RESULT = 101; //结束报修返回
 
     // 本地存储
     public SharedPreferences pref;
@@ -79,18 +83,6 @@ public class BasketRepairFragment extends Fragment {
                     mBasketRepairAdapter.notifyDataSetChanged();
                     updateContentView();
                     break;
-/*
-                case FAIL_REPAIR_LIST_INFO:  // 获取报修列表信息失败
-                    if(projectId == null || projectId.equals("")) {  // 无项目
-                        rvRepairInfo.setVisibility(View.GONE);
-                        noRepairListRelativeLayout.setVisibility(View.VISIBLE);
-                        noRepairListTextView.setText("您还没有相关的项目！");
-                    } else {  // 获取吊篮列表
-                        rvRepairInfo.setVisibility(View.GONE);
-                        noRepairListRelativeLayout.setVisibility(View.VISIBLE);
-                        noRepairListTextView.setText("该项目暂无报修信息！");
-                    }
-                    break;*/
                 default:
                     break;
             }
@@ -119,7 +111,9 @@ public class BasketRepairFragment extends Fragment {
                 intent.putExtra(ProAdminMessageFragment.BASKET_ID_MSG, mRepairInfoList.get(position).getDeviceId());
                 intent.putExtra(ProAdminMessageFragment.REPAIR_DATE_MSG,
                         mRepairInfoList.get(position).getStartTime().substring(0,16));
+                //startActivityForResult(intent, FINISH_BASKET_REPAIR_RESULT);
                 startActivity(intent);
+                getActivity().finish();
             }
         });
         // 空空如也
@@ -242,6 +236,7 @@ public class BasketRepairFragment extends Fragment {
         super.onAttach(context);
         onAttachToContext(context);
     }
+
     @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
@@ -250,5 +245,23 @@ public class BasketRepairFragment extends Fragment {
             onAttachToContext(activity);
         }
     }
+
+    /*
+     * 活动返回监听
+     *//*
+    //页面返回数据监听
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        switch (requestCode) {
+            case FINISH_BASKET_REPAIR_RESULT:        //报修结果显示
+                if(resultCode == RESULT_OK ) {
+                   mRepairInfoList.clear();
+                    rentAdminGetRepairInfoListInfo();
+                }
+                break;
+            default:
+                break;
+        }
+    }*/
 
 }
