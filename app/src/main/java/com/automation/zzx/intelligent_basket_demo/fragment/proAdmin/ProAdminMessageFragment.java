@@ -47,10 +47,10 @@ public class ProAdminMessageFragment extends Fragment {
 
     // 页面间消息传递标识
     public final static String REPAIR_MESSAGE_MSG = "repair_message_msg";
-    public final static String PROJECT_ID_MSG = "project_id_msg";
-    public final static String PROJECT_NAME_MSG = "project_name_msg";
-    public final static String BASKET_ID_MSG = "basket_id_msg";
-    public final static String REPAIR_DATE_MSG = "repair_date_msg";
+    public final static String PROJECT_ID_MSG = "project_id";
+    public final static String PROJECT_NAME_MSG = "project_name";
+    public final static String BASKET_ID_MSG = "basket_id";
+    public final static String REPAIR_DATE_MSG = "repair_date";
 
     // Message
     private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;;

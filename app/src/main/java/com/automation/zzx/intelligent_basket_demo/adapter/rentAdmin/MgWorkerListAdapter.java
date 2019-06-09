@@ -121,6 +121,9 @@ public class MgWorkerListAdapter extends RecyclerView.Adapter<MgWorkerListAdapte
 //        viewHolder.workerHeadImg.setImageUrl(mgWorkerInfo.getHeadImg());
         viewHolder.workerHeadImg.setCircle(true);  // 圆形头像
         viewHolder.workerName.setText(mgWorkerInfo.getName());
+        viewHolder.workerState.setVisibility(View.GONE);
+        viewHolder.workerBasketId.setVisibility(View.GONE);
+        viewHolder.workerTotalTime.setVisibility(View.GONE);
 //        viewHolder.workerState.setText(mgWorkerInfo.getState());
 //        viewHolder.workerBasketId.setText(mgWorkerInfo.getBasketId());
 //        viewHolder.workerTotalTime.setText(mgWorkerInfo.getTotalTime());

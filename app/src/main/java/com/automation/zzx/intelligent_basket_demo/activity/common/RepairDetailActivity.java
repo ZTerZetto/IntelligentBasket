@@ -247,8 +247,13 @@ public class RepairDetailActivity extends AppCompatActivity implements View.OnCl
             String timeHM = repairObj.getString("startTimeS").substring(11,16);
             String startTime = timeDate + " " + timeHM;
             try {
-                Date date = CustomApplication.dateSavedFormat.parse(mRepairDate);
-                String repairTime =  CustomApplication.dateInternetFormat.format(date);
+                String repairTime;
+                if(mRepairDate.contains("年")) {
+                    Date date = CustomApplication.dateSavedFormat.parse(mRepairDate);
+                    repairTime = CustomApplication.dateInternetFormat.format(date);
+                }else{
+                    repairTime = mRepairDate;
+                }
 
                 if(repairTime.equals(startTime)){
                     mRepairInfo = new RepairInfo(repairObj.getString("deviceId"),
@@ -259,7 +264,7 @@ public class RepairDetailActivity extends AppCompatActivity implements View.OnCl
                     if(endTime==null || endTime.equals("")){
                     }else {
                         mRepairInfo.setEndTime(endTime);
-                        mRepairInfo.setDiscription(repairObj.getString("description"));
+                        mRepairInfo.setDescription(repairObj.getString("description"));
                         mRepairInfo.setImageEnd(repairObj.getString("imageEnd"));
                     }
                     mHandler.sendEmptyMessage(UPDATE_VIEW_MSG);
@@ -317,7 +322,7 @@ public class RepairDetailActivity extends AppCompatActivity implements View.OnCl
             mMaintainDescribeLy.setVisibility(View.VISIBLE);
             mRepairBtn.setVisibility(View.GONE);
 
-            mMaintainDescribeTv.setText(mRepairInfo.getDiscription());
+            mMaintainDescribeTv.setText(mRepairInfo.getDescription());
             String[] endImageNames = mRepairInfo.getImageEnd().split(",");
             for(int index=0; index<endImageNames.length; index++){
                 mRepairEndImageNameList.add(endImageNames[index]);

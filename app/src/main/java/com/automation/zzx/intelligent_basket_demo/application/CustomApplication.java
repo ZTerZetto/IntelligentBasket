@@ -256,7 +256,7 @@ public class CustomApplication extends Application {
         if(messageInfo.getmType()==null || messageInfo.getmType().equals("")) return;
         switch (messageInfo.getmType()){
             case "1":  // 报警消息
-                messageInfo.setmWorkerPhone(keyValuePair.get("deviceId"));
+                messageInfo.setmBasketId(keyValuePair.get("deviceId"));
                 messageInfo.setmWorkerList(keyValuePair.get("worker"));
                 break;
             case "2": // 验收申请

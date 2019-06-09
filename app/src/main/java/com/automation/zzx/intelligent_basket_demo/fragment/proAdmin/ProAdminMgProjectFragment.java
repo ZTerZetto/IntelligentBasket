@@ -38,10 +38,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.CheckCompactActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadPreStopInfoActivity;
@@ -80,7 +78,6 @@ import okhttp3.Call;
 import static android.app.Activity.RESULT_OK;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_ADD_BASKET_INTO_PROJECT;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_GET_ALL_BASKET_INFO;
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_GET_ALL_PROJECT_INFO;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.PRO_ADMIN_GET_PROINFO;
 import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
 
@@ -90,7 +87,7 @@ import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.C
  */
 public class ProAdminMgProjectFragment extends Fragment implements View.OnClickListener {
 
-    private final static String TAG = "AreaAdminMgProject";
+    private final static String TAG = "ProAdminMgProject";
     // Handler 消息类型
     private final static int UPDATE_BASKET_STATEMENT_MSG = 101;  // 更新吊篮状态列表
     private final static int UPDATE_PROJECT_AND_BASKET_MSG = 102; // 更换项目，重新获取吊篮列表
@@ -714,6 +711,7 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
      */
     public void initProjectScheduleList(){
         mProjectScheduleList.add("立项");
+        mProjectScheduleList.add("配置清单");
         mProjectScheduleList.add("安装");
         mProjectScheduleList.add("安监证书");
         mProjectScheduleList.add("进行中");
@@ -876,29 +874,46 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
             case "1":
             case "0":/* 立项、安装 */
                 mProjectStartTextView.setText("暂未开始");
+                /*
                 if(projectInfo.getBoxList()==null || projectInfo.getBoxList().equals("")){ // 无吊篮
                     currentProjectScheduleFlag = 1;
                     mProjectScheduleTimeLine.setPointStrings(mProjectScheduleList, currentProjectScheduleFlag);  //
                     mPreApplyRelativeLayout.setVisibility(View.GONE);
-                }else{  // 很多吊篮
+                }
+                else{  // 很多吊篮
                     currentProjectScheduleFlag = 2;
                     mProjectScheduleTimeLine.setPointStrings(mProjectScheduleList, currentProjectScheduleFlag);   //
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.VISIBLE);
-                }
+                }*/
+                currentProjectScheduleFlag = 1;
+                mProjectScheduleTimeLine.setPointStrings(mProjectScheduleList, currentProjectScheduleFlag);  //
+                mPreApplyRelativeLayout.setVisibility(View.GONE);
+                mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
+                break;
+            case "11": // 清单待配置
+                currentProjectScheduleFlag = 2;
+                mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);  //
+                mPreApplyRelativeLayout.setVisibility(View.GONE);
+                mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
+                break;
+            case "12": // 清单待审核
+                currentProjectScheduleFlag = (float)2.5;
+                mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);  //
+                mPreApplyRelativeLayout.setVisibility(View.GONE);
                 mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                 break;
             case "2": /*  预安装申请图片 */
                 if(projectInfo.getStoreOut() == null || projectInfo.getStoreOut().equals("")){
                     // 尚未上传预申请图片
-                    currentProjectScheduleFlag = 2;
+                    currentProjectScheduleFlag = 3;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.VISIBLE);
                     mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                 }else{
                     // 已经上传预验收申请图片
-                    currentProjectScheduleFlag = (float)2.5;
+                    currentProjectScheduleFlag = (float)3.5;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.GONE);
@@ -911,7 +926,7 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
             case "21": /* 上传安监证书 */
                 if(projectInfo.getProjectCertUrl()==null || projectInfo.getProjectCertUrl().equals("")){ // 尚未上传安监证书
                     // 尚未上传
-                    currentProjectScheduleFlag = (float)2.5;
+                    currentProjectScheduleFlag = (float)3.5;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.GONE);
@@ -920,7 +935,7 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
                     mSendOrExamineCertificateTextView.setText("上传安监证书");
                     mSendOrExamineCertificateCountTextView.setVisibility(View.VISIBLE);
                 }else{
-                    currentProjectScheduleFlag = (float)3;
+                    currentProjectScheduleFlag = (float)4;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.GONE);
@@ -931,8 +946,8 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
                 }
                 break;
             case "3": /* 使用中 */
-                currentProjectScheduleFlag = 4;
-                mProjectScheduleTimeLine.setStep(4);
+                currentProjectScheduleFlag = (float)5;
+                mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
                 mPreApplyCountTextView.setVisibility(View.GONE);
                 mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
@@ -941,8 +956,8 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
                 mUploadPreStopInfoRelativeLayout.setVisibility(View.VISIBLE);
                 break;
             case "4": /* 结束 */
-                currentProjectScheduleFlag = 5;
-                mProjectScheduleTimeLine.setStep(5);
+                currentProjectScheduleFlag = (float)6;
+                mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
                 mPreApplyCountTextView.setVisibility(View.GONE);
                 mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);

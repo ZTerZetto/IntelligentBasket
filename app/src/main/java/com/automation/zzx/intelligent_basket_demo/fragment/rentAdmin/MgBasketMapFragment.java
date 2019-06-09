@@ -197,8 +197,8 @@ public class MgBasketMapFragment extends Fragment implements SensorEventListener
                 // 点击气泡进入详情页面：待做
                 Log.d(TAG, "点击气泡");
                 mBaiduMap.hideInfoWindow();
-                Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
-                startActivity(intent);
+                //Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
+                //startActivity(intent);
             }
         });
         // 点击地图响应

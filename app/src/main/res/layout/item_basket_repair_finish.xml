@@ -30,7 +30,6 @@
                 android:text="10006731"/>
             <TextView
                 android:id="@+id/send_examine_certificate_tv_count"
-                android:layout_gravity=""
                 style="@style/me_common_item_count_textView_style"
                 android:textColor="@color/white"
                 android:background="@color/gray01"

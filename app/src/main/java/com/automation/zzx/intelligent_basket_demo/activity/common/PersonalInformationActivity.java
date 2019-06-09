@@ -12,6 +12,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerMoreActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 
 /**
@@ -149,6 +150,9 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
                 break;
             case R.id.user_more_layout:  // 更多按钮
                 Log.i(TAG, "You have clicked the user_more_layout");
+                intent = new Intent(PersonalInformationActivity.this, WorkerMoreActivity.class);
+                intent.putExtra("worker_id", mUserInfo.getUserId());
+                startActivity(intent);
                 break;
         }
     }

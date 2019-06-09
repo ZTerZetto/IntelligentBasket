@@ -12,8 +12,8 @@ import android.os.Bundle;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketContentFragmentAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
-import com.automation.zzx.intelligent_basket_demo.fragment.BasketRepairEndFragment;
-import com.automation.zzx.intelligent_basket_demo.fragment.BasketRepairFragment;
+import com.automation.zzx.intelligent_basket_demo.fragment.basket.BasketRepairEndFragment;
+import com.automation.zzx.intelligent_basket_demo.fragment.basket.BasketRepairFragment;
 import com.automation.zzx.intelligent_basket_demo.widget.NoScrollViewPager;
 
 import java.util.ArrayList;
@@ -22,15 +22,20 @@ import java.util.List;
 public class RepairInfoListActivity extends AppCompatActivity {
 
     public final static String PROJECT_ID = "projectId";  // 上传图片的项目Id
+    public final static String PROJECT_NAME = "projectName";  // 上传图片的项目名称
 
     //控件及布局
     private TabLayout mTabLayout; // 顶部导航栏
     private NoScrollViewPager mViewPager; // 页面布局
+
     // 用户登录信息相关
     private UserInfo mUserInfo;
     private String mToken;
-    private String mProjectId;
     private SharedPreferences mPref;
+
+    // 项目信息
+    private String mProjectId;
+    private String mProjectName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +75,7 @@ public class RepairInfoListActivity extends AppCompatActivity {
         //获取当前项目ID
         Intent intent = getIntent();
         mProjectId = intent.getStringExtra(PROJECT_ID);
+        mProjectName = intent.getStringExtra(PROJECT_NAME);
     }
 
     // 将用户信息传递给子Fragment
@@ -83,5 +89,9 @@ public class RepairInfoListActivity extends AppCompatActivity {
     // 将ProjectId传递给子Fragment
     public String pushProjectId(){
         return mProjectId;
+    }
+    // 将ProjectId传递给子Fragment
+    public String pushProjectName(){
+        return mProjectName;
     }
 }

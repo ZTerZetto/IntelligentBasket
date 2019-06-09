@@ -153,6 +153,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private TextView mProjectStartTextView;
     private RelativeLayout mExamineCompactRelativeLayout; // 查看合同
     private RelativeLayout mConfigurationRelativeLayout; // 配置清单
+    private TextView mConfigurationCountTextView;
     private RelativeLayout mPreApplyRelativeLayout; // 预验收申请
     private TextView mPreApplyCountTextView;
     private RelativeLayout mSendOrExamineCertificateRelativeLayout; // 上传或查看安监证书
@@ -346,6 +347,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mExamineCompactRelativeLayout.setOnClickListener(this);  // 查看合同
         mConfigurationRelativeLayout = (RelativeLayout) view.findViewById(R.id.configuration_apply_layout);
         mConfigurationRelativeLayout.setOnClickListener(this);  // 配置清单
+        mConfigurationCountTextView = (TextView) view.findViewById(R.id.configuration_apply_tv_count);
         mPreApplyRelativeLayout = (RelativeLayout) view.findViewById(R.id.project_pre_apply_layout); // 预验收
         mPreApplyRelativeLayout.setOnClickListener(this);
         mPreApplyCountTextView = (TextView) view.findViewById(R.id.project_pre_apply_tv_count);
@@ -415,13 +417,14 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
                 break;
 
-            case R.id.rl_get_repair_info:
+            case R.id.rl_get_repair_info:  // 获取全部保修记录
                 Log.i(TAG, "You have clicked the repair information button");
                 intent = new Intent(getActivity(), RepairInfoListActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                intent.putExtra(PROJECT_NAME, mProjectInfoList.get(currentSelectedProject).getProjectName());
                 startActivity(intent);
                 break;
-            case R.id.pre_stop_info_layout:
+            case R.id.pre_stop_info_layout: // 预报停信息
                 Log.i(TAG, "You have clicked the pre stop info button");
                 intent = new Intent(getActivity(), UploadPreStopInfoActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
@@ -732,6 +735,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
      */
     public void initProjectScheduleList(){
         mProjectScheduleList.add("立项");
+        mProjectScheduleList.add("配置清单");
         mProjectScheduleList.add("安装");
         mProjectScheduleList.add("安监证书");
         mProjectScheduleList.add("进行中");
@@ -894,29 +898,55 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             case "1":
             case "0":/* 立项、安装 */
                 mProjectStartTextView.setText("暂未开始");
+                /*
                 if(projectInfo.getBoxList()==null || projectInfo.getBoxList().equals("")){ // 无吊篮
                     currentProjectScheduleFlag = 1;
                     mProjectScheduleTimeLine.setPointStrings(mProjectScheduleList, currentProjectScheduleFlag);  //
                     mPreApplyRelativeLayout.setVisibility(View.GONE);
-                }else{  // 很多吊篮
+                }
+                else{  // 很多吊篮
                     currentProjectScheduleFlag = 2;
                     mProjectScheduleTimeLine.setPointStrings(mProjectScheduleList, currentProjectScheduleFlag);   //
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.VISIBLE);
-                }
+                }*/
+                currentProjectScheduleFlag = 1;
+                mProjectScheduleTimeLine.setPointStrings(mProjectScheduleList, currentProjectScheduleFlag);  //
+                mPreApplyRelativeLayout.setVisibility(View.GONE);
+                mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
+                break;
+            case "11": // 清单待配置
+                currentProjectScheduleFlag = 2;
+                mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);  //
+                mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
+                mConfigurationRelativeLayout.setClickable(true);
+                mConfigurationCountTextView.setVisibility(View.VISIBLE);
+                mPreApplyRelativeLayout.setVisibility(View.GONE);
+                mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
+                break;
+            case "12": // 清单待审核
+                currentProjectScheduleFlag = (float)2.5;
+                mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);  //
+                mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
+                mConfigurationRelativeLayout.setClickable(false);
+                mConfigurationCountTextView.setVisibility(View.GONE);
+                mPreApplyRelativeLayout.setVisibility(View.GONE);
                 mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                 break;
             case "2": /*  预安装申请图片 */
+                mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
+                mConfigurationRelativeLayout.setClickable(false);
+                mConfigurationCountTextView.setVisibility(View.GONE);
                 if(projectInfo.getStoreOut() == null || projectInfo.getStoreOut().equals("")){
                     // 尚未上传预申请图片
-                    currentProjectScheduleFlag = 2;
+                    currentProjectScheduleFlag = 3;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.VISIBLE);
                     mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                 }else{
                     // 已经上传预验收申请图片
-                    currentProjectScheduleFlag = (float)2.5;
+                    currentProjectScheduleFlag = (float)3.5;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.GONE);
@@ -927,9 +957,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 }
                 break;
             case "21": /* 上传安监证书 */
+                mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
+                mConfigurationRelativeLayout.setClickable(false);
+                mConfigurationCountTextView.setVisibility(View.GONE);
                 if(projectInfo.getProjectCertUrl()==null || projectInfo.getProjectCertUrl().equals("")){ // 尚未上传安监证书
                     // 尚未上传
-                    currentProjectScheduleFlag = (float)2.5;
+                    currentProjectScheduleFlag = (float)3.5;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.GONE);
@@ -938,7 +971,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     mSendOrExamineCertificateTextView.setText("上传安监证书");
                     mSendOrExamineCertificateCountTextView.setVisibility(View.VISIBLE);
                 }else{
-                    currentProjectScheduleFlag = (float)3;
+                    currentProjectScheduleFlag = (float)4;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.GONE);
@@ -949,9 +982,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 }
                 break;
             case "3": /* 使用中 */
-                currentProjectScheduleFlag = 4;
-                mProjectScheduleTimeLine.setStep(4);
+                currentProjectScheduleFlag = (float)5;
+                mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
+                mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
+                mConfigurationRelativeLayout.setClickable(false);
+                mConfigurationCountTextView.setVisibility(View.GONE);
                 mPreApplyCountTextView.setVisibility(View.GONE);
                 mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                 mSendOrExamineCertificateTextView.setText("查看安监证书");
@@ -959,9 +995,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 mUploadPreStopInfoRelativeLayout.setVisibility(View.VISIBLE);
                 break;
             case "4": /* 结束 */
-                currentProjectScheduleFlag = 5;
-                mProjectScheduleTimeLine.setStep(5);
+                currentProjectScheduleFlag = (float)6;
+                mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
+                mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
+                mConfigurationRelativeLayout.setClickable(false);
+                mConfigurationCountTextView.setVisibility(View.GONE);
                 mPreApplyCountTextView.setVisibility(View.GONE);
                 mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                 mSendOrExamineCertificateTextView.setText("查看安监证书");
