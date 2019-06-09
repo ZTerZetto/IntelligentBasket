@@ -139,9 +139,13 @@ public class UserMessageActivity extends AppCompatActivity {
 
         List<MessageInfo> messageInfos = new ArrayList<>();
         switch (mUserMessageType){
+            case "worker_1":
+            case "worker_2":
+            case "worker_3":
+            case "worker_4":
             case "worker":
                 // 施工人员消息：报警
-                messageInfos = DataSupport.where("mType = ?", "1")
+                messageInfos = DataSupport.where("mType = 1 or mType = 4")
                         .find(MessageInfo.class);
                 break;
             case "inspect_person":

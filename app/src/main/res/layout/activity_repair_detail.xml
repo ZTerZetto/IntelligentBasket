@@ -78,11 +78,11 @@
                 android:orientation="vertical">
                 <TextView
                     android:text="报修描述"
-                    style="@style/content_title_textview"/>
+                    style="@style/content_title_textview" />
                 <TextView
                     android:id="@+id/repair_describe_textview"
                     android:text="xxxxxxxxxxxxxxxxxxx"
-                    style="@style/content_describe_gridview"/>
+                    style="@style/content_describe_textview"/>
                 <GridView
                     android:id="@+id/repair_describe_gridview"
                     style="@style/content_describe_gridview">
@@ -105,7 +105,7 @@
                 <TextView
                     android:id="@+id/maintain_describe_textview"
                     android:text="xxxxxxxxxxxxxxxxxxx"
-                    style="@style/content_describe_gridview"/>
+                    style="@style/content_describe_textview"/>
                 <GridView
                     android:id="@+id/maintain_describe_gridview"
                     style="@style/content_describe_gridview">

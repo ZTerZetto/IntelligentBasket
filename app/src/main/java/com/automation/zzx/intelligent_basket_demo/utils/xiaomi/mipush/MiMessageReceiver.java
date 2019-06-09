@@ -83,7 +83,7 @@ public class MiMessageReceiver extends PushMessageReceiver {
     @Override
     public void onNotificationMessageArrived(Context context, MiPushMessage message) {
         Log.d(CustomApplication.TAG,
-                "onNotificationMessageClicked is called. " + message.toString());
+                "onNotificationMessage is called. " + message.toString());
 
         if (!TextUtils.isEmpty(message.getTopic())) {
             mTopic = message.getTopic();
@@ -92,7 +92,7 @@ public class MiMessageReceiver extends PushMessageReceiver {
         }
 
         Message msg = Message.obtain();
-        msg.what = CustomApplication.OnReceivePassThroughMessage;
+        msg.what = CustomApplication.onReceiveNotificationMessage;
         msg.obj = message;
         CustomApplication.getHandler().sendMessage(msg);
 

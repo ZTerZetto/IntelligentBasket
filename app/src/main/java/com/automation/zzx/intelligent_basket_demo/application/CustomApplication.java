@@ -26,8 +26,6 @@ import android.util.Log;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
-import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMessageFragment;
-import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiMessageReceiver;
 import com.baidu.mapapi.SDKInitializer;
 import com.xiaomi.channel.commonutils.logger.LoggerInterface;
 import com.xiaomi.mipush.sdk.Logger;
@@ -35,8 +33,8 @@ import com.xiaomi.mipush.sdk.MiPushClient;
 import com.xiaomi.mipush.sdk.MiPushMessage;
 
 import org.litepal.LitePal;
-import org.litepal.crud.DataSupport;
 
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -58,7 +56,8 @@ public class CustomApplication extends Application {
     public static final String TAG = "MiPushApplication";
 
     public static final int OnReceivePassThroughMessage = 2;
-    public static final int onNotificationMessageClicked = 3;
+    public static final int onReceiveNotificationMessage = 3;
+    public static final int onNotificationMessageClicked = 4;
 
     private static MiHandler mHandler = null;
     private static Activity mainActivity = null;
@@ -76,7 +75,8 @@ public class CustomApplication extends Application {
     private int chatCount = 0;
 
     // 解析消息
-    SimpleDateFormat dataFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm");//设置日期格式
+    public static SimpleDateFormat dateSavedFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm"); //设置日期格式
+    public static SimpleDateFormat dateInternetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //设置日期格式
 
     // 为了提高推送服务的注册率，官方Demo建议在Application的onCreate中初始化推送服务
     // 你也可以根据需要，在其他地方初始化推送服务
@@ -193,7 +193,9 @@ public class CustomApplication extends Application {
             if (mainActivity != null) {
                 MiPushMessage miMessage = (MiPushMessage) msg.obj;
                 switch(msg.what){
-                    case OnReceivePassThroughMessage:  // 通知栏消息
+                    case OnReceivePassThroughMessage:  // 透传消息
+                        break;
+                    case onReceiveNotificationMessage: // 通知栏消息
                         // 震动和声音提示
                         onMessageNotify();
                         // 消息解析
@@ -247,7 +249,7 @@ public class CustomApplication extends Application {
     *  消息解析
     * */
     public void onMessageParse(MiPushMessage message){
-        MessageInfo messageInfo = new MessageInfo(dataFormat.format(new Date()),
+        MessageInfo messageInfo = new MessageInfo(dateSavedFormat.format(new Date()),
                 message.getTitle(), message.getDescription());
         Map<String, String> keyValuePair = message.getExtra();
         messageInfo.setmType(keyValuePair.get("type"));
@@ -262,9 +264,16 @@ public class CustomApplication extends Application {
             case "3": // 项目流程
                 break;
             case "4": // 报修信息
-                messageInfo.setmWorkerPhone(keyValuePair.get("projectId"));
-                messageInfo.setmWorkerPhone(keyValuePair.get("projectName"));
-                messageInfo.setmWorkerPhone(keyValuePair.get("deviceId"));
+                messageInfo.setmProjectId(keyValuePair.get("projectId"));
+                messageInfo.setmProjectName(keyValuePair.get("projectName"));
+                messageInfo.setmBasketId(keyValuePair.get("deviceId"));
+                String time = keyValuePair.get("time");
+                try {
+                    Date date = dateInternetFormat.parse(time);
+                    messageInfo.setmTime(dateSavedFormat.format(date));
+                } catch (ParseException e) {
+                    e.printStackTrace();
+                }
                 break;
             case "5": // 配置清单
                 messageInfo.setmProjectId(keyValuePair.get("projectId"));  // 项目id
@@ -367,7 +376,13 @@ public class CustomApplication extends Application {
     /*
      * 生命周期
      */
-
+    @Override
+    public void onTerminate() {
+        // 程序终止的时候执行
+        Log.d(TAG, "onTerminate");
+        super.onTerminate();
+        mainActivity = null;
+    }
     /*
      * 屏幕相关
      */

@@ -165,8 +165,10 @@ public class AppConfig {
     public static final String PRO_ADMIN_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
     // 项目管理员请求项目信息
     public static final String PRO_ADMIN_GET_PROINFO = ANDROID_URL_PATH.concat("/getProjectByProAdmin");
-    // 项目管理员请求单个吊篮单个报修事件详情
-    public static final String PRO_ADMIN_GET_REPAIR_SINGLE = ANDROID_URL_PATH.concat("/get");
+    // 项目管理员请求单个报修信息
+    public static final String PRO_ADMIN_GET_REPAIR_SINGLE = ANDROID_URL_PATH.concat("/getRepairBoxOne");
+    // 项目管理员请求单个修复信息
+    public static final String PRO_ADMIN_GET_REPAIR_END_SINGLE = ANDROID_URL_PATH.concat("/getRepairEndBoxOne");
 
 
     /*

@@ -47,6 +47,10 @@ public class ProAdminMessageFragment extends Fragment {
 
     // 页面间消息传递标识
     public final static String REPAIR_MESSAGE_MSG = "repair_message_msg";
+    public final static String PROJECT_ID_MSG = "project_id_msg";
+    public final static String PROJECT_NAME_MSG = "project_name_msg";
+    public final static String BASKET_ID_MSG = "basket_id_msg";
+    public final static String REPAIR_DATE_MSG = "repair_date_msg";
 
     // Message
     private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;;
@@ -108,7 +112,10 @@ public class ProAdminMessageFragment extends Fragment {
                     switch(messageInfo.getmType()){
                         case "4": // 报修消息
                             Intent intent = new Intent(getActivity(), RepairDetailActivity.class); // 跳转至维修详情页面
-                            intent.putExtra(REPAIR_MESSAGE_MSG, (Parcelable) messageInfo);
+                            intent.putExtra(PROJECT_ID_MSG, messageInfo.getmProjectId());
+                            intent.putExtra(PROJECT_NAME_MSG, messageInfo.getmProjectName());
+                            intent.putExtra(BASKET_ID_MSG, messageInfo.getmBasketId());
+                            intent.putExtra(REPAIR_DATE_MSG, messageInfo.getmTime());
                             startActivity(intent);
                             break;
                     }

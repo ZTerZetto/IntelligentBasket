@@ -43,7 +43,7 @@
             <TextView
                 android:id="@+id/basket_worker_id"
                 style="@style/usertextStyle"
-                android:hint="@string/workerName_hint" />
+                android:hint="负责人姓名" />
         </LinearLayout>
 
     </LinearLayout>

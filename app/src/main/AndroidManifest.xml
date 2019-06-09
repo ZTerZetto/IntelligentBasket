@@ -46,10 +46,10 @@
         <activity android:name=".activity.common.UserNameActivity" />
         <activity android:name=".activity.areaAdmin.UploadPreStopInfoActivity" />
         <activity android:name=".activity.areaAdmin.CheckCompactActivity" />
-        <activity android:name=".activity.worker.WorkerMessageActivity" />
         <activity android:name=".activity.areaAdmin.UploadImageActivity" />
         <activity android:name=".activity.common.UploadImageFTPActivity" />
         <activity android:name=".activity.common.QRcodeCardActivity" />
+        <activity android:name=".activity.common.UserMessageActivity" />
         <activity android:name=".activity.common.PersonalInformationActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
         <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" />

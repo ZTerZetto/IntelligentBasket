@@ -33,7 +33,7 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
     public final static String BASKET_ID = "basket_id";
 
     // 控件声明
-    private EditText mSetBasketIdEv;
+    //private EditText mSetBasketIdEv;
     private GridView mFunctionGridView;  // 功能测试
 
     private TextView txtBasketId;  //吊篮编号
@@ -85,23 +85,23 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
     // 资源句柄初始化及监听
     public void initWidgetResource(){
         // 获取控件句柄
-        mSetBasketIdEv = (EditText) findViewById(R.id.basket_id_ev);
-        mSetBasketIdEv.addTextChangedListener(new TextWatcher() {
-            @Override
-            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-                mBasketId = s.toString();
-            }
-
-            @Override
-            public void onTextChanged(CharSequence s, int start, int before, int count) {
-                mBasketId = s.toString();
-            }
-
-            @Override
-            public void afterTextChanged(Editable s) {
-                mBasketId = s.toString();
-            }
-        });
+//        mSetBasketIdEv = (EditText) findViewById(R.id.basket_id_ev);
+//        mSetBasketIdEv.addTextChangedListener(new TextWatcher() {
+//            @Override
+//            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+//                mBasketId = s.toString();
+//            }
+//
+//            @Override
+//            public void onTextChanged(CharSequence s, int start, int before, int count) {
+//                mBasketId = s.toString();
+//            }
+//
+//            @Override
+//            public void afterTextChanged(Editable s) {
+//                mBasketId = s.toString();
+//            }
+//        });
         mFunctionGridView = (GridView) findViewById(R.id.function_gridview);
 
         //初始化控件并显示内容

@@ -308,7 +308,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onDestroy(){
         super.onDestroy();
-        CustomApplication.setMainActivity(null);
+        //CustomApplication.setMainActivity(null);
     }
     // 退出但不销毁
     @Override

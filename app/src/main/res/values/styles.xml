@@ -609,11 +609,10 @@
         <item name="android:layout_height">wrap_content</item>
         <item name="android:textColor">@color/colorGradText</item>
         <item name="android:textSize">15sp</item>
-        <item name="android:paddingTop">6dp</item>
-        <item name="android:paddingBottom">6dp</item>
+        <item name="android:padding">10dp</item>
         <item name="android:layout_marginLeft">10dp</item>
         <item name="android:layout_marginRight">10dp</item>
-        <item name="android:background">@drawable/bg_white_quai</item>
+        <item name="android:background">@color/white</item>
     </style>
     <!-- 报修内容图片 -->
     <style name="content_describe_gridview">
@@ -624,6 +623,7 @@
         <item name="android:horizontalSpacing">5dp</item>
         <item name="android:paddingLeft">8dp</item>
         <item name="android:paddingRight">8dp</item>
+        <item name="android:background">@color/white</item>
     </style>
     <style name="content_date_textview" parent="@android:style/TextAppearance">
         <item name="android:layout_width">match_parent</item>
@@ -634,6 +634,7 @@
         <item name="android:textColor">@color/colorGradText</item>
         <item name="android:textSize">13sp</item>
         <item name="android:gravity">right</item>
+        <item name="android:background">@color/white</item>
     </style>
 
 

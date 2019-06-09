@@ -6,7 +6,19 @@ import java.util.List;
 
 public class RepairInfo {
     private String deviceId;
+    private String projectId;
+    private String managerId;
+    private String dealerId;
+    private String reason;
+    private String imageStart;
+    private String startTime;
+    private String imageEnd;
+    private String discription;
+    private String endTime;
 
+    /*
+     * 构造函数
+     */
     public RepairInfo(String deviceId, String projectId, String managerId, String dealerId, String reason,
                       String imageStart, String startTime, String imageEnd, String discription, String endTime) {
         this.deviceId = deviceId;
@@ -21,10 +33,6 @@ public class RepairInfo {
         this.endTime = endTime;
     }
 
-    private String projectId;
-    private String managerId;
-    private String dealerId;
-
     public RepairInfo(String deviceId, String projectId, String managerId, String reason, String imageStart, String startTime) {
         this.deviceId = deviceId;
         this.projectId = projectId;
@@ -34,9 +42,12 @@ public class RepairInfo {
         this.startTime = startTime;
     }
 
-    private String reason;
-    private String imageStart;
-    private String startTime;
+    public RepairInfo(String deviceId, String projectId, String managerId, String startTime) {
+        this.deviceId = deviceId;
+        this.projectId = projectId;
+        this.managerId = managerId;
+        this.startTime = startTime;
+    }
 
     public String getImageStart() {
         return imageStart;
@@ -60,18 +71,6 @@ public class RepairInfo {
 
     public void setDiscription(String discription) {
         this.discription = discription;
-    }
-
-    private String imageEnd;
-    private String discription;
-    private String endTime;
-
-
-    public RepairInfo(String deviceId, String projectId, String managerId, String startTime) {
-        this.deviceId = deviceId;
-        this.projectId = projectId;
-        this.managerId = managerId;
-        this.startTime = startTime;
     }
 
     public String getDeviceId() {
