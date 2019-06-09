@@ -6,21 +6,9 @@ import java.util.List;
 
 public class RepairInfo {
     private String deviceId;
-    private String projectId;
-    private String managerId;
-    private String dealerId;
-    private String reason;
-    private String imageStart;
-    private String startTime;
-    private String imageEnd;
-    private String discription;
-    private String endTime;
 
-    /*
-     * 构造函数
-     */
     public RepairInfo(String deviceId, String projectId, String managerId, String dealerId, String reason,
-                      String imageStart, String startTime, String imageEnd, String discription, String endTime) {
+                      String imageStart, String startTime, String imageEnd, String description, String endTime) {
         this.deviceId = deviceId;
         this.projectId = projectId;
         this.managerId = managerId;
@@ -29,9 +17,13 @@ public class RepairInfo {
         this.imageStart = imageStart;
         this.startTime = startTime;
         this.imageEnd = imageEnd;
-        this.discription = discription;
+        this.description = description;
         this.endTime = endTime;
     }
+
+    private String projectId;
+    private String managerId;
+    private String dealerId;
 
     public RepairInfo(String deviceId, String projectId, String managerId, String reason, String imageStart, String startTime) {
         this.deviceId = deviceId;
@@ -42,12 +34,9 @@ public class RepairInfo {
         this.startTime = startTime;
     }
 
-    public RepairInfo(String deviceId, String projectId, String managerId, String startTime) {
-        this.deviceId = deviceId;
-        this.projectId = projectId;
-        this.managerId = managerId;
-        this.startTime = startTime;
-    }
+    private String reason;
+    private String imageStart;
+    private String startTime;
 
     public String getImageStart() {
         return imageStart;
@@ -65,12 +54,24 @@ public class RepairInfo {
         this.imageEnd = imageEnd;
     }
 
-    public String getDiscription() {
-        return discription;
+    public String getDescription() {
+        return description;
     }
 
-    public void setDiscription(String discription) {
-        this.discription = discription;
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    private String imageEnd;
+    private String description;
+    private String endTime;
+
+
+    public RepairInfo(String deviceId, String projectId, String managerId, String startTime) {
+        this.deviceId = deviceId;
+        this.projectId = projectId;
+        this.managerId = managerId;
+        this.startTime = startTime;
     }
 
     public String getDeviceId() {

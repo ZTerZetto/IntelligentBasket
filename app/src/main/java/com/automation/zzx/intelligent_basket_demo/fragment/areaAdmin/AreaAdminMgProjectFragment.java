@@ -49,7 +49,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailAc
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.UploadPreStopInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.RepairInfoListActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.common.RepairInfoListActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
