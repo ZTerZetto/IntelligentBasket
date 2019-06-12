@@ -441,6 +441,8 @@ public class RegistRentManActivity extends AppCompatActivity {
                                 message.what = 3;
                             }else if(mMessage.equals("exist")){
                                 message.what = 4;
+                            }else{
+                                message.what = 5;
                             }
                         } else {
                             message.what = 5;

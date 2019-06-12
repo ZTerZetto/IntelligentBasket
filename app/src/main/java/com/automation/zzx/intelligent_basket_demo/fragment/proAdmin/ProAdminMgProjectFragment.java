@@ -405,10 +405,11 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
                 intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
                 startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
                 break;
-            case R.id.rl_get_repair_info:
+            case R.id.rl_get_repair_info: // 获取全部保修记录
                 Log.i(TAG, "You have clicked the repair information button");
                 intent = new Intent(getActivity(), RepairInfoListActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
+                intent.putExtra(PROJECT_NAME, mProjectInfoList.get(currentSelectedProject).getProjectName());
                 startActivity(intent);
                 break;
             case R.id.pre_stop_info_layout:

@@ -101,7 +101,7 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
         viewHolder.basketPreApplyStop.setVisibility(View.GONE); // 预报停
         switch(mgBasketStatement.getBasketStatement()){ // 吊篮状态
             case "0":
-                viewHolder.basketStatementTextView.setText("待出库");
+                viewHolder.basketStatementTextView.setText("待入库");
                 break;
             case "1":
                 viewHolder.basketStatementTextView.setText("待安装");

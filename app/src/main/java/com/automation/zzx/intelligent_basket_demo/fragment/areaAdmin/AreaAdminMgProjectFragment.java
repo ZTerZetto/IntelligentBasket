@@ -281,8 +281,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                mLastProjectId = mProjectInfoList.get(currentSelectedProject).getProjectId();
-                areaAdminGetAllProject();
+                if(mProjectInfoList.size()>0){
+                    mLastProjectId = mProjectInfoList.get(currentSelectedProject).getProjectId();
+                    areaAdminGetAllProject();
+                }else{
+                    mSmartRefreshLayout.finishRefresh();
+                }
             }
         });
         // 吊篮列表

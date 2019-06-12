@@ -63,7 +63,7 @@ public class AddedBasketAdapter extends RecyclerView.Adapter<AddedBasketAdapter.
 
         switch(mgBasketStatement.getBasketStatement()){ // 吊篮状态
             case "0":
-                viewHolder.basketStatementTextView.setText("待出库");
+                viewHolder.basketStatementTextView.setText("待入库");
                 break;
             case "1":
                 viewHolder.basketStatementTextView.setText("待安装");
