@@ -2,6 +2,7 @@ package com.automation.zzx.intelligent_basket_demo.activity.basket;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Intent;
 import android.os.Handler;
 import android.os.Looper;
 import android.os.Message;
@@ -122,8 +123,8 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
         submitNum = 0;
         initWidgetResource();  // 初始化控件
 
-        //Intent intent = getIntent();
-        //mDeviceId = intent.getStringExtra(HANGING_BASKET_ID);  // 获取吊篮ID
+        Intent intent = getIntent();
+        mDeviceId = intent.getStringExtra(BasketDetailActivity.BASKET_ID);  // 获取吊篮ID
         if(mDeviceId==null || mDeviceId.equals("")) mDeviceId = "1";
 
         initParam();//初始化参数

@@ -176,7 +176,7 @@ public class HttpUtil {
         String command = "/server.command?command=start_rtmp_stream&pipe=0&url=".concat(videoUrl);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type", "getVideo");
-        jsonObject.put("deviceId", Integer.valueOf(deviceId));
+        jsonObject.put("device_id", Integer.valueOf(deviceId));
         jsonObject.put("http_str", command);
         String json = jsonObject.toJSONString();
 
@@ -199,7 +199,7 @@ public class HttpUtil {
                                               String deviceId) {
         OkHttpClient client = new OkHttpClient();
         FormBody builder = new FormBody.Builder()
-                 .add("deviceId",deviceId)
+                .add("deviceId",deviceId)
                 .build();
         final Request request = new Request.Builder()
                 .url(AppConfig.HANGING_BASKET_PARAM)
