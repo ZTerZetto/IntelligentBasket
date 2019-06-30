@@ -305,6 +305,9 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
             MgBasketInfo mgBasketInfo = new MgBasketInfo(null, basketObj.getString("deviceId"),
                     String.valueOf(basketObj.getIntValue("workingState")), basketObj.getString("date"),
                     basketObj.getString("projectId"), basketObj.getString("storageState"));
+//            if(!mgBasketInfo.getOutStorage().equals('0'))
+//                mgBasketInfos.add(mgBasketInfo);
+//            else continue;
             mgBasketInfos.add(mgBasketInfo);
         }
         return mgBasketInfos;

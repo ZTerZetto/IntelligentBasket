@@ -176,7 +176,7 @@ public class HttpUtil {
         String command = "/server.command?command=start_rtmp_stream&pipe=0&url=".concat(videoUrl);
         JSONObject jsonObject = new JSONObject();
         jsonObject.put("type", "getVideo");
-        jsonObject.put("device_id", Integer.valueOf(deviceId));
+        jsonObject.put("device_id", Long.valueOf(deviceId));
         jsonObject.put("http_str", command);
         String json = jsonObject.toJSONString();
 

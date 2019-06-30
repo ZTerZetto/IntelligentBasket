@@ -305,6 +305,10 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 Log.i(TAG, "You have clicked the "+position+" item");
                 // 跳转至吊篮详情页面
                 Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
+                intent.putExtra("project_id",mProjectInfoList.get(currentSelectedProject).getProjectId());
+                intent.putExtra("basket_id", mgBasketStatementList.get(position).getBasketId());
+//                intent.putExtra("principal_name", mProjectInfoList.
+//                        get(currentSelectedProject).getAdminAreaUser().getUserName());
                 startActivity(intent);
             }
 

@@ -72,7 +72,7 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case GET_INFORM:  //获取默认参数
-                    if(msg.obj.toString() == null || msg.obj.toString().equals("")){
+                    if(msg.obj == null || msg.obj.toString().equals("")){
                         ToastUtil.showToastTips(BasketSettleActivity.this, "无法连接到设备");
                         finish();
                     }
