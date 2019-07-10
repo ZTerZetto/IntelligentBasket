@@ -15,7 +15,6 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.text.TextUtils;
-import android.view.KeyEvent;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
@@ -27,23 +26,19 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.basketSupervisor.SupervisorPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
-import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.google.gson.Gson;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.List;
 
 import okhttp3.Call;
 import okhttp3.Response;
-
-import static java.lang.System.exit;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -59,8 +54,9 @@ public class LoginActivity extends AppCompatActivity {
     private Button to_register;
     private Button test;
 
-    private CheckBox rememberPass;
-    private CheckBox autoLogin;
+    private CheckBox rememberPass;  //记住密码
+    private CheckBox autoLogin;  //自动登录
+    private int shareState = 0;  //本地存储状态
 
     private UserInfo userInfo;
     private UserInfo mUserInfo;
@@ -172,6 +168,8 @@ public class LoginActivity extends AppCompatActivity {
                 StartAndFinishActicity(AreaAdminPrimaryActivity.class); // 跳转到区域管理人员界面
             }
         });
+
+
     }
 
 
@@ -232,6 +230,9 @@ public class LoginActivity extends AppCompatActivity {
                                 break;
                             case "inspector":  // 巡检人员
                                 StartAndFinishActicity(InspectPersonPrimaryActivity.class);
+                                break;
+                            case "basketSupervisor":  // 吊篮监管人员（安监局）
+                                StartAndFinishActicity(SupervisorPrimaryActivity.class);
                                 break;
                         }
                     } else {
@@ -310,25 +311,39 @@ public class LoginActivity extends AppCompatActivity {
         }, mUserInfo.getUserId(),token);
     }
 
+
     //保存Token
     private void savePref(String token) {
         SharedPreferences sp = getSharedPreferences("loginToken",0);
         editor = sp.edit();
-
         editor = pref.edit();
-        if (rememberPass.isChecked()) {
-            editor.putBoolean("remember_password", true);
-            editor.putString("userId",mUserInfo.getUserId());
-            editor.putString("userPhone", account);
-            editor.putString("password", password);
-            editor.putString("loginToken",token);
-            editor.putString("userRole",mUserInfo.getUserRole());
-            editor.putString("userName",mUserInfo.getUserName());
+        //记住密码时
+        if(rememberPass.isChecked()){
+            saveAccountPref();
+            saveTokenPref(token);
         } else {
-            editor.clear();
-            //清空数据
+            editor.putBoolean("remember_password", false);
+            saveTokenPref(token);
         }
         editor.commit();
+    }
+
+    //保存账号密码
+    private void saveAccountPref( ) {
+        editor.putBoolean("remember_password", true);
+        editor.putString("userPhone", account);
+        editor.putString("password", password);
+    }
+
+    //保存自动登录数据
+    private void saveTokenPref(String token ) {
+        editor.putBoolean("auto_login", true);
+        editor.putString("password", password);
+        editor.putString("userId",mUserInfo.getUserId());
+        editor.putString("loginToken",token);
+        editor.putString("userPhone", account);
+        editor.putString("userRole",mUserInfo.getUserRole());
+        editor.putString("userName",mUserInfo.getUserName());
     }
 
 

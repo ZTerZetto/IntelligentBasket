@@ -248,7 +248,7 @@ public class ProAdminFragment extends Fragment implements View.OnClickListener {
         // 清空本地账号
         mPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
         SharedPreferences.Editor editor = mPref.edit();
-        editor.clear();
+        editor.remove("loginToken");
         editor.commit();
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();

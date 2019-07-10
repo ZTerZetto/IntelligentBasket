@@ -53,6 +53,7 @@ import okhttp3.Call;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_APPLY_PRE_STOP_BASKETS;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_MG_ALL_BASKET_INFO;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_MG_ALL_PRE_STOP_BASKET_INFO;
 
 /**
  * Created by pengchenghu on 2019/3/22.
@@ -243,7 +244,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                 .addHeader("Authorization", token)
                 .addParam("userId", userInfo.getUserId())
                 .get()
-                .url(RENT_ADMIN_MG_ALL_BASKET_INFO)
+                .url(RENT_ADMIN_MG_ALL_PRE_STOP_BASKET_INFO)
                 .build()
                 .enqueue(new BaseCallBack() {
                     @Override

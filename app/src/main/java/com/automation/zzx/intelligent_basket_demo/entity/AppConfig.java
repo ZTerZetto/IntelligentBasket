@@ -4,8 +4,8 @@ public class AppConfig {
     /*
      * 服务器地址
      */
-    public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
-    //public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080"; // 老刘
+    //public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
+    public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080"; // 老刘
     public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
     public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082"; // 刘跃博HTTP文件服务器地址
@@ -113,8 +113,10 @@ public class AppConfig {
      */
     // 施工人员基本信息
     public static final String RENT_ADMIN_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
+    // 租方管理员请求所有可预报停的吊篮信息
+    public static final String RENT_ADMIN_MG_ALL_PRE_STOP_BASKET_INFO = ANDROID_URL_PATH.concat("/forecastStop");
     // 租方管理员请求所有吊篮信息
-    public static final String RENT_ADMIN_MG_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/forecastStop");
+    public static final String RENT_ADMIN_MG_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/getBasketList");
     // 租方管理员请求预报停
     public static final String RENT_ADMIN_APPLY_PRE_STOP_BASKETS = ANDROID_URL_PATH.concat("/prepareEnd");
     // 租方管理员请求报停
@@ -134,7 +136,7 @@ public class AppConfig {
     // 区域管理员请求所有的项目信息
     public static final String AREA_ADMIN_GET_ALL_PROJECT_INFO = ANDROID_URL_PATH.concat("/getAllProject");
     // 区域管理员请求特定项目的所有吊篮
-    public static final String AREA_ADMIN_GET_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/getBasketList");
+    public static final String AREA_ADMIN_GET_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/getBasketListByAdmin");
     // 区域管理员请求特定项目添加指定吊篮
     public static final String AREA_ADMIN_ADD_BASKET_INTO_PROJECT = ANDROID_URL_PATH.concat("/androidIncreaseBasket");
     // 区域管理员上传安监证书

@@ -475,7 +475,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     //退出登录
     private void logoutHttp() {
         SharedPreferences.Editor editor = mPref.edit();
-        editor.clear();
+        editor.remove("loginToken");
         editor.commit();
         startActivity(new Intent(WorkerPrimaryActivity.this, LoginActivity.class));
         this.finish();  // 销毁此活动

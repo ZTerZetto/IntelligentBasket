@@ -1,6 +1,6 @@
 package com.automation.zzx.intelligent_basket_demo.activity.basket;
 
-import android.annotation.SuppressLint;
+/*import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -24,7 +24,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
-import com.automation.zzx.intelligent_basket_demo.adapter.BasketAdapter;
+import com.automation.zzx.intelligent_basket_demo.adapter.SvBasketListAdapter;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.BasketInfo;
@@ -41,7 +41,7 @@ import okhttp3.Response;
 public class BasketListActivity extends AppCompatActivity {
 
     private ListView mLv;
-    private BasketAdapter adapter;
+    private SvBasketListAdapter adapter;
     //private List<BasketInfo> basketInfoArrayList = new ArrayList<>();
     private List<BasketInfo> basketInfoArrayList;
     private Context mContext = BasketListActivity.this;
@@ -73,7 +73,7 @@ public class BasketListActivity extends AppCompatActivity {
                     }
 
                     if(basketInfoArrayList!=null){
-                        adapter = new BasketAdapter(mContext,R.layout.item_basket,basketInfoArrayList);
+                        adapter = new SvBasketListAdapter(mContext,R.layout.item_basket,basketInfoArrayList);
                         mLv.setAdapter(adapter);
                         mLv.setVisibility(View.VISIBLE);
                         txtResult.setVisibility(View.GONE);
@@ -183,7 +183,7 @@ public class BasketListActivity extends AppCompatActivity {
     }
 
     private void showList(List<BasketInfo> arrayList) {
-        adapter = new BasketAdapter(mContext,R.layout.item_basket,arrayList);
+        adapter = new SvBasketListAdapter(mContext,R.layout.item_basket,arrayList);
         mLv.setAdapter(adapter);
         mLv.setVisibility(View.VISIBLE);
         txtResult.setVisibility(View.GONE);
@@ -221,4 +221,4 @@ public class BasketListActivity extends AppCompatActivity {
             }
         }, token, mProjectId);
     }
-}
+}*/
