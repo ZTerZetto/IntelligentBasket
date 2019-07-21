@@ -37,6 +37,9 @@ public class AppConfig {
     */
     public final static String REGISTER_USER = ANDROID_URL_PATH.concat("/checkRegister");
 
+    //修改密码
+    public final static String UPDATE_PASSWORD = ANDROID_URL_PATH.concat("/updatePassword");
+
     //上传单个文件
     public final static String CREATE_IDENTITY_CARD_IMAGE = ANDROID_URL_PATH.concat("/createImageFile");
 

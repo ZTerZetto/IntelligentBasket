@@ -42,6 +42,13 @@
     <string name="register_exist">注册失败，手机号已注册</string>
     <string name="register_back_fail">注册失败，服务器异常</string>
 
+
+    <string name="password_change_hint_up">请先填写旧密码，后输入新密码并确认新密码</string>
+    <string name="password_change_hint_down">密码必须至少6个字符，而且同时包含字母与数字。</string>
+    <string name="password_change_old">请填写旧密码</string>
+    <string name="password_change_new">请填写新的密码</string>
+    <string name="password_change_new_again">请再次输入新密码</string>
+
     <!-- ManageMainActivity-->
     <string name="dialog_main_fail_login">您的登录状态已失效，请重新登录！</string>
 

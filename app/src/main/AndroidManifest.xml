@@ -36,8 +36,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.basketSupervisor.SupervisorBasketActivity"></activity>
-        <activity android:name=".activity.basketSupervisor.SupervisorPrimaryActivity"></activity>
+        <activity android:name=".activity.common.PasswordChangeActivity"></activity>
+        <activity android:name=".activity.basketSupervisor.SupervisorBasketActivity" />
+        <activity android:name=".activity.basketSupervisor.SupervisorPrimaryActivity" />
         <activity android:name=".activity.common.RepairInfoListActivity" />
         <activity android:name=".activity.areaAdmin.ConfigurationActivity" />
         <activity android:name=".activity.inspectionPerson.OutAndInStorageActivity" />
@@ -54,7 +55,7 @@
         <activity android:name=".activity.common.QRcodeCardActivity" />
         <activity android:name=".activity.common.UserMessageActivity" />
         <activity android:name=".activity.common.PersonalInformationActivity" />
-        <activity android:name=".activity.common.RepairDetailActivity"/>
+        <activity android:name=".activity.common.RepairDetailActivity" />
         <activity android:name=".activity.worker.WorkerHomePageActivity" />
         <activity android:name=".activity.worker.WorkerMoreActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
@@ -79,7 +80,6 @@
         <activity
             android:name=".activity.basket.BasketRepairFinishActivity"
             android:launchMode="singleTask" />
-
         <activity
             android:name=".activity.basket.BasketVideoActivity"
             android:configChanges="orientation|screenSize"

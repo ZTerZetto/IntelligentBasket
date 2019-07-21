@@ -140,6 +140,10 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
                 break;
             case R.id.user_password_layout:  // 更换密码
                 Log.i(TAG, "You have clicked the user_password_layout");
+                intent = new Intent(PersonalInformationActivity.this,PasswordChangeActivity.class);
+                intent.putExtra("userName",mUserInfo.getUserName());
+                intent.putExtra("userId",mUserInfo.getUserId());
+                startActivity(intent);
                 break;
             case R.id.user_qrcode_layout:  // 点击二维码名片
                 Log.i(TAG, "You have clicked the user_qrcode_layout");

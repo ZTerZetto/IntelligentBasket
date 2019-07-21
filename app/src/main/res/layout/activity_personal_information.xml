@@ -113,7 +113,7 @@
             style="@style/me_common_item_relativeLayout_style">
             <TextView
                 style="@style/more_common_item_textView_style"
-                android:text="密码"/>
+                android:text="修改密码"/>
             <ImageView
                 style="@style/me_common_item_arrow_right_imageView_style"/>
         </RelativeLayout>
