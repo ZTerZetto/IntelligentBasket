@@ -76,12 +76,20 @@ public class BasketSettleActivity extends AppCompatActivity implements View.OnCl
                         ToastUtil.showToastTips(BasketSettleActivity.this, "无法连接到设备");
                         finish();
                     }
-                    JSONObject jsonObject = JSON.parseObject(msg.obj.toString());
-                    if(jsonObject.getString("deviceId").equals(mDeviceId)){
-                        tvCurrent.setText(jsonObject.getString("overweight_current"));
-                        tvUpper.setText(jsonObject.getString("angle_upperlimit"));
-                        tvLower.setText(jsonObject.getString("angle_lowerlimit"));
-                        tvSnapshot.setText(jsonObject.getString("interval_snapshot"));
+                    if(msg.obj == null){
+                        //当data数据为空时
+                        tvCurrent.setText("0");
+                        tvUpper.setText("0");
+                        tvLower.setText("0");
+                        tvSnapshot.setText("0");
+                    } else {
+                        JSONObject jsonObject = JSON.parseObject(msg.obj.toString());
+                        if(jsonObject.getString("deviceId").equals(mDeviceId)){
+                            tvCurrent.setText(jsonObject.getString("overweight_current"));
+                            tvUpper.setText(jsonObject.getString("angle_upperlimit"));
+                            tvLower.setText(jsonObject.getString("angle_lowerlimit"));
+                            tvSnapshot.setText(jsonObject.getString("interval_snapshot"));
+                        }
                     }
                     break;
                 case REFRESH_CURRENT: //控件更新——超载电流

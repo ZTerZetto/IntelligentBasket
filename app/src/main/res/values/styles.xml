@@ -167,7 +167,7 @@
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
-        <item name="android:padding">2dp</item>
+        <item name="android:padding">5dp</item>
         <item name="android:layout_gravity">center_vertical</item>
         <item name="android:background">@drawable/bg_tab_selector</item>
     </style>

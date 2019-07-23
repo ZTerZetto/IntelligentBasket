@@ -28,7 +28,8 @@
         android:layout_marginBottom="30dp"
         android:hint="请输入参数"
         android:textSize="14sp"
-        android:textColor="@color/font_common_1"/>
+        android:textColor="@color/font_common_1"
+        android:inputType="number"/>
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
