@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketSettleActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UserMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
@@ -70,6 +71,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private final static int CHANGE_WORK_STATE_MSG = 101;
     private final static int OPEN_VERIFY_DIALOG_MSG = 102;
     private final static int UPDATE_USER_DISPLAY_MSG = 103;
+    private final static int NOTIFY_DEVICE_OPERATION_MSG = 104;
 
     // header
     private RelativeLayout mWorkerLoginLayout; // 登录总布局
@@ -104,7 +106,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private String mWorkProjectId;  // 项目ID
     private String mWorkProjectName; // 项目名称
     private int mWorkState = 0; // 0:等待上工 1:等待下工
-    //private String mBasketId; //s 吊篮ID
+    private String mBasketId; //s 吊篮ID
     private String mUserHeadUrl;
 
     // dialog
@@ -144,6 +146,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                             if(result.contains("Success")) {  // 密码验证通过
                                 Log.i(TAG, "Now, you can open/close the basket");
                                 requestBeginOrEndWork(basketId);
+                                mBasketId = basketId;  // 吊篮ID
                             }
                         }
                     });
@@ -161,6 +164,13 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                         else
                             mWorkerProjectState.setText(mWorkProjectName);
                     }
+                    break;
+
+                case NOTIFY_DEVICE_OPERATION_MSG:  // 通知硬件
+                    String hint = msg.obj.toString();
+                    Toast.makeText(WorkerPrimaryActivity.this,
+                            hint, Toast.LENGTH_SHORT).show();
+                    notifyHardDivice();
                     break;
             }
         }
@@ -367,7 +377,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 if (response.code() == 200) {
                     Log.d(TAG, "Http Server Success");
                     String data = response.body().string();
-                    parseBeginOrEndWork(data);
+                    String hint = parseBeginOrEndWork(data);
+                    Message msg = new Message();
+                    msg.what = NOTIFY_DEVICE_OPERATION_MSG;
+                    msg.obj = hint;
+                    mHandler.sendMessage(msg);
                 }else{
                     Log.d(TAG, "Http Server Error" + response.code());
                 }
@@ -376,15 +390,14 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     }
 
     // 解析上下工消息
-    private void parseBeginOrEndWork(String data){
+    private String parseBeginOrEndWork(String data){
         JSONObject jsonObject = JSON.parseObject(data);
         String hint = "";
         if(mWorkState == 0) { // 等待开工
             boolean beginWork = jsonObject.getBoolean("beginWork");
             if(beginWork) {
                 mWorkState = 1;
-                mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
-                hint="打开吊篮成功";
+                hint="请稍后，正在打开吊篮...";
             } else {
                 hint="打开吊篮失败,吊篮不在您的工作项目中";
             }
@@ -392,15 +405,54 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
             boolean endWork = jsonObject.getBoolean("endWork");
             if(endWork) {
                 mWorkState = 0;
-                mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
-                hint="关闭吊篮成功";
+                hint="请稍后，正在关闭吊篮...";
             } else {
                 hint="关闭吊篮失败，此吊篮不是您工作的吊篮";
             }
+        }else{
+            hint = "无效状态";
         }
-        Looper.prepare();
-        ToastUtil.showToastTips(WorkerPrimaryActivity.this, hint);
-        Looper.loop();
+        return hint;
+    }
+
+    // 通知硬件上下工
+    private void notifyHardDivice(){
+        HttpUtil.operateHardDevice(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "失败：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                switch (response.code()){
+                    case 200:
+                        Log.i(TAG, "成功返回值");
+                        // 返回服务器数据
+                        String responseData = response.body().string();
+                        if(responseData.equals("success")){
+                            mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
+                            Looper.prepare();
+                            Toast.makeText(WorkerPrimaryActivity.this,
+                                    "操作成功！", Toast.LENGTH_SHORT).show();
+                            Looper.loop();
+                        }else{
+                            Looper.prepare();
+                            Toast.makeText(WorkerPrimaryActivity.this,
+                                    "操作失败！", Toast.LENGTH_SHORT).show();
+                            Looper.loop();
+                        }
+                        break;
+                    default:
+                        Log.i(TAG, "错误编码：" + response.code());
+                        Looper.prepare();
+                        Toast.makeText(WorkerPrimaryActivity.this,
+                                "网络连接超时,请稍后重试！", Toast.LENGTH_SHORT).show();
+                        Looper.loop();
+                        break;
+                }
+            }
+        }, mBasketId, mWorkState);
     }
 
     private void changeWorkState(int workState){
