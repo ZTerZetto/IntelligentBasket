@@ -99,7 +99,7 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
         //viewHolder.basketIndexImageView.setImageUrl(mgBasketStatement.getBasketId()); // 图像
         viewHolder.basketUploadCert.setVisibility(View.GONE); // 预安装
         viewHolder.basketPreApplyStop.setVisibility(View.GONE); // 预报停
-        switch(mgBasketStatement.getBasketStatement()){ // 吊篮状态
+        switch(mgBasketStatement.getBasketStatement().substring(0,1)){ // 吊篮状态
             case "0":
                 viewHolder.basketStatementTextView.setText("待入库");
                 break;

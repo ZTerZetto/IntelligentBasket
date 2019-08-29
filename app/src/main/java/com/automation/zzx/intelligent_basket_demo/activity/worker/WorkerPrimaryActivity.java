@@ -167,10 +167,35 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     break;
 
                 case NOTIFY_DEVICE_OPERATION_MSG:  // 通知硬件
-                    String hint = msg.obj.toString();
-                    Toast.makeText(WorkerPrimaryActivity.this,
-                            hint, Toast.LENGTH_SHORT).show();
-                    notifyHardDivice();
+                    int state = (int)msg.obj;
+                    switch (state){
+                        case 10:  // 可以执行打开吊篮操作
+                            Toast.makeText(WorkerPrimaryActivity.this,
+                                    "正在打开吊篮...", Toast.LENGTH_SHORT).show();
+                            notifyHardDivice();
+                            break;
+                        case 11:  // 吊篮与施工人员不匹配
+                            Toast.makeText(WorkerPrimaryActivity.this,
+                                    "此吊篮不是您的工作吊篮，无法打开！", Toast.LENGTH_SHORT).show();
+                            break;
+                        case 200:  // 吊篮上有人，只执行下工，不关闭吊篮
+                            Toast.makeText(WorkerPrimaryActivity.this,
+                                    "下工成功，吊篮尚有其他作业人员，等待其他施工人员断电!",
+                                    Toast.LENGTH_SHORT).show();
+                            break;
+                        case 201:  // 吊篮上没人其他工人，下工+关闭吊篮
+                            Toast.makeText(WorkerPrimaryActivity.this,
+                                    "下工成功，正在关闭吊篮...",
+                                    Toast.LENGTH_SHORT).show();
+                            notifyHardDivice();
+                            break;
+                        case 21:  // 吊篮与施工人员不匹配
+                            Toast.makeText(WorkerPrimaryActivity.this,
+                                    "此吊篮不是您的工作吊篮，无法下工！", Toast.LENGTH_SHORT).show();
+                            break;
+                        default:
+                            break;
+                    }
                     break;
             }
         }
@@ -377,10 +402,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 if (response.code() == 200) {
                     Log.d(TAG, "Http Server Success");
                     String data = response.body().string();
-                    String hint = parseBeginOrEndWork(data);
+                    //String hint = parseBeginOrEndWork(data);
+                    int state = parseBeginOrEndWork(data);
                     Message msg = new Message();
                     msg.what = NOTIFY_DEVICE_OPERATION_MSG;
-                    msg.obj = hint;
+                    msg.obj = state;
                     mHandler.sendMessage(msg);
                 }else{
                     Log.d(TAG, "Http Server Error" + response.code());
@@ -390,29 +416,35 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     }
 
     // 解析上下工消息
-    private String parseBeginOrEndWork(String data){
+    private int parseBeginOrEndWork(String data){
         JSONObject jsonObject = JSON.parseObject(data);
+        int state;
         String hint = "";
         if(mWorkState == 0) { // 等待开工
             boolean beginWork = jsonObject.getBoolean("beginWork");
-            if(beginWork) {
+            if(beginWork) {  // 允许上工
                 mWorkState = 1;
-                hint="请稍后，正在打开吊篮...";
-            } else {
-                hint="打开吊篮失败,吊篮不在您的工作项目中";
+                state = 10;
+            } else {  // 吊篮与工人不匹配
+                state = 11;
             }
         }else if(mWorkState == 1){ // 等待下工
             boolean endWork = jsonObject.getBoolean("endWork");
+            boolean hasPeople = jsonObject.getBoolean("hasPeople");
             if(endWork) {
                 mWorkState = 0;
-                hint="请稍后，正在关闭吊篮...";
-            } else {
-                hint="关闭吊篮失败，此吊篮不是您工作的吊篮";
+                if(hasPeople) {  // 吊篮上还有作业人员
+                    state = 200;
+                }else{  // 吊篮上无其他作业人员
+                    state = 201;
+                }
+            } else {  // 吊篮与工人不匹配
+                state = 21;
             }
-        }else{
-            hint = "无效状态";
+        }else{  // 错误状态
+            state = 0;
         }
-        return hint;
+        return state;
     }
 
     // 通知硬件上下工
