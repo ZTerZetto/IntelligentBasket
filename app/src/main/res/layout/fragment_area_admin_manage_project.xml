@@ -295,7 +295,7 @@
                     style="@style/AddFloatImageView"
                     android:layout_alignParentBottom="true"
                     android:src="@mipmap/ic_round_add_fill"
-                    android:visibility="visible"/>
+                    android:visibility="gone"/>
             </RelativeLayout>
 
         </ScrollView>

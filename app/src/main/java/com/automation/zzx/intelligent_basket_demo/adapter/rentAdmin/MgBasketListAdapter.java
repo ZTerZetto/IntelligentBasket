@@ -105,7 +105,7 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
         viewHolder.basketSelected.setChecked(isCheck.get(position));  // 设置状态
         //viewHolder.basketImage.setImageUrl();
         viewHolder.basketId.setText(mgBasketInfo.getId());
-        switch (mgBasketInfo.getStorageState()){
+        switch (mgBasketInfo.getStorageState().substring(0,1)){
             case "1":
                 viewHolder.basketState.setText("等待安装");
                 break;

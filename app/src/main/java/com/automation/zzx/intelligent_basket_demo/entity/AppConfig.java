@@ -4,13 +4,13 @@ public class AppConfig {
     /*
      * 服务器地址
      */
-    //public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
-    public final static String ANDROID_URL_PATH = "http://10.193.6.159:8080"; // 老刘
+//    public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
+    public final static String ANDROID_URL_PATH = "http://10.193.233.106:8080"; // 老刘
     public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
     public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082"; // 刘跃博HTTP文件服务器地址
     public final static String COMMUNICATION_SERVER_PATH = "http://47.100.1.211:8081"; // 通讯服务器地址
-    //public final static String COMMUNICATION_SERVER_PATH = "http://10.193.6.159:8081"; // 通讯服务器地址-老刘暂时
+//    public final static String COMMUNICATION_SERVER_PATH = "http://10.193.7.58:8081"; // 通讯服务器地址-老刘暂时
     public final static String VIDEO_STREAM_PATH = "rtmp://47.96.103.244:1935"; // 流媒体服务器地址
 
     /*
@@ -96,6 +96,8 @@ public class AppConfig {
     public static final String HANGING_BASKET_VIDEO = COMMUNICATION_SERVER_PATH.concat("/sendToDevice");
     //电柜参数获取
     public static final String HANGING_BASKET_PARAM = COMMUNICATION_SERVER_PATH.concat("/getSetUpData");
+    // 打开/关闭吊篮设备
+    public static final String HANGING_BASKET_OPERATION = COMMUNICATION_SERVER_PATH.concat("/sendToDevice");
 
     /*
      * 施工人员活动请求

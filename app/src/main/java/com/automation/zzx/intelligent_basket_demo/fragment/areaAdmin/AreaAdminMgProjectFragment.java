@@ -650,7 +650,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         // 将数据装载进对应位置
         for(int i=0; i<mgBasketStatements.size(); i++){
             MgBasketStatement mgBasketStatement = mgBasketStatements.get(i);
-            mgBasketStatementClassifiedList.get(Integer.valueOf(mgBasketStatement.getBasketStatement())).
+            mgBasketStatementClassifiedList.get(Integer.valueOf(mgBasketStatement.getBasketStatement().substring(0,1))).
                     add(mgBasketStatement);
         }
         mgBasketStatementClassifiedList.get(0).addAll(mgBasketStatements);

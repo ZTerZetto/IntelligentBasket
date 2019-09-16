@@ -368,6 +368,12 @@ public class OutAndInStorageActivity extends AppCompatActivity implements View.O
                             Log.d(TAG, "入库成功");
                             ToastUtil.showToastTips(OutAndInStorageActivity.this, "入库成功");
                             getBasketList();
+                        }else if(result.equals("吊篮未报停")){
+                            Log.d(TAG, "吊篮未报停");
+                            ToastUtil.showToastTips(OutAndInStorageActivity.this, "吊篮未报停");
+                        }else if(result.equals("吊篮不存在")){
+                            Log.d(TAG, "吊篮不存在");
+                            ToastUtil.showToastTips(OutAndInStorageActivity.this, "吊篮不存在");
                         }else{
                             Log.d(TAG, "吊篮已入库");
                             ToastUtil.showToastTips(OutAndInStorageActivity.this, "吊篮已入库");

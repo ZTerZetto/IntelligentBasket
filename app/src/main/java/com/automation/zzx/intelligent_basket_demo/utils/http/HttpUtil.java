@@ -233,6 +233,26 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
+    /*
+     * 请求打开/关闭吊篮设备
+     */
+    public static void operateHardDevice(okhttp3.Callback callback,
+                                         String deviceId, int enable) {
+        OkHttpClient client = new OkHttpClient();
+
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("type", "PLCEnable");
+        jsonObject.put("value", enable);
+        jsonObject.put("device_id", deviceId);
+        String json = jsonObject.toJSONString();
+        RequestBody requestBody = FormBody.create(MediaType.parse("application/json; charset=utf-8"), json);
+        final Request request = new Request.Builder()
+                .url(AppConfig.HANGING_BASKET_OPERATION)
+                .addHeader("Authorization", "null")
+                .post(requestBody)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
 
     /*
      * 施工人员请求开始
