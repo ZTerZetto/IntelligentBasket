@@ -36,7 +36,11 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.common.PasswordChangeActivity"></activity>
+        <activity android:name=".activity.areaAdmin.AreaAdminMessageActivity"></activity>
+        <activity android:name=".activity.areaAdmin.AreaAdminSetActivity" />
+        <activity android:name=".activity.basket.BasketStickerActivity" />
+        <activity android:name=".activity.areaAdmin.AreaAdminPrimaryTRYActivity" />
+        <activity android:name=".activity.common.PasswordChangeActivity" />
         <activity android:name=".activity.basketSupervisor.SupervisorBasketActivity" />
         <activity android:name=".activity.basketSupervisor.SupervisorPrimaryActivity" />
         <activity android:name=".activity.common.RepairInfoListActivity" />
@@ -93,7 +97,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.areaAdmin.ProDetailActivity" />
         <activity android:name=".activity.areaAdmin.ProCommitActivity" />
-        <activity android:name=".activity.basket.BasketListActivity" />
+        <activity android:name=".activity.basket.BasketStateListActivity" />
         <activity android:name=".activity.oldversion.WorkerListActivity" />
         <activity android:name=".activity.oldversion.ProListActivity" />
         <activity

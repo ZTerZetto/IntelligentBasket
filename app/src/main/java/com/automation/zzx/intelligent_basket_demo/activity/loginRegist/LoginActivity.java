@@ -26,6 +26,8 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryTRYActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketStickerActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basketSupervisor.SupervisorPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryActivity;
@@ -222,11 +224,11 @@ public class LoginActivity extends AppCompatActivity {
                                 //判断是否为项目管理员
                                 judgeProAdminHttp(token);
                                 break;
-                            case "rentAdmin":  // 租房管理员
+                            case "rentAdmin":  // 租方管理员
                                 StartAndFinishActicity(RentAdminPrimaryActivity.class);
                                 break;
                             case "areaAdmin":  // 区域管理员
-                                StartAndFinishActicity(AreaAdminPrimaryActivity.class);
+                                StartAndFinishActicity(AreaAdminPrimaryTRYActivity.class);
                                 break;
                             case "inspector":  // 巡检人员
                                 StartAndFinishActicity(InspectPersonPrimaryActivity.class);

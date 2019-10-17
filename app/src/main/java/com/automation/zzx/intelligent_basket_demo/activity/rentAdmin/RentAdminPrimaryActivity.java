@@ -10,7 +10,6 @@ import android.view.KeyEvent;
 import android.view.View;
 
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.application.CustomApplication;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.ManageBasketFragment;

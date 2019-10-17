@@ -5,6 +5,9 @@
     android:layout_height="match_parent"
     android:orientation="vertical">
 
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
     <!-- 顶部导航 -->
     <android.support.design.widget.TabLayout
         android:id="@+id/head_tab_layout"

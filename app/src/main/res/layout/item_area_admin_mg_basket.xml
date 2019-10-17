@@ -96,6 +96,13 @@
             android:text="上传安监证书"
             android:visibility="gone"/>
 
+        <!-- 安监证书上传 -->
+        <TextView
+            android:id="@+id/upload_certificate"
+            style="@style/MgBasketOperationTextView"
+            android:text="上传安监证书"
+            android:visibility="gone"/>
+
         <!-- 预验收申请 -->
         <TextView
             android:id="@+id/pre_apply_stop"

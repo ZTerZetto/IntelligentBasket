@@ -17,8 +17,9 @@ import java.util.List;
 
 /**
  * Created by pengchenghu on 2019/3/27.
+ * Changed by zhangzixuan on 2019/10/16.
  * Author Email: 15651851181@163.com
- * Describe: 区域管理员管理吊篮出入库状态
+ * Describe: 区域管理员按状态管理吊篮
  */
 public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketStatementAdapter.ViewHolder>{
 
@@ -35,6 +36,7 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
         SmartImageView basketIndexImageView;
         TextView basketStatementTextView;
         TextView basketIdTextView;
+        TextView basketUploadAccept; // 预验收申请
         TextView basketUploadCert; // 安监证书
         TextView basketPreApplyStop; // 预报停申请
 
@@ -47,11 +49,18 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
             basketStatementTextView = (TextView)  itemView.findViewById(R.id.basket_statement_textview);
             basketIndexImageView = (SmartImageView) itemView.findViewById(R.id.basket_index_imageview);
             basketIdTextView = (TextView)  itemView.findViewById(R.id.basket_id);
-            basketUploadCert = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance);  // 预安装申请
+            basketUploadAccept = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance);  // 预验收申请
+            basketUploadCert = (TextView)  itemView.findViewById(R.id. upload_certificate); // 安监证书上传
             basketPreApplyStop = (TextView)  itemView.findViewById(R.id.pre_apply_stop); // 预报停申请
 
             // 消息监听
             this.onItemClickListener = onItemClickListener;
+            basketUploadCert.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onUploadCertClick(v, getAdapterPosition());
+                }
+            });
             basketUploadCert.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -105,6 +114,7 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
                 break;
             case "1":
                 viewHolder.basketStatementTextView.setText("待安装");
+                viewHolder.basketUploadAccept.setVisibility(View.VISIBLE);
                 break;
             case "2":
                 viewHolder.basketStatementTextView.setText("安装审核");

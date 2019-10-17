@@ -8,6 +8,9 @@ import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
+import android.view.MenuItem;
+import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketContentFragmentAdapter;
@@ -41,6 +44,16 @@ public class RepairInfoListActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fragment_rent_mg_basket);
+
+        // 顶部导航栏
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView titleText = (TextView) findViewById(R.id.toolbar_title);
+        toolbar.setTitle("");
+        titleText.setText("报修记录");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+
+
 
         // 绑定控件
         mTabLayout = (TabLayout) findViewById(R.id.head_tab_layout);
@@ -76,6 +89,20 @@ public class RepairInfoListActivity extends AppCompatActivity {
         Intent intent = getIntent();
         mProjectId = intent.getStringExtra(PROJECT_ID);
         mProjectName = intent.getStringExtra(PROJECT_NAME);
+    }
+
+    /*
+     * 重构函数
+     */
+    // 顶部导航栏消息响应
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home: // 返回按钮
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
     // 将用户信息传递给子Fragment

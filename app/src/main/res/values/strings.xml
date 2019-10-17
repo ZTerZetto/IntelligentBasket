@@ -55,6 +55,9 @@
 
     <!-- basketList activity -->
     <string name="basketList_title">吊篮列表</string>
+    <!-- basketSticker activity-->
+    <string name="basketSticker_title">吊篮平面图</string>
+
     <!-- basketList activity -->
     <string name="workerList_tile">施工人员列表</string>
     <!-- projectList activity -->

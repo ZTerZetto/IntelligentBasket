@@ -108,11 +108,11 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     public final static String PROJECT_ID = "projectId";  // 上传图片的项目Id
     public final static String PROJECT_NAME = "projectName";  // 上传图片的项目Id
     public final static String BASKETS_NUM = "basketsNumber";  // 吊篮数目
-    public final static String UPLOAD_IMAGE_TYPE  = "uploadImageType"; // 上传图片的类型
+    public final static String UPLOAD_IMAGE_TYPE = "uploadImageType"; // 上传图片的类型
     public final static String UPLOAD_BASKETS_PRE_INSTALL_IMAGE = "basketsPreInstall"; // 预验收
     public final static String UPLOAD_CERTIFICATE_IMAGE = "certificate"; // 安监证书
     public final static String BASKET_ID = "basketId"; // 上传图片的吊篮ID
-    public final static String UPLOAD_BASKETS_PRE_STOP_IMAGE = "basketsPreStop"; // 预验收
+    public final static String UPLOAD_BASKETS_PRE_STOP_IMAGE = "basketsPreStop"; // 预报停
 
     // 控件
     // 顶部导航栏
@@ -166,7 +166,10 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private ImageView mAddBasketImageView; // 添加吊篮
 
     // 上下左右滑动监听
-    private static enum State{ VISIBLE,ANIMATIONING,INVISIBLE,}
+    private static enum State {
+        VISIBLE, ANIMATIONING, INVISIBLE,
+    }
+
     private State state = State.INVISIBLE;
     protected static final float FLIP_DISTANCE = 150;
     private GestureDetector mGestureDetector;
@@ -185,7 +188,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
-            switch(msg.what) {
+            switch (msg.what) {
                 case UPDATE_BASKET_STATEMENT_MSG:  // 更新吊篮列表
                     mgBasketStatementList.clear();
                     mgBasketStatementList.addAll(mgBasketStatementClassifiedList.get(pre_selectedPosition));
@@ -195,7 +198,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     updateProjectContentView(); // 更新项目信息
                     mgBasketStatementList.clear();
                     mgBasketStatementClassifiedList.clear();
-                    parseBasketListInfo((String)msg.obj);  // 更新吊篮
+                    parseBasketListInfo((String) msg.obj);  // 更新吊篮
                     //pre_selectedPosition = 0;
                     mgStateAdapter.setSelectedPosition(pre_selectedPosition);
                     sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);
@@ -203,16 +206,16 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 case UPDATE_AREA_ADMIN_PROJECT_LIST_MSG: // 更新区域管理员的项目列表
                     mProjectNameList.clear();
                     mProjectInfoList.clear();
-                    parseProjectListInfo((String)msg.obj);  // 解析数据
+                    parseProjectListInfo((String) msg.obj);  // 解析数据
                     setLastLoginProjectId();  // 设置默认项目
                     //currentSelectedProject = 0; // 项目位置
                     //pre_selectedPosition = 0;  // 筛选框位置
 
-                    if(mProjectNameList.size()<=0) { // 没有项目
+                    if (mProjectNameList.size() <= 0) { // 没有项目
                         mProjectTitleTv.setText("暂无项目");
                         parseMgBasketStatementList(mgBasketStatementList);
                         updateBodyContentView();
-                    }else{
+                    } else {
                         areaAdminGetAllBasket();
                     }
                     break;
@@ -237,7 +240,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        if(!isHasPermission()) requestPermission();
+        if (!isHasPermission()) requestPermission();
 
         View view = inflater.inflate(R.layout.fragment_area_admin_manage_project,
                 container, false);
@@ -265,7 +268,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 pre_selectedPosition = position;
                 mgStateAdapter.setSelectedPosition(pre_selectedPosition);
-                if(mProjectNameList.size() > 0)  // 当且仅当存在项目时更新吊篮状态列表
+                if (mProjectNameList.size() > 0)  // 当且仅当存在项目时更新吊篮状态列表
                     mHandler.sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);  // 更新列表
             }
         });
@@ -281,10 +284,10 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                if(mProjectInfoList.size()>0){
+                if (mProjectInfoList.size() > 0) {
                     mLastProjectId = mProjectInfoList.get(currentSelectedProject).getProjectId();
                     areaAdminGetAllProject();
-                }else{
+                } else {
                     mSmartRefreshLayout.finishRefresh();
                 }
             }
@@ -302,10 +305,10 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             @Override
             public void onItemClick(View view, int position) {
                 // 点击item响应
-                Log.i(TAG, "You have clicked the "+position+" item");
+                Log.i(TAG, "You have clicked the " + position + " item");
                 // 跳转至吊篮详情页面
                 Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
-                intent.putExtra("project_id",mProjectInfoList.get(currentSelectedProject).getProjectId());
+                intent.putExtra("project_id", mProjectInfoList.get(currentSelectedProject).getProjectId());
                 intent.putExtra("basket_id", mgBasketStatementList.get(position).getBasketId());
 //                intent.putExtra("principal_name", mProjectInfoList.
 //                        get(currentSelectedProject).getAdminAreaUser().getUserName());
@@ -315,7 +318,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             @Override
             public void onUploadCertClick(View view, int position) {
                 // 点击安监证书
-                Log.i(TAG, "You have clicked the "+ position+" item's PreAssAndAcept");
+                Log.i(TAG, "You have clicked the " + position + " item's PreAssAndAcept");
                 Intent intent;
                 intent = new Intent(getActivity(), UploadImageFTPActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
@@ -327,7 +330,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             @Override
             public void onPreApplyStopClick(View view, int position) {
                 // 点击预报停申请
-                Log.i(TAG, "You have clicked the "+ position +" item's PreApplyStop");
+                Log.i(TAG, "You have clicked the " + position + " item's PreApplyStop");
 //                Intent intent;
 //                intent = new Intent(getActivity(), UploadImageFTPActivity.class);
 //                intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
@@ -363,22 +366,22 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mSendOrExamineCertificateRelativeLayout.setOnClickListener(this);
         mSendOrExamineCertificateTextView = (TextView) view.findViewById(R.id.send_examine_certification_tv);
         mSendOrExamineCertificateCountTextView = (TextView) view.findViewById(R.id.send_examine_certificate_tv_count);
-        rlGetRepairInfo   = (RelativeLayout) view.findViewById(R.id.rl_get_repair_info);
+        rlGetRepairInfo = (RelativeLayout) view.findViewById(R.id.rl_get_repair_info);
         rlGetRepairInfo.setOnClickListener(this);
         mUploadPreStopInfoRelativeLayout = (RelativeLayout) view.findViewById(R.id.pre_stop_info_layout);  // 上传预报停信息
         mUploadPreStopInfoRelativeLayout.setOnClickListener(this);
 
         /*
          * 悬浮框
-          */
+         */
         mAddBasketImageView = (ImageView) view.findViewById(R.id.basket_add_image_view);
         mAddBasketImageView.setOnClickListener(new View.OnClickListener() {  // 点击响应
             @Override
             public void onClick(View v) {
-                if(mProjectNameList.size() <= 0)
+                if (mProjectNameList.size() <= 0)
                     DialogToast("错误", "您尚无授权的项目");
                 else {
-                    if(!isHasPermission()) requestPermission();
+                    if (!isHasPermission()) requestPermission();
                     startActivityForResult(new Intent(getActivity(), CaptureActivity.class),
                             CAPTURE_ACTIVITY_RESULT);
                 }
@@ -398,7 +401,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     @Override
     public void onClick(View v) {
         Intent intent;
-        switch (v.getId()){
+        switch (v.getId()) {
             case R.id.examine_compact_layout:  // 查看合同
                 Log.i(TAG, "You have clicked the examine compact button");
                 intent = new Intent(getActivity(), CheckCompactActivity.class);
@@ -442,6 +445,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 break;
         }
     }
+
     // 溢出栏消息响应
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -461,6 +465,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         }
         return super.onOptionsItemSelected(item);
     }
+
     // 初始化溢出栏弹窗
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -493,19 +498,19 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
-        switch (requestCode){
+        switch (requestCode) {
             case CAPTURE_ACTIVITY_RESULT:  // 扫描工人二维码名片返回结果
-                if(resultCode == RESULT_OK){
+                if (resultCode == RESULT_OK) {
                     String basketId = data.getStringExtra(QR_CODE_RESULT);
-                    Log.i(TAG, "QR_Content: "+ basketId);
-                    if(isBasketInProject(basketId))  // 已存在于项目中
+                    Log.i(TAG, "QR_Content: " + basketId);
+                    if (isBasketInProject(basketId))  // 已存在于项目中
                         DialogToast("提示", "吊篮已经在项目中").show();
                     else  // 待添加
                         areaAdminAddBasketIntoProject(basketId);
                 }
                 break;
             case UPLOAD_BASKET_IMAGE_RESULT:  // 上传预验收图片返回
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     // 更新进度页面
                     mLastProjectId = mProjectInfoList.get(currentSelectedProject).getProjectId();
                     areaAdminGetAllProject();
@@ -515,7 +520,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 break;
 
             case UPLOAD_CONFIGURATION_RESULT: // 上传配置清单返回值
-                if(resultCode == RESULT_OK) {
+                if (resultCode == RESULT_OK) {
                     // 更新进度页面
                 }
                 break;
@@ -528,7 +533,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
      * 网络相关
      */
     // 获取区域管理员的项目列表
-    private void areaAdminGetAllProject(){
+    private void areaAdminGetAllProject() {
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization", mToken)
                 .addParam("userId", mUserInfo.getUserId())
@@ -547,7 +552,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
 
                     @Override
                     public void onError(int code) {
-                        Log.d(TAG, "获取所有项目信息错误，错误编码："+code);
+                        Log.d(TAG, "获取所有项目信息错误，错误编码：" + code);
 
                     }
 
@@ -557,22 +562,24 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     }
                 });
     }
+
     // 解析项目列表
-    private void parseProjectListInfo(String responseData){
+    private void parseProjectListInfo(String responseData) {
         JSONObject jsonObject = JSON.parseObject(responseData);
         String psojectListStr = jsonObject.getString("projectList");
-        JSONArray projectList= JSON.parseArray(psojectListStr);
+        JSONArray projectList = JSON.parseArray(psojectListStr);
         Iterator<Object> iterator = projectList.iterator();  // 迭代获取项目信息
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             JSONObject projectInfoJsonObject = (JSONObject) iterator.next();
             mProjectNameList.add(projectInfoJsonObject.getString("projectName"));
             mProjectInfoList.add(projectInfoJsonObject.toJavaObject(ProjectInfo.class));
         }
     }
+
     // 默认登录上次项目号
-    private void setLastLoginProjectId(){
-        for(int i=0; i<mProjectInfoList.size(); i++){
-            if(mLastProjectId.equals(mProjectInfoList.get(i).getProjectId())){
+    private void setLastLoginProjectId() {
+        for (int i = 0; i < mProjectInfoList.size(); i++) {
+            if (mLastProjectId.equals(mProjectInfoList.get(i).getProjectId())) {
                 currentSelectedProject = i;
                 return;
             }
@@ -581,7 +588,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     }
 
     // 获取项目对应的所有吊篮信息
-    private void areaAdminGetAllBasket(){
+    private void areaAdminGetAllBasket() {
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization", mToken)
                 .addParam("projectId", mProjectInfoList.get(currentSelectedProject).getProjectId())
@@ -592,7 +599,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 .enqueue(new BaseCallBack() {
                     @Override
                     public void onSuccess(Object o) {
-                        Log.i(TAG, "成功" );
+                        Log.i(TAG, "成功");
                         String responseData = o.toString();
                         Message message = new Message();
                         message.what = UPDATE_PROJECT_AND_BASKET_MSG;
@@ -605,7 +612,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     @Override
                     public void onError(int code) {
                         Log.i(TAG, "错误：" + code);
-                        switch (code){
+                        switch (code) {
                             case 401: // 未授权
                                 ToastUtil.showToastTips(getActivity(), "登录已过期，请重新登陆");
                                 startActivity(new Intent(getActivity(), LoginActivity.class));
@@ -624,40 +631,42 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     }
                 });
     }
+
     // 解析项目中的吊篮列表信息
-    private void parseBasketListInfo(String responseDate){
+    private void parseBasketListInfo(String responseDate) {
         JSONObject jsonObject = JSON.parseObject(responseDate);
         Iterator<String> iterator = jsonObject.keySet().iterator();  // 迭代获取吊篮信息
-        while(iterator.hasNext()) {
+        while (iterator.hasNext()) {
             String key = iterator.next();
-            if(!key.contains("storage")) continue;
+            if (!key.contains("storage")) continue;
             String value = jsonObject.getString(key);
-            if(value==null || value.equals("")) continue;
+            if (value == null || value.equals("")) continue;
             JSONObject basketObj = JSON.parseObject(value);
             String deviceId = basketObj.getString("deviceId");
-            if(deviceId==null || deviceId.equals("")) continue;
+            if (deviceId == null || deviceId.equals("")) continue;
             mgBasketStatementList.add(new MgBasketStatement(basketObj.getString("deviceId"),
                     null, basketObj.getString("storageState")));
         }
         parseMgBasketStatementList(mgBasketStatementList);
     }
+
     // 解析吊篮状态
-    private void parseMgBasketStatementList(List<MgBasketStatement> mgBasketStatements){
+    private void parseMgBasketStatementList(List<MgBasketStatement> mgBasketStatements) {
         // 初始化吊篮分类列表
-        for(int i=0; i<mStateLists.size();i++){
+        for (int i = 0; i < mStateLists.size(); i++) {
             mgBasketStatementClassifiedList.add(new ArrayList<MgBasketStatement>());
         }
         // 将数据装载进对应位置
-        for(int i=0; i<mgBasketStatements.size(); i++){
+        for (int i = 0; i < mgBasketStatements.size(); i++) {
             MgBasketStatement mgBasketStatement = mgBasketStatements.get(i);
-            mgBasketStatementClassifiedList.get(Integer.valueOf(mgBasketStatement.getBasketStatement().substring(0,1))).
+            mgBasketStatementClassifiedList.get(Integer.valueOf(mgBasketStatement.getBasketStatement().substring(0, 1))).
                     add(mgBasketStatement);
         }
         mgBasketStatementClassifiedList.get(0).addAll(mgBasketStatements);
     }
 
     // 将吊篮添加至项目
-    private void areaAdminAddBasketIntoProject(String basketId){
+    private void areaAdminAddBasketIntoProject(String basketId) {
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization", mToken)
                 .addParam("projectId", mProjectInfoList.get(currentSelectedProject).getProjectId())
@@ -670,10 +679,10 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     public void onSuccess(Object o) {
                         JSONObject jsonObject = JSON.parseObject(o.toString());
                         String isIncrease = jsonObject.getString("increase");
-                        if(isIncrease.contains("失败")){
+                        if (isIncrease.contains("失败")) {
                             Log.i(TAG, "新增吊篮失败");
                             DialogToast("提示", "该吊篮已存在于其他项目中！").show();
-                        }else{
+                        } else {
                             Log.i(TAG, "添加吊篮成功");
                             DialogToast("提示", "您已成功添加该吊篮！").show();
                             mHandler.sendEmptyMessage(UPDATE_PROJECT_LIST_FROM_INTERNET_MSG);
@@ -691,7 +700,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     @Override
                     public void onError(int code) {
                         Log.i(TAG, "添加吊篮错误：" + code);
-                        switch(code){
+                        switch (code) {
                             case 401:
                                 ToastUtil.showToastTips(getActivity(), "登陆已过期，请重新登录");
                                 startActivity(new Intent(getActivity(), LoginActivity.class));
@@ -713,13 +722,13 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
      * 业务逻辑相关
      */
     // 判断扫描到的吊篮是否在项目中
-    private boolean isBasketInProject(String basketId){
+    private boolean isBasketInProject(String basketId) {
         ProjectInfo projectInfo = mProjectInfoList.get(currentSelectedProject);
         String basketList = projectInfo.getBoxList();
-        basketList = (basketList==null) ? "":basketList;
+        basketList = (basketList == null) ? "" : basketList;
         String[] basketIds = basketList.split(",");
-        for(int i=0; i<basketIds.length; i++){
-            if(basketId.equals(basketIds[i]))
+        for (int i = 0; i < basketIds.length; i++) {
+            if (basketId.equals(basketIds[i]))
                 return true;
         }
         return false;
@@ -728,7 +737,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     /*
      * 初始化状态筛选栏
      */
-    private void initStateList(){
+    private void initStateList() {
         // mStateLists = new ArrayList<>();
         mStateLists.add("进度");
         mStateLists.add("待安装");
@@ -741,7 +750,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     /*
      * 初始化进度轴
      */
-    public void initProjectScheduleList(){
+    public void initProjectScheduleList() {
         mProjectScheduleList.add("立项");
         mProjectScheduleList.add("配置清单");
         mProjectScheduleList.add("安装");
@@ -753,7 +762,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     /*
      * 设置手势监听
      */
-    private void setGestureListener(){
+    private void setGestureListener() {
         mGestureDetector = new GestureDetector(getActivity(), mGestureListener);
         mGestureDetector.setIsLongpressEnabled(true);
         mGestureDetector.setOnDoubleTapListener(mGestureListener);
@@ -765,7 +774,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 return mGestureDetector.onTouchEvent(ev);
             }
         };
-        ((AreaAdminPrimaryActivity)getActivity()).registerMyOnTouchListener(myOnTouchListener);
+        ((AreaAdminPrimaryActivity) getActivity()).registerMyOnTouchListener(myOnTouchListener);
     }
 
     /*
@@ -790,7 +799,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         }
 
         @Override
-        public boolean onScroll(MotionEvent e1, MotionEvent e2,float distanceX, float distanceY) {
+        public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
             return false;
         }
 
@@ -799,8 +808,8 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         }
 
         @Override
-        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX,float velocityY) {
-            if(Math.abs(e1.getX()-e2.getX()) > Math.abs(e1.getY()-e2.getY())) {
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            if (Math.abs(e1.getX() - e2.getX()) > Math.abs(e1.getY() - e2.getY())) {
                 // 水平滑动的距离大于竖直滑动的距离
                 if (e1.getX() - e2.getX() > FLIP_DISTANCE) {
                     Log.i(TAG, "向左滑...");
@@ -818,7 +827,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     mHandler.sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);  // 更新列表
                     return true;
                 }
-            }else {
+            } else {
                 if (e1.getY() - e2.getY() > FLIP_DISTANCE) {
                     Log.i(TAG, "向上滑...");
                     return true;
@@ -833,11 +842,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
 
             return false;
         }
+
         //点击的时候执行
         @Override
         public boolean onSingleTapConfirmed(MotionEvent e) {
             //          toolbar.changeVisibility();
-            if(state == State.VISIBLE) {
+            if (state == State.VISIBLE) {
 
             } else {
 
@@ -860,8 +870,8 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
      * UI 更新类
      */
     // 主体页面显示逻辑控制
-    public void updateBodyContentView(){
-        if(pre_selectedPosition > 0) {  // 吊篮
+    public void updateBodyContentView() {
+        if (pre_selectedPosition > 0) {  // 吊篮
             mMgProjectLinearLayout.setVisibility(View.GONE); // 隐藏项目管理视图
             if (mgBasketStatementList.size() == 0) {  // 显示无操作吊篮
                 mListRelativeLayout.setVisibility(View.GONE);
@@ -873,27 +883,28 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 mgBasketStatementAdapter.notifyDataSetChanged();
             }
             // 添加吊篮按钮
-            if(pre_selectedPosition == 1)
+            if (pre_selectedPosition == 1)
                 mAddBasketImageView.setVisibility(View.VISIBLE);
             else
                 mAddBasketImageView.setVisibility(View.GONE);
-        }else if(pre_selectedPosition == 0){ // 项目
+        } else if (pre_selectedPosition == 0) { // 项目
             mListRelativeLayout.setVisibility(View.GONE);  // 隐藏列表
             mAddBasketImageView.setVisibility(View.GONE);  // 隐藏添加按钮
 
-            if(mProjectNameList.size() == 0){  // 显示无项目操作
+            if (mProjectNameList.size() == 0) {  // 显示无项目操作
                 mMgProjectLinearLayout.setVisibility(View.GONE);
                 mBlankRelativeLayout.setVisibility(View.VISIBLE);
                 mBlankHintTextView.setText("您还没有相关的项目");
-            }else{                               // 显示项目进度
+            } else {                               // 显示项目进度
                 mBlankRelativeLayout.setVisibility(View.GONE);
                 mMgProjectLinearLayout.setVisibility(View.VISIBLE);
             }
         }
     }
+
     // 项目进度页面更新
-    public void updateProjectContentView(){
-        if(mProjectInfoList.size() < 1){
+    public void updateProjectContentView() {
+        if (mProjectInfoList.size() < 1) {
             DialogToast("提示", "暂无项目");
             return;
         }
@@ -902,7 +913,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mProjectTitleTv.setText(projectInfo.getProjectName());
         mProjectIdTextView.setText(projectInfo.getProjectId());
         mProjectNameTextView.setText(projectInfo.getProjectName());
-        switch(projectInfo.getProjectState()){
+        switch (projectInfo.getProjectState()) {
             case "1":
             case "0":/* 立项、安装 */
                 mProjectStartTextView.setText("暂未开始");
@@ -933,7 +944,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                 break;
             case "12": // 清单待审核
-                currentProjectScheduleFlag = (float)2.5;
+                currentProjectScheduleFlag = (float) 2.5;
                 mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);  //
                 mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
                 mConfigurationRelativeLayout.setClickable(false);
@@ -945,16 +956,16 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
                 mConfigurationRelativeLayout.setClickable(false);
                 mConfigurationCountTextView.setVisibility(View.GONE);
-                if(projectInfo.getStoreOut() == null || projectInfo.getStoreOut().equals("")){
+                if (projectInfo.getStoreOut() == null || projectInfo.getStoreOut().equals("")) {
                     // 尚未上传预申请图片
                     currentProjectScheduleFlag = 3;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.VISIBLE);
                     mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
-                }else{
+                } else {
                     // 已经上传预验收申请图片
-                    currentProjectScheduleFlag = (float)3.5;
+                    currentProjectScheduleFlag = (float) 3.5;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.GONE);
@@ -968,9 +979,9 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
                 mConfigurationRelativeLayout.setClickable(false);
                 mConfigurationCountTextView.setVisibility(View.GONE);
-                if(projectInfo.getProjectCertUrl()==null || projectInfo.getProjectCertUrl().equals("")){ // 尚未上传安监证书
+                if (projectInfo.getProjectCertUrl() == null || projectInfo.getProjectCertUrl().equals("")) { // 尚未上传安监证书
                     // 尚未上传
-                    currentProjectScheduleFlag = (float)3.5;
+                    currentProjectScheduleFlag = (float) 3.5;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.GONE);
@@ -978,8 +989,8 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     mSendOrExamineCertificateRelativeLayout.setVisibility(View.GONE);
                     mSendOrExamineCertificateTextView.setText("上传安监证书");
                     mSendOrExamineCertificateCountTextView.setVisibility(View.VISIBLE);
-                }else{
-                    currentProjectScheduleFlag = (float)4;
+                } else {
+                    currentProjectScheduleFlag = (float) 4;
                     mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                     mPreApplyRelativeLayout.setVisibility(View.VISIBLE);
                     mPreApplyCountTextView.setVisibility(View.GONE);
@@ -990,7 +1001,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 }
                 break;
             case "3": /* 使用中 */
-                currentProjectScheduleFlag = (float)5;
+                currentProjectScheduleFlag = (float) 5;
                 mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
                 mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
@@ -1003,7 +1014,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 mUploadPreStopInfoRelativeLayout.setVisibility(View.VISIBLE);
                 break;
             case "4": /* 结束 */
-                currentProjectScheduleFlag = (float)6;
+                currentProjectScheduleFlag = (float) 6;
                 mProjectScheduleTimeLine.setStep(currentProjectScheduleFlag);
                 mProjectStartTextView.setText(projectInfo.getProjectStart());
                 mConfigurationRelativeLayout.setVisibility(View.VISIBLE);
@@ -1016,8 +1027,9 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 break;
         }
     }
+
     // 弹出项目选择框
-    public void showSingleAlertDialog(){
+    public void showSingleAlertDialog() {
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(getContext());
         alertBuilder.setTitle("这是单选框");
         alertBuilder.setSingleChoiceItems(listToArray(mProjectNameList), currentSelectedProject, new DialogInterface.OnClickListener() {
@@ -1031,7 +1043,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 currentSelectedProject = tmpSelectedProject;
-                if(mProjectNameList.size() > 0)  // 当且仅当存在且选择项目时，从网络获取数据
+                if (mProjectNameList.size() > 0)  // 当且仅当存在且选择项目时，从网络获取数据
                     areaAdminGetAllBasket(); // 获取项目中吊篮数据
                 mSelectProjectDialog.dismiss();
             }
@@ -1057,12 +1069,14 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mToken = ((AreaAdminPrimaryActivity) context).pushToken();
         mLastProjectId = ((AreaAdminPrimaryActivity) context).pushProjectId();
     }
+
     @TargetApi(23)
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
         onAttachToContext(context);
     }
+
     @SuppressWarnings("deprecation")
     @Override
     public void onAttach(Activity activity) {
@@ -1071,11 +1085,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             onAttachToContext(activity);
         }
     }
+
     // 销毁
     @Override
     public void onDestroy() {
         super.onDestroy();
-        if(mProjectInfoList.size()>0) {
+        if (mProjectInfoList.size() > 0) {
             mPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
             editor = mPref.edit();
             editor.putString("projectId", mProjectInfoList.get(currentSelectedProject).getProjectId());
@@ -1097,7 +1112,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                     public void hasPermission(List<String> granted, boolean isAll) {
                         if (isAll) {
                             onResume();
-                        }else {
+                        } else {
                             Toast.makeText(getActivity(),
                                     "必须同意所有的权限才能使用本程序", Toast.LENGTH_SHORT).show();
                         }
@@ -1105,12 +1120,12 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
 
                     @Override
                     public void noPermission(List<String> denied, boolean quick) {
-                        if(quick) {
+                        if (quick) {
                             Toast.makeText(getActivity(), "被永久拒绝授权，请手动授予权限",
                                     Toast.LENGTH_SHORT).show();
                             // 如果是被永久拒绝就跳转到应用权限系统设置页面
                             XXPermissions.gotoPermissionSettings(getActivity());
-                        }else {
+                        } else {
                             Toast.makeText(getActivity(), "获取权限失败",
                                     Toast.LENGTH_SHORT).show();
                             getActivity().finish();
@@ -1129,14 +1144,14 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     /*
      * 提示弹框
      */
-    private CommonDialog DialogToast(String mTitle, String mMsg){
+    private CommonDialog DialogToast(String mTitle, String mMsg) {
         return new CommonDialog(getActivity(), R.style.dialog, mMsg,
                 new CommonDialog.OnCloseListener() {
                     @Override
                     public void onClick(Dialog dialog, boolean confirm) {
-                        if(confirm){
+                        if (confirm) {
                             dialog.dismiss();
-                        }else{
+                        } else {
                             dialog.dismiss();
                         }
                     }
@@ -1146,13 +1161,14 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     /*
      * 工具类
      */
-    private String[] listToArray(List<String> list ){
+    private String[] listToArray(List<String> list) {
         String[] strings = new String[list.size()];
         list.toArray(strings);
         return strings;
     }
-    private String getRandomStatement(){
-        int num = (int) (Math.random()*5 + 1);
+
+    private String getRandomStatement() {
+        int num = (int) (Math.random() * 5 + 1);
         return String.valueOf(num);
     }
 
