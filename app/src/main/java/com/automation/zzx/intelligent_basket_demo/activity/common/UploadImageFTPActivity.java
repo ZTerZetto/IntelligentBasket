@@ -44,6 +44,9 @@ import com.automation.zzx.intelligent_basket_demo.widget.dialog.ProgressAlertDia
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.heynchy.compress.CompressImage;
+import com.heynchy.compress.compressUtil.FileSizeUtil;
+import com.heynchy.compress.compressinterface.CompressLubanListener;
 
 import org.apache.commons.net.ftp.FTPFile;
 
@@ -254,11 +257,14 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data){
         switch (requestCode){
-            case TAKE_PHOTO_FROM_CAMERA:        //拍摄
+            case TAKE_PHOTO_FROM_CAMERA:        // 拍摄
                 if(resultCode == RESULT_CANCELED){
                     Toast.makeText(UploadImageFTPActivity.this, "取消了拍照", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                String photoFilePath = CAMERA_PATH + "IMAGE_"+ fileName +".jpg";
+                String compressFilePath = CAMERA_PATH + "IMAGE_"+ fileName +"_compress.jpg";
+                compressImage(photoFilePath, compressFilePath);  // 压缩图片
                 Bitmap  photo = BitmapFactory.decodeFile(CAMERA_PATH + "IMAGE_"+ fileName +".jpg");
                 if(mUploadImageList.size() >= 1) {
                     mUploadImageList.remove(mUploadImageList.size() - 1); //移除最后一张图片
@@ -283,7 +289,12 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                     mUploadImageList.clear();
                     mUploadImageUrlList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                     for(int i = 0; i < mUploadImageUrlList.size(); i++){
-                        Log.d("ReleaseHouseActivity", mUploadImageUrlList.get(i));
+                        Log.d(TAG, mUploadImageUrlList.get(i));
+                        String imageFilePath = mUploadImageUrlList.get(i);
+                        String saveImageFilePath = imageFilePath.replace(".", "_compress.");
+                        if(!(new File(saveImageFilePath)).exists()){  // 压缩文件不存在就压缩文件
+                            compressImage(imageFilePath, saveImageFilePath);
+                        }
                         Bitmap bitmap = BitmapFactory.decodeFile(mUploadImageUrlList.get(i));
                         mUploadImageList.add(bitmap);
                     }
@@ -310,7 +321,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
         Log.i(TAG,getPackageName() + ".fileprovider");
         photoUrl = FileProvider.getUriForFile(this, getPackageName() + ".fileprovider", photoFile);
         Log.i(TAG,photoUrl.toString());
-        //拍照后的保存路径
+        // 拍照后的保存路径
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUrl);
         startActivityForResult(intent, TAKE_PHOTO_FROM_CAMERA);
     }
@@ -364,7 +375,16 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                             if(i==0) startIndex = getCapacityIndex();
                             tempFileName = workerId + "_" + (i+1+startIndex) + ".jpg";
                         }
-                        mFTPClient.uploadingSingleRenameFile(new File(mUploadImageUrlList.get(i)), tempFileName);
+                        String originFilePath = mUploadImageUrlList.get(i);
+                        File originaFile = new File(originFilePath);  // 原图
+                        String compressFilePath = originFilePath.replace(".", "_compress.");
+                        File compressFile = new File(compressFilePath);  // 压缩图
+                        if(!compressFile.exists()){  // 默认选择压缩图上传
+                            mFTPClient.uploadingSingleRenameFile(originaFile, tempFileName);  // 上传图片
+                        }else{
+                            mFTPClient.uploadingSingleRenameFile(compressFile, tempFileName);  // 上传图片
+                            myDeleteFile(compressFile); // 删除压缩图
+                        }
                     }
                     mFTPClient.closeConnect();  // 关闭连接
 
@@ -709,6 +729,47 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
     }
 
     /*
+     * 工具类
+     */
+    // 进行Luban算法压缩图片
+    private void compressImage(final String filePath, final String savePath){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                CompressImage.getInstance().imageLubrnCompress(filePath, savePath, new CompressLubanListener() {
+                    @Override
+                    public void onCompressLubanSuccessed(String imgPath, Bitmap bitmap) {
+                        /**
+                         * 返回值: imgPath----压缩后图片的绝对路径
+                         *        bitmap----返回的图片
+                         */
+                        Log.i(TAG, "Compress Success:" + imgPath);
+                    }
+
+                    @Override
+                    public void onCompressLubanFailed(String imgPath, String msg) {
+                        /**
+                         * 返回值: imgPath----原图片的绝对路径
+                         *        msg----返回的错误信息
+                         */
+                        Log.i(TAG, "Compress Failed:"+ imgPath + " " + msg);
+                    }
+
+                });
+            }
+        });
+    }
+
+    // 删除压缩的图片
+    private void myDeleteFile (File file){
+        String path = file.getPath();
+        // 删除系统缩略图
+        getContentResolver().delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.DATA + "=?", new String[]{path});
+        // 删除手机中图片
+        file.delete();
+    }
+
+    /*
      * 弹窗
      */
     // 提示弹框
@@ -768,7 +829,9 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
         popupMenu.show();
     }
 
-
+    /*
+     * 生命周期
+     */
     @Override
     public void onBackPressed(){
         Log.i(TAG, "onBackPressed");

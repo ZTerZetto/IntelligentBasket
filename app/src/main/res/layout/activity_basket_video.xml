@@ -18,8 +18,8 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:layout_gravity="center"
-            android:src="@mipmap/ic_video_cover"
-            android:visibility="gone"/>
+            android:src="@mipmap/ic_video_cover_signal"
+            android:visibility="visible"/>
 
         <!-- 视频播放 -->
         <com.pili.pldroid.player.widget.PLVideoTextureView
