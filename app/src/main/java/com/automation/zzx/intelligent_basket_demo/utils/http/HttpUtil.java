@@ -189,6 +189,31 @@ public class HttpUtil {
                 .build();
         client.newCall(request).enqueue(callback);
     }
+    /*萤石云
+     */
+    public static void getEZAccessToken(okhttp3.Callback callback, String key, String secret){
+        OkHttpClient client = new OkHttpClient();
+        FormBody builder = new FormBody.Builder()
+                .add("appKey", key)
+                .add("appSecret", secret)
+                .build();
+        final Request request = new Request.Builder()
+                .url(AppConfig.GET_UIKIT_ACCESS_TOKEN)
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+    public static void getEZVideoUrlList(okhttp3.Callback callback, String accessToken){
+        OkHttpClient client = new OkHttpClient();
+        FormBody builder = new FormBody.Builder()
+                .add("accessToken", accessToken)
+                .build();
+        final Request request = new Request.Builder()
+                .url(AppConfig.GET_UIKIT_VIDEO_URL)
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
 
     /*
      * 设置参数获取请求

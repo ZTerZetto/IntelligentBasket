@@ -46,10 +46,9 @@ import java.util.Map;
  * Describe:
  */
 public class CustomApplication extends Application {
-    // user your appid the key.
-    private static final String APP_ID = "2882303761517987207";
-    // user your appid the key.
-    private static final String APP_KEY = "5971798771207";
+    // user your mi appid the key.
+    private static final String MIPUSH_APP_ID = "2882303761517987207";
+    private static final String MIPUSH_APP_KEY = "5971798771207";
 
     // 此TAG在adb logcat中检索自己所需要的信息， 只需在命令行终端输入 adb logcat | grep
     // com.xiaomi.mipushdemo
@@ -78,6 +77,9 @@ public class CustomApplication extends Application {
     public static SimpleDateFormat dateSavedFormat = new SimpleDateFormat("yyyy年MM月dd日 HH:mm"); //设置日期格式
     public static SimpleDateFormat dateInternetFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm"); //设置日期格式
 
+    // EZOpenApp
+    private static final String EZOpen_APP_KEY = "8e501b6637eb41a3ac012204360be9f3";
+
     // 为了提高推送服务的注册率，官方Demo建议在Application的onCreate中初始化推送服务
     // 你也可以根据需要，在其他地方初始化推送服务
     @Override
@@ -88,10 +90,12 @@ public class CustomApplication extends Application {
         SDKInitializer.initialize(getApplicationContext());
         // 初始化LitePal数据库
         LitePal.initialize(this);
+        // 初始化萤石云
+//        ezOpenInit();
 
         // 判断用户是否已经打开App，详细见下面方法定
         if (shouldInit()) {
-            MiPushClient.registerPush(this, APP_ID, APP_KEY);
+            MiPushClient.registerPush(this, MIPUSH_APP_ID, MIPUSH_APP_KEY);
         }
 
         // 下面是与测试相关的日志设置
@@ -137,6 +141,22 @@ public class CustomApplication extends Application {
         //setChannel(true);
     }
 
+    // 初始化EZOpen
+    public void ezOpenInit() {
+//        /** * 设置是否支持P2P取流,详见api */
+//        EZOpenSDK.enableP2P(false);
+//        EZOpenSDK.initSDK(this, EZOpen_APP_KEY);
+//        EZOpenSDK.setAuthCallBack(new OnAuthCallBack() {
+//            @Override
+//            public void onAuthSuccessCallBack(EZAccessToken ezAccessToken) {
+//            }
+//            @Override
+//            public void onNeedAuthAccessToken() {
+//
+//            }
+//        });
+    }
+
     // 通过判断手机里的所有进程是否有这个App的进程
     // 从而判断该App是否有打开
     private boolean shouldInit() {
@@ -159,7 +179,7 @@ public class CustomApplication extends Application {
     }
 
     public static void reInitPush(Context ctx) {
-        MiPushClient.registerPush(ctx.getApplicationContext(), APP_ID, APP_KEY);
+        MiPushClient.registerPush(ctx.getApplicationContext(), MIPUSH_APP_ID, MIPUSH_APP_KEY);
     }
 
     public static MiHandler getHandler() {
@@ -382,6 +402,10 @@ public class CustomApplication extends Application {
         Log.d(TAG, "onTerminate");
         super.onTerminate();
         mainActivity = null;
+    }
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
     }
     /*
      * 屏幕相关

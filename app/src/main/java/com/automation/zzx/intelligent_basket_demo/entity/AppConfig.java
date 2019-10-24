@@ -4,8 +4,8 @@ public class AppConfig {
     /*
      * 服务器地址
      */
-//    public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
-    public final static String ANDROID_URL_PATH = "http://10.193.233.106:8080"; // 老刘
+    public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
+//    public final static String ANDROID_URL_PATH = "http://10.193.233.106:8080"; // 老刘
     public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
     public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082"; // 刘跃博HTTP文件服务器地址
@@ -18,6 +18,13 @@ public class AppConfig {
      */
     public final static String FILE_SERVER_USERNAME = "root";
     public final static String FILE_SERVER_PASSWORD = "nishipig2/";
+
+    /*
+     * 萤石云：appkey
+     */
+    public final static String EZUIKit_APPKEY = "6747c45b0baf43868d88e34748c742e7";
+    public final static String EZUIKit_SECRET = "3b3d8db1a048dd9e197711b37ecb6c42";
+    public final static String EZUIKit_AccessToken = "at.dq2en1fi9mpkqqzrdaqjhk392c7es89x-2h6a9c2x9j-1ry029z-abzmupcyx";
 
     /* 登陆
     * userId、userPassword
@@ -95,6 +102,10 @@ public class AppConfig {
     public static final String HANGING_BASKET_PARAM = COMMUNICATION_SERVER_PATH.concat("/getSetUpData");
     // 打开/关闭吊篮设备
     public static final String HANGING_BASKET_OPERATION = COMMUNICATION_SERVER_PATH.concat("/sendToDevice");
+    /* 萤石云
+     */
+    public static final String GET_UIKIT_ACCESS_TOKEN = "https://open.ys7.com/api/lapp/token/get";
+    public static final String GET_UIKIT_VIDEO_URL = "https://open.ys7.com/api/lapp/live/video/list";
 
     /*
      * 施工人员活动请求

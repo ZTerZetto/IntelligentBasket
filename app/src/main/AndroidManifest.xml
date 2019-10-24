@@ -15,6 +15,7 @@
     <uses-permission android:name="android.permission.FLASHLIGHT" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
     <uses-permission android:name="android.permission.VIBRATE" />
@@ -36,8 +37,21 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.basketSupervisor.SupervisorBasketActivity"></activity>
-        <activity android:name=".activity.basketSupervisor.SupervisorPrimaryActivity"></activity>
+
+        <meta-data
+            android:name="com.baidu.lbsapi.API_KEY"
+            android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" />
+
+        <!-- 欢迎页面 -->
+        <activity android:name=".activity.common.WelcomeActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.basketSupervisor.SupervisorBasketActivity" />
+        <activity android:name=".activity.basketSupervisor.SupervisorPrimaryActivity" />
         <activity android:name=".activity.common.RepairInfoListActivity" />
         <activity android:name=".activity.areaAdmin.ConfigurationActivity" />
         <activity android:name=".activity.inspectionPerson.OutAndInStorageActivity" />
@@ -54,23 +68,13 @@
         <activity android:name=".activity.common.QRcodeCardActivity" />
         <activity android:name=".activity.common.UserMessageActivity" />
         <activity android:name=".activity.common.PersonalInformationActivity" />
-        <activity android:name=".activity.common.RepairDetailActivity"/>
+        <activity android:name=".activity.common.RepairDetailActivity" />
         <activity android:name=".activity.worker.WorkerHomePageActivity" />
         <activity android:name=".activity.worker.WorkerMoreActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
         <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" />
         <activity android:name=".activity.rentAdmin.AlarmMessageActivity" />
         <activity android:name=".activity.proAdmin.ProAdminPrimaryActivity" /> <!-- 百度地图Ket -->
-        <meta-data
-            android:name="com.baidu.lbsapi.API_KEY"
-            android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" /> <!-- 欢迎页面 -->
-        <activity android:name=".activity.common.WelcomeActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity android:name=".activity.basket.BasketDetailActivity" />
         <activity android:name=".activity.basket.BasketParameterActivity" />
         <activity
@@ -79,21 +83,19 @@
         <activity
             android:name=".activity.basket.BasketRepairFinishActivity"
             android:launchMode="singleTask" />
-
-        <activity
-            android:name=".activity.basket.BasketVideoActivity"
+        <activity android:name=".activity.basket.BasketVideoActivity"
             android:configChanges="orientation|screenSize"
             android:screenOrientation="portrait"
             android:theme="@style/AppThemeFullscreen" />
         <activity android:name=".activity.basket.BasketPhotoActivity" />
         <activity android:name=".activity.worker.WorkerOrderActivity" />
-        <activity
-            android:name=".activity.worker.WorkerPrimaryActivity"
+        <activity android:name=".activity.worker.WorkerPrimaryActivity"
             android:label="@string/title_activity_woker_primary"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.areaAdmin.ProDetailActivity" />
         <activity android:name=".activity.areaAdmin.ProCommitActivity" />
         <activity android:name=".activity.basket.BasketListActivity" />
+        <activity android:name=".activity.basket.BasketEZVideoActivity"/>
         <activity android:name=".activity.oldversion.WorkerListActivity" />
         <activity android:name=".activity.oldversion.ProListActivity" />
         <activity
@@ -188,6 +190,12 @@
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
         </provider>
+
+        <!-- 萤石云 -->
+        <!-- UIKit Android 针对API>=28崩溃问题 -->
+        <uses-library
+            android:name="org.apache.http.legacy"
+            android:required="false" />
     </application>
 
 </manifest>
