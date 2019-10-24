@@ -94,7 +94,6 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.areaAdmin.ProDetailActivity" />
         <activity android:name=".activity.areaAdmin.ProCommitActivity" />
-        <activity android:name=".activity.basket.BasketListActivity" />
         <activity android:name=".activity.basket.BasketEZVideoActivity"/>
         <activity android:name=".activity.oldversion.WorkerListActivity" />
         <activity android:name=".activity.oldversion.ProListActivity" />
