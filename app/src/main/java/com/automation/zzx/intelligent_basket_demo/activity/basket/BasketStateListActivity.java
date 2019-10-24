@@ -2,46 +2,44 @@ package com.automation.zzx.intelligent_basket_demo.activity.basket;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
-import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.GestureDetector;
 import android.view.MenuItem;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.GridView;
-import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryTRYActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
-import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
-import com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -58,9 +56,7 @@ import java.util.List;
 
 import okhttp3.Call;
 
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_ADD_BASKET_INTO_PROJECT;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_GET_ALL_BASKET_INFO;
-import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
 
 public class BasketStateListActivity extends AppCompatActivity {
 
@@ -107,12 +103,19 @@ public class BasketStateListActivity extends AppCompatActivity {
     private List<List<MgBasketStatement>> mgBasketStatementClassifiedList;
     private MgBasketStatementAdapter mgBasketStatementAdapter;
 
-    // 悬浮按钮
-    private ImageView mAddBasketImageView; // 添加吊篮
 
     // 无吊篮或项目
     private RelativeLayout mBlankRelativeLayout;
     private TextView mBlankHintTextView;
+
+    // 底部筛选框
+    private LinearLayout llChoose;
+    private Spinner mySpinner_1;
+    private Spinner mySpinner_2;
+    private TextView myTextView;
+    private ArrayAdapter<String> adapter;//创建一个数组适配器
+    private List<String> list_1 = new ArrayList<String>();
+    private List<String> list_2 = new ArrayList<String>();//创建一个String类型的数组列表。
 
 
     /* 数据部分*/
@@ -130,6 +133,7 @@ public class BasketStateListActivity extends AppCompatActivity {
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case UPDATE_BASKET_STATEMENT_MSG:  // 更新吊篮列表
+                    //筛选实现
                     mgBasketStatementList.clear();
                     mgBasketStatementList.addAll(mgBasketStatementClassifiedList.get(pre_selectedPosition+1));
                     updateBodyContentView();
@@ -141,8 +145,6 @@ public class BasketStateListActivity extends AppCompatActivity {
                     mgStateAdapter.setSelectedPosition(pre_selectedPosition);
                     sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);
                     break;
-                case UPDATE_PROJECT_LIST_FROM_INTERNET_MSG: // 从网络重新获取指定项目的吊篮信息
-                    areaAdminGetAllBasket();
                 default:
                     break;
             }
@@ -248,7 +250,14 @@ public class BasketStateListActivity extends AppCompatActivity {
         //初始化菜单栏
         mBasketStateGv = (GridView) findViewById(R.id.mg_basket_state);
         mStateLists = new ArrayList<>();
+
+        llChoose = findViewById(R.id.share_main_layout);
+        mySpinner_1 = (Spinner) findViewById(R.id.spinner_1);
+        mySpinner_2 = (Spinner) findViewById(R.id.spinner_2);
+        myTextView = findViewById(R.id.text1);
+
         initStateList();
+
         mgStateAdapter = new MgStateAdapter(BasketStateListActivity.this, R.layout.item_basket_state_switch, mStateLists);
         mgStateAdapter.setSelectedPosition(pre_selectedPosition);
         mBasketStateGv.setAdapter(mgStateAdapter);
@@ -277,6 +286,7 @@ public class BasketStateListActivity extends AppCompatActivity {
             public void onRefresh(RefreshLayout refreshlayout) {
                 if(mProjectId != null){
                     //更新吊篮列表UI
+                    mHandler.sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);
                 }else{
                     mSmartRefreshLayout.finishRefresh();
                 }
@@ -304,6 +314,18 @@ public class BasketStateListActivity extends AppCompatActivity {
                 startActivity(intent);
             }
 
+            @Override
+            public void onUploadAccept(View view, int position) {
+                // 点击上传预验收照片
+                Log.i(TAG, "You have clicked the "+ position+" item's PreAssAndAccept");
+                Intent intent;
+                intent = new Intent(BasketStateListActivity.this, UploadImageFTPActivity.class);
+                intent.putExtra(PROJECT_ID, mProjectId);
+                intent.putExtra(AreaAdminPrimaryTRYActivity.BASKET_ID, mgBasketStatementList.get(position).getBasketId());
+                intent.putExtra(AreaAdminPrimaryTRYActivity.UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
+                startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
+            }
+
             //上传安检证书
             @Override
             public void onUploadCertClick(View view, int position) {
@@ -313,7 +335,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                 intent = new Intent(BasketStateListActivity.this, UploadImageFTPActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
                 intent.putExtra(AreaAdminPrimaryTRYActivity.BASKET_ID, mgBasketStatementList.get(position).getBasketId());
-                intent.putExtra(AreaAdminPrimaryTRYActivity.UPLOAD_IMAGE_TYPE, AreaAdminPrimaryTRYActivity.UPLOAD_CERTIFICATE_IMAGE);
+                intent.putExtra(AreaAdminPrimaryTRYActivity.UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
                 startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
             }
 
@@ -327,39 +349,98 @@ public class BasketStateListActivity extends AppCompatActivity {
         // 无吊篮提示信息
         mBlankRelativeLayout = (RelativeLayout) findViewById(R.id.basket_no_avaliable);
         mBlankHintTextView = (TextView) findViewById(R.id.no_basket_hint);
-
-        /*
-         * 悬浮框
-         */
-        mAddBasketImageView = (ImageView) findViewById(R.id.basket_add_image_view);
-        mAddBasketImageView.setOnClickListener(new View.OnClickListener() {  // 点击响应
-            @Override
-            public void onClick(View v) {
-                if(mProjectId == null)
-                    DialogToast("错误", "您尚无授权的项目");
-                else {
-                    if(!isHasPermission()) requestPermission();
-                    startActivityForResult(new Intent(BasketStateListActivity.this, CaptureActivity.class),
-                            CAPTURE_ACTIVITY_RESULT);
-                }
-            }
-        });
-
     }
 
 
     /*
      * 初始化
      */
-    //状态筛选栏
     private void initStateList(){
+        //初始化状态筛选栏
         mStateLists.add("待安装");
         mStateLists.add("安装审核");
         mStateLists.add("使用中");
         mStateLists.add("待报停");
         mStateLists.add("报停审核");
+
+        //初始化底部筛选栏
+        list_1.add("一号楼");
+        list_1.add("二号楼");
+        list_1.add("三号楼");
+        list_1.add("四号楼");
+        list_1.add("区域选择");
+
+        list_2.add("正在施工");
+        list_2.add("暂未使用");
+        list_2.add("状态选择");
+        setData();
     }
 
+    public void setData(){
+        if(list_1 != null && list_2 != null){
+            llChoose.setVisibility(View.VISIBLE);
+
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
+                mySpinner_1.setDropDownVerticalOffset(50);
+                mySpinner_2.setDropDownVerticalOffset(50);
+                mySpinner_1.setBackgroundColor(0x0);
+                mySpinner_2.setBackgroundColor(0x0);
+            }
+
+            adapter = new ArrayAdapter<String>(BasketStateListActivity.this,R.layout.spinner_simple_item,list_1);
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+            mySpinner_1.setAdapter(adapter);
+            mySpinner_1.setSelection(4, true);
+            mySpinner_1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    switch (mySpinner_1.getSelectedItem().toString()){
+                        case "一号楼" :
+                            //TODO 筛选楼层并修改UI
+                            break;
+                        case "二号楼" :
+                            break;
+                        case "三号楼" :
+                            break;
+                        case "四号楼" :
+                            break;
+                            default:break;
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    myTextView.setText("区域选择");
+                }
+            });
+
+            adapter = new ArrayAdapter<String>(BasketStateListActivity.this,R.layout.spinner_simple_item,list_2);
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+            mySpinner_2.setAdapter(adapter);
+
+            mySpinner_2.setSelection(2, true);
+            mySpinner_2.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    switch (mySpinner_2.getSelectedItem().toString()){
+                        case "正在施工" :
+                            //TODO 筛选状态并修改UI
+                            break;
+                        case "暂未使用" :
+                            break;
+                        default:break;
+                    }
+                }
+
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {
+                    myTextView.setText("状态选择");
+                }
+            });
+        } else {
+            llChoose.setVisibility(View.GONE);
+        }
+    }
 
     /*
     * 网络请求
@@ -425,6 +506,7 @@ public class BasketStateListActivity extends AppCompatActivity {
         }
         parseMgBasketStatementList(mgBasketStatementList);
     }
+
     // 解析吊篮状态
     private void parseMgBasketStatementList(List<MgBasketStatement> mgBasketStatements){
         // 初始化吊篮分类列表
@@ -441,70 +523,25 @@ public class BasketStateListActivity extends AppCompatActivity {
     }
 
 
-    // 将吊篮添加至项目
-    private void areaAdminAddBasketIntoProject(String basketId){
-        BaseOkHttpClient.newBuilder()
-                .addHeader("Authorization", mToken)
-                .addParam("projectId", mProjectId)
-                .addParam("boxId", basketId)
-                .post()
-                .url(AREA_ADMIN_ADD_BASKET_INTO_PROJECT)
-                .build()
-                .enqueue(new BaseCallBack() {
-                    @Override
-                    public void onSuccess(Object o) {
-                        JSONObject jsonObject = JSON.parseObject(o.toString());
-                        String isIncrease = jsonObject.getString("increase");
-                        if(isIncrease.contains("失败")){
-                            Log.i(TAG, "新增吊篮失败");
-                            DialogToast("提示", "该吊篮已存在于其他项目中！").show();
-                        }else{
-                            Log.i(TAG, "添加吊篮成功");
-                            DialogToast("提示", "您已成功添加该吊篮！").show();
-                            mHandler.sendEmptyMessage(UPDATE_PROJECT_LIST_FROM_INTERNET_MSG);
-                        }
-                    }
-
-                    @Override
-                    public void onError(int code) {
-                        Log.i(TAG, "添加吊篮错误：" + code);
-                        switch(code){
-                            case 401:
-                                ToastUtil.showToastTips(BasketStateListActivity.this, "登陆已过期，请重新登录");
-                                startActivity(new Intent(BasketStateListActivity.this, LoginActivity.class));
-                                BasketStateListActivity.this.finish();
-                                break;
-                            case 403:
-                                break;
-                        }
-                    }
-
-                    @Override
-                    public void onFailure(Call call, IOException e) {
-
-                    }
-                });
-    }
-
     /*
      * UI 更新类
      */
     // 主体页面显示逻辑控制
     public void updateBodyContentView(){
+       //有无吊篮显示
         if (mgBasketStatementList.size() == 0) {  // 显示无操作吊篮
             mListRelativeLayout.setVisibility(View.GONE);
             mBlankRelativeLayout.setVisibility(View.VISIBLE);
             mBlankHintTextView.setText("暂无相关吊篮");
+            llChoose.setVisibility(View.GONE);
         } else {                                   // 显示可操作吊篮列表
             mBlankRelativeLayout.setVisibility(View.GONE);
             mListRelativeLayout.setVisibility(View.VISIBLE);
             mgBasketStatementAdapter.notifyDataSetChanged();
+            //仅在使用中状态展示筛选栏
+            /*if(pre_selectedPosition == 2) llChoose.setVisibility(View.VISIBLE);
+            else llChoose.setVisibility(View.GONE);*/
         }
-        // 添加吊篮按钮
-        if(pre_selectedPosition == 0)
-            mAddBasketImageView.setVisibility(View.VISIBLE);
-        else
-            mAddBasketImageView.setVisibility(View.GONE);
     }
 
     /*
@@ -514,16 +551,6 @@ public class BasketStateListActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case CAPTURE_ACTIVITY_RESULT:  // 扫描二维码名片返回结果
-                if (resultCode == RESULT_OK) {
-                    String basketId = data.getStringExtra(QR_CODE_RESULT);
-                    Log.i(TAG, "QR_Content: " + basketId);
-                    if (isBasketInProject(basketId))  // 已存在于项目中
-                        DialogToast("提示", "吊篮已经在项目中").show();
-                    else  // 待添加
-                        areaAdminAddBasketIntoProject(basketId);
-                }
-                break;
             case UPLOAD_BASKET_IMAGE_RESULT:  // 上传预验收图片返回
                 if (resultCode == RESULT_OK) {
                     // TODO 隐藏该吊篮的预验收按钮
@@ -535,18 +562,6 @@ public class BasketStateListActivity extends AppCompatActivity {
             default:
                 break;
         }
-    }
-
-    /*
-     * 业务逻辑相关
-     */
-    // 判断扫描到的吊篮是否在项目中
-    private boolean isBasketInProject(String basketId) {
-        for (int i = 0; i < mgBasketStatementList.size(); i++) {
-            if (basketId.equals(mgBasketStatementList.get(i).getBasketId()))
-                return true;
-        }
-        return false;
     }
 
 
@@ -618,6 +633,15 @@ public class BasketStateListActivity extends AppCompatActivity {
                         }
                     }
                 }).setTitle(mTitle);
+    }
+
+
+    /*
+    * 工具类
+    * */
+    public static int dip2px(Context context, float dpValue) {
+        float scale = context.getResources().getDisplayMetrics().density;
+        return (int) (dpValue * scale + 0.5f);
     }
 
 }

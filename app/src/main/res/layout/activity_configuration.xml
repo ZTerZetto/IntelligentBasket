@@ -79,14 +79,40 @@
                     android:id="@+id/txt_sixMeter_num"
                     style="@style/more_common_desc_textView_style"
                     android:layout_alignParentEnd="false"
-                    android:layout_toLeftOf="@+id/txt_current_content_unit"
+                    android:layout_toLeftOf="@+id/txt_current_sixMeter_content_unit"
                     android:text="1"/>
                 <TextView
-                    android:id="@+id/txt_current_content_unit"
+                    android:id="@+id/txt_current_sixMeter_content_unit"
                     style="@style/more_common_desc_textView_style"
                     android:textColor="@color/colorGradText"
                     android:text="个"/>
             </RelativeLayout>
+
+            <RelativeLayout
+                android:id="@+id/item_eightMeter_layout"
+                style="@style/me_common_item_relativeLayout_style">
+                <TextView
+                    style="@style/more_common_item_textView_style"
+                    android:text="八米吊篮"/>
+                <EditText
+                    android:id="@+id/txt_eightMeter_num"
+                    style="@style/more_common_desc_textView_style"
+                    android:layout_alignParentEnd="false"
+                    android:layout_toLeftOf="@+id/txt_current_eightMeter_content_unit"
+                    android:text="2"/>
+                <TextView
+                    android:id="@+id/txt_current_eightMeter_content_unit"
+                    style="@style/more_common_desc_textView_style"
+                    android:textColor="@color/colorGradText"
+                    android:text="个"/>
+            </RelativeLayout>
+
+
+            <Button
+                style="@style/btnStyle"
+                android:layout_marginVertical="30dp"
+                android:text="提交配置清单"
+                android:id="@+id/bt_send_configuration"/>
 
 
         </LinearLayout>

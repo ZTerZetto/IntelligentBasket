@@ -303,6 +303,11 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
             }
 
             @Override
+            public void onUploadAccept(View view, int position) {
+
+            }
+
+            @Override
             public void onUploadCertClick(View view, int position) {
                 // 点击安监证书
                 Log.i(TAG, "You have clicked the "+ position+" item's PreAssAndAcept");

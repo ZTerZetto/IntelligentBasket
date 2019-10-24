@@ -55,10 +55,10 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
 
             // 消息监听
             this.onItemClickListener = onItemClickListener;
-            basketUploadCert.setOnClickListener(new View.OnClickListener() {
+            basketUploadAccept.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    onItemClickListener.onUploadCertClick(v, getAdapterPosition());
+                    onItemClickListener.onUploadAccept(v, getAdapterPosition());
                 }
             });
             basketUploadCert.setOnClickListener(new View.OnClickListener() {
@@ -107,6 +107,7 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
 
         //viewHolder.basketIndexImageView.setImageUrl(mgBasketStatement.getBasketId()); // 图像
         viewHolder.basketUploadCert.setVisibility(View.GONE); // 预安装
+        viewHolder.basketUploadCert.setVisibility(View.GONE); // 预安装
         viewHolder.basketPreApplyStop.setVisibility(View.GONE); // 预报停
         switch(mgBasketStatement.getBasketStatement().substring(0,1)){ // 吊篮状态
             case "0":
@@ -121,6 +122,7 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
                 viewHolder.basketUploadCert.setVisibility(View.VISIBLE);
                 break;
             case "3":
+
                 viewHolder.basketStatementTextView.setText("使用中");
                 break;
             case "4":
@@ -159,6 +161,13 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
          * @param position 点击得到位置
          */
         public void onItemClick(View view, int position);
+        /**
+         * 当RecyclerView某个被点击的时候回调
+         *
+         * @param view     点击item的视图
+         * @param position 点击得到位置
+         */
+        public void onUploadAccept(View view, int position);
         /**
          * 当RecyclerView某个被点击的时候回调
          *

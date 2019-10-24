@@ -102,6 +102,19 @@
     <string name="angel_upperLimit">倾斜角上限位</string>
     <string name="angel_lowerLimit">倾斜角下限位</string>
     <string name="interval_snapshot">截图时间间隔</string>
+
+    <!-- device activity -->
+    <string name="device_activity_title">设备绑定详情</string>
+    <string name="device_name">名称</string>
+    <string name="device_number">编号</string>
+    <string name="device_1">安全锁</string>
+    <string name="device_2">提升机</string>
+    <string name="device_3">配电柜</string>
+    <string name="device_4">标识标牌</string>
+
+    <!-- history info activity -->
+    <string name="history_info_title">相关图片</string>
+
     <!-- repair activity -->
     <string name="fix_describe">请输入报修情況描述...</string>
 

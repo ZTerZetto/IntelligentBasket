@@ -36,7 +36,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.areaAdmin.AreaAdminMessageActivity"></activity>
+        <activity android:name=".activity.basket.BasketHistoryInfoActivity"></activity>
+        <activity android:name=".activity.basket.BasketDeviceActivity" />
+        <activity android:name=".activity.areaAdmin.AreaAdminMessageActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminSetActivity" />
         <activity android:name=".activity.basket.BasketStickerActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminPrimaryTRYActivity" />

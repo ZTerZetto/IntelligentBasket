@@ -13,6 +13,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -49,6 +50,8 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
 
     private TextView txtProjectId; // 项目编号
     private EditText txtSixMetersNum; // 六米吊篮数目
+
+    private Button btSendConfig; //提交配置清单按钮
 
     // 上传参数
     private Map<String, String> params = new HashMap<String, String>();
@@ -110,6 +113,9 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
 
         txtProjectId  = findViewById(R.id.txt_project_id);
         txtSixMetersNum  = findViewById(R.id.txt_sixMeter_num);
+
+        btSendConfig = findViewById(R.id.bt_send_configuration);
+        btSendConfig.setOnClickListener(this);
     }
 
     /*
@@ -134,6 +140,9 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
     public void onClick(View v) {
         switch(v.getId()){
             case R.id.toolbar_send_configuration:
+                httpSubmitParam();
+                break;
+            case R.id.bt_send_configuration:
                 httpSubmitParam();
                 break;
             default:

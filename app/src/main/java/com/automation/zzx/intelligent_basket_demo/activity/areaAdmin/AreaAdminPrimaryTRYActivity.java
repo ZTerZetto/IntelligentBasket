@@ -163,7 +163,6 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
                     mProjectInfoList.clear();
                     parseProjectListInfo((String)msg.obj);  // 解析数据
                     setLastLoginProjectId();  // 设置默认项目
-
                     if(mProjectNameList.size()<=0) { // 没有项目
                         updateBodyContentView();
                     } else {
@@ -171,6 +170,7 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
                         areaAdminGetAllBasket();  //根据项目ID获取吊篮信息
                     }
                     break;
+
                 default:
                     break;
             }
@@ -300,14 +300,14 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
                         intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
                         startActivityForResult(intent, UPLOAD_CONFIGURATION_RESULT);
                         break;
-                    case 1: //查看吊篮
+                    case 1: //吊篮列表
                         Log.i(TAG, "You have clicked the basket button");
                         intent = new Intent(AreaAdminPrimaryTRYActivity.this, BasketStateListActivity.class);
                         intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
                         intent.putExtra(PROJECT_NAME, mProjectInfoList.get(currentSelectedProject).getProjectName());
                         startActivity(intent);
                         break;
-                    case 2: //查看平面图
+                    case 2: //平面图
                         intent = new Intent(AreaAdminPrimaryTRYActivity.this, BasketStickerActivity.class);
                         startActivity(intent);
                         break;
@@ -330,7 +330,7 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent;
                 switch (position) {
-                    case 0: //电子合同
+                    case 0: //查看合同
                         Log.i(TAG, "You have clicked the examine compact button");
                         intent = new Intent(AreaAdminPrimaryTRYActivity.this, CheckCompactActivity.class);
                         startActivity(intent);
@@ -369,9 +369,9 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
      * 初始化进度轴
      */
     public void initProjectScheduleList(){
-        mProjectScheduleList.add("立项");
+        mProjectScheduleList.add("合同执行");
         mProjectScheduleList.add("配置清单");
-        mProjectScheduleList.add("安装");
+        mProjectScheduleList.add("吊篮安装");
         mProjectScheduleList.add("安监证书");
         mProjectScheduleList.add("进行中");
         mProjectScheduleList.add("结束");
@@ -383,15 +383,15 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
         mBasFunctions = new ArrayList<>();
         Function configuration = new Function("配置清单", R.mipmap.ic_setting_192);
         mBasFunctions.add(configuration);
-        Function parameter = new Function("查看吊篮", R.mipmap.ic_icon_basket);
+        Function parameter = new Function("吊篮列表", R.mipmap.ic_icon_basket);
         mBasFunctions.add(parameter);
-        Function image = new Function("查看平面图", R.mipmap.ic_image_192);
+        Function image = new Function("平面图", R.mipmap.ic_image_192);
         mBasFunctions.add(image);
         Function repair = new Function("报修记录", R.mipmap.ic_repair_192);
         mBasFunctions.add(repair);
 
         mProFunctions = new ArrayList<>();
-        Function compact = new Function("电子合同", R.mipmap.icon_func_contact);
+        Function compact = new Function("查看合同", R.mipmap.icon_func_contact);
         mProFunctions.add(compact);
         Function preApply = new Function("预验收申请", R.mipmap.icon_func_confirm);
         mProFunctions.add(preApply);
@@ -494,6 +494,7 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
                     }
                 });
     }
+
     // 解析项目列表
     private void parseProjectListInfo(String responseData){
         JSONObject jsonObject = JSON.parseObject(responseData);
@@ -506,6 +507,7 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
             mProjectInfoList.add(projectInfoJsonObject.toJavaObject(ProjectInfo.class));
         }
     }
+
     // 默认登录上次项目号
     private void setLastLoginProjectId() {
         if (mLastProjectId != null) {
@@ -538,7 +540,6 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
                         message.what = UPDATE_CURRENT_PROJECT_MSG;
                         message.obj = responseData;
                         mHandler.sendMessage(message);
-
                         mSmartRefreshLayout.finishRefresh(100);
                     }
 
@@ -708,7 +709,6 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 currentSelectedProject = tmpSelectedProject;
-                /*mHandler.sendEmptyMessage(UPDATE_CURRENT_PROJECT_MSG);//切换项目后，自动更新UI*/
                 areaAdminGetAllBasket();
                 mSelectProjectDialog.dismiss();
             }
@@ -724,6 +724,7 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
         mSelectProjectDialog = alertBuilder.create();
         mSelectProjectDialog.show();
     }
+
 
     /*
      * 提示弹框
@@ -741,6 +742,7 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
                     }
                 }).setTitle(mTitle);
     }
+
 
     /*
      * 工具类
