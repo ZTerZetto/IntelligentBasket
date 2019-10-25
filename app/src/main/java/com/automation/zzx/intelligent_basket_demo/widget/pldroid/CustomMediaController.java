@@ -26,8 +26,12 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketVideoActivity;
+import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.pili.pldroid.player.IMediaController;
 import com.pili.pldroid.player.widget.PLVideoTextureView;
+
+import java.util.List;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.ASPECT_RATIO;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.ASPECT_RATIO_VIDEO;
@@ -44,6 +48,7 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
     private IMediaController.MediaPlayerControl mPlayer;
     private Context mContext;
     private Context mParentContext;
+    private BasketVideoActivity mParentActivity;
     private PopupWindow mWindow;
     private int mAnimStyle;  // 动画样式
     private View mAnchor;     // 锚点
@@ -62,8 +67,11 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
     private RelativeLayout mMediaControllerAll; // 弹窗
     private TextView mFileNameTextView;  // 视频名称
     private String mFileName;
+    private List<String> mVideoUrls;
+    private int mVidelUrlIndex=0;
     private ImageView mBackImageView;  // 返回
     private ImageView mPauseImageView; // 暂停播放
+    private ImageView mSwitchWayImageView; // 切换线路
     private ImageView mCaptureImageView; // 截屏
     private ImageView mScreenImageView; // 全屏/还原
 
@@ -95,13 +103,14 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
         mFromXml = true;
         initController(context);
     }
-
     // 构造函数
-    public CustomMediaController(Context context, String filename) {
+    public CustomMediaController(Context context, String filename, List<String> urls, BasketVideoActivity parentActivity) {
         super(context);
         getScreenInfo();  // 获取屏幕尺寸
         mParentContext = context;
         mFileName = filename;
+        mVideoUrls = urls;
+        mParentActivity = parentActivity;
         if (!mFromXml && initController(context))
             initFloatingWindow();
     }
@@ -163,6 +172,15 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
         if(mPauseImageView != null){
             // do something
             mPauseImageView.setOnClickListener(mPlayAndPauseListener);
+        }
+        mSwitchWayImageView = (ImageView) v.findViewById(getResources().getIdentifier(
+                "mediacontroller_switchway", "id", mContext.getPackageName()));
+        if (mVideoUrls.size() < 2){
+            mSwitchWayImageView.setVisibility(GONE);  // 如果不存在双路视频，关闭切换功能
+        }
+        if(mSwitchWayImageView != null){
+            // do something
+            mSwitchWayImageView.setOnClickListener(mSwitchWayImageListener);
         }
         mCaptureImageView = (ImageView) v.findViewById(getResources().getIdentifier(
                 "mediacontroller_screenshot", "id", mContext.getPackageName()));
@@ -317,6 +335,22 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
         mIsFullScreen = false;
     }
 
+    // 切换新路
+    private void doSwitchWay(){
+        mVidelUrlIndex += 1;
+        mVidelUrlIndex = mVidelUrlIndex % mVideoUrls.size();
+
+        mPlVideoTextureView.stopPlayback();
+        mPlVideoTextureView.setVideoPath(mVideoUrls.get(mVidelUrlIndex));
+        if(1==mVidelUrlIndex) {  // 板载摄像头
+            mParentActivity.openDeviceDefaultVideo();  // 如果打开的是板载视频，需要发送消息请求
+            ToastUtil.showToastTips(mContext, "切换至板载摄像头");
+        }else{
+            ToastUtil.showToastTips(mContext, "切换至海康摄像头");
+        }
+        mPlVideoTextureView.start();
+    }
+
     // 截屏
     private void doCaptureScreen(){
         mPlVideoTextureView.captureImage(0);
@@ -347,6 +381,15 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
         public void onClick(View v) {
             Log.d(TAG, "You has clicked play/pause");
             doPauseResume();
+            show(sDefaultTimeout);
+        }
+    };
+    // 暂停/播放按钮
+    private OnClickListener mSwitchWayImageListener = new OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            Log.d(TAG, "You has clicked switch/way");
+            doSwitchWay();
             show(sDefaultTimeout);
         }
     };
