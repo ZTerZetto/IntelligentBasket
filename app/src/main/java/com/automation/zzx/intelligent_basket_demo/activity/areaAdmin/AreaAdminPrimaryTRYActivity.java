@@ -395,7 +395,7 @@ public class AreaAdminPrimaryTRYActivity extends AppCompatActivity implements Vi
         mProFunctions.add(compact);
         Function preApply = new Function("预验收申请", R.mipmap.icon_func_confirm);
         mProFunctions.add(preApply);
-        Function certification = new Function("安检证书", R.mipmap.icon_func_certificate);
+        Function certification = new Function("安监证书", R.mipmap.icon_func_certificate);
         mProFunctions.add(certification);
         Function preFinish = new Function("预报停申请", R.mipmap.icon_func_pre_end);
         mProFunctions.add(preFinish);

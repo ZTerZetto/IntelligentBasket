@@ -185,7 +185,7 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
         Function equipment = new Function("设备绑定", R.mipmap.ic_device_192);
         //Function video = new Function("监控", R.mipmap.ic_video);
         mFunctions.add(equipment);
-        Function history = new Function("历史图片", R.mipmap.ic_history_info_192);
+        Function history = new Function("相关信息", R.mipmap.ic_history_info_192);
         //Function video = new Function("监控", R.mipmap.ic_video);
         mFunctions.add(history);
         Function repair = new Function("申请报修", R.mipmap.ic_repair_192);

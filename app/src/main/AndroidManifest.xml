@@ -59,8 +59,6 @@
         <activity android:name=".activity.basket.BasketStickerActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminPrimaryTRYActivity" />
         <activity android:name=".activity.common.PasswordChangeActivity" />
-        <activity android:name=".activity.basketSupervisor.SupervisorBasketActivity" />
-        <activity android:name=".activity.basketSupervisor.SupervisorPrimaryActivity" />
         <activity android:name=".activity.common.RepairInfoListActivity" />
         <activity android:name=".activity.areaAdmin.ConfigurationActivity" />
         <activity android:name=".activity.inspectionPerson.OutAndInStorageActivity" />
@@ -92,7 +90,6 @@
         <activity
             android:name=".activity.basket.BasketRepairFinishActivity"
             android:launchMode="singleTask" />
-        <activity android:name=".activity.basket.BasketVideoActivity"
         <activity
             android:name=".activity.basket.BasketVideoActivity"
             android:configChanges="orientation|screenSize"
