@@ -11,6 +11,7 @@
 
     <!-- color -->
     <color name="white">#ffffffff</color>
+    <color name="white_transparent">#2f000000</color>
     <color name="bg_common_gray">#ffe2e2e2</color>
     <color name="black">#000000</color>
     <color name="grad">#ff3c3c3c</color>

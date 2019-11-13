@@ -211,7 +211,7 @@ public class SvBasketListFragment extends Fragment{
             String deviceId = basketObj.getString("deviceId");
             if(deviceId==null || deviceId.equals("")) continue;
             mBasketStatements.add(new MgBasketStatement(basketObj.getString("deviceId"),
-                    null, basketObj.getString("storageState")));
+                    null, basketObj.getString("storageState"),basketObj.getString("workingState")));
         }
         return mBasketStatements;
     }

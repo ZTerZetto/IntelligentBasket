@@ -307,7 +307,7 @@ public class OutAndInStorageActivity extends AppCompatActivity implements View.O
             String deviceId = basketObj.getString("deviceId");
             if (deviceId == null || deviceId.equals("")) continue;
             mAddedBasketList.add(new MgBasketStatement(basketObj.getString("deviceId"),
-                    null, basketObj.getString("storageState")));
+                    null, basketObj.getString("storageState"),"0"));
         }
 
         mAddedBasketAdapter.notifyDataSetChanged();

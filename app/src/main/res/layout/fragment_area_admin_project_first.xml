@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/project_more_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ToolBarPopupThem">
+
+        <TextView
+            android:id="@+id/project_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="项    目"
+            android:singleLine="true"
+            android:textColor="@color/colorWhiteText"
+            android:textSize="19sp" />
+
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="@dimen/size_24"
+        android:layout_marginHorizontal="@dimen/size_24">
+
+        <ImageView
+            android:id="@+id/iv_project_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:src="@mipmap/bg_operating"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_round_selector"
+            android:elevation="8dp">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/iv_project_2"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_round_selector"
+            android:src="@mipmap/bg_installing"
+            android:elevation="8dp">
+
+        </ImageView>
+
+        <ImageView
+            android:id="@+id/iv_project_3"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="5dp"
+            android:layout_weight="1"
+            android:adjustViewBounds="true"
+            android:background="@drawable/bg_round_selector"
+            android:src="@mipmap/bg_ending"
+            android:elevation="8dp">
+        </ImageView>
+
+    </LinearLayout>
+
+
+</LinearLayout>

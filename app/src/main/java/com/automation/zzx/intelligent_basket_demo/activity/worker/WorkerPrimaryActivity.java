@@ -24,7 +24,6 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketSettleActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UserMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
@@ -32,8 +31,6 @@ import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrim
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
-import com.automation.zzx.intelligent_basket_demo.application.CustomApplication;
-import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.VerifyWorkDialog;

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorWorkPhotosBackground"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/smart_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                style="@style/more_common_linearlayout_style">
+                <RelativeLayout
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:text="@string/device_name"/>
+                    <TextView
+                        style="@style/more_common_item_textView_style"
+                        android:layout_alignParentRight="true"
+                        android:layout_marginRight="50dp"
+                        android:text="@string/device_number"/>
+                </RelativeLayout>
+                <View
+                    style="@style/me_horizontal_view_style"/>
+                <ListView
+                    android:id="@+id/install_team_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content">
+                </ListView>
+            </LinearLayout>
+
+        </RelativeLayout>
+
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</LinearLayout>

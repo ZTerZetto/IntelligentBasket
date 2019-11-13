@@ -29,7 +29,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryTRYActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
@@ -51,6 +51,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -63,9 +64,14 @@ public class BasketStateListActivity extends AppCompatActivity {
     private final static String TAG = "BasketStateListActivity";
 
     // Handler 消息类型
+    private final static String SORT_TYPE_WORKING = "working";  // 排序关键词——正在工作优先
+    private final static String SORT_TYPE_RESTING = "resting";   // 排序关键词——空闲状态优先
+
+    // Handler 消息类型
     private final static int UPDATE_BASKET_STATEMENT_MSG = 101;  // 更新吊篮状态列表
-    private final static int GET_BASKET_MSG =102;   // 获取指定项目的吊篮列表
-    private final static int UPDATE_PROJECT_LIST_FROM_INTERNET_MSG = 103; // 从网络重新获取指定项目的吊篮信息
+    private final static int UPDATE_BASKET_SORT_MSG = 102;  // 更新排序后吊篮列表
+    private final static int GET_BASKET_MSG =103;   // 获取指定项目的吊篮列表
+    private final static int UPDATE_PROJECT_LIST_FROM_INTERNET_MSG = 104; // 从网络重新获取指定项目的吊篮信息
 
     // intent 消息参数
     public final static String PROJECT_ID = "projectId";  // 上传图片的项目Id
@@ -75,7 +81,6 @@ public class BasketStateListActivity extends AppCompatActivity {
     public final static String UPLOAD_BASKETS_PRE_INSTALL_IMAGE = "basketsPreInstall"; // 预验收
     public final static String UPLOAD_CERTIFICATE_IMAGE = "certificate"; // 安监证书
     public final static String BASKET_ID = "basketId"; // 上传图片的吊篮ID
-
 
     //页面返回消息
     private final static int CAPTURE_ACTIVITY_RESULT = 1;  // 扫码返回
@@ -91,7 +96,7 @@ public class BasketStateListActivity extends AppCompatActivity {
     private GridView mBasketStateGv; // 吊篮状态
     private List<String> mStateLists; // 状态名称
     private MgStateAdapter mgStateAdapter; //适配器
-    private int pre_selectedPosition = 0;
+    private int pre_selectedPosition = 2;
 
     /* 主体内容部分*/
     private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
@@ -132,13 +137,16 @@ public class BasketStateListActivity extends AppCompatActivity {
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
             switch (msg.what) {
-                case UPDATE_BASKET_STATEMENT_MSG:  // 更新吊篮列表
+                case UPDATE_BASKET_STATEMENT_MSG:  // 点击状态切换时，更新吊篮列表
                     //筛选实现
                     mgBasketStatementList.clear();
                     mgBasketStatementList.addAll(mgBasketStatementClassifiedList.get(pre_selectedPosition+1));
                     updateBodyContentView();
                     break;
-                case GET_BASKET_MSG:  // 更新吊篮列表
+                case UPDATE_BASKET_SORT_MSG:  // 更新排序后吊篮列表
+                    updateBodyContentView();
+                    break;
+                case GET_BASKET_MSG:  // 获取吊篮列表
                     mgBasketStatementList.clear();
                     mgBasketStatementClassifiedList.clear();
                     parseBasketListInfo((String)msg.obj);  // 更新吊篮
@@ -160,6 +168,7 @@ public class BasketStateListActivity extends AppCompatActivity {
 
         initInfo();
         initWidget();
+        updateBodyContentView();
         areaAdminGetAllBasket();
 
 
@@ -189,7 +198,6 @@ public class BasketStateListActivity extends AppCompatActivity {
                 }
             }
         });*/
-
     }
 
     /*
@@ -238,7 +246,6 @@ public class BasketStateListActivity extends AppCompatActivity {
         mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                //TODO 重新获取吊篮列表
                 if (mProjectId != null) {
                     areaAdminGetAllBasket();
                 } else {
@@ -286,7 +293,7 @@ public class BasketStateListActivity extends AppCompatActivity {
             public void onRefresh(RefreshLayout refreshlayout) {
                 if(mProjectId != null){
                     //更新吊篮列表UI
-                    mHandler.sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);
+                    mHandler.sendEmptyMessage(GET_BASKET_MSG);
                 }else{
                     mSmartRefreshLayout.finishRefresh();
                 }
@@ -309,6 +316,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                 Log.i(TAG, "You have clicked the "+position+" item");
                 // 跳转至吊篮详情页面
                 Intent intent = new Intent(BasketStateListActivity.this, BasketDetailActivity.class);
+                intent.putExtra("project_state",pre_selectedPosition);
                 intent.putExtra("project_id",mProjectId);
                 intent.putExtra("basket_id", mgBasketStatementList.get(position).getBasketId());
                 startActivity(intent);
@@ -321,8 +329,8 @@ public class BasketStateListActivity extends AppCompatActivity {
                 Intent intent;
                 intent = new Intent(BasketStateListActivity.this, UploadImageFTPActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
-                intent.putExtra(AreaAdminPrimaryTRYActivity.BASKET_ID, mgBasketStatementList.get(position).getBasketId());
-                intent.putExtra(AreaAdminPrimaryTRYActivity.UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
+                intent.putExtra(AreaAdminPrimaryActivity.BASKET_ID, mgBasketStatementList.get(position).getBasketId());
+                intent.putExtra(AreaAdminPrimaryActivity.UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
                 startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
             }
 
@@ -334,8 +342,8 @@ public class BasketStateListActivity extends AppCompatActivity {
                 Intent intent;
                 intent = new Intent(BasketStateListActivity.this, UploadImageFTPActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
-                intent.putExtra(AreaAdminPrimaryTRYActivity.BASKET_ID, mgBasketStatementList.get(position).getBasketId());
-                intent.putExtra(AreaAdminPrimaryTRYActivity.UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
+                intent.putExtra(AreaAdminPrimaryActivity.BASKET_ID, mgBasketStatementList.get(position).getBasketId());
+                intent.putExtra(AreaAdminPrimaryActivity.UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
                 startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
             }
 
@@ -364,15 +372,13 @@ public class BasketStateListActivity extends AppCompatActivity {
         mStateLists.add("报停审核");
 
         //初始化底部筛选栏
-        list_1.add("一号楼");
-        list_1.add("二号楼");
-        list_1.add("三号楼");
-        list_1.add("四号楼");
-        list_1.add("区域选择");
+        list_1.add("所有区域");
+        list_1.add("按楼号从小到大");
+        list_1.add("按楼号从大到小");
 
-        list_2.add("正在施工");
-        list_2.add("暂未使用");
-        list_2.add("状态选择");
+        list_2.add("所有状态");
+        list_2.add("正在施工"); //workState == 1
+        list_2.add("暂未使用"); //workState == 0
         setData();
     }
 
@@ -381,8 +387,8 @@ public class BasketStateListActivity extends AppCompatActivity {
             llChoose.setVisibility(View.VISIBLE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mySpinner_1.setDropDownVerticalOffset(50);
-                mySpinner_2.setDropDownVerticalOffset(50);
+                mySpinner_1.setDropDownVerticalOffset(-30);
+                mySpinner_2.setDropDownVerticalOffset(-30);
                 mySpinner_1.setBackgroundColor(0x0);
                 mySpinner_2.setBackgroundColor(0x0);
             }
@@ -390,21 +396,19 @@ public class BasketStateListActivity extends AppCompatActivity {
             adapter = new ArrayAdapter<String>(BasketStateListActivity.this,R.layout.spinner_simple_item,list_1);
             adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             mySpinner_1.setAdapter(adapter);
-            mySpinner_1.setSelection(4, true);
+            mySpinner_1.setSelection(0, true);
             mySpinner_1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     switch (mySpinner_1.getSelectedItem().toString()){
-                        case "一号楼" :
+                        case "按楼号从小到大" :
                             //TODO 筛选楼层并修改UI
+
                             break;
-                        case "二号楼" :
+                        case "按楼号从大到小" :
+
                             break;
-                        case "三号楼" :
-                            break;
-                        case "四号楼" :
-                            break;
-                            default:break;
+                        default:break;
                     }
                 }
 
@@ -418,15 +422,17 @@ public class BasketStateListActivity extends AppCompatActivity {
             adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
             mySpinner_2.setAdapter(adapter);
 
-            mySpinner_2.setSelection(2, true);
+            mySpinner_2.setSelection(0, true);
             mySpinner_2.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
                 @Override
                 public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                     switch (mySpinner_2.getSelectedItem().toString()){
                         case "正在施工" :
                             //TODO 筛选状态并修改UI
+                            sortByWorkingState(SORT_TYPE_WORKING);
                             break;
                         case "暂未使用" :
+                            sortByWorkingState(SORT_TYPE_RESTING);
                             break;
                         default:break;
                     }
@@ -501,8 +507,10 @@ public class BasketStateListActivity extends AppCompatActivity {
             JSONObject basketObj = JSON.parseObject(value);
             String deviceId = basketObj.getString("deviceId");
             if(deviceId==null || deviceId.equals("")) continue;
+            String workingState = basketObj.getString("workingState");
+            if(workingState==null || workingState.equals("")) continue;
             mgBasketStatementList.add(new MgBasketStatement(basketObj.getString("deviceId"),
-                    null, basketObj.getString("storageState")));
+                    null, basketObj.getString("storageState"),basketObj.getString("workingState")));
         }
         parseMgBasketStatementList(mgBasketStatementList);
     }
@@ -539,8 +547,8 @@ public class BasketStateListActivity extends AppCompatActivity {
             mListRelativeLayout.setVisibility(View.VISIBLE);
             mgBasketStatementAdapter.notifyDataSetChanged();
             //仅在使用中状态展示筛选栏
-            /*if(pre_selectedPosition == 2) llChoose.setVisibility(View.VISIBLE);
-            else llChoose.setVisibility(View.GONE);*/
+            if(pre_selectedPosition == 2) llChoose.setVisibility(View.VISIBLE);
+            else llChoose.setVisibility(View.GONE);
         }
     }
 
@@ -642,6 +650,29 @@ public class BasketStateListActivity extends AppCompatActivity {
     public static int dip2px(Context context, float dpValue) {
         float scale = context.getResources().getDisplayMetrics().density;
         return (int) (dpValue * scale + 0.5f);
+    }
+
+    /*
+    * 冒泡排序
+    * */
+    private void sortByWorkingState( String sortType) {
+        for (int i = 0; i < mgBasketStatementList.size() - 1; i++) {
+            for (int j = 0; j < mgBasketStatementList.size() - 1 - i; j++) {
+                //按工作吊篮在前排序
+                if(sortType.equals(SORT_TYPE_WORKING)){
+                    if (mgBasketStatementList.get(j).getWorkStatement().equals("1")) {
+                        Collections.swap(mgBasketStatementList,j,j+1);
+                    }
+                }
+                //按空闲吊篮在前排序
+                else if(sortType.equals(SORT_TYPE_RESTING)){
+                    if (mgBasketStatementList.get(j).getWorkStatement().equals("0")) {
+                        Collections.swap(mgBasketStatementList,j,j+1);
+                    }
+                }
+            }
+        }
+        mHandler.sendEmptyMessage(UPDATE_BASKET_SORT_MSG);
     }
 
 }

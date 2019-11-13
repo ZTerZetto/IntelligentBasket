@@ -37,12 +37,15 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <activity android:name=".activity.areaAdmin.AreaAdminProListActivity"></activity>
+        <activity android:name=".activity.basket.BasketInstallTeamActivity" />
+        <activity android:name=".activity.proAdmin.ProAdminSetActivity" />
+        <activity android:name=".activity.proAdmin.ProAdminMessageActivity" />
+        <activity android:name=".activity.proAdmin.ProAdminPrimaryActivity" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
-            android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" />
-
-        <!-- 欢迎页面 -->
+            android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" /> <!-- 欢迎页面 -->
         <activity android:name=".activity.common.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -52,12 +55,12 @@
         </activity>
         <activity android:name=".activity.basketSupervisor.SupervisorBasketActivity" />
         <activity android:name=".activity.basketSupervisor.SupervisorPrimaryActivity" />
-        <activity android:name=".activity.basket.BasketHistoryInfoActivity"></activity>
+        <activity android:name=".activity.basket.BasketHistoryInfoActivity" />
         <activity android:name=".activity.basket.BasketDeviceActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminMessageActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminSetActivity" />
         <activity android:name=".activity.basket.BasketStickerActivity" />
-        <activity android:name=".activity.areaAdmin.AreaAdminPrimaryTRYActivity" />
+        <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
         <activity android:name=".activity.common.PasswordChangeActivity" />
         <activity android:name=".activity.common.RepairInfoListActivity" />
         <activity android:name=".activity.areaAdmin.ConfigurationActivity" />
@@ -78,10 +81,10 @@
         <activity android:name=".activity.common.RepairDetailActivity" />
         <activity android:name=".activity.worker.WorkerHomePageActivity" />
         <activity android:name=".activity.worker.WorkerMoreActivity" />
-        <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
+        <activity android:name=".activity.areaAdmin.AreaAdminPrimaryOldActivity" />
         <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" />
         <activity android:name=".activity.rentAdmin.AlarmMessageActivity" />
-        <activity android:name=".activity.proAdmin.ProAdminPrimaryActivity" /> <!-- 百度地图Ket -->
+        <activity android:name=".activity.proAdmin.ProAdminPrimaryOldActivity" /> <!-- 百度地图Ket -->
         <activity android:name=".activity.basket.BasketDetailActivity" />
         <activity android:name=".activity.basket.BasketParameterActivity" />
         <activity
@@ -97,12 +100,13 @@
             android:theme="@style/AppThemeFullscreen" />
         <activity android:name=".activity.basket.BasketPhotoActivity" />
         <activity android:name=".activity.worker.WorkerOrderActivity" />
-        <activity android:name=".activity.worker.WorkerPrimaryActivity"
+        <activity
+            android:name=".activity.worker.WorkerPrimaryActivity"
             android:label="@string/title_activity_woker_primary"
             android:theme="@style/AppTheme.NoActionBar" />
         <activity android:name=".activity.areaAdmin.ProDetailActivity" />
         <activity android:name=".activity.areaAdmin.ProCommitActivity" />
-        <activity android:name=".activity.basket.BasketEZVideoActivity"/>
+        <activity android:name=".activity.basket.BasketEZVideoActivity" />
         <activity android:name=".activity.basket.BasketStateListActivity" />
         <activity android:name=".activity.oldversion.WorkerListActivity" />
         <activity android:name=".activity.oldversion.ProListActivity" />
@@ -197,9 +201,7 @@
             <meta-data
                 android:name="android.support.FILE_PROVIDER_PATHS"
                 android:resource="@xml/file_paths" />
-        </provider>
-
-        <!-- 萤石云 -->
+        </provider> <!-- 萤石云 -->
         <!-- UIKit Android 针对API>=28崩溃问题 -->
         <uses-library
             android:name="org.apache.http.legacy"

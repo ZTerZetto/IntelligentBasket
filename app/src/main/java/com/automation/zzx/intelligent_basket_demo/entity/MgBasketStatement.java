@@ -12,24 +12,36 @@ public class MgBasketStatement  implements Serializable {
     private String basketId; // 吊篮ID
     private String basketIndexImage; // 首页数据
     /*
-     * 0: 待入库
-     * 1：待安装
-     * 2：安装审核
-     * 3：使用中
-     * 4：待报停
-     * 5：报停审核
+     * 0: 草稿
+     * 1：待成立项目部
+     * 11：清单待配置
+     * 12：清单待审核
+     * 2：吊篮安装验收
+     * 21：安检证书验收
+     * 3：进行中
+     * 4：已结束
      */
     private String basketStatement; // 吊篮出/入状态
+
+
+
+    /*
+     * 0: 未运行
+     * 1：运行中
+     */
+    private String workStatement; // 吊篮工作状态
 
     /*
      * 构造函数
      */
     public MgBasketStatement(){}
 
-    public MgBasketStatement(String basketId, String basketIndexImage, String basketStatement){
+
+    public MgBasketStatement(String basketId, String basketIndexImage, String basketStatement,String workStatement ){
         this.basketId = basketId;
         this.basketIndexImage = basketIndexImage;
         this.basketStatement = basketStatement;
+        this.workStatement = workStatement;
     }
 
     /*
@@ -59,4 +71,13 @@ public class MgBasketStatement  implements Serializable {
     public void setBasketStatement(String basketStatement) {
         this.basketStatement = basketStatement;
     }
+
+    public String getWorkStatement() {
+        return workStatement;
+    }
+
+    public void setWorkStatement(String workStatement) {
+        this.workStatement = workStatement;
+    }
+
 }

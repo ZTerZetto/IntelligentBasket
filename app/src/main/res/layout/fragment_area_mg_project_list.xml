@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorMainBackground"
+    android:orientation="vertical">
+
+    <RelativeLayout
+        android:id="@+id/ll_space"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/size_50"
+        android:background="@color/white">
+    </RelativeLayout>
+
+    <!-- 上拉/下拉刷新 -->
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/smart_refresh_layout"
+        android:layout_below="@id/ll_space"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 项目列表或无项目 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="vertical">
+
+            <!-- 吊篮主体 -->
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/project_recycler_view"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="visible">
+            </android.support.v7.widget.RecyclerView>
+
+            <!-- 空空如也 -->
+            <RelativeLayout
+                android:id="@+id/project_no_avaliable"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:visibility="gone">
+
+                <ImageView
+                    android:id="@+id/no_project_iv"
+                    android:layout_width="75dp"
+                    android:layout_height="75dp"
+                    android:layout_above="@+id/no_project_hint"
+                    android:layout_centerHorizontal="true"
+                    android:src="@mipmap/ic_no_avaliable_basket" />
+                <TextView
+                    android:id="@+id/no_project_hint"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerInParent="true"
+                    android:layout_marginTop="10dp"
+                    android:text="您还没有相关的吊篮"
+                    android:textSize="16sp"/>
+            </RelativeLayout>
+        </LinearLayout>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+</RelativeLayout>

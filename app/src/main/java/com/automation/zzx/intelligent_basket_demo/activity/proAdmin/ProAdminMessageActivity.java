@@ -1,13 +1,11 @@
-package com.automation.zzx.intelligent_basket_demo.activity.areaAdmin;
+package com.automation.zzx.intelligent_basket_demo.activity.proAdmin;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
+import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
-import android.os.Handler;
-import java.util.ArrayList;
-import java.util.List;
-
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -17,6 +15,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.common.RepairDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgAreaMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.hjq.permissions.OnPermission;
@@ -29,12 +28,22 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.litepal.crud.DataSupport;
 
+import java.util.ArrayList;
+import java.util.List;
 
-public class AreaAdminMessageActivity extends AppCompatActivity {
+public class ProAdminMessageActivity extends AppCompatActivity {
 
     // Message
     private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;;
 
+    // 页面间消息传递标识
+    public final static String REPAIR_MESSAGE_MSG = "repair_message_msg";
+    public final static String PROJECT_ID_MSG = "project_id";
+    public final static String PROJECT_NAME_MSG = "project_name";
+    public final static String BASKET_ID_MSG = "basket_id";
+    public final static String REPAIR_DATE_MSG = "repair_date";
+
+    private ImageView ivBack;
     private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private MgAreaMessageAdapter mgAreaMessageAdapter;
     private List<MessageInfo> mMessageInfoList = new ArrayList<>();
@@ -68,7 +77,7 @@ public class AreaAdminMessageActivity extends AppCompatActivity {
 
         mSmartRefreshLayout = (SmartRefreshLayout) findViewById(R.id.smart_refresh_layout);
         mSmartRefreshLayout.setRefreshHeader(  //设置 Header 为 贝塞尔雷达 样式
-                new BezierCircleHeader(AreaAdminMessageActivity.this));
+                new BezierCircleHeader(ProAdminMessageActivity.this));
         mSmartRefreshLayout.setPrimaryColorsId(R.color.smart_loading_background_color);
         mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
             @Override
@@ -79,14 +88,23 @@ public class AreaAdminMessageActivity extends AppCompatActivity {
         recyclerView = findViewById(R.id.rv_message);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         recyclerView.setLayoutManager(linearLayoutManager);
-        mgAreaMessageAdapter = new MgAreaMessageAdapter(AreaAdminMessageActivity.this,mMessageInfoList);
+        mgAreaMessageAdapter = new MgAreaMessageAdapter(ProAdminMessageActivity.this,mMessageInfoList);
         // 点击消息列表item响应
         mgAreaMessageAdapter.setOnItemClickListener(new MgAreaMessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 MessageInfo messageInfo = mMessageInfoList.get(position);
                 // do something
-
+                switch(messageInfo.getmType()){
+                    case "4": // 报修消息
+                        Intent intent = new Intent(ProAdminMessageActivity.this, RepairDetailActivity.class); // 跳转至维修详情页面
+                        intent.putExtra(PROJECT_ID_MSG, messageInfo.getmProjectId());
+                        intent.putExtra(PROJECT_NAME_MSG, messageInfo.getmProjectName());
+                        intent.putExtra(BASKET_ID_MSG, messageInfo.getmBasketId());
+                        intent.putExtra(REPAIR_DATE_MSG, messageInfo.getmTime());
+                        startActivity(intent);
+                        break;
+                }
                 // 更新页面与数据库
                 if(!messageInfo.ismIsChecked()) {
                     // 更新页面
@@ -120,7 +138,7 @@ public class AreaAdminMessageActivity extends AppCompatActivity {
      */
     // 申请权限
     private void requestPermission() {
-        XXPermissions.with(AreaAdminMessageActivity.this)
+        XXPermissions.with(ProAdminMessageActivity.this)
                 .constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
                 .permission(Permission.Group.STORAGE) //支持请求6.0悬浮窗权限8.0请求安装权限
                 .request(new OnPermission() {
@@ -130,7 +148,7 @@ public class AreaAdminMessageActivity extends AppCompatActivity {
                             //initCamera(scanPreview.getHolder());
                             onResume();
                         }else {
-                            Toast.makeText(AreaAdminMessageActivity.this, "必须同意所有的权限才能使用本程序",
+                            Toast.makeText(ProAdminMessageActivity.this, "必须同意所有的权限才能使用本程序",
                                     Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -138,14 +156,14 @@ public class AreaAdminMessageActivity extends AppCompatActivity {
                     @Override
                     public void noPermission(List<String> denied, boolean quick) {
                         if(quick) {
-                            Toast.makeText(AreaAdminMessageActivity.this, "被永久拒绝授权，请手动授予权限",
+                            Toast.makeText(ProAdminMessageActivity.this, "被永久拒绝授权，请手动授予权限",
                                     Toast.LENGTH_SHORT).show();
                             // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                            XXPermissions.gotoPermissionSettings(AreaAdminMessageActivity.this);
+                            XXPermissions.gotoPermissionSettings(ProAdminMessageActivity.this);
                         }else {
-                            Toast.makeText(AreaAdminMessageActivity.this, "获取权限失败",
+                            Toast.makeText(ProAdminMessageActivity.this, "获取权限失败",
                                     Toast.LENGTH_SHORT).show();
-                            AreaAdminMessageActivity.this.finish();
+                            ProAdminMessageActivity.this.finish();
                         }
                     }
                 });
@@ -155,7 +173,7 @@ public class AreaAdminMessageActivity extends AppCompatActivity {
 
     // 是否有权限：摄像头、拨打电话
     private boolean isHasPermission() {
-        if (XXPermissions.isHasPermission(AreaAdminMessageActivity.this, Permission.Group.STORAGE))
+        if (XXPermissions.isHasPermission(ProAdminMessageActivity.this, Permission.Group.STORAGE))
             return true;
         return false;
     }

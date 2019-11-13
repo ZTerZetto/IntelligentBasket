@@ -24,16 +24,6 @@
                 android:singleLine="true"
                 android:textColor="@color/colorWhiteText"
                 android:textSize="20sp" />
-            <!-- 右侧个人入口 -->
-            <ImageView
-                android:id="@+id/iv_back"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="right"
-                android:layout_marginRight="10dp"
-                android:src="@mipmap/ic_navi_back"
-                android:rotation="180"/>
-
         </android.support.v7.widget.Toolbar>
     </RelativeLayout>
 

@@ -136,7 +136,7 @@
         <item name="android:background">@null</item>
         <item name="android:gravity">center_vertical</item>
         <item name="android:paddingLeft">15dp</item>
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">14sp</item>
     </style>
 
     <!-- 文本编辑框样式-->
@@ -533,6 +533,26 @@
         <item name="android:layout_alignParentRight">true</item>
         <item name="android:background">@drawable/bg_ellipse_with_gray_line</item>
         <item name="android:padding">8dp</item>
+    </style>
+
+    <!-- 项目列表 -->
+    <style name= "ProjectItemLinearLayout">
+    <item name="android:layout_width">match_parent</item>
+    <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="ProjectItemInfoLL">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+    </style>
+    <style name="ProjectItemCatTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+    </style>
+    <style name="ProjectItemContentTextView" >
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textColor">@color/black</item>
     </style>
     <!-- 上传图片活动-弹出菜单 -->
     <style name="popupMenuStyle" parent="Widget.AppCompat.PopupMenu">

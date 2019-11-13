@@ -1,31 +1,28 @@
-package com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin;
+package com.automation.zzx.intelligent_basket_demo.activity.proAdmin;
 
 import android.annotation.SuppressLint;
-import android.annotation.TargetApi;
-import android.app.Activity;
-import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Build;
-import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 import android.os.Parcelable;
 import android.preference.PreferenceManager;
-import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
+import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryOldActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
@@ -36,15 +33,9 @@ import java.io.IOException;
 
 import okhttp3.Call;
 
+public class ProAdminSetActivity extends AppCompatActivity implements View.OnClickListener {
 
-/**
- * Created by pengchenghu on 2019/3/27.
- * Author Email: 15651851181@163.com
- * Describe:租方管理员用户页面
- */
-public class AreaAdminFragment extends Fragment implements View.OnClickListener {
-
-    private final static String TAG = "AreaAdminFragment";
+    private final static String TAG = "ProAdminSetActivity";
 
     // Handler消息
     private final static int UPDATE_USER_DISPLAY_MSG = 101;
@@ -54,6 +45,7 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
     private SmartImageView mWorkerHead; // 头像
     private TextView mWorkerName;  // 名字
     private TextView mWorkerProjectState;  // 项目
+    private TextView tvRole;//角色名
 
     // 其它功能
     private RelativeLayout mGiveHighPrice; // 给个好评
@@ -61,6 +53,10 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
     private RelativeLayout mContactService; // 联系客服
     private RelativeLayout mCheckUpdate; // 检查更新
     private RelativeLayout mInRegardTo; //关于
+
+    //切换至施工人员
+    private LinearLayout llSwitch;
+    private RelativeLayout rlSwitch;
 
     // 退出登录
     private RelativeLayout mLogout; // 退出登录
@@ -85,50 +81,86 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
         }
     };
 
+
     @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        getRentAdminInfoFromInternet();
-
-        View view = inflater.inflate(R.layout.fragment_area_admin, container, false);
-
-        // header
-        mWorkerLoginLayout = (RelativeLayout) view.findViewById(R.id.login_layout);
-        mWorkerLoginLayout.setOnClickListener(this);
-        mWorkerHead = (SmartImageView) view.findViewById(R.id.login_head); // 头像
-        mWorkerHead.setCircle(true);
-        //mWorkerHead.setImageUrl(mUserHeadUrl);
-        mWorkerName = (TextView) view.findViewById(R.id.login_username);  // 用户名
-        mWorkerProjectState = (TextView) view.findViewById(R.id.worker_project_state); // 项目状态
-
-        // other function
-        mGiveHighPrice = (RelativeLayout) view.findViewById(R.id.more_item_comment_layout); // 给个好评
-        mGiveHighPrice.setOnClickListener(this);
-        mFeedbackComment = (RelativeLayout) view.findViewById(R.id.more_item_feedback_layout); // 反馈意见
-        mFeedbackComment.setOnClickListener(this);
-        mContactService = (RelativeLayout) view.findViewById(R.id.more_item_contact_kefu_layout); // 联系客服
-        mContactService.setOnClickListener(this);
-        mCheckUpdate = (RelativeLayout) view.findViewById(R.id.more_item_check_update_layout); // 检查更新
-        mCheckUpdate.setOnClickListener(this);
-        mInRegardTo = (RelativeLayout) view.findViewById(R.id.more_item_about_layout); // 关于
-        mInRegardTo.setOnClickListener(this);
-
-        // logout
-        mLogout = (RelativeLayout) view.findViewById(R.id.more_item_log_out_layout); // 退出登录
-        mLogout.setOnClickListener(this);
-
-        return view;
+    protected void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        getUserInfo();
+        setContentView(R.layout.fragment_area_admin);
+        initWidget();
     }
 
     /*
-     * 点击响应
+     * 解析用户信息
      */
+    // 获取用户数据
+    private void getUserInfo() {
+        // 从本地获取数据
+        mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserInfo = new UserInfo();
+        mUserInfo.setUserId(mPref.getString("userId", ""));
+        mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mUserInfo.setUserRole(mPref.getString("userRole", ""));
+        mUserInfo.setUserName(mPref.getString("userName", ""));
+        mToken = mPref.getString("loginToken", "");
+        getRentAdminInfoFromInternet();
+
+    }
+    /*
+     * 初始化页面
+     * */
+    //初始化句柄
+    private void initWidget() {
+        // 顶部导航栏
+        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
+        TextView titleText = (TextView) findViewById(R.id.toolbar_title);
+        toolbar.setTitle("我的");
+        titleText.setText("");
+        setSupportActionBar(toolbar);
+        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+
+        // header
+        mWorkerLoginLayout = (RelativeLayout) findViewById(R.id.login_layout);
+        mWorkerLoginLayout.setOnClickListener(this);
+        mWorkerHead = (SmartImageView) findViewById(R.id.login_head); // 头像
+        mWorkerHead.setCircle(true);
+        //mWorkerHead.setImageUrl(mUserHeadUrl);
+        mWorkerName = (TextView) findViewById(R.id.login_username);  // 用户名
+        tvRole = (TextView) findViewById(R.id.tv_role_name);//角色名
+        tvRole.setText("项目管理员");
+        mWorkerProjectState = (TextView) findViewById(R.id.worker_project_state); // 项目状态
+
+        // other function
+        mGiveHighPrice = (RelativeLayout) findViewById(R.id.more_item_comment_layout); // 给个好评
+        mGiveHighPrice.setOnClickListener(this);
+        mFeedbackComment = (RelativeLayout) findViewById(R.id.more_item_feedback_layout); // 反馈意见
+        mFeedbackComment.setOnClickListener(this);
+        mContactService = (RelativeLayout) findViewById(R.id.more_item_contact_kefu_layout); // 联系客服
+        mContactService.setOnClickListener(this);
+        mCheckUpdate = (RelativeLayout) findViewById(R.id.more_item_check_update_layout); // 检查更新
+        mCheckUpdate.setOnClickListener(this);
+        mInRegardTo = (RelativeLayout) findViewById(R.id.more_item_about_layout); // 关于
+        mInRegardTo.setOnClickListener(this);
+
+        //切换角色
+        llSwitch = (LinearLayout) findViewById(R.id.switch_layout); //切换角色
+        llSwitch.setVisibility(View.VISIBLE);
+        rlSwitch =  (RelativeLayout) findViewById(R.id.more_item_switch_layout); //切换角色
+        rlSwitch.setOnClickListener(this);
+
+        // logout
+        mLogout = (RelativeLayout) findViewById(R.id.more_item_log_out_layout); // 退出登录
+        mLogout.setOnClickListener(this);
+
+    }
+
     @Override
     public void onClick(View v) {
         Intent intent;
-        switch(v.getId()){
+        switch (v.getId()) {
             case R.id.login_layout:  // 跳转至个人信息页面
                 Log.i(TAG, "You have clicked login layout");
-                intent = new Intent(getActivity(), PersonalInformationActivity.class);
+                intent = new Intent(ProAdminSetActivity.this, PersonalInformationActivity.class);
                 intent.putExtra("userInfo", (Parcelable) mUserInfo);
                 startActivity(intent);
                 break;
@@ -147,6 +179,10 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
             case R.id.more_item_about_layout: // 关于
                 Log.i(TAG, "You have clicked in regard to button");
                 break;
+            case R.id.more_item_switch_layout: //切换角色
+                Log.i(TAG, "You have clicked in regard to button");
+                switchToWorker();
+                break;
             case R.id.more_item_log_out_layout:  // 退出登录
                 Log.i(TAG, "You have clicked in regard to button");
                 logoutHttp();
@@ -158,12 +194,12 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
      * 网络相关
      */
     // 从网络获取用户信息
-    private void getRentAdminInfoFromInternet(){
+    private void getRentAdminInfoFromInternet() {
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization", mToken)
                 .addParam("userId", mUserInfo.getUserId())
                 .post()
-                .url(AppConfig.AREA_ADMIN_ALL_INFO)
+                .url(AppConfig.PRO_ADMIN_ALL_INFO)
                 .build()
                 .enqueue(new BaseCallBack() {
                     @Override
@@ -183,8 +219,9 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
                     }
                 });
     }
+
     // 解析后台返回数据
-    private void parseUserInfoFromInternet(String data){
+    private void parseUserInfoFromInternet(String data) {
         Log.d(TAG, "parse data:" + data);
         JSONObject jsonObject = JSON.parseObject(data);
         String userInfo = jsonObject.getString("userInfo");
@@ -192,37 +229,36 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
         mHandler.sendEmptyMessage(UPDATE_USER_DISPLAY_MSG);  // 更新人员信息状态
     }
 
-    /*
-     * 登录相关
-     */
-    protected void onAttachToContext(Context context) {
-        //do something
-        mUserInfo = ((AreaAdminPrimaryOldActivity) context).pushUserInfo();
-        mToken = ((AreaAdminPrimaryOldActivity) context).pushToken();
+    //切换角色
+    private void switchToWorker() {
+        startActivity(new Intent(ProAdminSetActivity.this, WorkerPrimaryActivity.class));
+        this.finish();
     }
-    @TargetApi(23)
-    @Override
-    public void onAttach(Context context) {
-        super.onAttach(context);
-        onAttachToContext(context);
-    }
-    @SuppressWarnings("deprecation")
-    @Override
-    public void onAttach(Activity activity) {
-        super.onAttach(activity);
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
-            onAttachToContext(activity);
-        }
-    }
+
     //退出登录
     private void logoutHttp() {
         // 清空本地账号
-        mPref = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        mPref = PreferenceManager.getDefaultSharedPreferences(ProAdminSetActivity.this);
         SharedPreferences.Editor editor = mPref.edit();
         editor.remove("loginToken");
         editor.commit();
-        startActivity(new Intent(getActivity(), LoginActivity.class));
-        getActivity().finish();
+        startActivity(new Intent(ProAdminSetActivity.this, LoginActivity.class));
+        ProAdminSetActivity.this.finish();
+    }
+
+
+    /*
+     * 重构函数
+     */
+    // 顶部导航栏消息响应
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case android.R.id.home: // 返回按钮
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
     }
 
 }

@@ -5,62 +5,119 @@ import android.support.annotation.NonNull;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ArrayAdapter;
+import android.support.v7.widget.RecyclerView;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
-
-import java.util.ArrayList;
 import java.util.List;
 
 // Created by $USER_NAME on 2018/12/12/012.
-public class ProjectAdapter extends ArrayAdapter<ProjectInfo> {
-
-    private int resourceId;
-    private List<ProjectInfo> projectItems = new ArrayList<>();
+public class ProjectAdapter extends RecyclerView.Adapter<ProjectAdapter.ViewHolder> {
+    
+    private List<ProjectInfo> projectItems;
     private  Context context;
+    private ProjectAdapter.OnItemClickListener mOnItemClickListener;  // 消息监听
 
-    public ProjectAdapter(@NonNull Context context, @NonNull int resource, @NonNull List<ProjectInfo> objects) {
-        super(context, resource, objects);
+    public ProjectAdapter(Context context, List<ProjectInfo> objects) {
         this.context = context;
         this.projectItems = objects;
-        resourceId = resource;
     }
 
+    /*
+     * viewholder
+     */
+    static public class ViewHolder extends RecyclerView.ViewHolder implements View.OnClickListener{
+        // 控件
+        TextView title;
+        TextView id;
+        TextView projectState;
+        TextView startTime;
+        TextView endTime;
+        TextView company;
 
-    @Override
-    public View getView(int position, View converView, ViewGroup parent){
-        ProjectInfo projectItems = getItem(position);//获取当前实例
-        View view ;
-        ViewHolder viewHolder;
-        if (converView == null){
-            view = LayoutInflater.from(getContext()).inflate(resourceId, parent, false);
-            viewHolder = new ViewHolder();
-            viewHolder.basketId = (TextView) view.findViewById(R.id.txt_id);
-            //viewHolder.basketState = (ImageView) view.findViewById(R.id.txt_state);
-            viewHolder.workerId = (TextView) view.findViewById(R.id.txt_worker);
+        private OnItemClickListener onItemClickListener;
 
-            view.setTag(viewHolder);
-        }else{
-            view = converView;
-            viewHolder = (ViewHolder) view.getTag();//重新获取ViewHolder
+        public ViewHolder(@NonNull View itemView, final OnItemClickListener onItemClickListener) {
+            super(itemView);
+            // 初始化控件
+            title = (TextView) itemView.findViewById(R.id.project_title);
+            id = (TextView) itemView.findViewById(R.id.project_id);
+            startTime = (TextView) itemView.findViewById(R.id.project_start_time);
+            projectState = (TextView) itemView.findViewById(R.id.project_state);
+            endTime = (TextView) itemView.findViewById(R.id.project_end_time);
+            company = (TextView) itemView.findViewById(R.id.project_company);
+
+            // 消息监听
+            this.onItemClickListener = onItemClickListener;
+
+            itemView.setOnClickListener(this);
         }
 
-        viewHolder.basketId.setText(projectItems.getProjectId());
-        /*if(projectItems.getProjectState().equals("WORKING")){
-            viewHolder.basketState.setBackgroundColor(Color.rgb(0, 255, 0));
-        } else if(projectItems.getProjectState().equals("RESTING")) {
-            viewHolder.basketState.setBackgroundColor(Color.rgb(255, 0, 0));
-        }*/
-
-        viewHolder.workerId.setText(projectItems.getProjectName());
-
-        return view;
+        @Override
+        public void onClick(View v) {
+            // getpostion()为Viewholder自带的一个方法，用来获取RecyclerView当前的位置，将此作为参数，传出去
+            onItemClickListener.onItemClick(v, getAdapterPosition());
+        }
     }
-    class ViewHolder{
-        TextView basketId;
-        //ImageView basketState;
-        TextView workerId;
+
+    @NonNull
+    @Override
+    public ViewHolder onCreateViewHolder(@NonNull ViewGroup viewGroup, int i) {
+        View view = LayoutInflater.from(viewGroup.getContext()).inflate(
+                R.layout.item_area_admin_mg_project, viewGroup, false);
+        ViewHolder viewHolder = new ViewHolder(view, mOnItemClickListener);
+
+        return viewHolder;
+    }
+
+    @Override
+    public void onBindViewHolder(@NonNull ViewHolder viewHolder, int i) {
+
+        ProjectInfo projectInfo = projectItems.get(i);
+        switch (projectInfo.getProjectState().charAt(0)){
+            case '0':
+                viewHolder.projectState.setText("立项中");
+                break;
+            case '1':
+            case '2':
+                viewHolder.projectState.setText("吊篮安装中");
+                break;
+            case '3':
+                viewHolder.projectState.setText("进行中");
+                break;
+            case '4':
+                viewHolder.projectState.setText("已结束");
+                break;
+        }
+        viewHolder.title.setText(projectInfo.getProjectName());
+        viewHolder.id.setText(projectInfo.getProjectId());
+        viewHolder.startTime.setText(projectInfo.getProjectStart());
+        viewHolder.endTime.setText(projectInfo.getProjectEnd());
+        viewHolder.company.setText(projectInfo.getCompanyName());
+    }
+
+    @Override
+    public int getItemCount() {
+        return projectItems.size();
+    }
+    
+    /*
+     * 设置监听
+     */
+    public void setOnItemClickListener(ProjectAdapter.OnItemClickListener mOnItemClickListener) {
+        this.mOnItemClickListener = mOnItemClickListener;
+    }
+    
+    /*
+     * 点击接口函数
+     */
+    public interface OnItemClickListener {
+        /**
+         * 当RecyclerView某个被点击的时候回调
+         * @param view 点击item的视图
+         * @param position 点击得到位置
+         */
+        public void onItemClick(View view, int position);
     }
 }

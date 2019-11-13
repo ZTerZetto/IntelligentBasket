@@ -24,10 +24,9 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
@@ -219,8 +218,8 @@ public class ProAdminFragment extends Fragment implements View.OnClickListener {
      */
     protected void onAttachToContext(Context context) {
         //do something
-        mUserInfo = ((ProAdminPrimaryActivity) context).pushUserInfo();
-        mToken = ((ProAdminPrimaryActivity) context).pushToken();
+        mUserInfo = ((ProAdminPrimaryOldActivity) context).pushUserInfo();
+        mToken = ((ProAdminPrimaryOldActivity) context).pushToken();
     }
     @TargetApi(23)
     @Override

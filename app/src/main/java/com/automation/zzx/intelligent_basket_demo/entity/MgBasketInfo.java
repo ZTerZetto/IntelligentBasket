@@ -20,6 +20,13 @@ public class MgBasketInfo {
     public MgBasketInfo(){
         //this.selected = false;
     }
+
+    public MgBasketInfo( String id, String state,String storageState){
+        this.id = id;
+        this.state = state;
+        this.storageState = storageState;
+    }
+
     public MgBasketInfo(String indexImageUri, String id, String state, String outStorage,
                         String principal, String storageState){
         //this.selected = false;

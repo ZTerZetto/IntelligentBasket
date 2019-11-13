@@ -9,9 +9,9 @@ import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.WindowManager;
 
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryTRYActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryOldActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
@@ -69,7 +69,7 @@ public class WelcomeActivity extends AppCompatActivity {
                                 RentAdminPrimaryActivity.class);
                     }else if(userRole.equals("areaAdmin")){
                         mainIntent = new Intent(WelcomeActivity.this,  // 区域管理员页面
-                                AreaAdminPrimaryTRYActivity.class);
+                                AreaAdminPrimaryOldActivity.class);
                     }else if(userRole.equals("inspector")){
                         mainIntent = new Intent(WelcomeActivity.this,  // 巡检人员主页面
                                 InspectPersonPrimaryActivity.class);

@@ -5,7 +5,7 @@
     android:layout_height="wrap_content"
     android:ellipsize="marquee"
     android:singleLine="true"
-    android:textAlignment="center"
-    android:paddingVertical="5dp"
-    android:textColor="@color/recycler_swipe_color_text_gray"
+    android:paddingVertical="10dp"
+    android:layout_marginLeft="@dimen/size_20"
+    android:textColor="@color/colorTextDark"
     android:textSize="14sp"/>

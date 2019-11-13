@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- pengchenghu: 用户租方管理员列表管理页面 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_round_white"
+    android:padding="10dp"
+    android:layout_margin="10dp">
+
+    <!-- 文字信息 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center_vertical">
+        <!-- 项目标题 -->
+        <LinearLayout
+            style="@style/ProjectItemLinearLayout">
+            <TextView
+                android:id="@+id/project_title"
+                style="@style/BasketItemContentTextView"
+                android:text="中心楼424项目"
+                android:textSize="@dimen/textSize_16"
+                android:padding="5dp"/>
+        </LinearLayout>
+
+        <!-- 吊篮编号 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+            <LinearLayout
+                style="@style/ProjectItemInfoLL">
+                <TextView
+                    style="@style/ProjectItemCatTextView"
+                    android:text="编号："/>
+                <TextView
+                    android:id="@+id/project_id"
+                    style="@style/ProjectItemContentTextView"
+                    android:text="10006731"/>
+            </LinearLayout>
+            <LinearLayout
+                style="@style/ProjectItemInfoLL">
+            <TextView
+                style="@style/ProjectItemCatTextView"
+                android:text="状态："/>
+            <TextView
+                android:id="@+id/project_state"
+                style="@style/ProjectItemContentTextView"
+                android:text="正在运行"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 起止日期 -->
+        <LinearLayout
+            style="@style/ProjectItemLinearLayout">
+            <LinearLayout
+                style="@style/ProjectItemInfoLL">
+            <TextView
+                style="@style/ProjectItemCatTextView"
+                android:text="开始日期："/>
+            <TextView
+                android:id="@+id/project_start_time"
+                style="@style/ProjectItemContentTextView"
+                android:text="2018-10-13"/>
+            </LinearLayout>
+            <LinearLayout
+                style="@style/ProjectItemInfoLL">
+            <TextView
+                style="@style/ProjectItemCatTextView"
+                android:text="结束日期："/>
+            <TextView
+                android:id="@+id/project_end_time"
+                style="@style/ProjectItemContentTextView"
+                android:text="2018-10-13"/>
+            </LinearLayout>
+        </LinearLayout>
+
+        <!-- 负责人 -->
+        <LinearLayout
+            style="@style/ProjectItemLinearLayout">
+            <TextView
+                style="@style/ProjectItemCatTextView"
+                android:text="所属公司："/>
+            <TextView
+                android:id="@+id/project_company"
+                style="@style/ProjectItemContentTextView"
+                android:hint="新东方烹饪学校"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

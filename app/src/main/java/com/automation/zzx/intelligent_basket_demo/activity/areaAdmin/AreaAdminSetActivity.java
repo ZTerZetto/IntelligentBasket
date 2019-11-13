@@ -106,13 +106,6 @@ public class AreaAdminSetActivity extends AppCompatActivity implements View.OnCl
      * */
     //初始化句柄
     private void initWidget() {
-        // 顶部导航栏
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        TextView titleText = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle("我的");
-        titleText.setText("");
-        setSupportActionBar(toolbar);
-        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
         // header
         mWorkerLoginLayout = (RelativeLayout) findViewById(R.id.login_layout);
@@ -217,8 +210,8 @@ public class AreaAdminSetActivity extends AppCompatActivity implements View.OnCl
      *//*
         protected void onAttachToContext(Context context) {
             //do something
-            mUserInfo = ((AreaAdminPrimaryActivity) context).pushUserInfo();
-            mToken = ((AreaAdminPrimaryActivity) context).pushToken();
+            mUserInfo = ((AreaAdminPrimaryOldActivity) context).pushUserInfo();
+            mToken = ((AreaAdminPrimaryOldActivity) context).pushToken();
         }
         @TargetApi(23)
         @Override
@@ -246,18 +239,5 @@ public class AreaAdminSetActivity extends AppCompatActivity implements View.OnCl
         AreaAdminSetActivity.this.finish();
     }
 
-    /*
-     * 重构函数
-     */
-    // 顶部导航栏消息响应
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case android.R.id.home: // 返回按钮
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
 }
 

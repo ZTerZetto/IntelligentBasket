@@ -5,7 +5,7 @@
     android:layout_height="match_parent">
 
     <android.support.v7.widget.Toolbar
-        android:id="@+id/areaAdmin_primary_toolbar"
+        android:id="@+id/proAdmin_primary_toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="?attr/colorPrimary"
@@ -34,15 +34,6 @@
             android:textSize="20sp"
             android:textStyle="bold" />
 
-        <!-- 居中项目切换 -->
-        <ImageView
-            android:id="@+id/project_list"
-            android:layout_width="20dp"
-            android:layout_height="20dp"
-            android:layout_gravity="center"
-            android:layout_marginLeft="10dp"
-            android:src="@mipmap/icon_exchange_white" />
-
         <!-- 右侧个人入口 -->
         <ImageView
             android:id="@+id/entrance_mine"
@@ -59,7 +50,7 @@
         android:id="@+id/ll_pro_basic"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@id/areaAdmin_primary_toolbar"
+        android:layout_below="@id/proAdmin_primary_toolbar"
         android:background="@color/colorPrimary"
         android:orientation="vertical">
 
@@ -162,121 +153,120 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent">
 
-            <RelativeLayout
-                android:id="@+id/function_content"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-
-                <!-- 项目进度 -->
                 <RelativeLayout
-                    android:id="@+id/rl_project_schedule"
+                    android:id="@+id/function_content"
                     android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    >
-                    <!-- 项目进度条 -->
-                    <com.automation.zzx.intelligent_basket_demo.widget.TimeLineView
-                        android:id="@+id/project_schedule_timelineview"
+                    android:layout_height="match_parent">
+
+                    <!-- 项目进度 -->
+                    <RelativeLayout
+                        android:id="@+id/rl_project_schedule"
                         android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:layout_margin="20dp"
-                        app:startedCircleColor="@color/colorPrimary"
-                        app:startedLineColor="@color/colorPrimary"
-                        app:startedStringColor="@color/colorPrimary"
-                        app:textSize="14sp"
-                        app:underwayCircleColor="@color/colorPrimary"
-                        app:underwayStringColor="@color/colorPrimary" />
+                        android:layout_height="wrap_content"
+                        >
+                        <!-- 项目进度条 -->
+                        <com.automation.zzx.intelligent_basket_demo.widget.TimeLineView
+                            android:id="@+id/project_schedule_timelineview"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:layout_margin="20dp"
+                            app:startedCircleColor="@color/colorPrimary"
+                            app:startedLineColor="@color/colorPrimary"
+                            app:startedStringColor="@color/colorPrimary"
+                            app:textSize="14sp"
+                            app:underwayCircleColor="@color/colorPrimary"
+                            app:underwayStringColor="@color/colorPrimary" />
+                    </RelativeLayout>
+
+                    <!-- 项目进度 -->
+                    <RelativeLayout
+                        android:id="@+id/rl_project_state_tips"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rl_project_schedule"
+                        android:background="@drawable/bg_elevation_white"
+                        android:elevation="10dp"
+                        android:layout_marginHorizontal="25dp"
+                        android:layout_marginVertical="20dp"
+                        android:padding="10dp">
+
+                        <ImageView
+                            android:id="@+id/iv_project_state_tips"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@mipmap/ic_tips"
+                            android:layout_centerVertical="true"
+                            />
+
+                        <TextView
+                            android:id="@+id/tv_project_state_tips"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_toRightOf="@id/iv_project_state_tips"
+                            android:text="吊篮安装验收已通过！"
+                            android:paddingHorizontal="10dp"
+                            android:layout_centerVertical="true"
+                            android:singleLine="true"
+                            android:textSize="14sp" />
+
+                    </RelativeLayout>
+
+                    <!-- 吊篮管理 -->
+                    <RelativeLayout
+                        android:id="@+id/rl_basket"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rl_project_state_tips">
+
+                        <TextView
+                            android:id="@+id/txt_basket_manage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="吊篮管理"
+                            android:textSize="16sp" />
+
+                        <GridView
+                            android:id="@+id/gv_basket_function"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/txt_basket_manage"
+                            android:horizontalSpacing="2dp"
+                            android:numColumns="4"
+                            android:padding="5dp"
+                            android:stretchMode="columnWidth"
+                            android:verticalSpacing="2dp" />
+
+                    </RelativeLayout>
+
+                    <!-- 项目管理 -->
+                    <RelativeLayout
+                        android:id="@+id/rl_project"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rl_basket">
+
+                        <TextView
+                            android:id="@+id/txt_pro_manage"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:padding="10dp"
+                            android:text="项目管理"
+                            android:textSize="16sp" />
+
+                        <GridView
+                            android:id="@+id/gv_pro_function"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/txt_pro_manage"
+                            android:horizontalSpacing="2dp"
+                            android:numColumns="4"
+                            android:padding="5dp"
+                            android:stretchMode="columnWidth"
+                            android:verticalSpacing="2dp" />
+
+                    </RelativeLayout>
                 </RelativeLayout>
-
-                <!-- 项目进度 -->
-                <RelativeLayout
-                    android:id="@+id/rl_project_state_tips"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/rl_project_schedule"
-                    android:background="@drawable/bg_elevation_white"
-                    android:elevation="10dp"
-                    android:layout_marginHorizontal="25dp"
-                    android:layout_marginVertical="20dp"
-                    android:padding="10dp">
-
-                   <ImageView
-                       android:id="@+id/iv_project_state_tips"
-                       android:layout_width="20dp"
-                       android:layout_height="20dp"
-                       android:src="@mipmap/ic_tips"
-                       android:layout_centerVertical="true"
-                       />
-
-                    <TextView
-                        android:id="@+id/tv_project_state_tips"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_toRightOf="@id/iv_project_state_tips"
-                        android:text="吊篮安装验收已通过！"
-                        android:paddingHorizontal="10dp"
-                        android:layout_centerVertical="true"
-                        android:singleLine="true"
-                        android:textSize="14sp"
-                        />
-
-                </RelativeLayout>
-
-                <!-- 吊篮管理 -->
-                <RelativeLayout
-                    android:id="@+id/rl_basket"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/rl_project_state_tips">
-
-                    <TextView
-                        android:id="@+id/txt_basket_manage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:text="吊篮管理"
-                        android:textSize="16sp" />
-
-                    <GridView
-                        android:id="@+id/gv_basket_function"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/txt_basket_manage"
-                        android:horizontalSpacing="2dp"
-                        android:numColumns="4"
-                        android:padding="5dp"
-                        android:stretchMode="columnWidth"
-                        android:verticalSpacing="2dp" />
-
-                </RelativeLayout>
-
-                <!-- 项目管理 -->
-                <RelativeLayout
-                    android:id="@+id/rl_project"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_below="@+id/rl_basket">
-
-                    <TextView
-                        android:id="@+id/txt_pro_manage"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:padding="10dp"
-                        android:text="项目管理"
-                        android:textSize="16sp" />
-
-                    <GridView
-                        android:id="@+id/gv_pro_function"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_below="@+id/txt_pro_manage"
-                        android:horizontalSpacing="2dp"
-                        android:numColumns="4"
-                        android:padding="5dp"
-                        android:stretchMode="columnWidth"
-                        android:verticalSpacing="2dp" />
-
-                </RelativeLayout>
-            </RelativeLayout>
 
                 <!-- 空空如也 -->
                 <RelativeLayout

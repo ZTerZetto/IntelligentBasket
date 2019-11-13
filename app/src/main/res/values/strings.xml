@@ -33,7 +33,7 @@
     <string name="registInspector_title">注册-巡检人员</string>
 
     <string name="basic_info">基本信息</string>
-    <string name="type_info">选择工种</string>
+    <string name="type_info">工种选择</string>
     <string name="pic_info">上传身份证照片（请保证照片清晰明亮）</string>
     <string name="pic_upNotice">请上传照片!</string>
     <string name="pic_successNotice">照片上传成功!</string>

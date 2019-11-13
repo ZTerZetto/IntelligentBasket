@@ -22,8 +22,8 @@
             />
         <ImageView
             android:id="@+id/imv_drop_1"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="@dimen/size_20"
+            android:layout_height="@dimen/size_20"
             android:layout_alignRight="@id/spinner_1"
             android:layout_marginRight="@dimen/size_20"
             android:layout_centerVertical="true"
@@ -42,8 +42,8 @@
         android:spinnerMode="dropdown" />
         <ImageView
             android:id="@+id/imv_drop_2"
-            android:layout_width="15dp"
-            android:layout_height="15dp"
+            android:layout_width="@dimen/size_20"
+            android:layout_height="@dimen/size_20"
             android:layout_alignRight="@id/spinner_2"
             android:layout_marginRight="@dimen/size_20"
             android:layout_centerVertical="true"

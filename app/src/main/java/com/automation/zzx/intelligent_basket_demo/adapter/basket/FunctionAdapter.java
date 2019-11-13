@@ -46,6 +46,11 @@ public class FunctionAdapter extends ArrayAdapter<Function> {
         viewHolder.functionName.setText(function.getName()); // 设置功能名称
         viewHolder.functionImage.setImageResource(function.getImageId());    // 设置功能图片
 
+        if(!function.getViewState()){
+            viewHolder.functionName.setVisibility(View.GONE);
+            viewHolder.functionImage.setVisibility(View.GONE);
+        }
+
         return view;
     }
 

@@ -9,12 +9,18 @@ import java.io.Serializable;
 // Created by $USER_NAME on 2018/11/28/028.
 public class UserInfo implements Serializable, Parcelable {
 
-    //
+    //用户角色
     private String userId;
     private String userName;
     private String userPassword;
     private String userPhone;
-    private String userRole; //用户角色
+    private String userRole;
+
+    //新增信息
+    private String userSex;  //性别
+    private String userAge;  //年龄
+    private String userNative;  //籍贯
+    private String userAccount; //身份证号码
 
     private String userPerm; //用户权限
     private String userImage;
@@ -33,7 +39,8 @@ public class UserInfo implements Serializable, Parcelable {
         this.userRole = userRole;
         this.userPhone = userPhone;
     }
-    public UserInfo(String userId,String userName, @Nullable String userPhone,@Nullable String userPassword, @Nullable String userRole) {
+    public UserInfo(String userId,String userName, @Nullable String userPhone,@Nullable String userPassword,
+                    @Nullable String userRole) {
         this.userId = userId;
         this.userName = userName;
         this.userPhone = userPhone;
@@ -49,7 +56,8 @@ public class UserInfo implements Serializable, Parcelable {
         this.userRole = userRole;
         this.userPhone = userName;
     }
-    public UserInfo(String userId, String userName, String userPassword, String userPhone, String userRole, String userPerm, String userImage, boolean checked) {
+    public UserInfo(String userId, String userName, String userPassword, String userPhone, String userRole,
+                    String userPerm, String userImage, boolean checked) {
         this.userId = userId;
         this.userName = userName;
         this.userPassword = userPassword;
@@ -59,6 +67,19 @@ public class UserInfo implements Serializable, Parcelable {
         this.userImage = userImage;
         this.checked = checked;
     }
+
+    public UserInfo(String userName, String userPassword, String userPhone, String userRole,
+                    String userSex, String userAge, String userNative,String userAccount) {
+        this.userName = userName;
+        this.userPassword = userPassword;
+        this.userPhone = userPhone;
+        this.userRole = userRole;
+        this.userSex = userSex;
+        this.userAge = userAge;
+        this.userNative = userNative;
+        this.userAccount = userAccount;
+    }
+
 
     /*
      * Bean 函数
@@ -94,6 +115,39 @@ public class UserInfo implements Serializable, Parcelable {
     public void setUserRole(String userRole) {
         this.userRole = userRole;
     }
+
+    public String getUserSex() {
+        return userSex;
+    }
+
+    public void setUserSex(String userSex) {
+        this.userSex = userSex;
+    }
+
+    public String getUserAge() {
+        return userAge;
+    }
+
+    public void setUserAge(String userAge) {
+        this.userAge = userAge;
+    }
+
+    public String getUserNative() {
+        return userNative;
+    }
+
+    public void setUserNative(String userNative) {
+        this.userNative = userNative;
+    }
+
+    public String getUserAccount() {
+        return userAccount;
+    }
+
+    public void setUserAccount(String userAccount) {
+        this.userAccount = userAccount;
+    }
+
 
     public String getUserPhone() {
         return userPhone;

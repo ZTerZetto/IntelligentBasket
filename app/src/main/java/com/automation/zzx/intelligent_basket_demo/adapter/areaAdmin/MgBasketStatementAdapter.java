@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
@@ -35,8 +36,11 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
         // 控件
         SmartImageView basketIndexImageView;
         TextView basketStatementTextView;
+        ImageView workStateImageView;
         TextView basketIdTextView;
-        TextView basketUploadAccept; // 预验收申请
+        TextView basketAllotTeam; // 预验收申请
+        TextView basketInstallTv; //预验收文字状态修改
+        TextView basketInstallPhoto; //预验收照片查看
         TextView basketUploadCert; // 安监证书
         TextView basketPreApplyStop; // 预报停申请
 
@@ -48,14 +52,17 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
             // 初始化控件
             basketStatementTextView = (TextView)  itemView.findViewById(R.id.basket_statement_textview);
             basketIndexImageView = (SmartImageView) itemView.findViewById(R.id.basket_index_imageview);
+            workStateImageView = itemView.findViewById(R.id.basket_index_state_iv);
             basketIdTextView = (TextView)  itemView.findViewById(R.id.basket_id);
-            basketUploadAccept = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance);  // 预验收申请
+            basketAllotTeam = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance);  // 待安装状态
+            basketInstallTv = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance_2);
+            basketInstallPhoto = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance_3);
             basketUploadCert = (TextView)  itemView.findViewById(R.id. upload_certificate); // 安监证书上传
             basketPreApplyStop = (TextView)  itemView.findViewById(R.id.pre_apply_stop); // 预报停申请
 
             // 消息监听
             this.onItemClickListener = onItemClickListener;
-            basketUploadAccept.setOnClickListener(new View.OnClickListener() {
+            basketAllotTeam.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onUploadAccept(v, getAdapterPosition());
@@ -106,8 +113,12 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
         MgBasketStatement mgBasketStatement = mgBasketStatementList.get(position);
 
         //viewHolder.basketIndexImageView.setImageUrl(mgBasketStatement.getBasketId()); // 图像
-        viewHolder.basketUploadCert.setVisibility(View.GONE); // 预安装
-        viewHolder.basketUploadCert.setVisibility(View.GONE); // 预安装
+        viewHolder.basketAllotTeam.setVisibility(View.GONE); // 分配安装队伍
+        viewHolder.basketInstallTv.setVisibility(View.GONE);
+        viewHolder.basketInstallPhoto.setVisibility(View.GONE);
+        viewHolder.workStateImageView.setVisibility(View.GONE);
+
+        viewHolder.basketUploadCert.setVisibility(View.GONE); // 安监证书
         viewHolder.basketPreApplyStop.setVisibility(View.GONE); // 预报停
         switch(mgBasketStatement.getBasketStatement().substring(0,1)){ // 吊篮状态
             case "0":
@@ -115,19 +126,27 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
                 break;
             case "1":
                 viewHolder.basketStatementTextView.setText("待安装");
-                viewHolder.basketUploadAccept.setVisibility(View.VISIBLE);
+                viewHolder.basketAllotTeam.setVisibility(View.VISIBLE);
                 break;
             case "2":
                 viewHolder.basketStatementTextView.setText("安装审核");
                 viewHolder.basketUploadCert.setVisibility(View.VISIBLE);
                 break;
             case "3":
-
                 viewHolder.basketStatementTextView.setText("使用中");
+                viewHolder.workStateImageView.setVisibility(View.VISIBLE);
+                //根据工作状态显示图标
+                if(mgBasketStatement.getWorkStatement().equals("1")){
+                    viewHolder.workStateImageView.setImageResource(R.mipmap.icon_working);
+                }else if(mgBasketStatement.getWorkStatement().equals("0")){
+                    viewHolder.workStateImageView.setImageResource(R.mipmap.icon_resting);
+                } else {
+                    viewHolder.workStateImageView.setImageResource(R.mipmap.icon_warning);
+                }
                 break;
             case "4":
                 viewHolder.basketStatementTextView.setText("待报停");
-                viewHolder.basketPreApplyStop.setVisibility(View.VISIBLE);
+                //viewHolder.basketPreApplyStop.setVisibility(View.VISIBLE);
                 break;
             case "5":
                 viewHolder.basketStatementTextView.setText("报停审核");
@@ -135,6 +154,7 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
             default:
                 break;
         }
+
         viewHolder.basketIdTextView.setText(mgBasketStatement.getBasketId()); // 吊篮id
     }
 

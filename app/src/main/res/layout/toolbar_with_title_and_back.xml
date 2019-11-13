@@ -12,7 +12,6 @@
         android:background="?attr/colorPrimary"
         android:minHeight="?attr/actionBarSize"
         app:navigationIcon="@mipmap/ic_navi_back_48px">
-
         <TextView
             android:id="@+id/toolbar_title"
             android:layout_width="wrap_content"
@@ -22,7 +21,12 @@
             android:singleLine="true"
             android:textColor="@color/colorWhiteText"
             android:textSize="21sp" />
-
     </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </LinearLayout>
 
 </LinearLayout>

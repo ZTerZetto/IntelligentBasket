@@ -35,7 +35,7 @@ import java.util.List;
 import okhttp3.Call;
 import okhttp3.Response;
 
-public class ProListActivity extends AppCompatActivity {
+/*public class ProListActivity extends AppCompatActivity {
 
     private ListView mLv;
     private ProjectAdapter adapter;
@@ -142,9 +142,9 @@ public class ProListActivity extends AppCompatActivity {
                    // if(isAllowed.equals("true")){
                         msg.obj = jsonObject.get("projectList");
                         msg.what = 0;
-                    /*} else {
+                    *//*} else {
                         msg.what = 1;
-                    }*/
+                    }*//*
                     handler.sendMessage(msg);
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -152,4 +152,4 @@ public class ProListActivity extends AppCompatActivity {
             }
         },token,"1");
     }
-}
+}*/
