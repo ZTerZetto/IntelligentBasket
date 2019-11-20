@@ -96,6 +96,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
     // 控件
     // 顶部导航栏
     private Toolbar mToolbar;  // 顶部导航栏
+    private ImageView mBack; //返回按钮
     private ImageView mMessageView; // 左侧消息图标
     private ImageView mMineView;   // 右侧个人图标
     private ImageView mSelectProList; //项目列表加载图标
@@ -104,13 +105,11 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
     private List<ProjectInfo> mProjectInfoList; // 项目详情列表
     private int currentSelectedProject = 0; // 当前项目号位置
     private int tmpSelectedProject = 0; // 临时项目号
-    private String mLastProjectId;// 上次退出时项目号
     private ProjectInfo projectInfo;
 
     //吊篮数据
     private List<MgBasketStatement> mgBasketStatementList;
     private List<List<MgBasketStatement>> mgBasketStatementClassifiedList;
-
 
     //标题栏内容
     private TextView txtProNum;  //项目编号
@@ -128,19 +127,21 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
 
     /* 主体内容部分*/
     private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
+    private RelativeLayout rlProInfo; //项目基本信息
+    private RelativeLayout rlConfiguration; //配置清单
+    private RelativeLayout rlInstall; //安装信息
+    private RelativeLayout rlBasket; //吊篮列表
+    private RelativeLayout rlCompact; //项目合同
+
 
     // function gridview
     private RelativeLayout rlFunction; //功能控件及进度条
     private RelativeLayout rlProTips;  //分状态操作提示
     private TextView txtProTips;  //分状态操作提示-文字
-    private GridView mGvBasket;  // 吊篮管理
-    private GridView mGvProject; // 项目管理
-    private RelativeLayout rlBasketManage;
-    private RelativeLayout rlProjectManage;
-    private List<Function> mBasFunctions;  // 吊篮功能列表
-    private List<Function> mProFunctions;  // 项目功能列表
-    private FunctionAdapter mBasAdapter;   // 吊篮功能适配器
-    private FunctionAdapter mProAdapter;   // 项目功能适配器
+    private GridView mGvRecord; // 项目管理
+    private RelativeLayout rlRecordManage;
+    private List<Function> mRecordFunctions;  // 项目功能列表
+    private FunctionAdapter mRecordAdapter;   // 项目功能适配器
 
 
     /*
@@ -157,16 +158,6 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
                     break;
 
                 case UPDATE_AREA_ADMIN_PROJECT_LIST_MSG: // 更新区域管理员的项目列表
-                    /*mProjectNameList.clear();
-                    mProjectInfoList.clear();
-                    parseProjectListInfo((String)msg.obj);  // 解析数据
-                    setLastLoginProjectId();  // 设置默认项目
-                    if(mProjectNameList.size()<=0) { // 没有项目
-                        updateBodyContentView();
-                    } else {
-                        updateProjectContentView(); // 更新项目信息及控件显示
-                        areaAdminGetAllBasket();  //根据项目ID获取吊篮信息
-                    }*/
                     updateProjectContentView(); // 更新项目信息及控件显示
                     areaAdminGetAllBasket();  //根据项目ID获取吊篮信息
                     break;
@@ -211,13 +202,10 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
         mUserInfo.setUserRole(mPref.getString("userRole", ""));
         mUserInfo.setUserName(mPref.getString("userName", ""));
         mToken = mPref.getString("loginToken","");
-        //mProjectId = mPref.getString("projectId","");
-
 
         //获取该区域管理员的项目列表
         mProjectNameList = new ArrayList<>();
         mProjectInfoList = new ArrayList<>();
-        //areaAdminGetAllProject();
 
     }
 
@@ -238,6 +226,8 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
         mMineView.setOnClickListener(this);
         mSelectProList = findViewById(R.id.project_list);
         mSelectProList.setOnClickListener(this);
+        mBack = findViewById(R.id.iv_back);
+        mBack.setOnClickListener(this);
 
         // 无吊篮提示信息
         mBlankRelativeLayout = (RelativeLayout) findViewById(R.id.basket_no_avaliable);
@@ -254,9 +244,19 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
         rlProTips = (RelativeLayout) findViewById(R.id.rl_project_state_tips);
         txtProTips = (TextView) findViewById(R.id.tv_project_state_tips);
 
+        rlProInfo = (RelativeLayout) findViewById(R.id.rl_project_info);
+        rlProInfo.setOnClickListener(this);
+        rlConfiguration = (RelativeLayout) findViewById(R.id.rl_configuration_info);
+        rlConfiguration.setOnClickListener(this);
+        rlInstall = (RelativeLayout) findViewById(R.id.rl_install_info);
+        rlInstall.setOnClickListener(this);
+        rlBasket = (RelativeLayout) findViewById(R.id.rl_basket_info);
+        rlBasket.setOnClickListener(this);
+        rlCompact = (RelativeLayout) findViewById(R.id.rl_compact_info);
+        rlCompact.setOnClickListener(this);
+
         rlFunction = (RelativeLayout)findViewById(R.id.function_content);
-        rlBasketManage = (RelativeLayout) findViewById(R.id.rl_basket);
-        rlProjectManage = (RelativeLayout) findViewById(R.id.rl_project);
+        rlRecordManage = (RelativeLayout) findViewById(R.id.rl_project);
 
         mProjectScheduleTimeLine = (TimeLineView) findViewById(R.id.project_schedule_timelineview);
         mProjectScheduleList = new ArrayList<>();
@@ -278,8 +278,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
                 if(mProjectInfoList.size()>0){
-                    mLastProjectId = mProjectInfoList.get(currentSelectedProject).getProjectId();
-                    //areaAdminGetAllProject();
+                    areaAdminGetAllBasket();
                 }else{
                     mSmartRefreshLayout.finishRefresh();
                 }
@@ -287,80 +286,38 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
         });
 
         //功能列表初始化
-        mGvBasket = (GridView)findViewById(R.id.gv_basket_function);
-        mGvProject = (GridView)findViewById(R.id.gv_pro_function);
+        mGvRecord = (GridView)findViewById(R.id.gv_record_function);
         initFunctionList();
-        //initInfoView();
 
-        //吊篮管理功能列表点击事件
-        mBasAdapter = new FunctionAdapter(AreaAdminPrimaryActivity.this,R.layout.item_function,mBasFunctions);
-        mGvBasket.setAdapter(mBasAdapter);
-        mGvBasket.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+        //历史记录功能列表点击事件
+        mRecordAdapter = new FunctionAdapter(AreaAdminPrimaryActivity.this,R.layout.item_function,mRecordFunctions);
+        mGvRecord.setAdapter(mRecordAdapter);
+        mGvRecord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Intent intent;
-                switch (position){
-                    case 0:  //配置清单
-                        Log.i(TAG, "You have clicked the configuration button");
-                        intent = new Intent(AreaAdminPrimaryActivity.this, ConfigurationActivity.class);
-                        intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
-                        startActivityForResult(intent, UPLOAD_CONFIGURATION_RESULT);
+                switch (position) {
+                    case 0: //安装信息
+                        Log.i(TAG, "You have clicked the examine compact button");
+
                         break;
-                    case 1: //吊篮列表
-                        Log.i(TAG, "You have clicked the basket button");
-                        intent = new Intent(AreaAdminPrimaryActivity.this, BasketStateListActivity.class);
+                    case 1: //报警记录
+                        Log.i(TAG, "You have clicked the pre_apply compact button");
+                        intent = new Intent(AreaAdminPrimaryActivity.this, AlarmRecordProjectActivity.class);
                         intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
-                        intent.putExtra(PROJECT_NAME, projectInfo.getProjectName());
                         startActivity(intent);
                         break;
-                    case 2: //平面图
-                        intent = new Intent(AreaAdminPrimaryActivity.this, BasketStickerActivity.class);
-                        startActivity(intent);
-                        break;
-                    case 3: //报修记录
+                    case 2: //报修记录
                         Log.i(TAG, "You have clicked the repair information button");
                         intent = new Intent(AreaAdminPrimaryActivity.this, RepairInfoListActivity.class);
                         intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
                         intent.putExtra(PROJECT_NAME, projectInfo.getProjectName());
                         startActivity(intent);
                         break;
-                        default:break;
-                }
-            }
-        });
-
-        mProAdapter = new FunctionAdapter(AreaAdminPrimaryActivity.this,R.layout.item_function,mProFunctions);
-        mGvProject.setAdapter(mProAdapter);
-        mGvProject.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                Intent intent;
-                switch (position) {
-                    case 0: //查看合同
-                        Log.i(TAG, "You have clicked the examine compact button");
-                        intent = new Intent(AreaAdminPrimaryActivity.this, CheckCompactActivity.class);
-                        startActivity(intent);
-                        break;
-                    case 1: //预验收申请
-                        Log.i(TAG, "You have clicked the pre_apply compact button");
-                        intent = new Intent(AreaAdminPrimaryActivity.this, UploadImageFTPActivity.class);
-                        intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
-                        intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
-                        startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
-                        break;
-                    case 2: //安检证书
-                        Log.i(TAG, "You have clicked the examine certification button");
-                        intent = new Intent(AreaAdminPrimaryActivity.this, UploadImageFTPActivity.class);
-                        intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
-                        intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
-                        startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
-                        break;
-                    case 3: //预报停
+                    case 3: //报停记录
                         Log.i(TAG, "You have clicked the pre stop info button");
-                        intent = new Intent(AreaAdminPrimaryActivity.this, UploadPreStopInfoActivity.class);
-                        intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());
-                        intent.putExtra(PROJECT_NAME, mProjectNameList.get(currentSelectedProject));
-                        intent.putExtra(BASKETS_NUM, mgBasketStatementClassifiedList.get(3).size());
+                        intent = new Intent(AreaAdminPrimaryActivity.this, StopRecordActivity.class);
+                        intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
                         startActivity(intent);
                         break;
                     default:
@@ -386,25 +343,15 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
 
     // 初始化测试功能列表（根据项目状态）
     private void initFunctionList(){
-        mBasFunctions = new ArrayList<>();
-        Function configuration = new Function("配置清单", R.mipmap.ic_setting_192,true);
-        mBasFunctions.add(configuration);
-        Function parameter = new Function("吊篮列表", R.mipmap.ic_icon_basket,true);
-        mBasFunctions.add(parameter);
-        Function image = new Function("平面图", R.mipmap.ic_image_192,true);
-        mBasFunctions.add(image);
-        Function repair = new Function("报修记录", R.mipmap.ic_repair_192,true);
-        mBasFunctions.add(repair);
-
-        mProFunctions = new ArrayList<>();
-        Function compact = new Function("查看合同", R.mipmap.icon_func_contact,true);
-        mProFunctions.add(compact);
-        Function preApply = new Function("预验收申请", R.mipmap.icon_func_confirm,true);
-        mProFunctions.add(preApply);
-        Function certification = new Function("安监证书", R.mipmap.icon_func_certificate,true);
-        mProFunctions.add(certification);
-        Function preFinish = new Function("预报停", R.mipmap.icon_func_pre_end,true);
-        mProFunctions.add(preFinish);
+        mRecordFunctions = new ArrayList<>();
+        Function compact = new Function("安装信息", R.mipmap.icon_func_contact,true);
+        mRecordFunctions.add(compact);
+        Function preApply = new Function("报警记录", R.mipmap.icon_func_confirm,true);
+        mRecordFunctions.add(preApply);
+        Function certification = new Function("报修记录", R.mipmap.icon_func_certificate,true);
+        mRecordFunctions.add(certification);
+        Function preFinish = new Function("报停记录", R.mipmap.icon_func_pre_end,true);
+        mRecordFunctions.add(preFinish);
 
     }
 
@@ -412,6 +359,8 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
     public void onClick(View v) {
         Intent intent;
         switch (v.getId()) {
+            case R.id.iv_back:  //返回按钮
+                onBackPressed();
             case R.id.project_list:  // 切换项目
                 Log.i(TAG, "You have clicked the select projectList button");
                 //showSingleAlertDialog();
@@ -426,6 +375,35 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
                 intent = new Intent(AreaAdminPrimaryActivity.this, AreaAdminSetActivity.class);
                 startActivity(intent);
                 break;
+            case R.id.rl_project_info:  // 项目基本信息
+                Log.i(TAG, "You have clicked the select projectList button");
+                intent = new Intent(AreaAdminPrimaryActivity.this, ProDetailActivity.class);
+                intent.putExtra("projectId", mProjectId);
+                startActivity(intent);
+                break;
+            case R.id.rl_configuration_info:  // 配置清单
+                Log.i(TAG, "You have clicked the configuration button");
+                intent = new Intent(AreaAdminPrimaryActivity.this, ConfigurationActivity.class);
+                intent.putExtra(PROJECT_ID, mProjectId);
+                startActivityForResult(intent, UPLOAD_CONFIGURATION_RESULT);
+                break;
+            case R.id.rl_install_info:  // 查看安装方案
+                Log.i(TAG, "You have clicked the select projectList button");
+                intent = new Intent(AreaAdminPrimaryActivity.this, BasketStickerActivity.class);
+                startActivity(intent);
+                break;
+            case R.id.rl_basket_info:  // 查看吊篮列表
+                Log.i(TAG, "You have clicked the basket button");
+                intent = new Intent(AreaAdminPrimaryActivity.this, BasketStateListActivity.class);
+                intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
+                intent.putExtra(PROJECT_NAME, projectInfo.getProjectName());
+                startActivity(intent);
+                break;
+            case R.id.rl_compact_info:  // 查看合同
+                Log.i(TAG, "You have clicked the examine compact button");
+                intent = new Intent(AreaAdminPrimaryActivity.this, CheckCompactActivity.class);
+                startActivity(intent);
+                break;
         }
     }
 
@@ -437,29 +415,16 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
             case CAPTURE_ACTIVITY_RESULT:  // 扫描工人二维码名片返回结果
-                if(resultCode == RESULT_OK){
-                    String basketId = data.getStringExtra(QR_CODE_RESULT);
-                    Log.i(TAG, "QR_Content: "+ basketId);
-                    /*if(isBasketInProject(basketId))  // 已存在于项目中
-                        DialogToast("提示", "吊篮已经在项目中").show();
-                    else  // 待添加
-                        areaAdminAddBasketIntoProject(basketId);*/
-                }
+
                 break;
             case UPLOAD_BASKET_IMAGE_RESULT:  // 上传预验收图片返回
-                if(resultCode == RESULT_OK) {
-                    // 更新进度页面
-                    mLastProjectId = mProjectInfoList.get(currentSelectedProject).getProjectId();
-                    //areaAdminGetAllProject();
-                }
+
                 break;
             case UPLOAD_CERTIFICATE_IMAGE_RESULT:  // 上传安监证书返回值
                 break;
 
             case UPLOAD_CONFIGURATION_RESULT: // 上传配置清单返回值
-                if(resultCode == RESULT_OK) {
-                    // 更新进度页面
-                }
+
                 break;
             default:
                 break;
@@ -501,32 +466,6 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
                 });
     }
 
-    // 解析项目列表
-    private void parseProjectListInfo(String responseData){
-        JSONObject jsonObject = JSON.parseObject(responseData);
-        String psojectListStr = jsonObject.getString("projectList");
-        JSONArray projectList= JSON.parseArray(psojectListStr);
-        Iterator<Object> iterator = projectList.iterator();  // 迭代获取项目信息
-        while(iterator.hasNext()) {
-            JSONObject projectInfoJsonObject = (JSONObject) iterator.next();
-            mProjectNameList.add(projectInfoJsonObject.getString("projectName"));
-            mProjectInfoList.add(projectInfoJsonObject.toJavaObject(ProjectInfo.class));
-        }
-    }
-
-    // 默认登录上次项目号
-    private void setLastLoginProjectId() {
-        if (mLastProjectId != null) {
-            for (int i = 0; i < mProjectInfoList.size(); i++) {
-
-                if (mLastProjectId.equals(mProjectInfoList.get(i).getProjectId())) {
-                    currentSelectedProject = i;
-                    return;
-                }
-            }
-        }
-        currentSelectedProject = 0;
-    }
 
     // 获取项目对应的所有吊篮信息
     private void areaAdminGetAllBasket(){
@@ -611,32 +550,8 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
     /*
      * UI 更新类
      */
-    // 主体页面显示逻辑控制
-    public void updateBodyContentView(){
-        if(mProjectNameList.size() == 0){  // 显示无项目操作
-            //头部及标题栏UI更新
-            txtProNum.setText("-");
-            rlProTips.setVisibility(View.GONE);
-            rlFunction.setVisibility(View.GONE);
-            mBlankRelativeLayout.setVisibility(View.VISIBLE);
-            mBlankHintTextView.setText("您还没有相关的项目");
-
-        }else{                               // 显示项目进度
-            rlProTips.setVisibility(View.VISIBLE);
-            mBlankRelativeLayout.setVisibility(View.GONE);
-            rlFunction.setVisibility(View.VISIBLE);
-        }
-    }
-
     // 项目进度页面更新
     public void updateProjectContentView(){
-        //updateBodyContentView();
-       /* if(mProjectInfoList.size() < 1){
-            DialogToast("提示", "暂无项目");
-            return;
-        }
-        ProjectInfo projectInfo = mProjectInfoList.get(currentSelectedProject);*/
-
         mProjectTitleTv.setText(projectInfo.getProjectName());
         txtProNum.setText(projectInfo.getProjectId());
         txtStartTime.setText(projectInfo.getProjectStart());

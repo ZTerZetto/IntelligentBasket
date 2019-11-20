@@ -76,21 +76,18 @@ public class AreaAdminFirstFragment extends Fragment implements View.OnClickList
         Intent intent;
         switch (v.getId()){
             case R.id.iv_project_1:
-                ToastUtil.showToastTips(getActivity(), "点击运营中项目");
                 intent = new Intent(getContext(), AreaAdminProListActivity.class);
-                //intent.putExtra("project_type",OPERATING);
+                intent.putExtra("project_type",OPERATING);
                 startActivity(intent);
                 break;
             case R.id.iv_project_2:
-                ToastUtil.showToastTips(getActivity(), "点击安装中项目");
                 intent = new Intent(getContext(), AreaAdminProListActivity.class);
-                /*intent.putExtra("project_type",INSTALLING);*/
+                intent.putExtra("project_type",INSTALLING);
                 startActivity(intent);
                 break;
             case R.id.iv_project_3:
-                ToastUtil.showToastTips(getActivity(), "点击已结束项目");
                 intent = new Intent(getContext(), AreaAdminProListActivity.class);
-               /* intent.putExtra("project_type",ENDING);*/
+                intent.putExtra("project_type",ENDING);
                 startActivity(intent);
                 break;
         }

@@ -113,7 +113,7 @@
     <string name="device_4">标识标牌</string>
 
     <!-- history info activity -->
-    <string name="history_info_title">相关信息</string>
+    <string name="history_info_title">查看安监证书</string>
 
     <!-- repair activity -->
     <string name="fix_describe">请输入报修情況描述...</string>

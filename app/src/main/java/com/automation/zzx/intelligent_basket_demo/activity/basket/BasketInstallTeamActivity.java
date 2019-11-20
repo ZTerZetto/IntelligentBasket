@@ -3,6 +3,7 @@ package com.automation.zzx.intelligent_basket_demo.activity.basket;
 import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.view.MenuItem;
 import android.widget.ListView;
 import android.support.v7.widget.Toolbar;
 import android.widget.TextView;
@@ -47,5 +48,17 @@ public class BasketInstallTeamActivity extends AppCompatActivity {
         mProjectId = intent.getStringExtra(BasketDetailActivity.UPLOAD_PROJECT_ID);  // 获取项目ID
         if(mDeviceId==null || mDeviceId.equals("")) mDeviceId = "1";
     }
+
+    // 顶部导航栏消息响应
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home: // 返回按钮
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

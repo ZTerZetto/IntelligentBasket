@@ -174,6 +174,12 @@ public class AppConfig {
     public static final String AREA_ADMIN_GET_REPAIR_INFO = ANDROID_URL_PATH.concat("/getRepairBox");
     // 区域管理员请求报修信息（已经结束）
     public static final String AREA_ADMIN_GET_REPAIR_END_INFO = ANDROID_URL_PATH.concat("/getRepairEndBox");
+    // 请求报警记录（全项目记录or单吊篮记录）
+    public static final String GET_ALARM_INFO = ANDROID_URL_PATH.concat("/getAlarmInfo");
+    // 请求报停记录
+    public static final String GET_STOP_RECORD = ANDROID_URL_PATH.concat("/getElectricStopInfo");
+
+
 
     /*
      * 项目管理员请求

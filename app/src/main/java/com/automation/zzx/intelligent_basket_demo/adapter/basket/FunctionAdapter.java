@@ -58,4 +58,8 @@ public class FunctionAdapter extends ArrayAdapter<Function> {
         NiceImageView functionImage;
         TextView functionName;
     }
+    public void setUnclickable(int textViewResourceId){
+
+    }
+
 }

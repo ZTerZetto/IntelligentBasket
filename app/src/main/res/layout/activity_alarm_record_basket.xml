@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+        <ListView
+            android:id="@+id/record_list_id"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/ll_record_sum"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/record_list_id"
+            android:orientation="horizontal"
+            android:paddingTop="@dimen/size_20"
+            android:paddingBottom="@dimen/size_50">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="@dimen/size_20"
+                android:hint="共有"
+                android:textSize="@dimen/size_20"
+                android:textColor="@color/colorText"/>
+            <TextView
+                android:id="@+id/tv_record_sum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="xx"
+                android:textSize="@dimen/size_20"
+                android:textColor="@color/colorText"/>
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_gravity="center"
+                android:text="条报警记录"
+                android:textSize="@dimen/size_20"
+                android:textColor="@color/colorText"/>
+        </LinearLayout>
+
+        <!-- 空空如也 -->
+        <RelativeLayout
+            android:id="@+id/record_no_avaliable"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:visibility="gone">
+            <ImageView
+                android:id="@+id/no_record_iv"
+                android:layout_width="75dp"
+                android:layout_height="75dp"
+                android:layout_centerHorizontal="true"
+                android:layout_above="@id/no_record_hint"
+                android:src="@mipmap/ic_no_avaliable_basket" />
+            <TextView
+                android:id="@+id/no_record_hint"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="10dp"
+                android:text="暂无报警记录"
+                android:textSize="16sp" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+
+</LinearLayout>

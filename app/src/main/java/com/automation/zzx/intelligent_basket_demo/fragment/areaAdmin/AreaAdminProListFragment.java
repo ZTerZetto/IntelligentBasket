@@ -222,7 +222,6 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
         JSONObject jsonObject = JSON.parseObject(responseData);
         JSONObject jsonObjectList = jsonObject.getJSONObject("projectList");
         String projectListStr = jsonObjectList.getString(projectType);
-       /* String projectListStr = jsonObjectList.getString("operatingProjectList");*/
         JSONArray projectList= JSON.parseArray(projectListStr);
         Iterator<Object> iterator = projectList.iterator();  // 迭代获取项目信息
         while(iterator.hasNext()) {

@@ -53,6 +53,7 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -190,9 +191,8 @@ public class RegistWorkerActivity extends AppCompatActivity {
         spinnerType = (Spinner) findViewById(R.id.spinner_type_choose);
 
         //技能资质
-        ivAddSkill = findViewById(R.id.iv_add_skill);
         lvSkill = findViewById(R.id.listView_skill);
-
+        ivAddSkill = findViewById(R.id.iv_add_skill);
         photo_exist = false;
 
         initRegister();
@@ -264,7 +264,9 @@ public class RegistWorkerActivity extends AppCompatActivity {
         ivAddSkill.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View v) {
-                Toast.makeText(getApplicationContext(), "添加技能证书", Toast.LENGTH_LONG).show();
+                Toast.makeText(getApplicationContext(), "添加技能证书", Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(RegistWorkerActivity.this,SkillEditActivity.class);
+                startActivity(intent);
             }
         });
 

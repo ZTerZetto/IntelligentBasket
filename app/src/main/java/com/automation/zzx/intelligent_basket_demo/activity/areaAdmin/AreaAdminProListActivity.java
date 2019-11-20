@@ -49,7 +49,18 @@ public class AreaAdminProListActivity extends AppCompatActivity {
         mToolbar = findViewById(R.id.toolbar);
         toolbarTitle = findViewById(R.id.toolbar_title);
         mToolbar.setTitle("");
-        toolbarTitle.setText("运营中项目");
+        switch (projectType){
+            case "operatingProjectList":
+                toolbarTitle.setText("运营中项目");
+                break;
+            case "installingProjectList":
+                toolbarTitle.setText("安装中项目");
+                break;
+            case "endProjectList":
+                toolbarTitle.setText("已结束项目");
+                break;
+
+        }
         setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 

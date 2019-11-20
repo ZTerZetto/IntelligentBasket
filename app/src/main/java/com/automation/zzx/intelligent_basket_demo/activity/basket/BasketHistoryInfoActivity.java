@@ -196,18 +196,6 @@ public class BasketHistoryInfoActivity extends AppCompatActivity {
     }
 
 
-
-    // 顶部导航栏消息响应
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home: // 返回按钮
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
     // 获取要显示图片的url
     private void displayCertificatePhoto(final String pathType,final int direction, final String filename, final int messageType){
         new Thread(){
@@ -320,5 +308,17 @@ public class BasketHistoryInfoActivity extends AppCompatActivity {
             mPreStopPhotos.set(i, WebImage.webImageCache.get(url));
         }
     }
+
+    // 顶部导航栏消息响应
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home: // 返回按钮
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
 
 }

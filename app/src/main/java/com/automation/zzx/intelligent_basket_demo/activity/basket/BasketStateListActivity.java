@@ -202,6 +202,7 @@ public class BasketStateListActivity extends AppCompatActivity {
 
     /*
      * 解析用户信息
+     * 解析用户信息
      */
     // 获取用户数据
     private void initInfo(){
@@ -319,6 +320,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                 intent.putExtra("project_state",pre_selectedPosition);
                 intent.putExtra("project_id",mProjectId);
                 intent.putExtra("basket_id", mgBasketStatementList.get(position).getBasketId());
+                intent.putExtra("basket_state", mgBasketStatementList.get(position).getBasketStatement());
                 startActivity(intent);
             }
 
@@ -387,8 +389,8 @@ public class BasketStateListActivity extends AppCompatActivity {
             llChoose.setVisibility(View.VISIBLE);
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
-                mySpinner_1.setDropDownVerticalOffset(-30);
-                mySpinner_2.setDropDownVerticalOffset(-30);
+                mySpinner_1.setDropDownVerticalOffset(0);
+                mySpinner_2.setDropDownVerticalOffset(0);
                 mySpinner_1.setBackgroundColor(0x0);
                 mySpinner_2.setBackgroundColor(0x0);
             }

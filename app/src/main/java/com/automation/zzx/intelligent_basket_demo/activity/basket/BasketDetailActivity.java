@@ -1,5 +1,6 @@
 package com.automation.zzx.intelligent_basket_demo.activity.basket;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
@@ -15,6 +16,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AlarmRecordProjectActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerHomePageActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.FunctionAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.Function;
 
@@ -37,6 +40,7 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
     private GridView mFunctionGridView;  // 功能测试
 
     private TextView txtBasketId;  //吊篮编号
+    private TextView txtBasketState; //吊篮状态
     //private TextView txtWorkerName;  //负责人姓名
 
     // function gridview
@@ -46,7 +50,7 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
     // others
     private String mProjectId;  //項目ID
     private String mBasketId;  // 吊篮id
-    private int mBasketState;  // 吊篮状态  0 待安装/1 待安监/2 进行中/3 预报停 /4 报停审核
+    private String mBasketState;  // 吊篮状态  0 待安装/1 待安监/2 进行中/3 预报停 /4 报停审核
     //private String mPrincipal; //吊篮负责人姓名
 
     public final static String UPLOAD_PROJECT_ID  = "project_id"; // 項目ID
@@ -74,6 +78,7 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
 
         getBaseInfoFromPred();
         initWidgetResource();
+        getWorkerIdByBasket();
     }
 
     // 項目和吊籃信息获取
@@ -81,11 +86,12 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
         Intent intent = getIntent();
         mProjectId = intent.getStringExtra("project_id");
         mBasketId = intent.getStringExtra("basket_id");
-        mBasketState = intent.getIntExtra("project_state",0);
-        //mPrincipal = intent.getStringExtra("principal_name");
+        mBasketState = intent.getStringExtra("basket_state");
+        mBasketState = mBasketState.substring(0,1);
     }
 
     // 资源句柄初始化及监听
+    @SuppressLint("ResourceAsColor")
     public void initWidgetResource(){
         // 获取控件句柄
         mFunctionGridView = (GridView) findViewById(R.id.function_gridview);
@@ -93,8 +99,34 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
         //初始化控件并显示内容
         txtBasketId = (TextView) findViewById(R.id.basket_id);
         txtBasketId.setText(mBasketId);
-        //txtWorkerName = (TextView) findViewById(R.id.basket_worker_id);
-       // txtWorkerName.setText(mPrincipal);
+        txtBasketState = (TextView) findViewById(R.id.basket_state);
+
+        //0 待安装/1 待安监/2 进行中/3 预报停 /4 报停审核
+        switch (mBasketState){
+            case "1":
+                txtBasketState.setText("待安装");
+                txtBasketState.setTextColor(R.color.gray01);
+                break;
+            case "2":
+                txtBasketState.setText("安装验收");
+                txtBasketState.setTextColor(R.color.gray01);
+                break;
+            case "3":
+                txtBasketState.setText("进行中");
+                txtBasketState.setTextColor(R.color.colorPrimary);
+                break;
+            case "4":
+                txtBasketState.setText("待报停");
+                txtBasketState.setTextColor(R.color.light_red);
+                break;
+            case "5":
+                txtBasketState.setText("报停审核");
+                txtBasketState.setTextColor(R.color.light_red);
+                break;
+            default:
+                txtBasketState.setVisibility(View.GONE);
+                break;
+        }
 
         // 初始化功能列表
         initFunctionList();
@@ -107,54 +139,82 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
                 // do something
                 Intent intent;
                 switch(position){
-                    case 0:  // 设备绑定
-                        intent = new Intent(BasketDetailActivity.this, BasketDeviceActivity.class);
-                        intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
+                    case 0:  // 监控视频
+                        intent = new Intent(BasketDetailActivity.this, BasketVideoActivity.class);
+                        intent.putExtra(BASKET_ID, mBasketId);
                         startActivity(intent);
                         break;
-                    case 1:  // 安装队伍
-                        intent = new Intent(BasketDetailActivity.this, BasketInstallTeamActivity.class);
-                        intent.putExtra(UPLOAD_PROJECT_ID, mProjectId);
-                        intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
-                        startActivityForResult(intent, UPLOAD_BASKET_REPAIR_RESULT);
+                    case 1:  // 工况图片
+                        intent = new Intent(BasketDetailActivity.this, BasketPhotoActivity.class);
+                        intent.putExtra(BASKET_ID, mBasketId);
+                        startActivity(intent);
                         break;
-                    case 2:  // 历史图片
+                    case 2:  // 实时参数
+                        intent = new Intent(BasketDetailActivity.this, BasketParameterActivity.class);
+                        intent.putExtra(BASKET_ID, mBasketId);
+                        startActivity(intent);
+                        break;
+                    case 3:  // 设置
+                        intent = new Intent(BasketDetailActivity.this, BasketSettleActivity.class);
+                        intent.putExtra(BASKET_ID, mBasketId);
+                        startActivity(intent);
+                        break;
+                    case 4:  // 安监证书
                         intent = new Intent(BasketDetailActivity.this, BasketHistoryInfoActivity.class);
                         intent.putExtra(UPLOAD_PROJECT_ID, mProjectId);
                         intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
                         startActivity(intent);
                         break;
-                    case 3:  // 参数设置
-                        intent = new Intent(BasketDetailActivity.this, BasketSettleActivity.class);
-                        intent.putExtra(BASKET_ID, mBasketId);
+                    case 5:  // 报警记录
+                        intent = new Intent(BasketDetailActivity.this, AlarmRecordBasketActivity.class);
+                        intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
                         startActivity(intent);
                         break;
-                    case 4:  // 实时参数
-                        intent = new Intent(BasketDetailActivity.this, BasketParameterActivity.class);
-                        intent.putExtra(BASKET_ID, mBasketId);
-                        startActivity(intent);
-                        break;
-                    case 5:  // 工况图片
-                        intent = new Intent(BasketDetailActivity.this, BasketPhotoActivity.class);
-                        intent.putExtra(BASKET_ID, mBasketId);
-                        startActivity(intent);
-                        break;
-                    case 6:  // 监控视频
-                        intent = new Intent(BasketDetailActivity.this, BasketVideoActivity.class);
-                        intent.putExtra(BASKET_ID, mBasketId);
-                        startActivity(intent);
-                        break;
-                    case 7:  // 申请报修
+                    case 6:  // 报修
                         intent = new Intent(BasketDetailActivity.this, BasketRepairActivity.class);
                         intent.putExtra(UPLOAD_PROJECT_ID, mProjectId);
                         intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
                         intent.putExtra(UPLOAD_IMAGE_TEXT_TYPE, UPLOAD_BASKET_REPAIR_IMAGE);
                         startActivityForResult(intent, UPLOAD_BASKET_REPAIR_RESULT);
                         break;
+                    case 7:  // 申请报停
+
+                        break;
+                    case 8:  // 设备产权
+
+                        break;
+                    case 9:  // 操作工人
+                        if(mBasketState.equals("3")){
+                            intent = new Intent(BasketDetailActivity.this, WorkerHomePageActivity.class);
+                            intent.putExtra("worker_id", "9975");//TODO 改为当前操作人员ID
+                            startActivity(intent);
+                        } else {
+                            Toast.makeText(BasketDetailActivity.this,"该吊篮为空闲状态，暂未绑定操作人员！",Toast.LENGTH_SHORT).show();
+                        }
+
+                        break;
+
+                        /*
+                        * //设备绑定
+                        * intent = new Intent(BasketDetailActivity.this, BasketDeviceActivity.class);
+                        intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
+                        startActivity(intent);
+                        * */
+                        /*
+                        * //设备绑定
+                        * intent = new Intent(BasketDetailActivity.this, BasketDeviceActivity.class);
+                        intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
+                        startActivity(intent);
+                        * */
                     default:break;
                 }
             }
         });
+    }
+
+    //TODO 获取当前操作人员ID
+    public void getWorkerIdByBasket(){
+
     }
 
     /*
@@ -180,43 +240,48 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
     private void initFunctionList(){
         //先初始化
         mFunctions = new ArrayList<>();
-        Function equipment = new Function("设备绑定", R.mipmap.ic_device_192,true);
-        //Function video = new Function("监控", R.mipmap.ic_video);
-        mFunctions.add(equipment);
-        Function installTeam = new Function("安装队伍", R.mipmap.ic_install_192,true);
-        //Function video = new Function("监控", R.mipmap.ic_video);
-        mFunctions.add(installTeam);
-        Function history = new Function("相关信息", R.mipmap.ic_history_info_192,true);
-        //Function video = new Function("监控", R.mipmap.ic_video);
-        mFunctions.add(history);
-        Function setting = new Function("参数设置", R.mipmap.ic_setting_192,true);
-        //Function video = new Function("监控", R.mipmap.ic_video);
-        mFunctions.add(setting);
-        Function parameter = new Function("实时参数", R.mipmap.ic_parameter_192,true);
-        //Function parameter = new Function("参数", R.mipmap.ic_parameter);
-        mFunctions.add(parameter);
-        Function image = new Function("工况图片", R.mipmap.ic_image_192,true);
-        //Function image = new Function("图片", R.mipmap.ic_image);
-        mFunctions.add(image);
         Function video = new Function("监控视频", R.mipmap.ic_video_192,true);
         //Function video = new Function("监控", R.mipmap.ic_video);
         mFunctions.add(video);
-        Function repair = new Function("申请报修", R.mipmap.ic_repair_192,true);
+        Function image = new Function("工况图片", R.mipmap.ic_image_192,true);
+        //Function image = new Function("图片", R.mipmap.ic_image);
+        mFunctions.add(image);
+        Function parameter = new Function("实时参数", R.mipmap.ic_parameter_192,true);
+        //Function parameter = new Function("参数", R.mipmap.ic_parameter);
+        mFunctions.add(parameter);
+        Function setting = new Function("设置", R.mipmap.ic_setting_192,true);
+        //Function video = new Function("监控", R.mipmap.ic_video);
+        mFunctions.add(setting);
+        Function history = new Function("安监证书", R.mipmap.ic_history_info_192,true);
+        //Function video = new Function("监控", R.mipmap.ic_video);
+        mFunctions.add(history);
+        Function equipment = new Function("报警信息", R.mipmap.ic_device_192,true);
+        //Function video = new Function("监控", R.mipmap.ic_video);
+        mFunctions.add(equipment);
+        Function repair = new Function("报修", R.mipmap.ic_repair_192,true);
         //Function video = new Function("监控", R.mipmap.ic_video);
         mFunctions.add(repair);
+        Function stop = new Function("报停", R.mipmap.ic_repair_192,true);
+        //Function video = new Function("监控", R.mipmap.ic_video);
+        mFunctions.add(stop);
+        Function property = new Function("设备产权", R.mipmap.ic_setting_192,true);
+        //Function video = new Function("监控", R.mipmap.ic_video);
+        mFunctions.add(property);
+        Function installTeam = new Function("操作工人", R.mipmap.ic_install_192,true);
+        //Function video = new Function("监控", R.mipmap.ic_video);
+        mFunctions.add(installTeam);
 
-        //根据吊篮状态隐藏功能列表
+        /*//根据吊篮状态隐藏功能列表
         if(mBasketState < 2 ){ //未投入使用
             for(int i = 4; i <  mFunctions.size() ;i++){
                 mFunctions.get(i).setViewState(false);
             }
         }
-
         if(mBasketState < 1 ){ //未上传安装照片
             for(int i = 2; i < 4 ;i++){
                 mFunctions.get(i).setViewState(false);
             }
-        }
+        }*/
     }
 
 

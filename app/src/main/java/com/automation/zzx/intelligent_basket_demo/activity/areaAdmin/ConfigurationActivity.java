@@ -10,7 +10,6 @@ import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
@@ -47,10 +46,8 @@ public class ConfigurationActivity extends AppCompatActivity implements View.OnC
     private Toolbar mToolbar;  // 顶部导航栏
     private TextView mSendTextView; // 发送 标题
     private ImageView mSendImageView; // 发送 图标
-
     private TextView txtProjectId; // 项目编号
     private EditText txtSixMetersNum; // 六米吊篮数目
-
     private Button btSendConfig; //提交配置清单按钮
 
     // 上传参数

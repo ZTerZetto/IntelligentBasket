@@ -22,7 +22,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/size_17"
-                android:text="预验收图片" />
+                android:text="预验收图片"
+                android:visibility="gone"/>
 
             <!-- 预验收缩略图 -->
             <GridView
@@ -32,7 +33,8 @@
                 android:layout_margin="20dp"
                 android:horizontalSpacing="10dp"
                 android:numColumns="4"
-                android:verticalSpacing="10dp" />
+                android:verticalSpacing="10dp"
+                android:visibility="gone"/>
 
 
             <View style="@style/me_horizontal_view_style" />
@@ -42,7 +44,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/size_17"
-                android:text="安监证书图片" />
+                android:textSize="@dimen/textSize_16"
+                android:text="安监证书图片"
+                android:visibility="gone"/>
 
             <!-- 安检证书缩略图 -->
             <GridView
@@ -61,7 +65,8 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:padding="@dimen/size_17"
-                android:text="预报停图片" />
+                android:text="预报停图片"
+                android:visibility="gone"/>
 
             <!-- 预报停缩略图 -->
             <GridView
@@ -71,7 +76,8 @@
                 android:layout_margin="20dp"
                 android:horizontalSpacing="10dp"
                 android:numColumns="4"
-                android:verticalSpacing="10dp"/>
+                android:verticalSpacing="10dp"
+                android:visibility="gone"/>
         </LinearLayout>
     </ScrollView>
 
