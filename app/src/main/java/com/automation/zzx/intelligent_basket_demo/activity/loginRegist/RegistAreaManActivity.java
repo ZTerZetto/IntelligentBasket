@@ -55,7 +55,6 @@ import okhttp3.Response;
 
 public class RegistAreaManActivity extends AppCompatActivity {
 
-
     public static final int TAKE_PHOTO = 1;
     public static final int CHOOSE_PHOTO = 2;
     private ImageView picture;

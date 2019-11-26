@@ -37,7 +37,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.basket.AlarmRecordBasketActivity"></activity>
+        <activity android:name=".activity.basket.BasketParameterNewActivity"></activity>
+        <activity android:name=".activity.basket.AlarmRecordBasketActivity" />
         <activity android:name=".activity.areaAdmin.StopRecordActivity" />
         <activity android:name=".activity.areaAdmin.AlarmRecordProjectActivity" />
         <activity android:name=".activity.loginRegist.SkillEditActivity" />

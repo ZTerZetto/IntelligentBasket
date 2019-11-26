@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/colorParameterBackground"
+    android:fitsSystemWindows="true"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back"/>
+
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/smart_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <!-- 参数显示 -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- 开关变量组 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/var_switch"
+                    android:textColor="@color/colorSilverText"
+                    style="@style/ParameterSubTitleTextView"/>
+                <com.automation.zzx.intelligent_basket_demo.widget.SmartGridView
+                    android:id="@+id/var_switch_gv"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:numColumns="3"
+                    android:scrollbars="none"
+                    android:stretchMode="columnWidth"
+                    android:horizontalSpacing="2dp"
+                    android:verticalSpacing="2dp"/>
+
+                <!-- 控制输入 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/control_input"
+                    android:textColor="@color/colorSilverText"
+                    style="@style/ParameterSubTitleTextView"/>
+                <RelativeLayout
+                    style="@style/ParameterRelativeLayout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/parameter_motor"
+                        style="@style/ParameterItemTextView"/>
+                    <ImageView
+                        android:id="@+id/motor_left"
+                        android:layout_toLeftOf="@id/motor_right"
+                        android:src="@mipmap/ic_motor_stop"
+                        style="@style/ParameterLeftImageView"/>
+                    <ImageView
+                        android:id="@+id/motor_right"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/ic_motor_up"
+                        style="@style/ParameterRightImageView"/>
+                </RelativeLayout>
+                <!-- 其它数据 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/basket_data"
+                    android:textColor="@color/colorSilverText"
+                    style="@style/ParameterSubTitleTextView"/>
+                <!-- 变频器采集参数 -->
+                <!-- 称重 -->
+                <RelativeLayout
+                    style="@style/ParameterRelativeLayout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/parameter_weight"
+                        style="@style/ParameterItemTextView"/>
+                    <TextView
+                        android:id="@+id/weight_tv"
+                        android:layout_alignParentRight="true"
+                        style="@style/ParameterItemContentTextView"
+                        android:text="333.2 Kg"/>
+                </RelativeLayout>
+                <!-- 分割线 -->
+                <View
+                    style="@style/ParameterSplitLineView"/>
+                <!-- 分割线 -->
+                <View
+                    style="@style/ParameterSplitLineView"/>
+                <!-- 倾斜仪采集参数 -->
+                <RelativeLayout
+                    style="@style/ParameterRelativeLayout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="倾斜角度"
+                        style="@style/ParameterItemTextView"/>
+                    <TextView
+                        android:id="@+id/clinometer_degree_tv"
+                        android:layout_alignParentRight="true"
+                        style="@style/ParameterItemContentTextView"
+                        android:text="22.4°"/>
+                </RelativeLayout>
+
+                <!-- 其它数据 -->
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/control_out"
+                    android:textColor="@color/colorSilverText"
+                    style="@style/ParameterSubTitleTextView"/>
+                <!-- 北斗采集参数 -->
+                <RelativeLayout
+                    style="@style/ParameterRelativeLayout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/parameter_location"
+                        style="@style/ParameterItemTextView"/>
+                    <TextView
+                        android:id="@+id/location_msg_tv"
+                        android:layout_alignParentRight="true"
+                        style="@style/ParameterItemContentTextView"
+                        android:text="(112.5°,26.9°,112.5m)"/>
+                </RelativeLayout>
+                <!-- 分割线 -->
+                <View
+                    style="@style/ParameterSplitLineView"/>
+                <RelativeLayout
+                    style="@style/ParameterRelativeLayout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="@string/parameter_date"
+                        style="@style/ParameterItemTextView"/>
+                    <TextView
+                        android:id="@+id/date_msg_tv"
+                        android:layout_alignParentRight="true"
+                        style="@style/ParameterItemContentTextView"
+                        android:text="2018-3-13 12:30:12"/>
+                </RelativeLayout>
+            </LinearLayout>
+        </ScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+
+</LinearLayout>
