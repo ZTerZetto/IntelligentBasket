@@ -163,7 +163,7 @@
 
     <!-- “设置”框 字体样式 -->
     <style name="usertextStyle">
-        <item name="android:textSize">16sp</item>
+        <item name="android:textSize">18sp</item>
         <item name="android:textColor">@color/colorPrimaryDark</item>
         <item name="android:layout_width">wrap_content</item>
         <item name="android:layout_height">wrap_content</item>
@@ -535,6 +535,23 @@
         <item name="android:padding">8dp</item>
     </style>
 
+    <!-- 吊篮详情 菜单-->
+    <style name="modularTitleStyle">
+        <item name="android:textSize">16sp</item>
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">10dp</item>
+        <item name="android:layout_marginLeft">10dp</item>
+    </style>
+    <!-- 吊篮详情 菜单-->
+    <style name="modularContentStyle">
+        <item name="android:textSize">14sp</item>
+        <item name="android:textColor">@color/colorTextDark</item>
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:padding">3dp</item>
+    </style>
     <!-- 项目列表 -->
     <style name= "ProjectItemLinearLayout">
     <item name="android:layout_width">match_parent</item>

@@ -178,7 +178,8 @@ public class AppConfig {
     public static final String GET_ALARM_INFO = ANDROID_URL_PATH.concat("/getAlarmInfo");
     // 请求报停记录
     public static final String GET_STOP_RECORD = ANDROID_URL_PATH.concat("/getElectricStopInfo");
-
+    // 请求操作人员（根据吊篮ID）
+    public static final String GET_WORKERS_BY_BASKET = ANDROID_URL_PATH.concat("/getWorker");
 
 
     /*

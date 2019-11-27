@@ -8,8 +8,8 @@
 
     <com.shehuan.niv.NiceImageView
         android:id="@+id/function_icon"
-        android:layout_width="40dp"
-        android:layout_height="40dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:layout_centerHorizontal="true"
         android:src="@mipmap/ic_main_rope"
         app:is_circle="true"/>
@@ -20,8 +20,8 @@
         android:layout_below="@+id/function_icon"
         android:layout_centerHorizontal="true"
         android:layout_marginTop="5dp"
-        android:textSize="14sp"
-        android:text="helloworld"/>
+        android:textSize="16sp"
+        android:text="helloWorld"/>
 
 
 </RelativeLayout>

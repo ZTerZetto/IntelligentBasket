@@ -55,51 +55,37 @@
             android:layout_marginRight="10dp"
             android:src="@mipmap/ic_add_white"
             android:visibility="gone"/>
-
     </android.support.v7.widget.Toolbar>
 
-    <!--<LinearLayout
-        android:id="@+id/ll_main_bottom"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:layout_alignParentBottom="true"
-        android:orientation="horizontal"
-        android:padding="5dp">
-
-        <ImageView
-            android:id="@+id/iv_sticker_01"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:scaleType="centerInside"
-            android:src="@mipmap/ic_launcher_round" />
-
-        <ImageView
-            android:id="@+id/iv_sticker_02"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:scaleType="centerInside"
-            android:src="@mipmap/ic_launcher_round" />
-    </LinearLayout>-->
 
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
-        <ImageView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_below="@+id/toolbar"
-            android:scaleType="centerCrop"
-            android:src="@mipmap/test_plan" />
 
-        <com.lcw.library.stickerview.StickerLayout
+        <TextView
+            android:id="@+id/tv_basket_title"
+            android:text="@string/basket_data"
+            style="@style/modularTitleStyle"/>
+        
+        <ListView
+            android:id="@+id/lv_basket"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/tv_basket_title"
+            android:visibility="gone"/>
+        
+        <ImageView
+            android:id="@+id/iv_picture"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:src="@mipmap/test_plan"
+            android:layout_below="@id/lv_basket"/>
+
+        <ImageView
             android:id="@+id/sl_sticker_layout"
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
-
+            android:layout_height="wrap_content"/>
+        
     </RelativeLayout>
-
-
 
 </LinearLayout>

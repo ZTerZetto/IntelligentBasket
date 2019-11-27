@@ -9,6 +9,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -25,12 +26,11 @@ public class BasketStickerActivity extends AppCompatActivity {
     private final static String TAG = "BasketStickerActivity";
 
    //控件布局
-    private StickerLayout mStickerLayout;
+    private ImageView mStickerLayout;
     private CommonDialog mCommonDialog;
     private TextView editStickerTv;
     private ImageView addStickerIv;
     private ImageView saveStickerIv;
-
 
 
     //页面状态：查看 or 编辑
@@ -48,8 +48,6 @@ public class BasketStickerActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_basket_sticker);
-
-
 
         // 初始化控件
         initWidgetResource();
@@ -75,7 +73,7 @@ public class BasketStickerActivity extends AppCompatActivity {
             }
         });
 
-        //用户点击“新增”按钮时
+/*        //用户点击“新增”按钮时
         findViewById(R.id.toolbar_addSticker).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -83,7 +81,7 @@ public class BasketStickerActivity extends AppCompatActivity {
                         BitmapFactory.decodeResource(BasketStickerActivity.this.getResources(), R.mipmap.ic_launcher_round));
                 mStickerLayout.addSticker(sticker);
             }
-        });
+        });*/
 
         //用户点击“保存”按钮时
         findViewById(R.id.toolbar_updateChange).setOnClickListener(new View.OnClickListener() {
@@ -113,6 +111,8 @@ public class BasketStickerActivity extends AppCompatActivity {
         editStickerTv = findViewById(R.id.toolbar_editBtn);
         addStickerIv = findViewById(R.id.toolbar_addSticker);
         saveStickerIv = findViewById(R.id.toolbar_updateChange);
+
+        mStickerLayout.setOnTouchListener(onTouchListener);
 
     }
 
@@ -189,10 +189,29 @@ public class BasketStickerActivity extends AppCompatActivity {
         return super.onOptionsItemSelected(item);
     }
 
+
+    //事件监听方法
+    private View.OnTouchListener onTouchListener = new View.OnTouchListener() {
+
+        @Override
+        public boolean onTouch(View v, MotionEvent event) {
+            switch (event.getAction()) {
+                case MotionEvent.ACTION_DOWN:
+                    float x = event.getX();
+                    float y = event.getY();
+                    Toast.makeText(BasketStickerActivity.this,"("+x+","+y+")",Toast.LENGTH_LONG).show();
+                    break;
+                default:
+                    break;
+            }
+            return false;
+        }
+    };
+
     @Override
     protected void onDestroy() {
         super.onDestroy();
-        mStickerLayout.removeAllSticker();
+
     }
 
 }

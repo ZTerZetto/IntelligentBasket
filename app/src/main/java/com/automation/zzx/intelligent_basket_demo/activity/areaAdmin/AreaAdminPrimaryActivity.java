@@ -27,6 +27,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketStateListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketStickerActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.PlaneFigureActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.RepairInfoListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
@@ -389,7 +390,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
                 break;
             case R.id.rl_install_info:  // 查看安装方案
                 Log.i(TAG, "You have clicked the select projectList button");
-                intent = new Intent(AreaAdminPrimaryActivity.this, BasketStickerActivity.class);
+                intent = new Intent(AreaAdminPrimaryActivity.this, PlaneFigureActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_basket_info:  // 查看吊篮列表

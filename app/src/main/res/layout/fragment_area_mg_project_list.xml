@@ -12,10 +12,30 @@
         android:background="@color/white">
     </RelativeLayout>
 
+    <LinearLayout
+        android:id="@+id/ll_search"
+        android:layout_below="@id/ll_space"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/size_20"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/bg_round_gray">
+            <android.support.v7.widget.SearchView
+                android:id="@+id/view_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
+
     <!-- 上拉/下拉刷新 -->
     <com.scwang.smartrefresh.layout.SmartRefreshLayout
         android:id="@+id/smart_refresh_layout"
-        android:layout_below="@id/ll_space"
+        android:layout_below="@id/ll_search"
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
@@ -30,7 +50,7 @@
                 android:id="@+id/project_recycler_view"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="visible">
+                android:visibility="gone">
             </android.support.v7.widget.RecyclerView>
 
             <!-- 空空如也 -->
@@ -38,14 +58,14 @@
                 android:id="@+id/project_no_avaliable"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:visibility="gone">
+                >
 
                 <ImageView
                     android:id="@+id/no_project_iv"
                     android:layout_width="75dp"
                     android:layout_height="75dp"
                     android:layout_above="@+id/no_project_hint"
-                    android:layout_centerHorizontal="true"
+                    android:layout_centerInParent="true"
                     android:src="@mipmap/ic_no_avaliable_basket" />
                 <TextView
                     android:id="@+id/no_project_hint"

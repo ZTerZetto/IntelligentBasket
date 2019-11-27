@@ -7,6 +7,7 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -14,12 +15,16 @@ import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.SearchView;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AutoCompleteTextView;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -44,6 +49,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -65,10 +71,16 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
     private final static int GET_PROJECT_LIST_INFO = 2; // 从后台获取吊篮列表数据
 
     // 主体
+    //搜索框控件
+    private SearchView mSearchView;
+    private AutoCompleteTextView mAutoCompleteTextView;//搜索输入框
+    private ImageView mDeleteButton;//搜索框中的删除按钮
+
     private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private RecyclerView projectRv; // 项目列表
     private List<ProjectInfo> mgProjectInfoList ;
-    private ProjectAdapter mgProjectListAdapter;
+    private List<ProjectInfo> showProjectList;
+    private ProjectAdapter showProjectAdapter;
     private RelativeLayout noProjectListRelativeLayout; // 空空如也
     private TextView noProjectListTextView;
 
@@ -104,6 +116,21 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_area_mg_project_list, container, false);
 
+        //搜索框
+        mSearchView=view.findViewById(R.id.view_search);
+        mAutoCompleteTextView=mSearchView.findViewById(R.id.search_src_text);
+        mDeleteButton=mSearchView.findViewById(R.id.search_close_btn);
+        mSearchView.setIconifiedByDefault(false);//设置搜索图标是否显示在搜索框内
+
+        mSearchView.setImeOptions(3);//设置输入法搜索选项字段，1:回车2:前往3:搜索4:发送5:下一項6:完成
+//      mSearchView.setInputType(1);//设置输入类型
+//      mSearchView.setMaxWidth(200);//设置最大宽度
+        mSearchView.setQueryHint("输入项目名称搜索");//设置查询提示字符串
+        mSearchView.setSubmitButtonEnabled(true);//设置是否显示搜索框展开时的提交按钮
+        mAutoCompleteTextView.setTextColor(Color.GRAY);
+        //设置SearchView下划线透明
+        setUnderLinetransparent(mSearchView);
+
         // 下拉刷新
         mSmartRefreshLayout = (SmartRefreshLayout) view.findViewById(R.id.smart_refresh_layout);
         mSmartRefreshLayout.setRefreshHeader(  //设置 Header 为 贝塞尔雷达 样式
@@ -112,25 +139,27 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
         mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
             @Override
             public void onRefresh(RefreshLayout refreshlayout) {
-                handler.sendEmptyMessage(GET_PROJECT_LIST_INFO);
+                rentAdminGetProjectListInfo();
+                mSearchView.setQuery("",false);
             }
         });
 
         // 初始化吊篮列表
         projectRv= (RecyclerView) view.findViewById(R.id.project_recycler_view);
         mgProjectInfoList = new ArrayList<>();
+        showProjectList = new ArrayList<>();
         rentAdminGetProjectListInfo();
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getActivity());
         projectRv.setLayoutManager(layoutManager);
-        mgProjectListAdapter = new ProjectAdapter(getContext(), mgProjectInfoList);
-        projectRv.setAdapter(mgProjectListAdapter);
-        mgProjectListAdapter.setOnItemClickListener(new ProjectAdapter.OnItemClickListener() {
+        showProjectAdapter = new ProjectAdapter(getContext(), showProjectList);
+        projectRv.setAdapter(showProjectAdapter);
+        showProjectAdapter.setOnItemClickListener(new ProjectAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 // item 点击响应
                 Intent intent = new Intent(getActivity(), AreaAdminPrimaryActivity.class);
-                intent.putExtra("project_info",mgProjectInfoList.get(position));
+                intent.putExtra("project_info",showProjectList.get(position));
                 startActivity(intent);
             }
         });
@@ -140,10 +169,71 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
         noProjectListRelativeLayout = (RelativeLayout) view.findViewById(R.id.project_no_avaliable);
         noProjectListTextView = (TextView) view.findViewById(R.id.no_project_hint);
 
-
-        // 消息监听
+        setListener();
 
         return view;
+    }
+
+
+    private void setListener(){
+
+        // 设置搜索文本监听
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            //当点击搜索按钮时触发该方法
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                showProjectList.clear();
+                if (query == null  || query.equals("")) {
+                    showProjectList.addAll(mgProjectInfoList);
+                }else{
+                    for (int i = 0; i < mgProjectInfoList.size(); i++) {
+                        ProjectInfo projectInfo = mgProjectInfoList.get(i);
+                        if (projectInfo.getProjectName().equals(query)) {
+                            showProjectList.add(projectInfo);
+                        } else if (projectInfo.getProjectId().equals(query)) {
+                            showProjectList.add(projectInfo);
+                        }
+                    }
+                    handler.sendEmptyMessage(MG_PROJECT_LIST_INFO);
+                }
+                return false;
+            }
+
+            //当搜索内容改变时触发该方法
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                showProjectList.clear();
+                if (newText == null || newText.equals("")) {
+                    showProjectList.addAll(0,mgProjectInfoList);
+                }else{
+                    for (int i = 0; i < mgProjectInfoList.size(); i++) {
+                        ProjectInfo projectInfo = mgProjectInfoList.get(i);
+                        if (projectInfo.getProjectName().equals(newText)) {
+                            showProjectList.add(projectInfo);
+                        } else if (projectInfo.getProjectId().equals(newText)) {
+                            showProjectList.add(projectInfo);
+                        }
+                    }
+                    handler.sendEmptyMessage(MG_PROJECT_LIST_INFO);
+                }
+                return false;
+            }
+        });
+    }
+
+    /**设置SearchView下划线透明**/
+    private void setUnderLinetransparent(SearchView searchView){
+        try {
+            Class<?> argClass = searchView.getClass();
+            Field ownField = argClass.getDeclaredField("mSearchPlate");
+            ownField.setAccessible(true);
+            View mView = (View) ownField.get(searchView);
+            mView.setBackgroundColor(Color.TRANSPARENT);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
     }
 
     /*
@@ -151,21 +241,29 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
      */
     @Override
     public void onClick(View v) {
+        switch (v.getId()) {
 
+            default:
+                break;
+        }
     }
+
     /*
      * UI 更新类
      */
     // 主体页面显示逻辑控制
     public void updateProjectContentView(){
-        if(mgProjectInfoList.size() == 0){  // 显示无项目操作
+        if(mgProjectInfoList.size() == 0 ){  // 显示无项目操作
             projectRv.setVisibility(View.GONE);
             noProjectListRelativeLayout.setVisibility(View.VISIBLE);
             noProjectListTextView.setText("您还没有相关的项目");
-
-        }else{                               // 显示项目列表
+        }else if(showProjectList.size() == 0 ){ // 显示未搜索
+            projectRv.setVisibility(View.GONE);
+            noProjectListRelativeLayout.setVisibility(View.VISIBLE);
+            noProjectListTextView.setText("未搜索出相关项目");
+        }else{                                          // 显示项目列表
             projectRv.setVisibility(View.VISIBLE);
-            mgProjectListAdapter.notifyDataSetChanged();
+            showProjectAdapter.notifyDataSetChanged();
             noProjectListRelativeLayout.setVisibility(View.GONE);
             noProjectListTextView.setVisibility(View.GONE);
         }
@@ -217,6 +315,7 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
                     }
                 });
     }
+
     // 解析项目列表数据
     private void parseProjectListInfo(String responseData){
         JSONObject jsonObject = JSON.parseObject(responseData);
@@ -228,6 +327,8 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
             JSONObject projectInfoJsonObject = (JSONObject) iterator.next();
             mgProjectInfoList.add(projectInfoJsonObject.toJavaObject(ProjectInfo.class));
         }
+
+        showProjectList.addAll(mgProjectInfoList);
     }
 
 
@@ -262,22 +363,5 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
      * 权限申请
      */
 
-
-    /*
-     * 提示弹框
-     */
-    private CommonDialog DialogToast(String mTitle, String mMsg){
-        return new CommonDialog(getActivity(), R.style.dialog, mMsg,
-                new CommonDialog.OnCloseListener() {
-                    @Override
-                    public void onClick(Dialog dialog, boolean confirm) {
-                        if(confirm){
-                            dialog.dismiss();
-                        }else{
-                            dialog.dismiss();
-                        }
-                    }
-                }).setTitle(mTitle);
-    }
 
 }

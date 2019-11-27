@@ -12,10 +12,21 @@
         android:id="@+id/id_linearlayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
+        android:orientation="horizontal"
         android:background="@color/white"
-        android:padding="10dp">
+        android:paddingVertical="30dp">
 
+        <ImageView
+            android:layout_width="70dp"
+            android:layout_height="70dp"
+            android:layout_gravity="center"
+            android:layout_marginLeft="@dimen/textSize_10"
+            android:src="@mipmap/icon_basket" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -57,19 +68,216 @@
                 style="@style/usertextStyle"
                 android:hint="3号楼" />
         </LinearLayout>
+        </LinearLayout>
     </LinearLayout>
 
-    <GridView
-        android:id="@+id/function_gridview"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:paddingLeft="5dp"
-        android:paddingRight="5dp"
-        android:paddingTop="@dimen/size_20"
-        android:numColumns="4"
-        android:stretchMode="columnWidth"
-        android:horizontalSpacing="2dp"
-        android:verticalSpacing="2dp" />
+        android:fillViewport="true">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:id="@+id/ll_monitoring"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="@dimen/textSize_10">
+
+                <TextView
+                    android:text="实时监控"
+                    style="@style/modularTitleStyle"/>
+
+                <GridView
+                    android:id="@+id/function_gridview_1"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="@dimen/textSize_10"
+                    android:numColumns="3"
+                    android:stretchMode="columnWidth"
+                    android:horizontalSpacing="2dp"
+                    android:verticalSpacing="10dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_function"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="@dimen/textSize_10">
+
+                <TextView
+                    android:text="常用功能"
+                    style="@style/modularTitleStyle"/>
+
+                <GridView
+                    android:id="@+id/function_gridview_2"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="@dimen/textSize_10"
+                    android:numColumns="3"
+                    android:stretchMode="columnWidth"
+                    android:horizontalSpacing="2dp"
+                    android:verticalSpacing="2dp" />
+            </LinearLayout>
+            <LinearLayout
+                android:id="@+id/ll_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:layout_marginTop="2dp"
+                android:paddingBottom="@dimen/textSize_10">
+                <TextView
+                    android:text="其他信息"
+                    style="@style/modularTitleStyle"/>
+                <GridView
+                    android:id="@+id/function_gridview_3"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:paddingLeft="20dp"
+                    android:paddingRight="20dp"
+                    android:paddingTop="@dimen/textSize_10"
+                    android:numColumns="3"
+                    android:stretchMode="columnWidth"
+                    android:horizontalSpacing="2dp"
+                    android:verticalSpacing="2dp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_worker"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:layout_marginTop="2dp">
+                <TextView
+                    android:text="操作工人"
+                    style="@style/modularTitleStyle"/>
+                <TextView
+                    android:id="@+id/tv_no_worker"
+                    android:text="无操作人员，因为该吊篮未处于工作状态！"
+                    style="@style/modularTitleStyle"
+                    android:gravity="center"
+                    android:textColor="@color/gray01"
+                    android:visibility="gone"/>
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginBottom="@dimen/size_20">
+                    <RelativeLayout
+                        android:id="@+id/rl_worker1_all"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:background="@drawable/bg_round_pressed"
+                        android:paddingVertical="@dimen/textSize_10">
+
+                        <ImageView
+                            android:id="@+id/worker1_image"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_marginLeft="25dp"
+                            android:src="@mipmap/icon_operator"
+                            android:layout_gravity="center"/>
+
+                        <LinearLayout
+                            android:id="@+id/ll_worker1"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingLeft="5dp"
+                            android:layout_toRightOf="@id/worker1_image">
+
+                            <TextView
+                                android:id="@+id/tv_worker1_name"
+                                style="@style/modularContentStyle"
+                                android:hint="暂无" />
+
+                            <TextView
+                                android:id="@+id/tv_worker1_phone"
+                                style="@style/modularContentStyle"
+                                android:hint=" " />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:layout_alignParentRight="true"
+                            android:src="@mipmap/arrow_right_my_gray"
+                            android:layout_centerVertical="true"/>
+
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:layout_width="1dp"
+                        android:layout_height="match_parent"
+                        android:layout_marginVertical="@dimen/textSize_10"
+                        android:layout_gravity="center"
+                        android:background="@color/colorWorkerOrderBackground">
+                    </RelativeLayout>
+
+                    <RelativeLayout
+                        android:id="@+id/rl_worker2_all"
+                        android:layout_width="0dp"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:orientation="horizontal"
+                        android:paddingVertical="@dimen/textSize_10"
+                        android:background="@drawable/bg_round_pressed">
+                        <ImageView
+                            android:id="@+id/worker2_image"
+                            android:layout_width="70dp"
+                            android:layout_height="70dp"
+                            android:layout_marginLeft="15dp"
+                            android:src="@mipmap/icon_operator"
+                            android:layout_gravity="center"/>
+
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:orientation="vertical"
+                            android:paddingLeft="5dp"
+                            android:layout_toRightOf="@id/worker2_image">
+
+                            <TextView
+                                android:id="@+id/tv_worker2_name"
+                                style="@style/modularContentStyle"
+                                android:hint="暂无" />
+
+                            <TextView
+                                android:id="@+id/tv_worker2_phone"
+                                style="@style/modularContentStyle"
+                                android:hint=" " />
+                        </LinearLayout>
+
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginRight="10dp"
+                            android:layout_alignParentRight="true"
+                            android:src="@mipmap/arrow_right_my_gray"
+                            android:layout_centerVertical="true"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+        </LinearLayout>
+    </ScrollView>
 
 </LinearLayout>

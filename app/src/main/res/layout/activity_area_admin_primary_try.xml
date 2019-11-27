@@ -148,7 +148,7 @@
             android:id="@+id/rl_project_info"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@drawable/bg_round_white"
+            android:background="@drawable/bg_round_pressed"
             android:orientation="horizontal"
             android:paddingHorizontal="@dimen/size_20"
             android:paddingVertical="@dimen/size_20">
@@ -268,7 +268,7 @@
                         android:id="@+id/rl_configuration_info"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:background="@drawable/bg_round_white"
+                        android:background="@drawable/bg_round_pressed"
                         android:orientation="horizontal"
                         android:paddingHorizontal="@dimen/size_20"
                         android:paddingVertical="@dimen/textSize_10">
@@ -341,7 +341,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/rl_record"
                         android:layout_marginTop="@dimen/activity_horizontal_margin"
-                        android:background="@drawable/bg_round_white"
+                        android:background="@drawable/bg_round_pressed"
                         android:orientation="horizontal"
                         android:paddingHorizontal="@dimen/size_20"
                         android:paddingVertical="@dimen/textSize_10">
@@ -396,7 +396,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/rl_install_info"
                         android:layout_marginTop="@dimen/activity_horizontal_margin"
-                        android:background="@drawable/bg_round_white"
+                        android:background="@drawable/bg_round_pressed"
                         android:orientation="horizontal"
                         android:paddingHorizontal="@dimen/size_20"
                         android:paddingVertical="@dimen/textSize_10">
@@ -451,7 +451,7 @@
                         android:layout_height="wrap_content"
                         android:layout_below="@id/rl_basket_info"
                         android:layout_marginTop="@dimen/activity_horizontal_margin"
-                        android:background="@drawable/bg_round_white"
+                        android:background="@drawable/bg_round_pressed"
                         android:orientation="horizontal"
                         android:paddingHorizontal="@dimen/size_20"
                         android:paddingVertical="@dimen/textSize_10">

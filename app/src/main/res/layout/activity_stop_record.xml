@@ -6,6 +6,25 @@
 
     <include layout="@layout/toolbar_with_title_and_back"/>
 
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white">
+        <LinearLayout
+            android:id="@+id/ll_search"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/size_20"
+            android:layout_marginVertical="8dp"
+            android:background="@drawable/bg_round_gray">
+            <android.support.v7.widget.SearchView
+                android:id="@+id/view_search"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </LinearLayout>
+    </LinearLayout>
+
     <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
