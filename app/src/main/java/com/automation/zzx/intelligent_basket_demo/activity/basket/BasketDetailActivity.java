@@ -213,7 +213,7 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
                         startActivity(intent);
                         break;
                     case 2:  // 实时参数
-                        intent = new Intent(BasketDetailActivity.this, BasketParameterActivity.class);
+                        intent = new Intent(BasketDetailActivity.this, BasketParameterNewActivity.class);
                         intent.putExtra(BASKET_ID, mBasketId);
                         startActivity(intent);
                         break;

@@ -46,6 +46,11 @@ public class VarSwitchAdapter extends ArrayAdapter<VarSwitch> {
             viewHolder = (ViewHolder) view.getTag();  //重新获取ViewHolder
         }
 
+        if(varSwitch.getState() == -1){
+            view.setVisibility(View.INVISIBLE);
+            return view;
+        }
+
         viewHolder.varSwitchName.setText(varSwitch.getName()); // 设置功能名称
         viewHolder.varSwitchImage.setImageResource(varSwitch.getImageId());    // 设置功能图片
         if(varSwitch.getState() == 0) {  // 设置提醒信息

@@ -10,6 +10,9 @@ public class VarSwitch {
     private int imageId;  // 功能示意图
     private int state; // 开关状态(0: 安全， 1：提醒)
 
+    public VarSwitch(){
+        this.state=-1;
+    }
     public VarSwitch(String name, int imageId, int state){
         this.name = name;
         this.imageId = imageId;
