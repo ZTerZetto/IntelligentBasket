@@ -2,6 +2,8 @@ package com.automation.zzx.intelligent_basket_demo.entity;
 
 import android.support.annotation.Nullable;
 
+import com.baidu.mapapi.model.LatLng;
+
 import java.io.Serializable;
 
 // Created by $USER_NAME on 2019/1/23/023.
@@ -52,6 +54,8 @@ public class ProjectInfo implements Serializable {
     public UserInfo adminAreaUser;
     // 本项目租方管理员基本信息
     public UserInfo adminRentUser;
+    // 项目的经纬度信息
+    public String coordinate;
 
 
     /*
@@ -285,4 +289,11 @@ public class ProjectInfo implements Serializable {
         this.adminRentUser = adminRentUser;
     }
 
+    public String getCoordinate() {
+        return coordinate;
+    }
+
+    public void setCoordinate(String coordinate) {
+        this.coordinate = coordinate;
+    }
 }

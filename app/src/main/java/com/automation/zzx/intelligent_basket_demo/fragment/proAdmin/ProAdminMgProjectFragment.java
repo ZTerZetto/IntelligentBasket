@@ -303,9 +303,14 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
             }
 
             @Override
-            public void onUploadAccept(View view, int position) {
+            public void onAddInstall(View view, int position) {
 
             }
+
+           /* @Override
+            public void onUploadAccept(View view, int position) {
+
+            }*/
 
             @Override
             public void onUploadCertClick(View view, int position) {

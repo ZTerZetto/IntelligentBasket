@@ -51,7 +51,8 @@
                     <EditText
                         android:id="@+id/edt_register_userName"
                         style="@style/editStyle"
-                        android:hint="未设置" />
+                        android:hint="未设置"
+                        android:maxLength="14"/>
                 </LinearLayout>
 
                 <View style="@style/me_horizontal_view_style" />
@@ -73,6 +74,8 @@
                     <EditText
                         android:id="@+id/edt_register_age"
                         style="@style/editStyle"
+                        android:inputType="number"
+                        android:maxLength="3"
                         android:hint="未设置" />
                 </LinearLayout>
 
@@ -95,6 +98,7 @@
                     <EditText
                         android:id="@+id/edt_register_native"
                         style="@style/editStyle"
+                        android:maxLength="11"
                         android:hint="未设置" />
                 </LinearLayout>
 
@@ -164,7 +168,8 @@
                     <EditText
                         android:id="@+id/edt_register_userPhone"
                         style="@style/editStyle"
-                        android:hint="该手机号码将作为登录账号" />
+                        android:hint="该手机号码将作为登录账号"
+                        android:maxLength="11"/>
                 </LinearLayout>
 
                 <View style="@style/me_horizontal_view_style" />
@@ -189,6 +194,7 @@
                         android:id="@+id/edt_register_pwd"
                         style="@style/editStyle"
                         android:hint="该密码将作为登录密码"
+                        android:maxLength="15"
                         android:inputType="textPassword" />
                 </LinearLayout>
 
@@ -214,6 +220,7 @@
                         android:id="@+id/edt_register_pwd_again"
                         style="@style/editStyle"
                         android:hint="请再次输入正确密码"
+                        android:maxLength="15"
                         android:inputType="textPassword" />
                 </LinearLayout>
             </LinearLayout>
@@ -248,7 +255,8 @@
                     android:id="@+id/edt_id_card_num"
                     style="@style/editStyle"
                     android:hint="请输入正确格式的身份证号码"
-                    android:inputType="textPassword" />
+                    android:maxLength="18"
+                    android:digits="0123456789X"/>
             </LinearLayout>
 
             <View style="@style/me_horizontal_view_style" />
@@ -318,7 +326,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:visibility="visible">
+                android:visibility="gone">
 
                 <RelativeLayout
                     android:id="@+id/ll_add_skill"

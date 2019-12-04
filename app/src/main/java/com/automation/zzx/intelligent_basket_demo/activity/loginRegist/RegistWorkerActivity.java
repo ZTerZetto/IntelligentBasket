@@ -53,7 +53,6 @@ import com.google.gson.Gson;
 
 import java.io.File;
 import java.io.IOException;
-import java.net.Inet4Address;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.List;
@@ -282,7 +281,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
             return;
         }
         spinnerGender.setDropDownVerticalOffset(80); //下拉的纵向偏移
-        genderAdapter = new ArrayAdapter<String>(this,R.layout.spinner_simple_item,gender_list);
+        genderAdapter = new ArrayAdapter<String>(this,R.layout.spinner_left_item,gender_list);
         genderAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerGender.setAdapter(genderAdapter);
         spinnerGender.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
@@ -302,7 +301,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
             return;
         }
         spinnerType.setDropDownVerticalOffset(50); //下拉的纵向偏移
-        typeAdapter = new ArrayAdapter<String>(this,R.layout.spinner_simple_item,type_list);
+        typeAdapter = new ArrayAdapter<String>(this,R.layout.spinner_left_item,type_list);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
         spinnerType.setSelection(5, true); // 设置默认值为:其它

@@ -3,15 +3,19 @@ package com.automation.zzx.intelligent_basket_demo.activity.basket;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -31,6 +35,7 @@ import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -39,14 +44,22 @@ import okhttp3.Call;
 
 import static android.content.ContentValues.TAG;
 
-public class AlarmRecordBasketActivity extends AppCompatActivity {
+public class AlarmRecordBasketActivity extends AppCompatActivity implements View.OnClickListener {
 
     // intent 消息参数
     public final static String BASKET_ID = "basket_id";  // 项目Id
     // Handler消息
     private final static int MG_ALARM_LIST_INFO = 1;
+    private final static int UPDATE_LIST_INFO = 2;
+
+    // 主体
+    //搜索框控件
+    private SearchView mSearchView;
+    private AutoCompleteTextView mAutoCompleteTextView;//搜索输入框
+    private ImageView mDeleteButton;//搜索框中的删除按钮
 
     private List<AlarmInfo> alarmInfoList = new ArrayList<>();
+    private List<AlarmInfo> showAlarmInfoList = new ArrayList<>();
     private AlarmRecordAdapter adapter;
 
     private LinearLayout llRecordSum;
@@ -71,10 +84,14 @@ public class AlarmRecordBasketActivity extends AppCompatActivity {
             switch(msg.what) {
                 case MG_ALARM_LIST_INFO: // 获取报停记录
                     alarmInfoList.clear();
+                    showAlarmInfoList.clear();
                     parseAlarmListInfo((String) msg.obj);
                     adapter.notifyDataSetChanged();
                     updateContentView();
                     break;
+                case UPDATE_LIST_INFO:
+                    adapter.notifyDataSetChanged();
+                    updateContentView(); // 更新项目信息及控件显示
                 default:
                     break;
             }
@@ -119,6 +136,24 @@ public class AlarmRecordBasketActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
+        //搜索框
+        mSearchView=findViewById(R.id.view_search);
+        mAutoCompleteTextView=mSearchView.findViewById(R.id.search_src_text);
+        mDeleteButton=mSearchView.findViewById(R.id.search_close_btn);
+        mDeleteButton.setOnClickListener(this);
+        mSearchView.setIconifiedByDefault(false);//设置搜索图标是否显示在搜索框内
+        mAutoCompleteTextView.clearFocus(); //默认失去焦点
+        mSearchView.setImeOptions(3);//设置输入法搜索选项字段，1:回车2:前往3:搜索4:发送5:下一項6:完成
+//      mSearchView.setInputType(1);//设置输入类型
+//      mSearchView.setMaxWidth(200);//设置最大宽度
+        mSearchView.setQueryHint("输入吊篮ID或描述详情");//设置查询提示字符串
+        mSearchView.setSubmitButtonEnabled(true);//设置是否显示搜索框展开时的提交按钮
+        mAutoCompleteTextView.setTextColor(Color.GRAY);
+        //设置SearchView下划线透明
+        setUnderLinetransparent(mSearchView);
+        setListener();
+
+
         // 空空如也
         noRecordListRelativeLayout = (RelativeLayout) findViewById(R.id.record_no_avaliable);
         noRecordListTextView = (TextView)findViewById(R.id.no_record_hint);
@@ -129,6 +164,64 @@ public class AlarmRecordBasketActivity extends AppCompatActivity {
 
         adapter=new AlarmRecordAdapter(this,R.layout.item_basket_alarm_record,alarmInfoList);
         lvStop.setAdapter(adapter);
+    }
+
+    private void setListener(){
+
+        // 设置搜索文本监听
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            //当点击搜索按钮时触发该方法
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                showAlarmInfoList.clear();
+                if (query == null  || query.equals("")) {
+                    showAlarmInfoList.addAll(alarmInfoList);
+                }else{
+                    for (int i = 0; i < alarmInfoList.size(); i++) {
+                        AlarmInfo alarmInfo = alarmInfoList.get(i);
+                        if (alarmInfo.getDevice_id().contains(query)) {
+                            showAlarmInfoList.add(alarmInfo);
+                        } else if (alarmInfo.getAlarm_detail().contains(query)) {
+                            showAlarmInfoList.add(alarmInfo);
+                        }
+                    }
+                }
+                handler.sendEmptyMessage(UPDATE_LIST_INFO);
+                return true;
+            }
+
+            //当搜索内容改变时触发该方法
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                showAlarmInfoList.clear();
+                if (newText == null || newText.equals("")) {
+                    showAlarmInfoList.addAll(alarmInfoList);
+                }else{
+                    for (int i = 0; i < alarmInfoList.size(); i++) {
+                        AlarmInfo alarmInfo = alarmInfoList.get(i);
+                        if (alarmInfo.getDevice_id().contains(newText)) {
+                            showAlarmInfoList.add(alarmInfo);
+                        } else if (alarmInfo.getAlarm_detail().contains(newText)) {
+                            showAlarmInfoList.add(alarmInfo);
+                        }
+                    }
+                }
+                handler.sendEmptyMessage(UPDATE_LIST_INFO);
+                return true;
+            }
+        });
+    }
+
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.search_close_btn:
+                mAutoCompleteTextView.setText("");
+                break;
+            default:
+                break;
+        }
     }
 
     /*
@@ -196,6 +289,7 @@ public class AlarmRecordBasketActivity extends AppCompatActivity {
                 alarmInfoList.add(mAlarmInfo);
             }
         }
+        showAlarmInfoList.addAll(alarmInfoList);
     }
 
     /*
@@ -207,13 +301,34 @@ public class AlarmRecordBasketActivity extends AppCompatActivity {
             llRecordSum.setVisibility(View.GONE);
             noRecordListRelativeLayout.setVisibility(View.VISIBLE);
             noRecordListTextView.setText("暂无报警记录！");
-        } else {  // 好多记录
+        } else if (showAlarmInfoList.size() < 1 ){
+            lvStop.setVisibility(View.GONE);
+            llRecordSum.setVisibility(View.GONE);
+            noRecordListRelativeLayout.setVisibility(View.VISIBLE);
+            noRecordListTextView.setText("未搜索出相关报警记录！");
+        }else{  // 好多记录
             noRecordListRelativeLayout.setVisibility(View.GONE);
             lvStop.setVisibility(View.VISIBLE);
             llRecordSum.setVisibility(View.VISIBLE);
             tvRecordSum.setText(String.valueOf(alarmInfoList.size()));
         }
     }
+
+    /**设置SearchView下划线透明**/
+    private void setUnderLinetransparent(SearchView searchView){
+        try {
+            Class<?> argClass = searchView.getClass();
+            Field ownField = argClass.getDeclaredField("mSearchPlate");
+            ownField.setAccessible(true);
+            View mView = (View) ownField.get(searchView);
+            mView.setBackgroundColor(Color.TRANSPARENT);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
 
     // 顶部导航栏消息响应
     @Override

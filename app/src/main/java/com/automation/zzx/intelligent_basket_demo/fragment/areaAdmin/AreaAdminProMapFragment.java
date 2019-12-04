@@ -1,10 +1,19 @@
 package com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin;
 
+import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.os.Build;
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.util.Log;
@@ -15,7 +24,18 @@ import android.widget.Button;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminProListActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
+import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
+import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.baidu.location.BDAbstractLocationListener;
 import com.baidu.location.BDLocation;
 import com.baidu.location.LocationClient;
@@ -40,14 +60,22 @@ import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
 
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
+import okhttp3.Call;
+
 import static android.content.Context.SENSOR_SERVICE;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_GET_ALL_PROJECT_INFO;
 
 public class AreaAdminProMapFragment extends Fragment implements SensorEventListener, BaiduMap.OnMapLoadedCallback {
 
         final static private String TAG = "MapViewFragment";
+
+        // Handler消息
+        private final static int GET_PROJECT_LIST_INFO = 2; // 从后台获取吊篮列表数据
 
         // 视图相关
         private View mView;
@@ -62,8 +90,8 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
         private SensorManager mSensorManager;  // 传感器管理
         private Double lastX = 0.0;
         private int mCurrentDirection = 0;
-        private double mCurrentLat = 0.0;  // 当前经纬度
-        private double mCurrentLon = 0.0;
+        private double mCurrentLat = 31.0791900;  // 当前经纬度
+        private double mCurrentLon = 121.3853800;
         private float mCurrentAccracy;
 
         // 地图相关
@@ -84,6 +112,33 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
         private View mPopupView;
         private TextView mText_id;
         private TextView mText_text;
+        private TextView mText_region;
+
+    // 本地存储
+    public SharedPreferences pref;
+    private UserInfo userInfo; // 个人信息
+    private String token;
+    //项目
+    private String projectType;
+    private int mItemPosition;
+
+    private List<ProjectInfo> mgProjectInfoList  = new ArrayList<>();
+
+
+    @SuppressLint("HandlerLeak")
+    private Handler handler = new Handler() {
+        public void handleMessage(Message msg) {
+            switch(msg.what) {
+                case GET_PROJECT_LIST_INFO:
+                    //处理收到的项目列表信息
+                    mgProjectInfoList.clear();
+                    parseProjectListInfo((String)msg.obj);  // 解析数据
+                    addMarkers();// 添加marker点
+                    break;
+
+            }
+        }
+    };
 
         @Nullable
         @Override
@@ -91,7 +146,7 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
             if(!isHasPermission()) requestPermission();  // 检查权限
             if (mView == null) {
                 initWidge(inflater, container);
-                //initOnTouchEvent();
+                rentAdminGetProjectListInfo();
             }
             return mView;
         }
@@ -132,7 +187,7 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
 
             // 点聚合功能初始化
             mClusterManager = new ClusterManager<AreaAdminProMapFragment.MyItem>(getActivity(), mBaiduMap);
-            addMarkers(); // 添加marker点
+            //addMarkers(); // 添加marker点
             mBaiduMap.setOnMapStatusChangeListener(mClusterManager); // 设置地图监听，当地图状态发生改变时，进行点聚合运算
             mBaiduMap.setOnMarkerClickListener(mClusterManager); // 设置maker点击时的响应
 
@@ -140,6 +195,7 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
             mPopupView = inflater.inflate(R.layout.bmap_popu_marker, null);
             mText_id = (TextView) mPopupView.findViewById(R.id.marker_id);
             mText_text = (TextView) mPopupView.findViewById(R.id.marker_text);
+            mText_region = (TextView) mPopupView.findViewById(R.id.marker_region);
 
             /*
              * 消息响应
@@ -165,12 +221,16 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
             mClusterManager.setOnClusterItemClickListener(new ClusterManager.OnClusterItemClickListener<AreaAdminProMapFragment.MyItem>() {
                 @Override
                 public boolean onClusterItemClick(AreaAdminProMapFragment.MyItem item) {
-                    if(item != null && item.getExtraInfo().get("address")!=null){
-                        String address = String.valueOf(item.getExtraInfo().get("address"));
+                    if(item != null && item.getExtraInfo().get("projectId")!=null){
+                        String projectId = String.valueOf(item.getExtraInfo().get("projectId"));
+                        String projectName = String.valueOf(item.getExtraInfo().get("projectName"));
+                        String region = String.valueOf(item.getExtraInfo().get("region"));
                         // 点击弹出气泡窗口，显示一些信息。点击窗口可以跳转到详情页面
-                        mText_id.setText("编号：xxx");
-                        mText_text.setText("名称：" + address);
-
+                        mText_id.setText("编号:"+projectId);
+                        mText_text.setText("名称:" + projectName);
+                        mText_region.setText("区域:"+region);
+                        //确定当前气泡所属顺序的值
+                        mItemPosition = item.getOrder();
                         // 定义用于显示该InfoWindow的坐标点
                         LatLng pt = new LatLng(item.getPosition().latitude, item.getPosition().longitude);
                         //创建InfoWindow , 传入 view， 地理坐标， y 轴偏移量
@@ -182,15 +242,19 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
                     return false;
                 }
             });
+
             // 点击气泡响应
             mPopupView.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
-                    // 点击气泡进入详情页面：待做
-                    Log.d(TAG, "点击气泡");
+                    // 点击气泡进入详情页面
                     mBaiduMap.hideInfoWindow();
-                    //Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
-                    //startActivity(intent);
+                    //根据气泡顺序定位项目
+                    if(mItemPosition <= mgProjectInfoList.size()) {
+                        Intent intent = new Intent(getActivity(), AreaAdminPrimaryActivity.class);
+                        intent.putExtra("project_info", mgProjectInfoList.get(mItemPosition));
+                        startActivity(intent);
+                    }
                 }
             });
             // 点击地图响应
@@ -242,6 +306,63 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
             }
         };
 
+    /*
+     * 网络请求相关
+     */
+    // 从后台获取吊篮列表数据
+    public void rentAdminGetProjectListInfo(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", token)
+                .addParam("userId", userInfo.getUserId())
+                .get()
+                .url(AREA_ADMIN_GET_ALL_PROJECT_INFO)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String responseData = o.toString();
+                        Message message = new Message();
+                        message.what = GET_PROJECT_LIST_INFO;
+                        message.obj = responseData;
+                        handler.sendMessage(message);
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        switch (code){
+                            case 401: // 未授权
+                                ToastUtil.showToastTips(getActivity(), "登录已过期，请重新登陆");
+                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                                getActivity().finish();
+                                break;
+                            case 403: // 禁止
+                                break;
+                            case 404: // 404
+                                break;
+                        }
+
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+                });
+    }
+
+
+    // 解析项目列表数据
+    private void parseProjectListInfo(String responseData){
+        JSONObject jsonObject = JSON.parseObject(responseData);
+        JSONObject jsonObjectList = jsonObject.getJSONObject("projectList");
+        String projectListStr = jsonObjectList.getString(projectType);
+        JSONArray projectList= JSON.parseArray(projectListStr);
+        Iterator<Object> iterator = projectList.iterator();  // 迭代获取项目信息
+        while(iterator.hasNext()) {
+            JSONObject projectInfoJsonObject = (JSONObject) iterator.next();
+            mgProjectInfoList.add(projectInfoJsonObject.toJavaObject(ProjectInfo.class));
+        }
+    }
         /*
             传感器监听重构函数
          */
@@ -300,7 +421,7 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
                     LatLng ll = new LatLng(location.getLatitude(),
                             location.getLongitude());
                     ms = new MapStatus.Builder().target(ll).zoom(18.0f).build();
-                    mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(ms));;
+                    mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(ms));
                 }
                 if(mCurrentLat<3.85 || mCurrentLat>53.55 // 定位不在中国境内，重新定位
                         || mCurrentLon<73.55 || mCurrentLon>135.08 )
@@ -403,15 +524,17 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
         public class MyItem implements ClusterItem {
             private final LatLng mPosition;
             private Bundle buns; // 额外信息
+            private int order; // 排序信息
 
 
             public MyItem(LatLng latLng) {
                 mPosition = latLng;
             }
 
-            public MyItem(LatLng latLng, Bundle bun) {
+            public MyItem(LatLng latLng, Bundle bun, int mOrder) {
                 mPosition = latLng;
                 buns = bun;
+                order = mOrder;
             }
 
             @Override
@@ -431,12 +554,44 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
                 return BitmapDescriptorFactory
                         .fromResource(R.drawable.ic_baidu_gcoding);
             }
+
+            public int getOrder() {
+                // 返回marker坐标
+                return order;
+            }
         }
+
+    /*
+     *  生命周期函数
+     */
+    /*
+     * 登录相关
+     */
+    protected void onAttachToContext(Context context) {
+        //do something
+        userInfo = ((AreaAdminProListActivity) context).pushUserInfo();
+        token = ((AreaAdminProListActivity) context).pushToken();
+        projectType = ((AreaAdminProListActivity) context).pushType();
+    }
+    @TargetApi(23)
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        onAttachToContext(context);
+    }
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            onAttachToContext(activity);
+        }
+    }
 
         // 添加初始点聚合点
         public void addMarkers() {
             // 添加Marker点
-            LatLng l1A = new LatLng(32.061148, 118.800284); // 东南大学四牌楼校区
+            /* LatLng l1A = new LatLng(32.061148, 118.800284); // 东南大学四牌楼校区
             LatLng l1B = new LatLng(32.061494, 118.796678);
             LatLng l1C = new LatLng(32.059660, 118.800120);
             Bundle bundle1_0 = new Bundle();
@@ -447,7 +602,7 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
             bundle1_1.putString("address","东南大学九龙湖校区");
             LatLng l1F = new LatLng(32.080885, 118.782467); // 东南大学丁家桥校区
             LatLng l1G = new LatLng(32.078562, 118.782731);
-            Bundle bundle1_2 = new Bundle();
+           Bundle bundle1_2 = new Bundle();
             bundle1_2.putString("address","东南大学丁家桥校区");
 
             LatLng l2A = new LatLng(32.061430, 118.786007); // 南京大学鼓楼校区
@@ -469,9 +624,9 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
             bundle4_1.putString("address","南京理工大学明孝陵");
             LatLng l4B = new LatLng(32.132273, 118.940764); // 南京理工大学紫金学院
             Bundle bundle4_2 = new Bundle();
-            bundle4_2.putString("address","南京理工大学紫金学院");
+            bundle4_2.putString("address","南京理工大学紫金学院");*/
 
-            List<AreaAdminProMapFragment.MyItem> items = new ArrayList<MyItem>();
+           /* List<AreaAdminProMapFragment.MyItem> items = new ArrayList<MyItem>();
             items.add(new AreaAdminProMapFragment.MyItem(l1A, bundle1_0));
             items.add(new AreaAdminProMapFragment.MyItem(l1B, bundle1_0));
             items.add(new AreaAdminProMapFragment.MyItem(l1C, bundle1_0));
@@ -484,10 +639,28 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
             items.add(new AreaAdminProMapFragment.MyItem(l3A, bundle3_1));
             items.add(new AreaAdminProMapFragment.MyItem(l3B, bundle3_2));
             items.add(new AreaAdminProMapFragment.MyItem(l4A, bundle4_1));
-            items.add(new AreaAdminProMapFragment.MyItem(l4B, bundle4_2));
+            items.add(new AreaAdminProMapFragment.MyItem(l4B, bundle4_2));*/
 
+            List<AreaAdminProMapFragment.MyItem> items = new ArrayList<MyItem>();
+            for (int i = 0; i < mgProjectInfoList.size(); i++) {
+                double dbl_1, dbl_2;
+                if (!mgProjectInfoList.get(i).getCoordinate().equals("")) {
+
+                    String str[] = mgProjectInfoList.get(i).getCoordinate().split(",");
+                    dbl_1 = Double.valueOf(str[0]);//经度
+                    dbl_2 = Double.valueOf(str[1]);//纬度
+
+                    //分解经纬度信息
+                    LatLng mLatLng = new LatLng(dbl_2, dbl_1);
+                    //获取项目信息
+                    Bundle bundle = new Bundle();
+                    bundle.putString("region", mgProjectInfoList.get(i).getRegion());
+                    bundle.putString("projectName", mgProjectInfoList.get(i).getProjectName());
+                    bundle.putString("projectId", mgProjectInfoList.get(i).getProjectId());
+                    items.add(new AreaAdminProMapFragment.MyItem(mLatLng, bundle, i));
+                }
+           }
             mClusterManager.addItems(items);
-
         }
 
 }

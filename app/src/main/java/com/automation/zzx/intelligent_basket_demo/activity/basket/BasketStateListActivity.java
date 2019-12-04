@@ -19,6 +19,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.Button;
 import android.widget.GridView;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
@@ -34,12 +35,14 @@ import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTP
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
+import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
+import com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -58,6 +61,7 @@ import java.util.List;
 import okhttp3.Call;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_GET_ALL_BASKET_INFO;
+import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
 
 public class BasketStateListActivity extends AppCompatActivity {
 
@@ -84,7 +88,7 @@ public class BasketStateListActivity extends AppCompatActivity {
 
     //页面返回消息
     private final static int CAPTURE_ACTIVITY_RESULT = 1;  // 扫码返回
-    private final static int UPLOAD_BASKET_IMAGE_RESULT = 2;  // 上传预验收图片
+    private final static int ADD_INSTALL_RESULT = 2;  // 上传预验收图片
     private final static int UPLOAD_CERTIFICATE_IMAGE_RESULT = 3;  // 上传安监证书页面
 
     /* 控件部分 */
@@ -104,6 +108,7 @@ public class BasketStateListActivity extends AppCompatActivity {
     // 吊篮列表视图
     private RelativeLayout mListRelativeLayout;
     private RecyclerView mBasketListRecyclerView;
+    private String mInstallBasketId;
     private List<MgBasketStatement> mgBasketStatementList;
     private List<List<MgBasketStatement>> mgBasketStatementClassifiedList;
     private MgBasketStatementAdapter mgBasketStatementAdapter;
@@ -112,6 +117,9 @@ public class BasketStateListActivity extends AppCompatActivity {
     // 无吊篮或项目
     private RelativeLayout mBlankRelativeLayout;
     private TextView mBlankHintTextView;
+
+    //批量分配安装队伍
+    private Button btnInstall;
 
     // 底部筛选框
     private LinearLayout llChoose;
@@ -281,23 +289,11 @@ public class BasketStateListActivity extends AppCompatActivity {
             }
         });
 
-        /*
-         主体内容部分
-          */
-        // 下拉刷新
-        mSmartRefreshLayout = (SmartRefreshLayout) findViewById(R.id.smart_refresh_layout);
-        mSmartRefreshLayout.setRefreshHeader(  //设置 Header 为 贝塞尔雷达 样式
-                new BezierCircleHeader(BasketStateListActivity.this));
-        mSmartRefreshLayout.setPrimaryColorsId(R.color.smart_loading_background_color);
-        mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
+        btnInstall = findViewById(R.id.install_image_view);
+        btnInstall.setOnClickListener(new View.OnClickListener() {
             @Override
-            public void onRefresh(RefreshLayout refreshlayout) {
-                if(mProjectId != null){
-                    //更新吊篮列表UI
-                    mHandler.sendEmptyMessage(GET_BASKET_MSG);
-                }else{
-                    mSmartRefreshLayout.finishRefresh();
-                }
+            public void onClick(View v) {
+                Toast.makeText(BasketStateListActivity.this,"批量分配安装队伍",Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -325,6 +321,16 @@ public class BasketStateListActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onAddInstall(View view, int position) {
+                // 跳转至扫描分配安装队伍页面
+                mInstallBasketId = mgBasketStatementList.get(position).getBasketId();
+                if(mInstallBasketId==null || mInstallBasketId.equals("")){
+                    DialogToast("提示", "该吊篮信息有误，无法分配安装队伍");
+                }
+                startActivityForResult(new Intent(BasketStateListActivity.this, CaptureActivity.class), ADD_INSTALL_RESULT);
+            }
+/*
+            @Override
             public void onUploadAccept(View view, int position) {
                 // 点击上传预验收照片
                 Log.i(TAG, "You have clicked the "+ position+" item's PreAssAndAccept");
@@ -334,7 +340,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                 intent.putExtra(AreaAdminPrimaryActivity.BASKET_ID, mgBasketStatementList.get(position).getBasketId());
                 intent.putExtra(AreaAdminPrimaryActivity.UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
                 startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
-            }
+            }*/
 
             //上传安检证书
             @Override
@@ -395,8 +401,8 @@ public class BasketStateListActivity extends AppCompatActivity {
                 mySpinner_2.setBackgroundColor(0x0);
             }
 
-            adapter = new ArrayAdapter<String>(BasketStateListActivity.this,R.layout.spinner_simple_item,list_1);
-            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+            adapter = new ArrayAdapter<String>(BasketStateListActivity.this,R.layout.spinner_center_item,list_1);
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_center_item);
             mySpinner_1.setAdapter(adapter);
             mySpinner_1.setSelection(0, true);
             mySpinner_1.setOnItemSelectedListener(new Spinner.OnItemSelectedListener() {
@@ -420,8 +426,8 @@ public class BasketStateListActivity extends AppCompatActivity {
                 }
             });
 
-            adapter = new ArrayAdapter<String>(BasketStateListActivity.this,R.layout.spinner_simple_item,list_2);
-            adapter.setDropDownViewResource(R.layout.spinner_dropdown_item);
+            adapter = new ArrayAdapter<String>(BasketStateListActivity.this,R.layout.spinner_center_item,list_2);
+            adapter.setDropDownViewResource(R.layout.spinner_dropdown_center_item);
             mySpinner_2.setAdapter(adapter);
 
             mySpinner_2.setSelection(0, true);
@@ -497,6 +503,56 @@ public class BasketStateListActivity extends AppCompatActivity {
     }
 
 
+    // 添加施工人员
+    private void addInstallWithBasket(String installId){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("projectId", mProjectId)
+                .addParam("userId", installId)
+                .addParam("deviceList", mInstallBasketId)
+                .post()
+                .url(AppConfig.CREATE_INSTALL_INFO)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String response = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(response);
+                        String create = jsonObject.getString("create");
+                        Boolean isLogin = jsonObject.getBoolean("isLogin");
+                        if(isLogin.equals(true)){
+                            if(create.contains("成功")) {
+                                Log.i(TAG, "分配安装队伍成功");
+                                DialogToast("提示", "您已成功分配安装队伍").show();
+                                areaAdminGetAllBasket();
+                            }else if(create.contains("存在项目中")){
+                                DialogToast("提示", "分配安装队伍失败").show();
+                            }
+                        }else{
+                            DialogToast("提示", "权限认证失败,分配安装队伍失败").show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        switch(code){
+                            case 401:
+                                ToastUtil.showToastTips(BasketStateListActivity.this, "登陆已过期，请重新登录");
+                                startActivity(new Intent(BasketStateListActivity.this, LoginActivity.class));
+                                BasketStateListActivity.this.finish();
+                                break;
+                            case 403:
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+                });
+    }
+
     // 解析项目中的吊篮列表信息
     private void parseBasketListInfo(String responseDate){
         JSONObject jsonObject = JSON.parseObject(responseDate);
@@ -548,9 +604,18 @@ public class BasketStateListActivity extends AppCompatActivity {
             mBlankRelativeLayout.setVisibility(View.GONE);
             mListRelativeLayout.setVisibility(View.VISIBLE);
             mgBasketStatementAdapter.notifyDataSetChanged();
+
             //仅在使用中状态展示筛选栏
-            if(pre_selectedPosition == 2) llChoose.setVisibility(View.VISIBLE);
-            else llChoose.setVisibility(View.GONE);
+            llChoose.setVisibility(View.GONE);
+            btnInstall.setVisibility(View.GONE);
+            switch (pre_selectedPosition){
+                case 0:
+                    btnInstall.setVisibility(View.VISIBLE);
+                    break;
+                case 2:
+                    llChoose.setVisibility(View.VISIBLE);
+                    break;
+            }
         }
     }
 
@@ -561,9 +626,15 @@ public class BasketStateListActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
-            case UPLOAD_BASKET_IMAGE_RESULT:  // 上传预验收图片返回
+            case ADD_INSTALL_RESULT:  // 上传预验收图片返回
                 if (resultCode == RESULT_OK) {
-                    // TODO 隐藏该吊篮的预验收按钮
+                    String userInfo = data.getStringExtra(QR_CODE_RESULT);
+                    int colon = userInfo.indexOf(":");
+                    String installId = userInfo.substring(colon+1);
+                    if(userInfo.contains("InstallTeam")){  // 是安装队伍Id
+                        addInstallWithBasket(installId);
+                    }else // 二维码有误
+                        DialogToast("错误", "此非安装人员身份二维码，请核实后重新扫描").show();
                 }
                 break;
             case UPLOAD_CERTIFICATE_IMAGE_RESULT:  // 上传安监证书返回值

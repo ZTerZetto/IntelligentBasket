@@ -13,6 +13,7 @@
     <uses-permission android:name="android.permission.CHANGE_WIFI_STATE" />
     <uses-permission android:name="android.permission.DISABLE_KEYGUARD" />
     <uses-permission android:name="android.permission.FLASHLIGHT" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.GET_TASKS" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.MOUNT_UNMOUNT_FILESYSTEMS" />
@@ -37,9 +38,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.basket.BasketParameterNewActivity"></activity>
+        <activity android:name=".activity.basket.PlaneBasketActivity"></activity>
+        <activity android:name=".activity.basket.BasketParameterNewActivity" />
         <activity android:name=".activity.basket.AlarmRecordBasketActivity" />
-        <activity android:name=".activity.basket.PlaneFigureActivity"></activity>
+        <activity android:name=".activity.basket.PlaneFigureActivity" />
         <activity android:name=".activity.basket.AlarmRecordBasketActivity" />
         <activity android:name=".activity.areaAdmin.StopRecordActivity" />
         <activity android:name=".activity.areaAdmin.AlarmRecordProjectActivity" />

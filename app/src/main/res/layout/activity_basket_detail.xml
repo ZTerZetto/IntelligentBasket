@@ -14,11 +14,11 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:background="@color/white"
-        android:paddingVertical="30dp">
+        android:paddingVertical="20dp">
 
         <ImageView
-            android:layout_width="70dp"
-            android:layout_height="70dp"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
             android:layout_gravity="center"
             android:layout_marginLeft="@dimen/textSize_10"
             android:src="@mipmap/icon_basket" />
@@ -27,37 +27,39 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical">
-        <RelativeLayout
+
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingHorizontal="10dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
             <TextView
                 android:id="@+id/basket_id_txt"
                 style="@style/usertextStyle"
-                android:text="吊篮编号 "
-                />
+                android:text="吊篮编号 " />
+
             <TextView
                 android:id="@+id/basket_id"
                 style="@style/usertextStyle"
-                android:layout_toRightOf="@id/basket_id_txt"
+                android:layout_weight="6"
+                android:singleLine="true"
                 android:hint="@string/basketId_hint" />
 
             <TextView
                 android:id="@+id/basket_state"
                 style="@style/usertextStyle"
-                android:layout_marginLeft="@dimen/size_50"
-                android:layout_alignParentRight="true"
                 android:textColor="@color/dark_red"
+                android:textSize="@dimen/textSize_10"
+                android:layout_marginRight="8dp"
                 android:text="进行中" />
 
-        </RelativeLayout>
+        </LinearLayout>
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
-            android:paddingHorizontal="10dp"
+            android:layout_marginStart="10dp"
             android:orientation="horizontal">
             <TextView
                 style="@style/usertextStyle"
@@ -66,6 +68,7 @@
             <TextView
                 android:id="@+id/area_id"
                 style="@style/usertextStyle"
+                android:layout_weight="1"
                 android:hint="3号楼" />
         </LinearLayout>
         </LinearLayout>
@@ -98,13 +101,13 @@
                     android:id="@+id/function_gridview_1"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:paddingTop="@dimen/textSize_10"
                     android:numColumns="3"
                     android:stretchMode="columnWidth"
                     android:horizontalSpacing="2dp"
-                    android:verticalSpacing="10dp" />
+                    android:verticalSpacing="5dp" />
             </LinearLayout>
 
             <LinearLayout
@@ -124,8 +127,8 @@
                     android:id="@+id/function_gridview_2"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:paddingTop="@dimen/textSize_10"
                     android:numColumns="3"
                     android:stretchMode="columnWidth"
@@ -147,8 +150,8 @@
                     android:id="@+id/function_gridview_3"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:paddingLeft="20dp"
-                    android:paddingRight="20dp"
+                    android:paddingLeft="10dp"
+                    android:paddingRight="10dp"
                     android:paddingTop="@dimen/textSize_10"
                     android:numColumns="3"
                     android:stretchMode="columnWidth"

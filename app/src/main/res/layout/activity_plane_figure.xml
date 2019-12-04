@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:fitsSystemWindows="true"
-    android:background="@color/gray01"
+    android:background="@color/windowBackground"
     android:orientation="vertical">
 
     <!-- 顶部导航栏 -->
@@ -19,14 +19,49 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+<!--
+            <Button
+                android:id="@+id/button1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@color/colorPrimary"
+                android:layout_below="@id/general_layout"
+                android:layout_centerHorizontal="true"
+                android:text="放大图片" />
+-->
+
             <com.github.chrisbanes.photoview.PhotoView
                 android:id="@+id/general_layout"
                 android:adjustViewBounds="true"
-                android:layout_centerInParent="true"
+                android:layout_centerHorizontal="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:src="@mipmap/test_plan"
+                android:layout_marginVertical="@dimen/activity_vertical_margin"
                 android:scaleType="fitXY"/>
+
+            <LinearLayout
+                android:layout_below="@id/general_layout"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:background="@color/white"
+                android:layout_marginTop="8dp"
+                android:visibility="gone">
+
+                <TextView
+                    style="@style/modularTitleStyle"
+                    android:background="@color/white"
+                    android:text="项目内所有建筑"/>
+
+                <ListView
+                    android:id="@+id/lv_build"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+
         </RelativeLayout>
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 

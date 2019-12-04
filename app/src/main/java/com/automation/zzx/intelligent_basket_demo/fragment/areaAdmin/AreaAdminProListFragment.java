@@ -120,12 +120,13 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
         mSearchView=view.findViewById(R.id.view_search);
         mAutoCompleteTextView=mSearchView.findViewById(R.id.search_src_text);
         mDeleteButton=mSearchView.findViewById(R.id.search_close_btn);
+        mDeleteButton.setOnClickListener(this);
         mSearchView.setIconifiedByDefault(false);//设置搜索图标是否显示在搜索框内
-
+        mAutoCompleteTextView.clearFocus(); //默认失去焦点
         mSearchView.setImeOptions(3);//设置输入法搜索选项字段，1:回车2:前往3:搜索4:发送5:下一項6:完成
 //      mSearchView.setInputType(1);//设置输入类型
 //      mSearchView.setMaxWidth(200);//设置最大宽度
-        mSearchView.setQueryHint("输入项目名称搜索");//设置查询提示字符串
+        mSearchView.setQueryHint("输入项目名称或项目ID");//设置查询提示字符串
         mSearchView.setSubmitButtonEnabled(true);//设置是否显示搜索框展开时的提交按钮
         mAutoCompleteTextView.setTextColor(Color.GRAY);
         //设置SearchView下划线透明
@@ -188,15 +189,15 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
                 }else{
                     for (int i = 0; i < mgProjectInfoList.size(); i++) {
                         ProjectInfo projectInfo = mgProjectInfoList.get(i);
-                        if (projectInfo.getProjectName().equals(query)) {
+                        if (projectInfo.getProjectName().contains(query)) {
                             showProjectList.add(projectInfo);
-                        } else if (projectInfo.getProjectId().equals(query)) {
+                        } else if (projectInfo.getProjectId().contains(query)) {
                             showProjectList.add(projectInfo);
                         }
                     }
                     handler.sendEmptyMessage(MG_PROJECT_LIST_INFO);
                 }
-                return false;
+                return true;
             }
 
             //当搜索内容改变时触发该方法
@@ -208,15 +209,15 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
                 }else{
                     for (int i = 0; i < mgProjectInfoList.size(); i++) {
                         ProjectInfo projectInfo = mgProjectInfoList.get(i);
-                        if (projectInfo.getProjectName().equals(newText)) {
+                        if (projectInfo.getProjectName().contains(newText)) {
                             showProjectList.add(projectInfo);
-                        } else if (projectInfo.getProjectId().equals(newText)) {
+                        } else if (projectInfo.getProjectId().contains(newText)) {
                             showProjectList.add(projectInfo);
                         }
                     }
-                    handler.sendEmptyMessage(MG_PROJECT_LIST_INFO);
                 }
-                return false;
+                handler.sendEmptyMessage(MG_PROJECT_LIST_INFO);
+                return true;
             }
         });
     }
@@ -242,7 +243,9 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
-
+            case R.id.search_close_btn:
+                mAutoCompleteTextView.setText("");
+                break;
             default:
                 break;
         }
@@ -327,7 +330,7 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
             JSONObject projectInfoJsonObject = (JSONObject) iterator.next();
             mgProjectInfoList.add(projectInfoJsonObject.toJavaObject(ProjectInfo.class));
         }
-
+        showProjectList.clear();
         showProjectList.addAll(mgProjectInfoList);
     }
 

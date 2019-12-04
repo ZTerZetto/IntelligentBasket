@@ -51,6 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/rl_drop_menu"
+                    android:layout_marginBottom="@dimen/size_20"
                     android:visibility="gone">
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/basket_recycler_view"
@@ -90,6 +91,16 @@
                     android:layout_alignParentBottom="true"
                     android:src="@mipmap/ic_round_add_fill"
                     android:visibility="gone" />
+                <!-- 悬浮窗 -->
+                <Button
+                    android:id="@+id/install_image_view"
+                    style="@style/btnStyle"
+                    android:layout_alignParentBottom="true"
+                    android:src="@mipmap/ic_round_add_fill"
+                    android:text="批量分配安装队伍"
+                    android:gravity="center_horizontal"
+                    android:layout_marginBottom="30dp"
+                    android:visibility="gone"/>
             </RelativeLayout>
 
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>

@@ -5,7 +5,7 @@ public class AppConfig {
      * 服务器地址
      */
 //    public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
-    public final static String ANDROID_URL_PATH = "http://10.193.25.79:8080"; // 老刘
+    public final static String ANDROID_URL_PATH = "http://10.193.246.98:8080"; // 老刘
     public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
     public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082"; // 刘跃博HTTP文件服务器地址
@@ -180,6 +180,8 @@ public class AppConfig {
     public static final String GET_STOP_RECORD = ANDROID_URL_PATH.concat("/getElectricStopInfo");
     // 请求操作人员（根据吊篮ID）
     public static final String GET_WORKERS_BY_BASKET = ANDROID_URL_PATH.concat("/getWorker");
+    // 请求操作人员（根据吊篮ID）
+    public static final String CREATE_INSTALL_INFO = ANDROID_URL_PATH.concat("/createInstallInfo");
 
 
     /*

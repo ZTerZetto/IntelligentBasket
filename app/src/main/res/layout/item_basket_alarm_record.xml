@@ -14,15 +14,17 @@
 
     <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center"
         android:padding="5dp">
         <TextView
             android:id="@+id/tv_alarm_detail"
-            android:text="@string/device_number"
+            android:text="@string/start_time"
             android:textSize="@dimen/textSize_16"
             android:textColor="@color/colorTextDark"
+            android:maxLines="4"
+            android:ellipsize="end"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:paddingVertical="5dp"/>

@@ -16,7 +16,7 @@
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:layout_marginHorizontal="@dimen/size_20"
-            android:layout_marginVertical="8dp"
+            android:layout_marginVertical="5dp"
             android:background="@drawable/bg_round_gray">
             <android.support.v7.widget.SearchView
                 android:id="@+id/view_search"

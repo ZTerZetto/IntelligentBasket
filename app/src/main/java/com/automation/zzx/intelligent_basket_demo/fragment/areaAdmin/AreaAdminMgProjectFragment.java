@@ -316,6 +316,11 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             }
 
             @Override
+            public void onAddInstall(View view, int position) {
+
+            }
+
+            /*@Override
             public void onUploadAccept(View view, int position) {
                 // 点击安监证书
                 Log.i(TAG, "You have clicked the " + position + " item's PreAssAndAcept");
@@ -325,7 +330,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 intent.putExtra(BASKET_ID, mgBasketStatementList.get(position).getBasketId());
                 intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
                 startActivityForResult(intent, UPLOAD_PRE_STOP_BASKET_IMAGE_RESULT);
-            }
+            }*/
 
             @Override
             public void onUploadCertClick(View view, int position) {

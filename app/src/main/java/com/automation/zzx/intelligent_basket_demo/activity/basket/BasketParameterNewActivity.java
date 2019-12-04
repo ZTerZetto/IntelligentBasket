@@ -87,9 +87,9 @@ public class BasketParameterNewActivity extends AppCompatActivity {
         setContentView(R.layout.activity_basket_parameter_new);
 
         Intent intent = getIntent();
-//        mBasketId = intent.getStringExtra(BasketDetailActivity.BASKET_ID);  // 获取吊篮id
-//        if(mBasketId==null || mBasketId.equals("")) mBasketId = "js_nj_00003";
-        mBasketId = "36FFD6054154393207782457";
+        mBasketId = intent.getStringExtra(BasketDetailActivity.BASKET_ID);  // 获取吊篮id
+        if(mBasketId==null || mBasketId.equals("")) mBasketId = "js_nj_00003";
+//        mBasketId = "36FFD6054154393207782457";
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
 

@@ -28,6 +28,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInform
 import com.automation.zzx.intelligent_basket_demo.activity.common.UserMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
@@ -549,7 +550,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
 
     //切换角色
     private void switchToProAdmin() {
-        startActivity(new Intent(this, ProAdminPrimaryActivity.class));
+        startActivity(new Intent(this, ProAdminPrimaryOldActivity.class));
         this.finish();
     }
 

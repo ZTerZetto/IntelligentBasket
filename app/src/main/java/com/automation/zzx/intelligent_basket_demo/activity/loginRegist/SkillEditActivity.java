@@ -34,7 +34,6 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketRepairActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.UploadImageLikeWxAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
@@ -60,10 +59,7 @@ import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.Call;
 import okhttp3.Response;
 
-import static com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity.UPLOAD_BASKET_ID;
 import static com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity.UPLOAD_BASKET_REPAIR_IMAGE;
-import static com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity.UPLOAD_IMAGE_TEXT_TYPE;
-import static com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity.UPLOAD_PROJECT_ID;
 
 public class SkillEditActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -217,7 +213,7 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
             return;
         }
         spinnerSkill.setDropDownVerticalOffset(80); //下拉的纵向偏移
-        typeAdapter = new ArrayAdapter<String>(this,R.layout.spinner_simple_item,type_list);
+        typeAdapter = new ArrayAdapter<String>(this,R.layout.spinner_left_item,type_list);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSkill.setAdapter(typeAdapter);
         spinnerSkill.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){

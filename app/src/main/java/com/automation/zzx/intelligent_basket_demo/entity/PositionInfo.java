@@ -2,16 +2,18 @@ package com.automation.zzx.intelligent_basket_demo.entity;
 
 public class PositionInfo {
 
-    private String id; // 关联吊篮ID or 楼层ID
-    private Float position_X;  // X坐标
-    private Float position_Y;  // Y坐标
+    private String id; // 所属楼层内吊篮编号 or 总平面图里的楼号
+    private String itemId; // 关联吊篮ID or 楼层ID
+    private Double position_X;  // X坐标
+    private Double position_Y;  // Y坐标
 
 
     public PositionInfo() {
     }
 
-    public PositionInfo(String id, Float position_X, Float position_Y) {
+    public PositionInfo(String id, String basketId, Double position_X, Double position_Y) {
         this.id = id;
+        this.itemId = basketId;
         this.position_X = position_X;
         this.position_Y = position_Y;
     }
@@ -24,19 +26,27 @@ public class PositionInfo {
         this.id = id;
     }
 
-    public Float getPosition_X() {
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
+
+    public Double getPosition_X() {
         return position_X;
     }
 
-    public void setPosition_X(Float position_X) {
+    public void setPosition_X(Double position_X) {
         this.position_X = position_X;
     }
 
-    public Float getPosition_Y() {
+    public Double getPosition_Y() {
         return position_Y;
     }
 
-    public void setPosition_Y(Float position_Y) {
+    public void setPosition_Y(Double position_Y) {
         this.position_Y = position_Y;
     }
 }

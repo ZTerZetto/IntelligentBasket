@@ -88,6 +88,9 @@ public class CustomApplication extends Application {
 
         // 百度地图
         SDKInitializer.initialize(getApplicationContext());
+        //设置使用https请求
+        SDKInitializer.setHttpsEnable(true);
+
         // 初始化LitePal数据库
         LitePal.initialize(this);
         // 初始化萤石云

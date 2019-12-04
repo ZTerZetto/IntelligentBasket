@@ -1,18 +1,23 @@
 package com.automation.zzx.intelligent_basket_demo.activity.areaAdmin;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Color;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AutoCompleteTextView;
 import android.widget.ExpandableListView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -31,8 +36,10 @@ import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 
 import java.io.IOException;
+import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -44,20 +51,29 @@ import okhttp3.Call;
 
 import static android.content.ContentValues.TAG;
 
-public class AlarmRecordProjectActivity extends AppCompatActivity {
+public class AlarmRecordProjectActivity extends AppCompatActivity implements View.OnClickListener {
 
     // intent 消息参数
     public final static String PROJECT_ID = "projectId";  // 项目Id
 
     // Handler消息
     private final static int MG_ALARM_LIST_INFO = 1;
+    private final static int UPDATE_LIST_INFO = 2;
 
+    // 主体
+    //搜索框控件
+    private SearchView mSearchView;
+    private AutoCompleteTextView mAutoCompleteTextView;//搜索输入框
+    private ImageView mDeleteButton;//搜索框中的删除按钮
 
     private ExpandableListView expandListView;
     private List<AlarmInfo> alarmInfoList;
+    private List<AlarmInfo> showAlarmInfoList;
     private List<String> mBasketList;
     private List<List<String>> mRecordList;
     private ExpandableListviewAdapter adapter;
+
+    private CommonDialog mCommonDialog; //报警详情弹窗
 
     // 空空如也
     private RelativeLayout noRepairListRelativeLayout;
@@ -79,10 +95,17 @@ public class AlarmRecordProjectActivity extends AppCompatActivity {
                     mBasketList.clear();
                     mRecordList.clear();
                     alarmInfoList.clear();
+                    showAlarmInfoList.clear();
                     parseAlarmListInfo((String) msg.obj);
                     adapter.refresh(mBasketList,mRecordList);
                     updateContentView();
                     break;
+                case UPDATE_LIST_INFO:
+                    mBasketList.clear();
+                    mRecordList.clear();
+                    alarmListToRecordList();
+                    adapter.refresh(mBasketList,mRecordList);
+                    updateContentView(); // 更新项目信息及控件显示
                 default:
                     break;
             }
@@ -105,6 +128,7 @@ public class AlarmRecordProjectActivity extends AppCompatActivity {
         mBasketList = new ArrayList<>();
         mRecordList = new ArrayList<>();
         alarmInfoList = new ArrayList<>();
+        showAlarmInfoList = new ArrayList<>();
 
         //获取用户数据
         getUserInfo();
@@ -128,10 +152,26 @@ public class AlarmRecordProjectActivity extends AppCompatActivity {
         //获取当前项目ID
         Intent intent = getIntent();
         mProjectId = intent.getStringExtra(PROJECT_ID);
-
     }
 
     private void initView() {
+
+        //搜索框
+        mSearchView=findViewById(R.id.view_search);
+        mAutoCompleteTextView=mSearchView.findViewById(R.id.search_src_text);
+        mDeleteButton=mSearchView.findViewById(R.id.search_close_btn);
+        mDeleteButton.setOnClickListener(this);
+        mSearchView.setIconifiedByDefault(false);//设置搜索图标是否显示在搜索框内
+        mAutoCompleteTextView.clearFocus(); //默认失去焦点
+        mSearchView.setImeOptions(3);//设置输入法搜索选项字段，1:回车2:前往3:搜索4:发送5:下一項6:完成
+//      mSearchView.setInputType(1);//设置输入类型
+//      mSearchView.setMaxWidth(200);//设置最大宽度
+        mSearchView.setQueryHint("输入吊篮ID或描述详情");//设置查询提示字符串
+        mSearchView.setSubmitButtonEnabled(true);//设置是否显示搜索框展开时的提交按钮
+        mAutoCompleteTextView.setTextColor(Color.GRAY);
+        //设置SearchView下划线透明
+        setUnderLinetransparent(mSearchView);
+        setListener();
 
         // 空空如也
         noRepairListRelativeLayout = (RelativeLayout) findViewById(R.id.basket_no_avaliable);
@@ -155,7 +195,12 @@ public class AlarmRecordProjectActivity extends AppCompatActivity {
         expandListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
-                Toast.makeText(AlarmRecordProjectActivity.this, "点击"+mRecordList.get(groupPosition).get(childPosition), Toast.LENGTH_SHORT).show();
+                if (mCommonDialog == null) {
+                    String time = mRecordList.get(groupPosition).get(childPosition).substring(0,19);
+                    String detail = mRecordList.get(groupPosition).get(childPosition).substring(21);
+                    mCommonDialog = initDialog(detail+'\n'+time);
+                }
+                mCommonDialog.show();
                 return true;
             }
         });
@@ -176,6 +221,63 @@ public class AlarmRecordProjectActivity extends AppCompatActivity {
 
             }
         });
+    }
+
+    private void setListener(){
+
+        // 设置搜索文本监听
+        mSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
+            //当点击搜索按钮时触发该方法
+            @Override
+            public boolean onQueryTextSubmit(String query) {
+                showAlarmInfoList.clear();
+                if (query == null  || query.equals("")) {
+                    showAlarmInfoList.addAll(alarmInfoList);
+                }else{
+                    for (int i = 0; i < alarmInfoList.size(); i++) {
+                        AlarmInfo alarmInfo = alarmInfoList.get(i);
+                        if (alarmInfo.getDevice_id().contains(query)) {
+                            showAlarmInfoList.add(alarmInfo);
+                        } else if (alarmInfo.getAlarm_detail().contains(query)) {
+                            showAlarmInfoList.add(alarmInfo);
+                        }
+                    }
+                }
+                handler.sendEmptyMessage(UPDATE_LIST_INFO);
+                return true;
+            }
+
+            //当搜索内容改变时触发该方法
+            @Override
+            public boolean onQueryTextChange(String newText) {
+                showAlarmInfoList.clear();
+                if (newText == null || newText.equals("")) {
+                    showAlarmInfoList.addAll(alarmInfoList);
+                }else{
+                    for (int i = 0; i < alarmInfoList.size(); i++) {
+                        AlarmInfo alarmInfo = alarmInfoList.get(i);
+                        if (alarmInfo.getDevice_id().contains(newText)) {
+                            showAlarmInfoList.add(alarmInfo);
+                        } else if (alarmInfo.getAlarm_detail().contains(newText)) {
+                            showAlarmInfoList.add(alarmInfo);
+                        }
+                    }
+                }
+                handler.sendEmptyMessage(UPDATE_LIST_INFO);
+                return true;
+            }
+        });
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()) {
+            case R.id.search_close_btn:
+                mAutoCompleteTextView.setText("");
+                break;
+            default:
+                break;
+        }
     }
 
     /*
@@ -226,6 +328,7 @@ public class AlarmRecordProjectActivity extends AppCompatActivity {
 
     //解析报警记录信息
     private void parseAlarmListInfo(String responseDate){
+
         JSONObject jsonObject = JSON.parseObject(responseDate);
         String alarmInfo =jsonObject.getString("alarmInfo");
 
@@ -243,12 +346,16 @@ public class AlarmRecordProjectActivity extends AppCompatActivity {
                 alarmInfoList.add(mAlarmInfo);
             }
         }
+        showAlarmInfoList.addAll(alarmInfoList);
+        alarmListToRecordList();
+    }
 
+    private void alarmListToRecordList( ){
         Map<String , String> map1 = new HashMap<>();
         Map<String , String> map2 = new HashMap<>();
-        for(int i = 0; i < alarmInfoList.size();i++){
-            map1.put(alarmInfoList.get(i).getDevice_id(),alarmInfoList.get(i).getTime()+"  "+alarmInfoList.get(i).getAlarm_detail());
-            map2.put(alarmInfoList.get(i).getTime()+"  "+alarmInfoList.get(i).getAlarm_detail(),alarmInfoList.get(i).getDevice_id());
+        for(int i = 0; i < showAlarmInfoList.size();i++){
+            map1.put(showAlarmInfoList.get(i).getDevice_id(),showAlarmInfoList.get(i).getTime()+"  "+showAlarmInfoList.get(i).getAlarm_detail());
+            map2.put(showAlarmInfoList.get(i).getTime()+"  "+showAlarmInfoList.get(i).getAlarm_detail(),showAlarmInfoList.get(i).getDevice_id());
         }
 
         mBasketList =  new ArrayList<>(map1.keySet());
@@ -262,21 +369,55 @@ public class AlarmRecordProjectActivity extends AppCompatActivity {
         }
     }
 
-
     /*
      * UI 更新相关
      */
     private void updateContentView() {
-        if (mBasketList.size() < 1) { // 暂无吊篮有报警记录
+        if(alarmInfoList.size() == 0 ){  // 显示暂无报警记录
             expandListView.setVisibility(View.GONE);
             noRepairListRelativeLayout.setVisibility(View.VISIBLE);
             noRepairListTextView.setText("暂无报警记录！");
-        } else {  // 好多吊篮
+        }else if(mBasketList.size() == 0 ){ // 显示未搜索
+            expandListView.setVisibility(View.GONE);
+            noRepairListRelativeLayout.setVisibility(View.VISIBLE);
+            noRepairListTextView.setText("未搜索出相关报警记录！");
+        }else{                                          // 显示项目列表
             noRepairListRelativeLayout.setVisibility(View.GONE);
             expandListView.setVisibility(View.VISIBLE);
         }
     }
 
+    /**设置SearchView下划线透明**/
+    private void setUnderLinetransparent(SearchView searchView){
+        try {
+            Class<?> argClass = searchView.getClass();
+            Field ownField = argClass.getDeclaredField("mSearchPlate");
+            ownField.setAccessible(true);
+            View mView = (View) ownField.get(searchView);
+            mView.setBackgroundColor(Color.TRANSPARENT);
+        } catch (NoSuchFieldException e) {
+            e.printStackTrace();
+        } catch (IllegalAccessException e) {
+            e.printStackTrace();
+        }
+    }
+
+    /*
+     * 提示弹框
+     */
+    private CommonDialog initDialog(String mMsg){
+        return new CommonDialog(this, R.style.dialog, mMsg,
+                new CommonDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if(confirm){
+                            dialog.dismiss();
+                        }else{
+                            dialog.dismiss();
+                        }
+                    }
+                }).setTitle("报警详情");
+    }
 
     // 顶部导航栏消息响应
     @Override
@@ -300,5 +441,6 @@ public class AlarmRecordProjectActivity extends AppCompatActivity {
         }
         return keyList;
     }
+
 
 }

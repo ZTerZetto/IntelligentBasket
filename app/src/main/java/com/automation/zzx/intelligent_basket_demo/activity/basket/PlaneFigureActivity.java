@@ -1,6 +1,7 @@
 package com.automation.zzx.intelligent_basket_demo.activity.basket;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.Matrix;
@@ -13,10 +14,9 @@ import android.support.v7.widget.Toolbar;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
-import android.widget.ImageView;
+import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.PositionInfo;
@@ -24,17 +24,19 @@ import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
 import com.github.chrisbanes.photoview.PhotoView;
+import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import static java.lang.Math.sqrt;
 
 public class PlaneFigureActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -44,14 +46,21 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
     private final static int UPDATE_FAILED = 105; // 更新失败
     private final static int UPDATE_SUCESS = 106; // 更新成功
 
+    private final static double DISTANCE = 40; // 点击范围阈值
+    private final static double COMPENSATION_X = 30; // 水平位置偏移量
+    private final static double COMPENSATION_Y = 34; // 竖直位置偏移量
+
     private List<String> urls  = new ArrayList<>(); // bitmap 位图
     private List<Bitmap> bitmaps  = new ArrayList<>(); // 文件Url
+    private PositionInfo positionInfoA= new PositionInfo("A","A",-75686.174,32863.739);
+    private PositionInfo positionInfoB= new PositionInfo("B","B",45847.787,126467.042);
     private List<PositionInfo> infoList = new ArrayList<>();
     private Map<String, PositionInfo> positionMap = new HashMap<>();
 
     // 控件声明
     private RefreshLayout mSmartRefreshLayout;
     private PhotoView photoView;
+    private ListView lvBasket;
 
 
     // 用户登录信息相关
@@ -109,11 +118,42 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initPosition(){
-        /*infoList.add()
+        PositionInfo positionInfo1= new PositionInfo("1","1号吊篮",-30053.379,63739.285);
+        infoList.add(positionInfo1);
+        PositionInfo positionInfo2= new PositionInfo("2","2号吊篮",-30053.379,43249.445);
+        infoList.add(positionInfo2);
+        PositionInfo positionInfo3= new PositionInfo("3","2号吊篮",-208.307,65478.735);
+        infoList.add(positionInfo3);
+        PositionInfo positionInfo4= new PositionInfo("4","2号吊篮",-129.566,73575.676);
+        infoList.add(positionInfo4);
+        PositionInfo positionInfo5= new PositionInfo("5","2号吊篮",27000.872,75108.255);
+        infoList.add(positionInfo5);
+        PositionInfo positionInfo6= new PositionInfo("6","2号吊篮",37196.703,84486.968);
+        infoList.add(positionInfo6);
+        PositionInfo positionInfo7= new PositionInfo("7","2号吊篮",37407.298,105384.505);
+        infoList.add(positionInfo7);
+        PositionInfo positionInfo8= new PositionInfo("8","2号吊篮",26941.406,115620.630);
+        infoList.add(positionInfo8);
+        PositionInfo positionInfo9= new PositionInfo("9","2号吊篮",3027.207,115108.735);
+        infoList.add(positionInfo9);
+        PositionInfo positionInfo10= new PositionInfo("10","1号吊篮",-21230.465,115518.278);
+        infoList.add(positionInfo10);
+        PositionInfo positionInfo11= new PositionInfo("11","1号吊篮",-58505.545,115657.204);
+        infoList.add(positionInfo11);
+        PositionInfo positionInfo12= new PositionInfo("12","2号吊篮",-67864.128,106087.881);
+        infoList.add(positionInfo12);
+        PositionInfo positionInfo13= new PositionInfo("13","2号吊篮",-67930.382,84659.387);
+        infoList.add(positionInfo13);
+        PositionInfo positionInfo14= new PositionInfo("14","2号吊篮",-57878.567,75146.626);
+        infoList.add(positionInfo14);
+        PositionInfo positionInfo15= new PositionInfo("15","2号吊篮",-25181.852,89459.565);
+        infoList.add(positionInfo15);
+        PositionInfo positionInfo16= new PositionInfo("16","2号吊篮",7611.330,75545.110);
+        infoList.add(positionInfo16);
 
-        for(int i = 0; i < alarmInfoList.size();i++){
-            positionMap.put(alarmInfoList.get(i).getDevice_id(),alarmInfoList.get(i).getTime()+"  "+alarmInfoList.get(i).getAlarm_detail());
-        }*/
+        for(int i = 0; i < infoList.size();i++){
+            positionMap.put(infoList.get(i).getId(),infoList.get(i));
+        }
     }
 
     /*
@@ -145,6 +185,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
 
         photoView = findViewById(R.id.general_layout);
         photoView.setOnTouchListener(onTouchListener);
+        lvBasket = findViewById(R.id.lv_build);
 
     }
 
@@ -224,10 +265,14 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    float[] dst = areaJudge(v, event);
-                    float dstX = dst[0];
-                    float dstY = dst[1];
-                    Toast.makeText(PlaneFigureActivity.this,"("+dstX+","+dstY+")",Toast.LENGTH_LONG).show();
+                    PositionInfo positionInfo = areaJudge(v, event);
+                    if(positionInfo != null) {
+                        Toast.makeText(PlaneFigureActivity.this, positionInfo.getId()+"号楼",
+                                Toast.LENGTH_SHORT).show();
+                        Intent intent = new Intent(PlaneFigureActivity.this, PlaneBasketActivity.class);
+                        intent.putExtra("build_id",positionInfo.getId());
+                        startActivity(intent);
+                    }
                     break;
                 default:
                     break;
@@ -236,7 +281,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         }
     };
 
-    private float[] areaJudge(View v, MotionEvent event){
+    private PositionInfo areaJudge(View v, MotionEvent event){
         float x = event.getX();
         float y = event.getY();
         // 目标点的坐标
@@ -249,8 +294,27 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         imageMatrix.invert(inverseMatrix);
         // 通过逆矩阵映射得到目标点 dst 的值
         inverseMatrix.mapPoints(dst, new float[]{x, y});
-        return dst;
         // 判断dstX, dstY在Bitmap上的位置即可
+        for(int i=0;i<infoList.size();i++){
+            double distance_x = dst[0]-parseToScreen(infoList.get(i)).getPosition_X();
+            double distance_y = dst[1]-parseToScreen(infoList.get(i)).getPosition_Y();
+            double distance = sqrt(distance_x*distance_x+distance_y*distance_y);
+            if(distance < DISTANCE) return infoList.get(i);
+        }
+        return null;
+    }
+
+    //坐标转换至空间像素
+    private PositionInfo parseToScreen(PositionInfo positionInfo){
+        PositionInfo mPosition;
+        Double x = (positionInfo.getPosition_X()-positionInfoA.getPosition_X())
+                    /(positionInfoB.getPosition_X()-positionInfoA.getPosition_X());
+        Double y = (positionInfo.getPosition_Y()-positionInfoB.getPosition_Y())
+                /(positionInfoA.getPosition_Y()-positionInfoB.getPosition_Y());
+        mPosition = new PositionInfo(positionInfo.getId(),positionInfo.getItemId(),
+                (photoView.getRight()-photoView.getLeft())*x+COMPENSATION_X,
+                (photoView.getBottom()-photoView.getTop())*y+COMPENSATION_Y);
+        return mPosition;
     }
 
 }
