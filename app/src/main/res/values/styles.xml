@@ -526,6 +526,59 @@
          <item name="android:background">@color/colorPrimary</item>
          <item name="android:visibility">invisible</item>
     </style>
+
+    <!-- 安装信息 -->
+    <!-- 完工上传图片页面 -->
+    <style name="ItemNameTextView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:textSize">@dimen/textSize_18</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:singleLine">true</item>
+        <item name="android:maxLines">1</item>
+        <item name="android:ellipsize">marquee</item>
+    </style>
+    <!-- 提示字段 -->
+    <style name="ItemHintTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/sliver</item>
+    </style>
+    <!-- 内容字段 -->
+    <style name="ItemContentTextView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center|center_vertical</item>
+    </style>
+    <!-- 图片字段 -->
+    <style name="ItemContentImageView">
+        <item name="android:layout_width">0dp</item>
+        <item name="android:layout_height">match_parent</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:textColor">@color/black</item>
+        <item name="android:gravity">center_vertical</item>
+        <item name="android:scaleType">fitCenter</item>
+    </style>
+    <!-- 安装图片显示 -->
+    <style name="MultiLinearLayout">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:layout_margin">10dp</item>
+        <item name="android:orientation">vertical</item>
+        <item name="android:background">@color/colorMainBackground</item>
+    </style>
+    <style name="MultiSmartImageView">
+        <item name="android:layout_width">match_parent</item>
+        <item name="android:layout_height">0dp</item>
+        <item name="android:layout_weight">1</item>
+        <item name="android:src">@mipmap/ic_empty</item>
+        <item name="android:scaleType">fitCenter</item>
+        <item name="android:background">@drawable/bg_white_quai</item>
+    </style>
     <!-- 吊篮列表 -->
     <style name="MgBasketOperationTextView">
         <item name="android:layout_width">wrap_content</item>
@@ -583,6 +636,22 @@
     <style name="textAppearanceSmallPopupMenu"
         parent="@style/TextAppearance.AppCompat.Light.Widget.PopupMenu.Small">
         <item name="android:textColor">@color/black</item>
+    </style>
+
+    <!-- 底部操作 -->
+    <style name="InstallBtnTextView">
+        <item name="android:layout_width">wrap_content</item>
+        <item name="android:layout_height">wrap_content</item>
+        <item name="android:layout_alignParentRight">true</item>
+        <item name="android:layout_centerVertical">true</item>
+        <item name="android:paddingLeft">20dp</item>
+        <item name="android:paddingRight">20dp</item>
+        <item name="android:paddingTop">10dp</item>
+        <item name="android:paddingBottom">10dp</item>
+        <item name="android:gravity">center</item>
+        <item name="android:background">@color/colorPrimary</item>
+        <item name="android:textColor">@color/white</item>
+        <item name="android:textSize">@dimen/textSize_18</item>
     </style>
 
     <!-- 弹窗：加载中 -->

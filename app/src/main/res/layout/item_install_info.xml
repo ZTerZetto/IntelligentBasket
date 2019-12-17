@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- 吊篮子项 -->
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="100dp"
+    android:orientation="horizontal"
+    android:layout_margin="5dp"
+    android:background="@color/white">
+
+    <!-- 图片：放置电柜的图片，如果没有放置百安胜的图片 -->
+    <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
+        android:id="@+id/basket_logo_smartImg"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:layout_margin="5dp"
+        android:padding="15dp"
+        android:src="@mipmap/ic_supervisor_basket"
+        android:scaleType="fitCenter"/>
+
+    <!-- 吊篮信息，包括：电柜编号、人员信息、完工图片、设备信息 -->
+    <LinearLayout
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="2"
+        android:orientation="vertical"
+        android:layout_gravity="center_vertical">
+
+        <!-- 电柜编号 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="2dp">
+            <TextView style="@style/ItemHintTextView"
+                android:text="电柜编号："/>
+            <TextView style="@style/ItemContentTextView"
+                android:id="@+id/basket_id_tv"
+                android:text="201906220001"/>
+        </LinearLayout>
+
+        <!-- 人员信息 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="2dp">
+            <TextView style="@style/ItemHintTextView"
+                android:text="安装人员："/>
+            <TextView style="@style/ItemContentTextView"
+                android:id="@+id/worker_info_iv"
+                android:text="9922"/>
+        </LinearLayout>
+        <!-- 完工时间 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:padding="2dp">
+            <TextView style="@style/ItemHintTextView"
+                android:text="安装期限："/>
+            <TextView style="@style/ItemContentTextView"
+                android:id="@+id/end_time_tv"
+                android:text="2019-12-12"/>
+        </LinearLayout>
+    </LinearLayout>
+
+</LinearLayout>

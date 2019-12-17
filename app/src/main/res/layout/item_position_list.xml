@@ -35,7 +35,8 @@
         android:layout_weight="2"
         android:orientation="horizontal">
         <TextView
-            android:text="吊篮："
+            android:id="@+id/tv_item"
+            android:text="编号："
             android:textSize="@dimen/textSize_16"
             android:textColor="@color/colorTextDark"
             android:layout_width="wrap_content"

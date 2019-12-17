@@ -38,7 +38,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.basket.PlaneBasketActivity"></activity>
+        <activity android:name=".activity.InstallInfo.MultiImgUploadActivity"></activity>
+        <activity android:name=".activity.InstallInfo.SingleImgUploadActivity" />
+        <activity android:name=".activity.InstallInfo.BasketInstallInfoActivity" />
+        <activity android:name=".activity.areaAdmin.InstallInfoListActivity" />
+        <activity android:name=".activity.basket.BasketInstallByListActivity" />
+        <activity android:name=".activity.basket.PlaneBasketActivity" />
         <activity android:name=".activity.basket.BasketParameterNewActivity" />
         <activity android:name=".activity.basket.AlarmRecordBasketActivity" />
         <activity android:name=".activity.basket.PlaneFigureActivity" />

@@ -53,6 +53,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -88,7 +89,7 @@ public class BasketStateListActivity extends AppCompatActivity {
 
     //页面返回消息
     private final static int CAPTURE_ACTIVITY_RESULT = 1;  // 扫码返回
-    private final static int ADD_INSTALL_RESULT = 2;  // 上传预验收图片
+    private final static int ADD_INSTALL_RESULT = 2;  // 获取安装人员信息
     private final static int UPLOAD_CERTIFICATE_IMAGE_RESULT = 3;  // 上传安监证书页面
 
     /* 控件部分 */
@@ -293,7 +294,11 @@ public class BasketStateListActivity extends AppCompatActivity {
         btnInstall.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(BasketStateListActivity.this,"批量分配安装队伍",Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(BasketStateListActivity.this, BasketInstallByListActivity.class);
+                intent.putExtra("projectName",mProjectName);
+                intent.putExtra("project_id",mProjectId);
+                intent.putExtra("basket_list", (Serializable)mgBasketStatementClassifiedList.get(0));
+                startActivity(intent);
             }
         });
 

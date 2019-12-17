@@ -51,7 +51,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/rl_drop_menu"
-                    android:layout_marginBottom="@dimen/size_20"
                     android:visibility="gone">
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/basket_recycler_view"
@@ -66,7 +65,8 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:layout_centerVertical="true"
-                    android:layout_above="@id/basket_avaliable">
+                    android:layout_above="@id/basket_avaliable"
+                    android:visibility="gone">
                     <ImageView
                         android:id="@+id/no_basket_iv"
                         android:layout_width="75dp"

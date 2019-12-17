@@ -254,6 +254,7 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
                         Intent intent = new Intent(getActivity(), AreaAdminPrimaryActivity.class);
                         intent.putExtra("project_info", mgProjectInfoList.get(mItemPosition));
                         startActivity(intent);
+                        getActivity().finish();
                     }
                 }
             });

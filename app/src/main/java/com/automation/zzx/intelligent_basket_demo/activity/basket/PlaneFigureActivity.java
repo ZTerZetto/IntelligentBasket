@@ -1,6 +1,7 @@
 package com.automation.zzx.intelligent_basket_demo.activity.basket;
 
 import android.annotation.SuppressLint;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
@@ -8,16 +9,20 @@ import android.graphics.Matrix;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.adapter.basket.BasketPlaneAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.PositionInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
@@ -46,9 +51,9 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
     private final static int UPDATE_FAILED = 105; // 更新失败
     private final static int UPDATE_SUCESS = 106; // 更新成功
 
-    private final static double DISTANCE = 40; // 点击范围阈值
-    private final static double COMPENSATION_X = 30; // 水平位置偏移量
-    private final static double COMPENSATION_Y = 34; // 竖直位置偏移量
+    private double DISTANCE; // 点击范围阈值
+    private final static double COMPENSATION_X = 0; // 水平位置偏移量30
+    private final static double COMPENSATION_Y = 0; // 竖直位置偏移量34
 
     private List<String> urls  = new ArrayList<>(); // bitmap 位图
     private List<Bitmap> bitmaps  = new ArrayList<>(); // 文件Url
@@ -60,8 +65,17 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
     // 控件声明
     private RefreshLayout mSmartRefreshLayout;
     private PhotoView photoView;
-    private ListView lvBasket;
+    private ListView lvBuild;
+    private BasketPlaneAdapter buildPlaneAdapter;
 
+    //选择弹窗
+    private AlertDialog mSelectProjectDialog;  // 选择角色弹窗
+    private int currentSelected = 0; // 当前角色位置
+    private int tmpSelected = 0; // 临时角色位置
+    private String[] mBuildString ;  // 疑似点击楼号列表
+
+    //屏幕适配
+    private float dst_2[] = new float[2];
 
     // 用户登录信息相关
     private UserInfo mUserInfo;
@@ -113,42 +127,43 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         // 获取相关图片
         displayPlanePhoto(0, "");
 
+
         //初始化坐标点信息
         initPosition();
     }
 
     private void initPosition(){
-        PositionInfo positionInfo1= new PositionInfo("1","1号吊篮",-30053.379,63739.285);
+        PositionInfo positionInfo1= new PositionInfo("1","1号楼",-30053.379,63739.285);
         infoList.add(positionInfo1);
-        PositionInfo positionInfo2= new PositionInfo("2","2号吊篮",-30053.379,43249.445);
+        PositionInfo positionInfo2= new PositionInfo("2","21号楼",-30053.379,43249.445);
         infoList.add(positionInfo2);
-        PositionInfo positionInfo3= new PositionInfo("3","2号吊篮",-208.307,65478.735);
+        PositionInfo positionInfo3= new PositionInfo("3","21号楼",-208.307,65478.735);
         infoList.add(positionInfo3);
-        PositionInfo positionInfo4= new PositionInfo("4","2号吊篮",-129.566,73575.676);
+        PositionInfo positionInfo4= new PositionInfo("4","2号楼",-129.566,73575.676);
         infoList.add(positionInfo4);
-        PositionInfo positionInfo5= new PositionInfo("5","2号吊篮",27000.872,75108.255);
+        PositionInfo positionInfo5= new PositionInfo("5","2号楼",27000.872,75108.255);
         infoList.add(positionInfo5);
-        PositionInfo positionInfo6= new PositionInfo("6","2号吊篮",37196.703,84486.968);
+        PositionInfo positionInfo6= new PositionInfo("6","2号楼",37196.703,84486.968);
         infoList.add(positionInfo6);
-        PositionInfo positionInfo7= new PositionInfo("7","2号吊篮",37407.298,105384.505);
+        PositionInfo positionInfo7= new PositionInfo("7","2号楼",37407.298,105384.505);
         infoList.add(positionInfo7);
-        PositionInfo positionInfo8= new PositionInfo("8","2号吊篮",26941.406,115620.630);
+        PositionInfo positionInfo8= new PositionInfo("8","2号楼",26941.406,115620.630);
         infoList.add(positionInfo8);
-        PositionInfo positionInfo9= new PositionInfo("9","2号吊篮",3027.207,115108.735);
+        PositionInfo positionInfo9= new PositionInfo("9","2号楼",3027.207,115108.735);
         infoList.add(positionInfo9);
-        PositionInfo positionInfo10= new PositionInfo("10","1号吊篮",-21230.465,115518.278);
+        PositionInfo positionInfo10= new PositionInfo("10","1号楼",-21230.465,115518.278);
         infoList.add(positionInfo10);
-        PositionInfo positionInfo11= new PositionInfo("11","1号吊篮",-58505.545,115657.204);
+        PositionInfo positionInfo11= new PositionInfo("11","1号楼",-58505.545,115657.204);
         infoList.add(positionInfo11);
-        PositionInfo positionInfo12= new PositionInfo("12","2号吊篮",-67864.128,106087.881);
+        PositionInfo positionInfo12= new PositionInfo("12","2号楼",-67864.128,106087.881);
         infoList.add(positionInfo12);
-        PositionInfo positionInfo13= new PositionInfo("13","2号吊篮",-67930.382,84659.387);
+        PositionInfo positionInfo13= new PositionInfo("13","2号楼",-67930.382,84659.387);
         infoList.add(positionInfo13);
-        PositionInfo positionInfo14= new PositionInfo("14","2号吊篮",-57878.567,75146.626);
+        PositionInfo positionInfo14= new PositionInfo("14","2号楼",-57878.567,75146.626);
         infoList.add(positionInfo14);
-        PositionInfo positionInfo15= new PositionInfo("15","2号吊篮",-25181.852,89459.565);
+        PositionInfo positionInfo15= new PositionInfo("15","2号楼",-25181.852,89459.565);
         infoList.add(positionInfo15);
-        PositionInfo positionInfo16= new PositionInfo("16","2号吊篮",7611.330,75545.110);
+        PositionInfo positionInfo16= new PositionInfo("16","2号楼",7611.330,75545.110);
         infoList.add(positionInfo16);
 
         for(int i = 0; i < infoList.size();i++){
@@ -185,7 +200,21 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
 
         photoView = findViewById(R.id.general_layout);
         photoView.setOnTouchListener(onTouchListener);
-        lvBasket = findViewById(R.id.lv_build);
+        lvBuild = findViewById(R.id.lv_build);
+        buildPlaneAdapter = new BasketPlaneAdapter(this,R.layout.item_position_list,infoList);
+        lvBuild.setAdapter(buildPlaneAdapter);
+
+        //消息响应
+        lvBuild.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toast.makeText(PlaneFigureActivity.this, infoList.get(position).getId() + "号楼",
+                        Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(PlaneFigureActivity.this, PlaneBasketActivity.class);
+                intent.putExtra("build_id", infoList.get(position).getId());
+                startActivity(intent);
+            }
+        });
 
     }
 
@@ -265,13 +294,46 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         public boolean onTouch(View v, MotionEvent event) {
             switch (event.getAction()) {
                 case MotionEvent.ACTION_DOWN:
-                    PositionInfo positionInfo = areaJudge(v, event);
-                    if(positionInfo != null) {
-                        Toast.makeText(PlaneFigureActivity.this, positionInfo.getId()+"号楼",
-                                Toast.LENGTH_SHORT).show();
-                        Intent intent = new Intent(PlaneFigureActivity.this, PlaneBasketActivity.class);
-                        intent.putExtra("build_id",positionInfo.getId());
-                        startActivity(intent);
+                    //转换控件边界
+                    //Matrix matrix = new Matrix();
+                    //Matrix inverse = photoView.getImageMatrix();
+                    Matrix matrix = new Matrix(photoView.getImageMatrix());
+                    Matrix inverse = new Matrix();
+                    matrix.invert(inverse);
+                    inverse.mapPoints(dst_2, new float[]{photoView.getWidth(), photoView.getHeight()});
+                    DISTANCE = 0.05*(dst_2[0]+dst_2[1]);
+
+                    List<PositionInfo> positionInfos = areaJudge(v, event);
+                    float x = event.getX();
+                    float y = event.getY();
+                    // 目标点的坐标
+                    float dst[] = new float[2];
+                    // 获取到ImageView的matrix
+                    Matrix imageMatrix = photoView.getImageMatrix();
+                    // 创建一个逆矩阵
+                    Matrix inverseMatrix = new Matrix();
+
+                    // 求逆，逆矩阵被赋值
+                    imageMatrix.invert(inverseMatrix);
+                    // 通过逆矩阵映射得到目标点 dst 的值
+                    inverseMatrix.mapPoints(dst, new float[]{x, y});
+
+                    if(positionInfos != null) {
+                        if(positionInfos.size() == 1) {
+                            Toast.makeText(PlaneFigureActivity.this, positionInfos.get(0).getId() + "号楼",
+                                    Toast.LENGTH_SHORT).show();
+                            Intent intent = new Intent(PlaneFigureActivity.this, PlaneBasketActivity.class);
+                            intent.putExtra("build_id", positionInfos.get(0).getId());
+                            startActivity(intent);
+                        } else if(positionInfos.size() > 1) {
+                            mBuildString =  new String[positionInfos.size()];
+                            for(int i=0;i<positionInfos.size();i++){
+                                mBuildString[i] = positionInfos.get(i).getId();
+                            }
+                            showSelectDialog();
+
+                        }
+
                     }
                     break;
                 default:
@@ -281,7 +343,8 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         }
     };
 
-    private PositionInfo areaJudge(View v, MotionEvent event){
+    private List<PositionInfo> areaJudge(View v, MotionEvent event){
+        List<PositionInfo> positionInfos = new ArrayList<>();
         float x = event.getX();
         float y = event.getY();
         // 目标点的坐标
@@ -299,9 +362,9 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
             double distance_x = dst[0]-parseToScreen(infoList.get(i)).getPosition_X();
             double distance_y = dst[1]-parseToScreen(infoList.get(i)).getPosition_Y();
             double distance = sqrt(distance_x*distance_x+distance_y*distance_y);
-            if(distance < DISTANCE) return infoList.get(i);
+            if(distance < DISTANCE) positionInfos.add(infoList.get(i));
         }
-        return null;
+        return positionInfos;
     }
 
     //坐标转换至空间像素
@@ -312,9 +375,47 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         Double y = (positionInfo.getPosition_Y()-positionInfoB.getPosition_Y())
                 /(positionInfoA.getPosition_Y()-positionInfoB.getPosition_Y());
         mPosition = new PositionInfo(positionInfo.getId(),positionInfo.getItemId(),
-                (photoView.getRight()-photoView.getLeft())*x+COMPENSATION_X,
-                (photoView.getBottom()-photoView.getTop())*y+COMPENSATION_Y);
+                dst_2[0]*x+COMPENSATION_X,
+                dst_2[1]*y+COMPENSATION_Y);
         return mPosition;
     }
+
+
+    // 弹出身份选择框
+    public void showSelectDialog(){
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setTitle("选择楼号");
+        alertBuilder.setSingleChoiceItems(mBuildString, currentSelected, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int position) {
+                tmpSelected = position;
+            }
+        });
+
+        alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                currentSelected = tmpSelected;
+                //跳转至所选择的楼号主界面
+                Toast.makeText(PlaneFigureActivity.this, mBuildString[currentSelected] + "号楼",
+                            Toast.LENGTH_SHORT).show();
+                Intent intent = new Intent(PlaneFigureActivity.this, PlaneBasketActivity.class);
+                intent.putExtra("build_id", mBuildString[currentSelected]);
+                startActivity(intent);
+                mSelectProjectDialog.dismiss();
+            }
+        });
+
+        alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mSelectProjectDialog.dismiss();
+            }
+        });
+
+        mSelectProjectDialog = alertBuilder.create();
+        mSelectProjectDialog.show();
+    }
+
 
 }

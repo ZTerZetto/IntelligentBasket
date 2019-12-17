@@ -18,6 +18,7 @@ import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
@@ -97,7 +98,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
     // 控件
     // 顶部导航栏
     private Toolbar mToolbar;  // 顶部导航栏
-    private ImageView mBack; //返回按钮
+    private LinearLayout mBack; //返回按钮
     private ImageView mMessageView; // 左侧消息图标
     private ImageView mMineView;   // 右侧个人图标
     private ImageView mSelectProList; //项目列表加载图标
@@ -300,7 +301,9 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
                 switch (position) {
                     case 0: //安装信息
                         Log.i(TAG, "You have clicked the examine compact button");
-
+                        intent = new Intent(AreaAdminPrimaryActivity.this, InstallInfoListActivity.class);
+                        intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
+                        startActivity(intent);
                         break;
                     case 1: //报警记录
                         Log.i(TAG, "You have clicked the pre_apply compact button");

@@ -20,7 +20,7 @@
             android:text="title"
             android:singleLine="true"
             android:textColor="@color/colorWhiteText"
-            android:textSize="21sp" />
+            android:textSize="20sp" />
     </android.support.v7.widget.Toolbar>
 
     <LinearLayout

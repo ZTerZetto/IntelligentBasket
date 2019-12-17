@@ -74,5 +74,6 @@ dependencies {
     androidTestImplementation 'com.android.support.test:runner:1.0.2'
     androidTestImplementation 'com.android.support.test.espresso:espresso-core:3.0.2'
     implementation 'com.lcw.library:StickeView:1.0.1'
+    implementation 'org.jetbrains:annotations-java5:15.0'
 
 }

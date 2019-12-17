@@ -6,7 +6,6 @@ import org.apache.commons.net.ftp.FTPClient;
 import org.apache.commons.net.ftp.FTPClientConfig;
 import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
-import org.apache.commons.net.io.Util;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -15,10 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
-
-import javax.xml.transform.Result;
 
 /**
  * Created by pengchenghu on 2019/4/14.
@@ -54,9 +50,14 @@ public class FTPUtil {
     private FTPClient ftpClient;
 
     /**
-     * FTP列表.
+     * FTP文件列表.
      */
     private List<FTPFile> list;
+
+    /**
+     * FTP文件名列表.
+     */
+    private List<String> filenameList;
 
     /**
      * FTP根目录.
@@ -90,6 +91,7 @@ public class FTPUtil {
         this.password = pass;
         this.ftpClient = new FTPClient();
         this.list = new ArrayList<FTPFile>();
+        this.filenameList = new ArrayList<String>();
     }
 
     /**
@@ -202,6 +204,24 @@ public class FTPUtil {
             }
         }
         return list;
+    }
+
+    public List<String> listCurrentFileNames() throws IOException {
+        if (ftpClient != null) {
+            // 获取文件
+            try {
+                FTPFile[] files = ftpClient.listFiles();
+                if (files != null && files.length > 0) {
+                    // 遍历并且添加到集合
+                    for (FTPFile file : files) {
+                        filenameList.add(file.getName());
+                    }
+                }
+            } catch (Exception e) {
+                Log.e("TAG", "请稍等...");
+            }
+        }
+        return filenameList;
     }
 
     /**

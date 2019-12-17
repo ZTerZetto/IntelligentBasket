@@ -23,13 +23,16 @@
             android:src="@mipmap/icon_info_white"
             android:visibility="gone"/>
 
-        <ImageView
+        <LinearLayout
             android:id="@+id/iv_back"
-            android:layout_width="@dimen/size_18"
-            android:layout_height="@dimen/size_18"
-            android:layout_gravity="left"
-            android:layout_marginLeft="10dp"
-            android:src="@mipmap/ic_navi_back" />
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="@dimen/size_23"
+                android:layout_height="@dimen/size_23"
+                android:src="@mipmap/ic_navi_back" />
+        </LinearLayout>
 
         <!-- 居中项目标题 -->
         <TextView
