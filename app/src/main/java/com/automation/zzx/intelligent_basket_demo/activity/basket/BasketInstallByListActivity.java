@@ -25,10 +25,9 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
+import com.automation.zzx.intelligent_basket_demo.adapter.basket.InstallChooseAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketListAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
-import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
@@ -43,15 +42,12 @@ import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
-
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-
 import okhttp3.Call;
-
 import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
+
 
 public class BasketInstallByListActivity extends AppCompatActivity implements View.OnClickListener{
 
@@ -82,9 +78,9 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
     // 主体
     private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private RecyclerView basketRv; // 吊篮列表
-    private List<MgBasketInfo> mgBasketInfoList; //MgBasketStatement
+    /*private List<MgBasketInfo> mgBasketInfoList; //MgBasketStatement*/
 
-    private MgBasketListAdapter mgBasketListAdapter;
+    private InstallChooseAdapter mgBasketListAdapter;
     private RelativeLayout noBasketListRelativeLayout; // 空空如也
     private TextView noBasketListTextView;
 
@@ -187,24 +183,18 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
 
         // 初始化吊篮列表
         basketRv = (RecyclerView) findViewById(R.id.basket_recycler_view);
-        mgBasketInfoList = new ArrayList<>();
         LinearLayoutManager layoutManager = new LinearLayoutManager(BasketInstallByListActivity.this);
         basketRv.setLayoutManager(layoutManager);
-        mgBasketListAdapter = new MgBasketListAdapter(this, mgBasketInfoList);
+        mgBasketListAdapter = new InstallChooseAdapter(this, mgBasketStatementList);
         basketRv.setAdapter(mgBasketListAdapter);
-        mgBasketListAdapter.setOnItemClickListener(new MgBasketListAdapter.OnItemClickListener() {
+        mgBasketListAdapter.setOnItemClickListener(new InstallChooseAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 // item 点击响应
                 Log.i(TAG, "You have clicked the "+ position +" item");if(mBasketIdList==null || mBasketIdList.equals("")){
                     DialogToast("提示", "该吊篮信息有误，无法分配安装队伍");
                 }
-                startActivityForResult(new Intent(BasketInstallByListActivity.this, CaptureActivity.class), ADD_INSTALL_RESULT);
-               /* Intent intent = new Intent(BasketInstallByListActivity.this, BasketDetailActivity.class);
-                intent.putExtra("project_id",mProjectId);
-                intent.putExtra("basket_id", mgBasketInfoList.get(position).getId());
-                intent.putExtra("principal_name", mgBasketInfoList.get(position).getPrincipal());
-                startActivity(intent);*/
+                /*startActivityForResult(new Intent(BasketInstallByListActivity.this, CaptureActivity.class), ADD_INSTALL_RESULT);*/
             }
 
             @Override
@@ -213,9 +203,10 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
                 Log.i(TAG, "You have changed the "+ position +" item checkbox");
                 int basketNumberSelected = mgBasketListAdapter.checkedBasket();
                 basketNumber.setText(String.valueOf(basketNumberSelected));
-                basketAllSelected.setChecked(basketNumberSelected == mgBasketInfoList.size());
+                basketAllSelected.setChecked(basketNumberSelected == mgBasketStatementList.size());
             }
         });
+
         // 空空如也
         noBasketListRelativeLayout = (RelativeLayout) findViewById(R.id.basket_no_avaliable);
         noBasketListTextView = (TextView) findViewById(R.id.no_basket_hint);
@@ -242,11 +233,15 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
             }
         });
 
-        // 报停按钮点击
+        // 分配安装人员按钮点击
         basketApplyStop.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                if(Integer.parseInt(basketNumber.getText().toString()) == 0) {  // 尚未选择吊篮
+                    ToastUtil.showToastTips(BasketInstallByListActivity.this, "您尚未选择任何吊篮");
+                } else {
+                    startActivityForResult(new Intent(BasketInstallByListActivity.this, CaptureActivity.class), ADD_INSTALL_RESULT);
+                }
 
             }
         });
@@ -259,7 +254,7 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
     // 主体页面显示逻辑控制
     public void updateBodyContentView() {
         //有无吊篮显示
-        if (mgBasketInfoList.size() < 1) { // 暂无吊篮
+        if (mgBasketStatementList.size() < 1) { // 暂无吊篮
             basketRv.setVisibility(View.GONE);
             noBasketListRelativeLayout.setVisibility(View.VISIBLE);
             noBasketListTextView.setText("您还没有相关的吊篮");
@@ -280,10 +275,23 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
                 if (resultCode == RESULT_OK) {
                     String userInfo = data.getStringExtra(QR_CODE_RESULT);
                     int colon = userInfo.indexOf(":");
-                    String installId = userInfo.substring(colon+1);
-                    if(userInfo.contains("InstallTeam")){  // 是安装队伍Id
-                        addInstallWithBasket(installId,mBasketIdList);
-                    }else // 二维码有误
+                    final String installId = userInfo.substring(colon + 1);
+                    if (userInfo.contains("InstallTeam")) {  // 是安装队伍Id
+                        String content = "您分配安装吊篮的编号为" + getInstallBasketList();
+                        // 弹窗二次确认
+                        new CommonDialog(BasketInstallByListActivity.this, R.style.dialog, content,
+                                new CommonDialog.OnCloseListener() {
+                                    @Override
+                                    public void onClick(Dialog dialog, boolean confirm) {
+                                        if (confirm) {
+                                            addInstallWithBasket(installId, mBasketIdList);
+                                            dialog.dismiss();
+                                        } else {
+                                            dialog.dismiss();
+                                        }
+                                    }
+                                }).setTitle("提示").show();
+                    } else // 二维码有误
                         DialogToast("错误", "此非安装人员身份二维码，请核实后重新扫描").show();
                 }
                 break;
@@ -304,6 +312,19 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
         return super.onOptionsItemSelected(item);
     }
 
+    // 获取选中待安装的吊篮列表
+    private String getInstallBasketList(){
+        String results = "";
+
+        Map<Integer,Boolean> isCheck = mgBasketListAdapter.getMap();
+        for(int i=0; i<isCheck.size(); i++){
+            if(isCheck.get(i)){
+                results += mgBasketStatementList.get(i).getBasketId() + ",";
+            }
+        }
+        results = results.substring(0, results.length()-1);
+        return results;
+    }
 
     @Override
     public void onClick(View v) {

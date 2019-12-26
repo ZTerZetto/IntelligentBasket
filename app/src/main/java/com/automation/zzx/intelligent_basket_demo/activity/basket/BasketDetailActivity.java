@@ -267,7 +267,9 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
                         startActivity(intent);
                         break;
                     case 1:  // 设备产权
-
+                        intent = new Intent(BasketDetailActivity.this, EquipCopyRightActivity.class);
+                        intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
+                        startActivity(intent);
                         break;
                     case 2:  // 报警记录
                         intent = new Intent(BasketDetailActivity.this, AlarmRecordBasketActivity.class);

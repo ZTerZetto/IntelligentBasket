@@ -55,7 +55,7 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
             workStateImageView = itemView.findViewById(R.id.basket_index_state_iv);
             basketIdTextView = (TextView)  itemView.findViewById(R.id.basket_id);
             basketAllotTeam = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance);  // 分配安装队伍
-            basketInstallTv = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance_2);
+            basketInstallTv = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance_2); //查看安装详情
             basketInstallPhoto = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance_3);
             basketUploadCert = (TextView)  itemView.findViewById(R.id. upload_certificate); // 安监证书上传
             basketPreApplyStop = (TextView)  itemView.findViewById(R.id.pre_apply_stop); // 预报停申请
@@ -68,6 +68,13 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
                     onItemClickListener.onAddInstall(v, getAdapterPosition());
                 }
             });
+            basketInstallTv.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onInstallDetail(v, getAdapterPosition());
+                }
+            });
+
             basketUploadCert.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
@@ -193,6 +200,13 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
          * @param position 点击得到位置
          */
         public void onAddInstall(View view, int position);
+        /**
+         * 当RecyclerView某个被点击的时候回调
+         *
+         * @param view     点击item的视图
+         * @param position 点击得到位置
+         */
+        public void onInstallDetail(View view, int position);
         /**
          * 当RecyclerView某个被点击的时候回调
          *

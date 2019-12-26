@@ -137,7 +137,7 @@ public class AreaAdminProListActivity extends AppCompatActivity {
         CustomApplication.setMainActivity(null);
     }
 
-    // 退出但不销毁
+/*    // 退出但不销毁
     @Override
     public boolean onKeyDown(int keyCode, KeyEvent event) {
         if (keyCode == KeyEvent.KEYCODE_BACK) {
@@ -145,6 +145,6 @@ public class AreaAdminProListActivity extends AppCompatActivity {
             return true;
         }
         return super.onKeyDown(keyCode, event);
-    }
+    }*/
 
 }

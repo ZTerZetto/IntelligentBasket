@@ -38,7 +38,10 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.InstallInfo.MultiImgUploadActivity"></activity>
+        <activity android:name=".activity.areaAdmin.ProjectInstallActivity"></activity>
+        <activity android:name=".activity.areaAdmin.ProjectFinishedActivity" />
+        <activity android:name=".activity.basket.EquipCopyRightActivity" />
+        <activity android:name=".activity.InstallInfo.MultiImgUploadActivity" />
         <activity android:name=".activity.InstallInfo.SingleImgUploadActivity" />
         <activity android:name=".activity.InstallInfo.BasketInstallInfoActivity" />
         <activity android:name=".activity.areaAdmin.InstallInfoListActivity" />

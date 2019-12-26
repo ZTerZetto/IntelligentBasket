@@ -13,7 +13,6 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
-import android.util.DisplayMetrics;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -29,7 +28,6 @@ import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
 import com.github.chrisbanes.photoview.PhotoView;
-import com.github.chrisbanes.photoview.PhotoViewAttacher;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -133,37 +131,37 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initPosition(){
-        PositionInfo positionInfo1= new PositionInfo("1","1号楼",-30053.379,63739.285);
+        PositionInfo positionInfo1= new PositionInfo("1","1,3,5,7",-30053.379,63739.285);
         infoList.add(positionInfo1);
-        PositionInfo positionInfo2= new PositionInfo("2","21号楼",-30053.379,43249.445);
+        PositionInfo positionInfo2= new PositionInfo("2","1,3,5,7",-30053.379,43249.445);
         infoList.add(positionInfo2);
-        PositionInfo positionInfo3= new PositionInfo("3","21号楼",-208.307,65478.735);
+        PositionInfo positionInfo3= new PositionInfo("3","1,3,5,7",-208.307,65478.735);
         infoList.add(positionInfo3);
-        PositionInfo positionInfo4= new PositionInfo("4","2号楼",-129.566,73575.676);
+        PositionInfo positionInfo4= new PositionInfo("4","1,3,5,7",-129.566,73575.676);
         infoList.add(positionInfo4);
-        PositionInfo positionInfo5= new PositionInfo("5","2号楼",27000.872,75108.255);
+        PositionInfo positionInfo5= new PositionInfo("5","1,3,5,7",27000.872,75108.255);
         infoList.add(positionInfo5);
-        PositionInfo positionInfo6= new PositionInfo("6","2号楼",37196.703,84486.968);
+        PositionInfo positionInfo6= new PositionInfo("6","1,3,5,7",37196.703,84486.968);
         infoList.add(positionInfo6);
-        PositionInfo positionInfo7= new PositionInfo("7","2号楼",37407.298,105384.505);
+        PositionInfo positionInfo7= new PositionInfo("7","1,3,5,7",37407.298,105384.505);
         infoList.add(positionInfo7);
-        PositionInfo positionInfo8= new PositionInfo("8","2号楼",26941.406,115620.630);
+        PositionInfo positionInfo8= new PositionInfo("8","1,3,5,7",26941.406,115620.630);
         infoList.add(positionInfo8);
-        PositionInfo positionInfo9= new PositionInfo("9","2号楼",3027.207,115108.735);
+        PositionInfo positionInfo9= new PositionInfo("9","1,3,5,7",3027.207,115108.735);
         infoList.add(positionInfo9);
-        PositionInfo positionInfo10= new PositionInfo("10","1号楼",-21230.465,115518.278);
+        PositionInfo positionInfo10= new PositionInfo("10","1,3,5,7",-21230.465,115518.278);
         infoList.add(positionInfo10);
-        PositionInfo positionInfo11= new PositionInfo("11","1号楼",-58505.545,115657.204);
+        PositionInfo positionInfo11= new PositionInfo("11","1,3,5,7",-58505.545,115657.204);
         infoList.add(positionInfo11);
-        PositionInfo positionInfo12= new PositionInfo("12","2号楼",-67864.128,106087.881);
+        PositionInfo positionInfo12= new PositionInfo("12","1,3,5,7",-67864.128,106087.881);
         infoList.add(positionInfo12);
-        PositionInfo positionInfo13= new PositionInfo("13","2号楼",-67930.382,84659.387);
+        PositionInfo positionInfo13= new PositionInfo("13","1,3,5,7",-67930.382,84659.387);
         infoList.add(positionInfo13);
-        PositionInfo positionInfo14= new PositionInfo("14","2号楼",-57878.567,75146.626);
+        PositionInfo positionInfo14= new PositionInfo("14","1,3,5,7",-57878.567,75146.626);
         infoList.add(positionInfo14);
-        PositionInfo positionInfo15= new PositionInfo("15","2号楼",-25181.852,89459.565);
+        PositionInfo positionInfo15= new PositionInfo("15","1,3,5,7",-25181.852,89459.565);
         infoList.add(positionInfo15);
-        PositionInfo positionInfo16= new PositionInfo("16","2号楼",7611.330,75545.110);
+        PositionInfo positionInfo16= new PositionInfo("16","1,3,5,7",7611.330,75545.110);
         infoList.add(positionInfo16);
 
         for(int i = 0; i < infoList.size();i++){
@@ -201,7 +199,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         photoView = findViewById(R.id.general_layout);
         photoView.setOnTouchListener(onTouchListener);
         lvBuild = findViewById(R.id.lv_build);
-        buildPlaneAdapter = new BasketPlaneAdapter(this,R.layout.item_position_list,infoList);
+        buildPlaneAdapter = new BasketPlaneAdapter(this,R.layout.item_area_plane,infoList);
         lvBuild.setAdapter(buildPlaneAdapter);
 
         //消息响应

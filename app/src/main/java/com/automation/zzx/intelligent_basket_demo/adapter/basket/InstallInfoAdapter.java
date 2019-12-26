@@ -1,6 +1,7 @@
 package com.automation.zzx.intelligent_basket_demo.adapter.basket;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.support.annotation.NonNull;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -72,8 +73,19 @@ public class InstallInfoAdapter extends RecyclerView.Adapter<InstallInfoAdapter.
     public void onBindViewHolder(@NonNull InstallInfoAdapter.ViewHolder viewHolder, int i) {
         MgBasketInstallInfo basket = mBasketList.get(i);
         viewHolder.tvId.setText(basket.getBasketId());
-        viewHolder.ivWorkerInfo.setText(basket.getUserId());
-        viewHolder.ivFinishTime.setText(basket.getEndTime());
+        if(basket.getUserId() != null){
+            viewHolder.ivWorkerInfo.setText(basket.getUserId());
+        }else{
+            viewHolder.ivWorkerInfo.setText("待分配");
+            viewHolder.ivWorkerInfo.setTextColor(Color.DKGRAY);
+        }
+        if(basket.getEndTime() != null){
+            viewHolder.ivFinishTime.setText(basket.getEndTime());
+        } else {
+            viewHolder.ivFinishTime.setText("暂无");
+            viewHolder.ivFinishTime.setTextColor(Color.DKGRAY);
+        }
+
         //TODO 安装信息完善
 
     }

@@ -33,8 +33,10 @@
             android:orientation="horizontal"
             android:padding="2dp">
             <TextView style="@style/ItemHintTextView"
+                android:layout_weight="1"
                 android:text="电柜编号："/>
             <TextView style="@style/ItemContentTextView"
+                android:layout_weight="2"
                 android:id="@+id/basket_id_tv"
                 android:text="201906220001"/>
         </LinearLayout>
@@ -46,8 +48,10 @@
             android:orientation="horizontal"
             android:padding="2dp">
             <TextView style="@style/ItemHintTextView"
+                android:layout_weight="1"
                 android:text="安装人员："/>
             <TextView style="@style/ItemContentTextView"
+                android:layout_weight="2"
                 android:id="@+id/worker_info_iv"
                 android:text="9922"/>
         </LinearLayout>
@@ -58,8 +62,10 @@
             android:orientation="horizontal"
             android:padding="2dp">
             <TextView style="@style/ItemHintTextView"
+                android:layout_weight="1"
                 android:text="安装期限："/>
             <TextView style="@style/ItemContentTextView"
+                android:layout_weight="2"
                 android:id="@+id/end_time_tv"
                 android:text="2019-12-12"/>
         </LinearLayout>

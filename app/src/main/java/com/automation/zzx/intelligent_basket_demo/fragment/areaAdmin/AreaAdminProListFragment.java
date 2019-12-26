@@ -34,6 +34,8 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminProListActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProjectFinishedActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProjectInstallActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.ProjectAdapter;
@@ -62,9 +64,9 @@ import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_A
 public class AreaAdminProListFragment extends Fragment implements View.OnClickListener {
     private final static String TAG = "AreaAdminProListFragment";
     // 消息参数
-    private final static int OPERATING = 1;
-    private final static int INSTALLING = 2;
-    private final static int ENDING = 3;
+    private final static String OPERATING = "operatingProjectList";
+    private final static String INSTALLING = "installingProjectList";
+    private final static String ENDING = "endProjectList";
 
     // Handler消息
     private final static int MG_PROJECT_LIST_INFO = 1;  // 项目列表视图更新显示
@@ -158,10 +160,27 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
         showProjectAdapter.setOnItemClickListener(new ProjectAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                // item 点击响应
-                Intent intent = new Intent(getActivity(), AreaAdminPrimaryActivity.class);
-                intent.putExtra("project_info",showProjectList.get(position));
-                startActivity(intent);
+                Intent intent;
+                switch (projectType){
+                    case OPERATING:
+                        // item 点击响应
+                         intent = new Intent(getActivity(), AreaAdminPrimaryActivity.class);
+                        intent.putExtra("project_info",showProjectList.get(position));
+                        startActivity(intent);
+                        break;
+                    case INSTALLING:
+                        // item 点击响应
+                        intent = new Intent(getActivity(), ProjectInstallActivity.class);
+                        intent.putExtra("project_info",showProjectList.get(position));
+                        startActivity(intent);
+                        break;
+                    case ENDING:
+                        // item 点击响应
+                        intent = new Intent(getActivity(), ProjectFinishedActivity.class);
+                        intent.putExtra("project_info",showProjectList.get(position));
+                        startActivity(intent);
+                        break;
+                }
             }
         });
 

@@ -106,7 +106,7 @@
         <TextView
             android:id="@+id/pre_assessment_acceptance_2"
             style="@style/MgBasketOperationTextView"
-            android:text="已分配安装队伍"
+            android:text="查看安装情况"
             android:clickable="false"
             android:visibility="gone"/>
 

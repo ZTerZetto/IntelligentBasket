@@ -39,7 +39,7 @@
                 <TextView
                     style="@style/modularTitleStyle"
                     android:background="@color/white"
-                    android:text="吊篮列表"/>
+                    android:text="吊篮列表" />
 
                 <ListView
                     android:id="@+id/lv_basket"

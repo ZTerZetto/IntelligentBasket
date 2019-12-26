@@ -141,37 +141,37 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
     }
 
     private void initPosition(){
-        PositionInfo positionInfo1= new PositionInfo("1","1号吊篮",-30053.379,63739.285);
+        PositionInfo positionInfo1= new PositionInfo("1","20191112",-30053.379,63739.285);
         infoList.add(positionInfo1);
-        PositionInfo positionInfo2= new PositionInfo("2","2号吊篮",-30053.379,43249.445);
+        PositionInfo positionInfo2= new PositionInfo("2","20191112",-30053.379,43249.445);
         infoList.add(positionInfo2);
-        PositionInfo positionInfo3= new PositionInfo("3","2号吊篮",-208.307,65478.735);
+        PositionInfo positionInfo3= new PositionInfo("3","20191112",-208.307,65478.735);
         infoList.add(positionInfo3);
-        PositionInfo positionInfo4= new PositionInfo("4","2号吊篮",-129.566,73575.676);
+        PositionInfo positionInfo4= new PositionInfo("4","20191112",-129.566,73575.676);
         infoList.add(positionInfo4);
-        PositionInfo positionInfo5= new PositionInfo("5","2号吊篮",27000.872,75108.255);
+        PositionInfo positionInfo5= new PositionInfo("5","20191112",27000.872,75108.255);
         infoList.add(positionInfo5);
-        PositionInfo positionInfo6= new PositionInfo("6","2号吊篮",37196.703,84486.968);
+        PositionInfo positionInfo6= new PositionInfo("6","20191112",37196.703,84486.968);
         infoList.add(positionInfo6);
-        PositionInfo positionInfo7= new PositionInfo("7","2号吊篮",37407.298,105384.505);
+        PositionInfo positionInfo7= new PositionInfo("7","20191112",37407.298,105384.505);
         infoList.add(positionInfo7);
-        PositionInfo positionInfo8= new PositionInfo("8","2号吊篮",26941.406,115620.630);
+        PositionInfo positionInfo8= new PositionInfo("8","20191112",26941.406,115620.630);
         infoList.add(positionInfo8);
-        PositionInfo positionInfo9= new PositionInfo("9","2号吊篮",3027.207,115108.735);
+        PositionInfo positionInfo9= new PositionInfo("9","20191112",3027.207,115108.735);
         infoList.add(positionInfo9);
-        PositionInfo positionInfo10= new PositionInfo("10","1号吊篮",-21230.465,115518.278);
+        PositionInfo positionInfo10= new PositionInfo("10","20191112",-21230.465,115518.278);
         infoList.add(positionInfo10);
-        PositionInfo positionInfo11= new PositionInfo("11","1号吊篮",-58505.545,115657.204);
+        PositionInfo positionInfo11= new PositionInfo("11","20191112",-58505.545,115657.204);
         infoList.add(positionInfo11);
-        PositionInfo positionInfo12= new PositionInfo("12","2号吊篮",-67864.128,106087.881);
+        PositionInfo positionInfo12= new PositionInfo("12","20191112",-67864.128,106087.881);
         infoList.add(positionInfo12);
-        PositionInfo positionInfo13= new PositionInfo("13","2号吊篮",-67930.382,84659.387);
+        PositionInfo positionInfo13= new PositionInfo("13","20191112",-67930.382,84659.387);
         infoList.add(positionInfo13);
-        PositionInfo positionInfo14= new PositionInfo("14","2号吊篮",-57878.567,75146.626);
+        PositionInfo positionInfo14= new PositionInfo("14","20191112",-57878.567,75146.626);
         infoList.add(positionInfo14);
-        PositionInfo positionInfo15= new PositionInfo("15","2号吊篮",-25181.852,89459.565);
+        PositionInfo positionInfo15= new PositionInfo("15","20191112",-25181.852,89459.565);
         infoList.add(positionInfo15);
-        PositionInfo positionInfo16= new PositionInfo("16","2号吊篮",7611.330,75545.110);
+        PositionInfo positionInfo16= new PositionInfo("16","20191112",7611.330,75545.110);
         infoList.add(positionInfo16);
 
         for(int i = 0; i < infoList.size();i++){

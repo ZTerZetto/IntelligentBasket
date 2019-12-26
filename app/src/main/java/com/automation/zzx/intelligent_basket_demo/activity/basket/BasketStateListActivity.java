@@ -30,6 +30,7 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.InstallInfo.BasketInstallInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
@@ -297,7 +298,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                 Intent intent = new Intent(BasketStateListActivity.this, BasketInstallByListActivity.class);
                 intent.putExtra("projectName",mProjectName);
                 intent.putExtra("project_id",mProjectId);
-                intent.putExtra("basket_list", (Serializable)mgBasketStatementClassifiedList.get(0));
+                intent.putExtra("basket_list", (Serializable)mgBasketStatementClassifiedList.get(1));
                 startActivity(intent);
             }
         });
@@ -327,12 +328,25 @@ public class BasketStateListActivity extends AppCompatActivity {
 
             @Override
             public void onAddInstall(View view, int position) {
-                // 跳转至扫描分配安装队伍页面
+                Intent intent = new Intent(BasketStateListActivity.this, BasketInstallByListActivity.class);
+                intent.putExtra("projectName",mProjectName);
+                intent.putExtra("project_id",mProjectId);
+                intent.putExtra("basket_list", (Serializable)mgBasketStatementClassifiedList.get(1));
+                startActivity(intent);
+            }
+
+            @Override
+            public void onInstallDetail(View view, int position) {
+                // 跳转至吊篮安装详情页面
                 mInstallBasketId = mgBasketStatementList.get(position).getBasketId();
                 if(mInstallBasketId==null || mInstallBasketId.equals("")){
                     DialogToast("提示", "该吊篮信息有误，无法分配安装队伍");
+                }else {
+                    Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
+                    intent.putExtra("project_id", mProjectId);
+                    intent.putExtra("basket_id", mgBasketStatementList.get(position).getBasketId());
+                    startActivity(intent);
                 }
-                startActivityForResult(new Intent(BasketStateListActivity.this, CaptureActivity.class), ADD_INSTALL_RESULT);
             }
 /*
             @Override

@@ -1,0 +1,519 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/areaAdmin_primary_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ToolBarPopupThem">
+
+
+        <!-- 左侧消息入口 -->
+        <ImageView
+            android:id="@+id/entrance_info"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="10dp"
+            android:src="@mipmap/icon_info_white"
+            android:visibility="gone"/>
+
+        <LinearLayout
+            android:id="@+id/iv_back"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:padding="10dp">
+            <ImageView
+                android:layout_width="@dimen/size_23"
+                android:layout_height="@dimen/size_23"
+                android:src="@mipmap/ic_navi_back" />
+        </LinearLayout>
+
+        <!-- 居中项目标题 -->
+        <TextView
+            android:id="@+id/project_title"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_gravity="left"
+            android:singleLine="true"
+            android:text="中心楼622项目"
+            android:textColor="@color/colorWhiteText"
+            android:textSize="@dimen/textSize_18"
+            android:layout_marginHorizontal="15dp"
+            android:textStyle="bold" />
+
+        <!-- 居中项目切换 -->
+        <ImageView
+            android:id="@+id/project_list"
+            android:layout_width="20dp"
+            android:layout_height="20dp"
+            android:layout_gravity="left"
+            android:layout_marginLeft="15dp"
+            android:textStyle="bold"
+            android:src="@mipmap/icon_exchange_white"
+            android:visibility="gone" />
+
+        <!-- 右侧个人入口 -->
+        <ImageView
+            android:id="@+id/entrance_mine"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:src="@mipmap/icon_user_white"
+            android:visibility="gone" />
+
+    </android.support.v7.widget.Toolbar>
+
+
+    <LinearLayout
+        android:id="@+id/ll_pro_basic"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/areaAdmin_primary_toolbar"
+        android:background="@color/colorPrimary"
+        android:orientation="horizontal"
+        android:paddingVertical="@dimen/me_login_profile_layout_marginStart"
+        android:paddingHorizontal="@dimen/me_login_profile_layout_marginStart"
+        >
+
+        <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
+            android:layout_width="80dp"
+            android:layout_height="match_parent"
+            android:src="@mipmap/test" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="项目编号："
+                    android:textColor="@color/colorWhiteText"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_pro_num"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="No.123456"
+                    android:textColor="@color/colorWhiteText"
+                    android:textSize="14sp" />
+
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="开始日期："
+                    android:textColor="@color/colorWhiteText"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_pro_start"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2019-03-15 12:30"
+                    android:textColor="@color/colorWhiteText"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="结束日期："
+                    android:textColor="@color/colorWhiteText"
+                    android:textSize="14sp" />
+
+                <TextView
+                    android:id="@+id/tv_pro_end"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="2019-12-15 12:30"
+                    android:textColor="@color/colorWhiteText"
+                    android:textSize="14sp" />
+            </LinearLayout>
+
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- 项目进度 -->
+    <RelativeLayout
+        android:id="@+id/rl_project_detail"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/ll_pro_basic"
+        android:background="@drawable/bg_primary_gradient"
+        android:paddingHorizontal="@dimen/activity_horizontal_margin"
+        android:paddingVertical="@dimen/activity_horizontal_margin">
+
+        <RelativeLayout
+            android:id="@+id/rl_project_info"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/bg_round_pressed"
+            android:orientation="horizontal"
+            android:paddingHorizontal="@dimen/size_20"
+            android:paddingVertical="@dimen/size_20">
+
+            <ImageView
+                android:id="@+id/iv_project_info"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/ic_tips" />
+
+            <TextView
+                android:id="@+id/iv_project_info_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerVertical="true"
+                android:layout_toRightOf="@id/iv_project_info"
+                android:paddingHorizontal="10dp"
+                android:singleLine="true"
+                android:text="查看项目基本信息"
+                android:textColor="@color/colorTextDark"
+                android:textSize="16sp" />
+
+            <ImageView
+                android:id="@+id/iv_project"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true"
+                android:src="@mipmap/arrow_right_my_gray" />
+        </RelativeLayout>
+    </RelativeLayout>
+
+    <!-- 上拉/下拉刷新 -->
+    <com.scwang.smartrefresh.layout.SmartRefreshLayout
+        android:id="@+id/smart_refresh_layout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@+id/rl_project_detail"
+        android:layout_marginTop="-1dp">
+
+        <!--body -->
+        <ScrollView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:fillViewport="true">
+
+            <RelativeLayout
+                android:id="@+id/fragment_content"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+
+                <!-- 项目进度 -->
+                <RelativeLayout
+                    android:id="@+id/rl_project_state_tips"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginHorizontal="25dp"
+                    android:layout_marginVertical="10dp"
+                    android:background="@drawable/bg_elevation_white"
+                    android:elevation="5dp"
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/iv_project_state_tips"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/ic_tips" />
+
+                    <TextView
+                        android:id="@+id/tv_project_state_tips"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerVertical="true"
+                        android:layout_toRightOf="@id/iv_project_state_tips"
+                        android:paddingHorizontal="10dp"
+                        android:singleLine="true"
+                        android:text="吊篮安装验收已通过！"
+                        android:textSize="14sp" />
+
+                </RelativeLayout>
+
+                <!-- 项目进度 -->
+                <RelativeLayout
+                    android:id="@+id/rl_project_schedule"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@id/rl_project_state_tips">
+                    <!-- 项目进度条 -->
+                    <com.automation.zzx.intelligent_basket_demo.widget.TimeLineView
+                        android:id="@+id/project_schedule_timelineview"
+                        android:layout_width="match_parent"
+                        android:layout_height="40dp"
+                        android:layout_margin="10dp"
+                        android:visibility="gone"
+                        app:startedCircleColor="@color/colorPrimary"
+                        app:startedLineColor="@color/colorPrimary"
+                        app:startedStringColor="@color/colorPrimary"
+                        app:textSize="14sp"
+                        app:underwayCircleColor="@color/colorPrimary"
+                        app:underwayStringColor="@color/colorPrimary" />
+                </RelativeLayout>
+
+                <RelativeLayout
+                    android:id="@+id/function_content"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_below="@+id/rl_project_schedule"
+                    android:paddingHorizontal="@dimen/size_20"
+                    android:paddingVertical="@dimen/size_20"
+                    android:paddingTop="@dimen/activity_horizontal_margin">
+
+                    <!-- 查看项目合同 -->
+                    <RelativeLayout
+                        android:id="@+id/rl_compact_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:background="@drawable/bg_round_pressed"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/size_20"
+                        android:paddingVertical="@dimen/textSize_10">
+
+                        <TextView
+                            android:id="@+id/tv_compact_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="5dp"
+                            android:singleLine="true"
+                            android:text="查看项目合同"
+                            android:textColor="@color/colorTextDark"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_compact_info_tips"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_below="@id/tv_compact_title"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="@dimen/size_20"
+                            android:layout_marginRight="10dp"
+                            android:src="@mipmap/ic_compact" />
+
+                        <TextView
+                            android:id="@+id/tv_compact_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_compact_title"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="@dimen/size_20"
+                            android:layout_toRightOf="@id/iv_compact_info_tips"
+                            android:singleLine="true"
+                            android:text="分状态查看吊篮列表"
+                            android:textColor="@color/gray01"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_compact_detail"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/arrow_right_my_gray" />
+                    </RelativeLayout>
+
+
+                    <!-- 安装方案 -->
+                    <RelativeLayout
+                        android:id="@+id/rl_install_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/rl_compact_info"
+                        android:background="@drawable/bg_round_pressed"
+                        android:orientation="horizontal"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:paddingHorizontal="@dimen/size_20"
+                        android:paddingVertical="@dimen/textSize_10">
+                        <TextView
+                            android:id="@+id/tv_install_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="5dp"
+                            android:singleLine="true"
+                            android:text="查看安装方案"
+                            android:textColor="@color/colorTextDark"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_install_info_tips"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_below="@id/tv_install_title"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="@dimen/size_20"
+                            android:layout_marginRight="10dp"
+                            android:src="@mipmap/ic_basketlist" />
+
+                        <TextView
+                            android:id="@+id/tv_install_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_install_title"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="@dimen/size_20"
+                            android:layout_toRightOf="@id/iv_install_info_tips"
+                            android:singleLine="true"
+                            android:text="总平面图及吊篮平面图"
+                            android:textColor="@color/gray01"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_configuration_detail"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/arrow_right_my_gray" />
+                    </RelativeLayout>
+
+
+
+                    <!-- 历史记录 -->
+                    <RelativeLayout
+                        android:id="@+id/rl_record"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@+id/rl_install_info"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/bg_round_white"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="5dp"
+                        android:paddingVertical="@dimen/textSize_10">
+
+                        <TextView
+                            android:id="@+id/txt_record"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:text="历史记录"
+                            android:paddingHorizontal="@dimen/textSize_15"
+                            android:textColor="@color/colorTextDark"
+                            android:textSize="16sp" />
+
+                        <GridView
+                            android:id="@+id/gv_record_function"
+                            android:layout_width="match_parent"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@+id/txt_record"
+                            android:horizontalSpacing="1dp"
+                            android:numColumns="4"
+                            android:padding="3dp"
+                            android:stretchMode="columnWidth"
+                            android:verticalSpacing="2dp" />
+                    </RelativeLayout>
+
+                   <!-- &lt;!&ndash; 查看吊篮列表 &ndash;&gt;
+                    <RelativeLayout
+                        android:id="@+id/rl_basket_info"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_below="@id/rl_record"
+                        android:layout_marginTop="@dimen/activity_horizontal_margin"
+                        android:background="@drawable/bg_round_pressed"
+                        android:orientation="horizontal"
+                        android:paddingHorizontal="@dimen/size_20"
+                        android:paddingVertical="@dimen/textSize_10">
+
+                        <TextView
+                            android:id="@+id/tv_basket_title"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:paddingHorizontal="5dp"
+                            android:singleLine="true"
+                            android:text="查看吊篮列表"
+                            android:textColor="@color/colorTextDark"
+                            android:textSize="16sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_basket_info_tips"
+                            android:layout_width="25dp"
+                            android:layout_height="25dp"
+                            android:layout_below="@id/tv_basket_title"
+                            android:layout_marginLeft="20dp"
+                            android:layout_marginTop="@dimen/size_20"
+                            android:layout_marginRight="10dp"
+                            android:src="@mipmap/ic_basketlist" />
+
+                        <TextView
+                            android:id="@+id/tv_basket_detail"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_below="@id/tv_basket_title"
+                            android:layout_marginLeft="5dp"
+                            android:layout_marginTop="@dimen/size_20"
+                            android:layout_toRightOf="@id/iv_basket_info_tips"
+                            android:singleLine="true"
+                            android:text="分状态查看吊篮列表"
+                            android:textColor="@color/gray01"
+                            android:textSize="14sp" />
+
+                        <ImageView
+                            android:id="@+id/iv_basket_detail"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_alignParentRight="true"
+                            android:layout_centerVertical="true"
+                            android:src="@mipmap/arrow_right_my_gray" />
+
+                    </RelativeLayout>-->
+
+                </RelativeLayout>
+
+                <!-- 空空如也 -->
+                <RelativeLayout
+                    android:id="@+id/basket_no_avaliable"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_centerVertical="true"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:id="@+id/no_basket_iv"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_above="@+id/no_basket_hint"
+                        android:layout_centerHorizontal="true"
+                        android:src="@mipmap/ic_no_avaliable_basket" />
+
+                    <TextView
+                        android:id="@+id/no_basket_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="10dp"
+                        android:text="您还未加入项目"
+                        android:textSize="16sp" />
+
+                </RelativeLayout>
+            </RelativeLayout>
+        </ScrollView>
+    </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+</RelativeLayout>

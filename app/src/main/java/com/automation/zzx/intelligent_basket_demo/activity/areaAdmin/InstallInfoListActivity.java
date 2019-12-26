@@ -344,7 +344,9 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
             basket.setPicFlag(basketInfo.getIntValue("pic_flg"));
             basket.setFlag(basketInfo.getIntValue("flag"));
             basket.setStartTime(basketInfo.getString("start_time").substring(0,10));
-            basket.setEndTime(basketInfo.getString("end_time").substring(0,10));
+            if(basketInfo.getString("end_time") != null) {
+                basket.setEndTime(basketInfo.getString("end_time").substring(0, 10));
+            }
 
             int flag = basketInfo.getIntValue("flag");
             if(flag==0) mBasketSummaryList.get(1).add(basket);
