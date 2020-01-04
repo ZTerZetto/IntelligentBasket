@@ -178,6 +178,7 @@ public class CustomMediaController extends FrameLayout implements IMediaControll
         if (mVideoUrls.size() < 2){
             mSwitchWayImageView.setVisibility(GONE);  // 如果不存在双路视频，关闭切换功能
         }
+        mSwitchWayImageView.setVisibility(GONE);  // 暂时只提供一种视频流
         if(mSwitchWayImageView != null){
             // do something
             mSwitchWayImageView.setOnClickListener(mSwitchWayImageListener);

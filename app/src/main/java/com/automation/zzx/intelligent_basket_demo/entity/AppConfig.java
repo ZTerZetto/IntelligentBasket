@@ -90,10 +90,13 @@ public class AppConfig {
     public final static String GET_WORKER_LIST = ANDROID_URL_PATH.concat("/getUserList");
 
 
-    /* 获取吊篮实施参数
+    /*
+     * 吊篮请求
      */
+    // 获取吊篮实施参数
     public static final String REAL_TIME_PARAMETER = ANDROID_URL_PATH.concat("/getRealTimeData");
-
+    // 获取吊篮设备序列号
+    public static final String GET_ELECTRICBOX_CONFIG = ANDROID_URL_PATH.concat("/getElectricBoxConfig");
 
     /* 获取流媒体视频
      */

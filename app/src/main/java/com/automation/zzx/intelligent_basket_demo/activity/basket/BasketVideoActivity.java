@@ -25,6 +25,8 @@ import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.pldroid.CustomMediaController;
 import com.pili.pldroid.player.AVOptions;
 import com.pili.pldroid.player.PLOnBufferingUpdateListener;
@@ -62,6 +64,8 @@ public class BasketVideoActivity extends AppCompatActivity {
     private static final int OPEN_VIDEO_FAILED = 2;
     public static final int SET_ACCESS_TOKEN_MSG = 100;
     public static final int SET_VIDEO_URL_MSG = 101;
+    public static final int INIT_VIDEO_URL_MSG = 103;
+    public static final int FINISH_ACTIVITY_MSG = 104;
 
     // 控件声明
     private RelativeLayout mVideoViewRelativelayout;
@@ -71,7 +75,7 @@ public class BasketVideoActivity extends AppCompatActivity {
 
     private Toast mToast = null;
     private int mDisplayAspectRatio = PLVideoTextureView.ASPECT_RATIO_FIT_PARENT; //default
-    private List<String> mVideoUrlList;
+    private List<String> mVideoUrlList = new ArrayList<>();;
     private boolean mIsBuffering = true;
     private CustomMediaController mMediaController;
 
@@ -107,7 +111,7 @@ public class BasketVideoActivity extends AppCompatActivity {
                     ToastUtil.showToastTips(BasketVideoActivity.this, "流媒体服务器无响应");
                     finish();
                     break;
-                case SET_ACCESS_TOKEN_MSG:
+                case SET_ACCESS_TOKEN_MSG:  // 获取Token
                     long expireTime = (long)(msg.arg1 * 100000) + (long)(msg.arg2);
                     String accessToken = msg.obj.toString();
                     mExpireTime = expireTime;
@@ -117,8 +121,20 @@ public class BasketVideoActivity extends AppCompatActivity {
                     mEditor.commit();
                     getEzVideoUrl();
                     break;
-                case SET_VIDEO_URL_MSG:
+                case SET_VIDEO_URL_MSG:  // 设置播放地址
                     openEzVideo();
+                    break;
+                case INIT_VIDEO_URL_MSG:  // 初始化播放地址并打开默认视频流
+                    initEzVideoUrl();
+                    break;
+                case FINISH_ACTIVITY_MSG:
+                    if(msg.arg1 == 1){
+                        ToastUtil.showToastTips(BasketVideoActivity.this,
+                                "该摄像头未激活或未添加至萤石云账号，请联系管理员");
+                    }else if(msg.arg1 == 2){
+                        ToastUtil.showToastTips(BasketVideoActivity.this, "设备摄像头未绑定");
+                    }
+                    finish();
                     break;
                 default:break;
             }
@@ -138,7 +154,8 @@ public class BasketVideoActivity extends AppCompatActivity {
         mEditor = mSharedPref.edit();
 
         getScreenSize();
-        initDeviceVideoUrls();
+        getSharedPrefInfo();  // 获取基本信息
+        getCameraNumber();  // 获取摄像头序列号
         initWidget();
     }
 
@@ -187,20 +204,56 @@ public class BasketVideoActivity extends AppCompatActivity {
         mVideoView.setOnErrorListener(mOnErrorListener);
         mVideoView.setLooping(false);  // 不循环
     }
-    // 初始化直播地址
-    private void initDeviceVideoUrls(){
-        mVideoUrlList = new ArrayList<>();
-        getSharedPrefInfo();
-    }
 
     /*
      * 网络相关
      */
+    // 获取吊篮对应的设备序列号
+    private void getCameraNumber(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("deviceId", mBasketId)
+                .addParam("type", 1)  // type = 2 返回摄像头序列号
+                .get()
+                .url(AppConfig.GET_ELECTRICBOX_CONFIG)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(data);
+                        boolean isLogin = jsonObject.getBooleanValue("isLogin");
+                        if(isLogin){
+                            JSONObject electricBoxConfig = JSON.parseObject(jsonObject.getString("electricBoxConfig"));
+                            String cameraId = electricBoxConfig.getString("cameraId");
+                            if(cameraId.equals("") || cameraId.isEmpty()){
+                                Message msg = new Message();
+                                msg.what = FINISH_ACTIVITY_MSG;
+                                msg.arg1 = 2;
+                                mHandler.handleMessage(msg);
+                            }else{  // 获取正确的摄像头序列号
+                                mDeviceSerial = cameraId;
+                                mHandler.sendEmptyMessage(INIT_VIDEO_URL_MSG);
+                            }
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+
     // 打开海康视屏
     public void openEzVideo(){
         mVideoView.setVideoPath(mVideoUrlList.get(0));
     }
-
     // 打开板载视频。 flag->true:打开， false:关闭
     public void openDeviceDefaultVideo(){
         HttpUtil.getDeviceVideoOkHttpRequest(new Callback() {  // 通知硬件打开流媒体服务器
@@ -224,8 +277,8 @@ public class BasketVideoActivity extends AppCompatActivity {
             }
         }, mToken, mBasketId, mVideoUrlList.get(1));
     }
-    /*
-     * 播放相关函数
+
+    /** 播放相关函数
      */
     // 获取AccessToken
     private void getEzAccessToken(){
@@ -252,8 +305,6 @@ public class BasketVideoActivity extends AppCompatActivity {
                     msg.arg2 = (int) expireTime % 100000;
                     msg.what = SET_ACCESS_TOKEN_MSG;
                     mHandler.sendMessage(msg);
-                }else{
-
                 }
             }
         }, AppConfig.EZUIKit_APPKEY, AppConfig.EZUIKit_SECRET);
@@ -274,22 +325,27 @@ public class BasketVideoActivity extends AppCompatActivity {
                 if (code.equals("200")){
                     String data = jsonObject.getString("data");
                     JSONArray urls = JSON.parseArray(data);
+                    boolean if_exist = false;  // 检查摄像头是否激活/公司账户
                     for(int i=0; i<urls.size(); i++){
                         JSONObject row = urls.getJSONObject(i);
                         String deviceSeries = row.getString("deviceSerial");
                         if (deviceSeries.equals(mDeviceSerial)){
                             String videoUrl = row.getString("rtmp");  // 一般清晰度视频
-                            String videoUrlHd = row.getString("rtmpHd");  // 暂时无法解析高清视频
                             mVideoUrlList.add(videoUrl);
+//                            String videoUrlHd = row.getString("rtmpHd");  // 暂时无法解析高清视频
 //                            mVideoUrlList.add(videoUrlHd);
                             mVideoUrlList.add(VIDEO_STREAM_PATH + "/rtmplive/" + mBasketId);  // 板子上视频
                             mHandler.sendEmptyMessage(SET_VIDEO_URL_MSG);
-                        }else{
-                            continue;
+                            if_exist = true;
+                            break;
                         }
                     }
-                }else{
-
+                    if(!if_exist){
+                        Message msg = new Message();
+                        msg.what = FINISH_ACTIVITY_MSG;
+                        msg.arg1 = 2;
+                        mHandler.handleMessage(msg);
+                    }
                 }
             }
         }, mAccessToken);
@@ -311,10 +367,12 @@ public class BasketVideoActivity extends AppCompatActivity {
         mToken = mSharedPref.getString("loginToken","");
         mExpireTime = mSharedPref.getLong("expireTime", 0);
         mAccessToken = mSharedPref.getString("accessToken", "");
-
-        if (mExpireTime==0 || mAccessToken.equals("")){
+    }
+    // 初始化播放地址
+    private void initEzVideoUrl(){
+        if (mExpireTime==0 || mAccessToken.equals(""))
             getEzAccessToken();
-        }else{
+        else{
             if (System.currentTimeMillis() >= mExpireTime*1000) {  // 时间超过7天，重新获取
                 getEzAccessToken();
             }else{
