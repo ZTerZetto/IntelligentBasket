@@ -14,11 +14,14 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.view.View;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
@@ -52,6 +55,8 @@ public class LoginActivity extends AppCompatActivity {
     private EditText accountEdit;
     private EditText passwordEdit;
 
+    private ImageView clearName;
+    private ImageView clearPassword;
     private Button login;
     private Button to_register;
     private Button test;
@@ -120,8 +125,15 @@ public class LoginActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(false); //设置返回键可用
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
+
+        clearName = findViewById(R.id.iv_clear_username);
+        clearPassword  = findViewById(R.id.iv_clear_password);
+
         accountEdit =  findViewById(R.id.text_input_username);
+        accountEdit.addTextChangedListener(textWatcherName);
         passwordEdit = findViewById(R.id.text_input_password);
+        passwordEdit.addTextChangedListener(textWatcherPassword);
+
         rememberPass = findViewById(R.id.remember_pass);
         autoLogin = findViewById(R.id.auto_login);
         login =  findViewById(R.id.Login_Button);
@@ -129,6 +141,23 @@ public class LoginActivity extends AppCompatActivity {
         test = findViewById(R.id.Test_Button);
 
         initProAdminRoleList();
+
+        //一键清空监听
+        clearName.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                accountEdit.setText("");
+                passwordEdit.setText("");
+                accountEdit.setFocusableInTouchMode(true);
+            }
+        });
+        clearPassword.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                passwordEdit.setText("");
+            }
+        });
+
 
         boolean isRemember = pref.getBoolean("remember_password", false);
         if (isRemember) {
@@ -175,6 +204,9 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+
+
+
     private void initProAdminRoleList(){
         mProAdminRoleList = new String[2];
         mProAdminRoleList[0] = "施工人员";
@@ -215,15 +247,6 @@ public class LoginActivity extends AppCompatActivity {
                         String userRole = userInfoJsonObj.getString("userRole");
                         savePref(token);
                         switch (userRole){
-                            case "worker":  // 工人主页面
-                            case "worker_1":
-                            case "worker_2":
-                            case "worker_3":
-                            case "worker_4":
-                            case "worker_5":
-                                //判断是否为项目管理员
-                                judgeProAdminHttp(token);
-                                break;
                             case "rentAdmin":  // 租方管理员
                                 StartAndFinishActicity(RentAdminPrimaryActivity.class);
                                 break;
@@ -236,26 +259,25 @@ public class LoginActivity extends AppCompatActivity {
                             case "basketSupervisor":  // 吊篮监管人员（安监局）
                                 StartAndFinishActicity(SupervisorPrimaryActivity.class);
                                 break;
+                            default:
+                                if(userRole.contains("worker")){
+                                     //判断是否为项目管理员
+                                      judgeProAdminHttp(token);
+                                } break;
                         }
                     } else {
                         switch (state) {
                             case "1":
                                 //审核中
-                                Message msg = new Message();
-                                msg.what = 1;
-                                handler.sendMessage(msg);
+                                handler.sendEmptyMessage(1);
                                 break;
                             case "2":
                                 //审核失败
-                                Message msg2 = new Message();
-                                msg2.what = 2;
-                                handler.sendMessage(msg2);
+                                handler.sendEmptyMessage(2);
                                 break;
                             case "3":
                                 //账号密码错误
-                                Message msg3 = new Message();
-                                msg3.what = 3;
-                                handler.sendMessage(msg3);
+                                handler.sendEmptyMessage(3);
                                 break;
                             default:
                                 break;
@@ -418,6 +440,49 @@ public class LoginActivity extends AppCompatActivity {
     }
 
 
+    //用户名编辑框清空监听
+    private TextWatcher textWatcherName = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (accountEdit.getEditableText().length() >= 1){
+                clearName.setVisibility(View.VISIBLE);
+            } else{
+                clearName.setVisibility(View.GONE);
+            }
+        }
+    };
+
+    //密码编辑框清空监听
+    private TextWatcher textWatcherPassword = new TextWatcher() {
+        @Override
+        public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+        }
+
+        @Override
+        public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+        }
+
+        @Override
+        public void afterTextChanged(Editable s) {
+            if (accountEdit.getEditableText().length() >= 1){
+                clearPassword.setVisibility(View.VISIBLE);
+            } else{
+                clearPassword.setVisibility(View.GONE);
+            }
+        }
+    };
 
     @Override
     protected void onActivityResult(int requestCode,int resultCode,Intent data){

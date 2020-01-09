@@ -16,6 +16,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.GridView;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -27,6 +28,8 @@ import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActi
 import com.automation.zzx.intelligent_basket_demo.adapter.worker.ImageGridAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
+import com.automation.zzx.intelligent_basket_demo.entity.enums.CardType;
+import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
@@ -60,9 +63,12 @@ public class WorkerHomePageActivity extends AppCompatActivity implements View.On
     // 消息响应标识
     private final static int UPDATE_WORKER_INFO_MSG = 101;
 
+    private TextView txtEdit ;// 进入编辑
+
     // 控件
     private SmartImageView mWorkerHeadImageView; // 头像
     private TextView mWorkerNameTextView; // 用户名
+    private TextView mWorkerIdCardTextView; // IDCard
     private TextView mWorkerTypeTextView; // 用户工种
     private LinearLayout mWorkerCallPhoneLayout; // 拨打电话
 
@@ -116,17 +122,22 @@ public class WorkerHomePageActivity extends AppCompatActivity implements View.On
      */
     // 控件初始化
     private void initWidgets(){
+
         // 顶部导航栏
-        Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
-        TextView titleText = (TextView) findViewById(R.id.toolbar_title);
+        Toolbar toolbar = (Toolbar) findViewById(R.id.worker_toolbar);
         toolbar.setTitle("");
-        titleText.setText("工人主页");
+        setSupportActionBar(toolbar);
+        txtEdit = findViewById(R.id.entrance_edit_skill);
+        txtEdit.setOnClickListener(this);
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
+
         // 控件初始化
+        txtEdit = findViewById(R.id.entrance_edit_skill);
         mWorkerHeadImageView = (SmartImageView) findViewById(R.id.login_head);
         mWorkerNameTextView = (TextView) findViewById(R.id.login_user_name);
+        mWorkerIdCardTextView = (TextView) findViewById(R.id.login_id_card);
         mWorkerTypeTextView = (TextView) findViewById(R.id.login_user_type);
         mWorkerCallPhoneLayout = (LinearLayout) findViewById(R.id.login_call_phone);
         mWorkerCallPhoneLayout.setOnClickListener(this);
@@ -170,13 +181,18 @@ public class WorkerHomePageActivity extends AppCompatActivity implements View.On
     // 按钮消息响应
     @Override
     public void onClick(View v) {
+        Intent intent;
         switch(v.getId()){
             case R.id.login_call_phone:
                 if(!isHasPermission()) requestPermission();
-                Intent intent = new Intent(Intent.ACTION_DIAL);
+                intent = new Intent(Intent.ACTION_DIAL);
                 intent.setData(Uri.parse("tel:"+ mWorkerInfo.getUserPhone()));
                 startActivity(intent);
                 break;
+            case R.id.entrance_edit_skill:
+                intent = new Intent(WorkerHomePageActivity.this,SkillEditActivity.class);
+                //intent.putExtra("",);
+                startActivity(intent);
         }
     }
 
@@ -215,7 +231,7 @@ public class WorkerHomePageActivity extends AppCompatActivity implements View.On
         mHandler.sendEmptyMessage(UPDATE_WORKER_INFO_MSG);  // 更新人员信息状态
     }
 
-    // 获取资质证书url
+    /*// 获取资质证书url
     private void workerUpdateCapacityImage(){
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization", mToken)
@@ -253,7 +269,8 @@ public class WorkerHomePageActivity extends AppCompatActivity implements View.On
                         Log.i(TAG, "更新资质证书失败：" + e.toString());
                     }
                 });
-    }
+    }*/
+
     // 解析图片地址
     private void parseImageUrl(String data){
         if(data==null || data.equals("")){
@@ -261,11 +278,22 @@ public class WorkerHomePageActivity extends AppCompatActivity implements View.On
             mWorkerNoContentTextView.setVisibility(View.VISIBLE);
         }else{
             mWorkerCapacityImageUrlList.clear();
-            String[] imageNames = data.split(",");
-            for(int index=0; index<imageNames.length; index++){
-                mWorkerCapacityImageNameList.add(imageNames[index]);
-                mWorkerCapacityImageUrlList.add(REMOTE_WORKER_IMAGE_PATH + mWorkerInfo.getUserId()
-                                                + "/" + imageNames[index]);
+            String[] typeSums = data.split(",");
+            for(int index=0; index<typeSums.length; index++){
+                String[] imageNames = typeSums[index].split("_");
+
+                //1_2 表示第一类证件一共有2张，typeNum_imageSum
+                Integer typeNum = Integer.valueOf(imageNames[0]);
+                Integer imageSum = Integer.valueOf(imageNames[1]);
+                CardType mCardType = CardType.getByType(typeNum);
+                if(mCardType != null){
+                    for(int order=1;order<=imageSum;order++){
+                        String mImageName = mWorkerInfo.getUserId()+"_"+typeNum+"_"+order;
+                        mWorkerCapacityImageNameList.add(mImageName);
+                        mWorkerCapacityImageUrlList.add(REMOTE_WORKER_IMAGE_PATH + mWorkerInfo.getUserId()
+                                + "/" + mCardType.getEnglish()+"/"+mImageName+".jpg"); //图片存放路径+图片名
+                    }
+                }
             }
         }
     }
@@ -285,26 +313,14 @@ public class WorkerHomePageActivity extends AppCompatActivity implements View.On
     // 更新工人基本信息
     private void updateWorkerInfoView(){
         mWorkerNameTextView.setText(mWorkerInfo.getUserName());
-        switch(mWorkerInfo.getUserRole()){
-            case "worker_1":
-                mWorkerTypeTextView.setText("涂料");
-                break;
-            case "worker_2":
-                mWorkerTypeTextView.setText("幕墙");
-                break;
-            case "worker_3":
-                mWorkerTypeTextView.setText("内装");
-                break;
-            case "worker_4":
-                mWorkerTypeTextView.setText("土建");
-                break;
-            case "worker_5":
-                mWorkerTypeTextView.setText("车辆");
-                break;
-            case "worker":
-                mWorkerTypeTextView.setText("其它");
-                break;
+        mWorkerIdCardTextView.setText(mWorkerInfo.getUserAccount());
+        WorkerType workerType = WorkerType.getByDetailtype(mWorkerInfo.getUserRole());
+        if(workerType != null){
+            mWorkerTypeTextView.setText(workerType.getChineseType() + " " + workerType.getChineseDetail());
+        } else {
+            mWorkerTypeTextView.setText(WorkerType.ELECTRIC.getChineseType() + "-" + WorkerType.ELECTRIC.getChineseDetail() );
         }
+
         /* 用户头像设置 */
         String mUserHeadUrl = AppConfig.FILE_SERVER_YBLIU_PATH + "/userImage/" + mWorkerInfo.getUserId() + "/head.png";
         mWorkerHeadImageView.setImageUrl(mUserHeadUrl, R.mipmap.ic_default_user_head); // 头像

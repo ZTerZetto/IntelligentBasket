@@ -158,7 +158,7 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle("安装信息");
+        toolbar.setTitle("安装进度");
         titleText.setText("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -309,7 +309,6 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
                         boolean isLogin = jsonObject.getBooleanValue("isLogin");
                         if(isLogin)
                             parseProjectDetails(jsonObject.getString("info"));
-
                     }
 
                     @Override
@@ -345,7 +344,7 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
             basket.setFlag(basketInfo.getIntValue("flag"));
             basket.setStartTime(basketInfo.getString("start_time").substring(0,10));
             if(basketInfo.getString("end_time") != null) {
-                basket.setEndTime(basketInfo.getString("end_time").substring(0, 10));
+                basket.setEndTime(basketInfo.getString("end_time").substring(0,10));
             }
 
             int flag = basketInfo.getIntValue("flag");

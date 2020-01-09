@@ -15,8 +15,10 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ExpandableListView;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListView;
@@ -28,8 +30,10 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketStateListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.ExpandableListviewAdapter;
+import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AlarmInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
@@ -59,8 +63,15 @@ public class AlarmRecordProjectActivity extends AppCompatActivity implements Vie
     // Handler消息
     private final static int MG_ALARM_LIST_INFO = 1;
     private final static int UPDATE_LIST_INFO = 2;
+    private final static int UPDATE_STATEMENT_MSG = 3;
 
     // 主体
+    // 报警类型选择栏
+    private GridView mBasketStateGv; // 报警类型
+    private List<String> mStateLists; // 类型名称
+    private MgStateAdapter mgStateAdapter; //适配器
+    private int pre_selectedPosition = 0;
+
     //搜索框控件
     private SearchView mSearchView;
     private AutoCompleteTextView mAutoCompleteTextView;//搜索输入框
@@ -106,6 +117,7 @@ public class AlarmRecordProjectActivity extends AppCompatActivity implements Vie
                     alarmListToRecordList();
                     adapter.refresh(mBasketList,mRecordList);
                     updateContentView(); // 更新项目信息及控件显示
+
                 default:
                     break;
             }
@@ -155,6 +167,28 @@ public class AlarmRecordProjectActivity extends AppCompatActivity implements Vie
     }
 
     private void initView() {
+
+       /* //初始化菜单栏
+        mBasketStateGv = (GridView) findViewById(R.id.mg_basket_state);
+        mStateLists = new ArrayList<>();
+
+        initStateList();
+
+        mgStateAdapter = new MgStateAdapter(AlarmRecordProjectActivity.this, R.layout.item_basket_state_switch, mStateLists);
+        mgStateAdapter.setSelectedPosition(pre_selectedPosition);
+        mBasketStateGv.setAdapter(mgStateAdapter);
+
+        // 消息响应
+        mBasketStateGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                pre_selectedPosition = position;
+                mgStateAdapter.setSelectedPosition(pre_selectedPosition);
+                if(mProjectId != null)  // 当且仅当存在项目时更新吊篮状态列表
+                    handler.sendEmptyMessage(UPDATE_STATEMENT_MSG);  // 更新列表
+            }
+        });*/
+
 
         //搜索框
         mSearchView=findViewById(R.id.view_search);
@@ -440,6 +474,16 @@ public class AlarmRecordProjectActivity extends AppCompatActivity implements Vie
             }
         }
         return keyList;
+    }
+
+    /*
+     * 初始化
+     */
+    private void initStateList(){
+        //初始化状态筛选栏
+        mStateLists.add("行为报警");
+        mStateLists.add("故障报警");
+
     }
 
 

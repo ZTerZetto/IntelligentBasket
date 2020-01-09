@@ -75,7 +75,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
     private TextView uploadResult;
 
     private EditText edt_userName;
-    private EditText edt_userAge;
+    //private EditText edt_userAge;
     private EditText edt_userLocal;
     private Spinner spinnerGender;
     private EditText edt_userPhone;
@@ -166,7 +166,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
 
         //基本信息
         edt_userName = findViewById(R.id.edt_register_userName);
-        edt_userAge = findViewById(R.id.edt_register_age);
+        //edt_userAge = findViewById(R.id.edt_register_age);
         edt_userLocal = findViewById(R.id.edt_register_native);
         spinnerGender = findViewById(R.id.spinner_gender);
         //账号信息
@@ -236,7 +236,7 @@ public class RegistAreaManActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "身份证号填写有误！", Toast.LENGTH_LONG).show();
                 } else {
                     userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPwd.getText().toString(),edt_userPhone.getText().toString(),
-                            "areaAdmin",genderType,edt_userAge.getText().toString(),edt_userLocal.getText().toString(),edt_userIDNum.getText().toString());
+                            "areaAdmin",genderType,/*edt_userAge.getText().toString(),*/edt_userLocal.getText().toString(),edt_userIDNum.getText().toString());
                     mLoadingDialog.show();
                     //uploadPhoto();
                     uploadIdentityCardImage();

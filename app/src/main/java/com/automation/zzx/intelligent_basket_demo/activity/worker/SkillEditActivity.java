@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.activity.loginRegist;
+package com.automation.zzx.intelligent_basket_demo.activity.worker;
 
 import android.annotation.SuppressLint;
 import android.app.Dialog;
@@ -9,7 +9,6 @@ import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Environment;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.provider.MediaStore;
@@ -23,7 +22,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
-import android.widget.EditText;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.Spinner;
@@ -31,19 +29,25 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
-import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.UploadImageLikeWxAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
+import com.automation.zzx.intelligent_basket_demo.entity.enums.CardType;
+import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
-import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.ProgressAlertDialog;
-import com.google.gson.Gson;
+import com.heynchy.compress.CompressImage;
+import com.heynchy.compress.compressinterface.CompressLubanListener;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+
+import org.apache.commons.net.ftp.FTPFile;
 
 import java.io.File;
 import java.io.FileNotFoundException;
@@ -51,15 +55,10 @@ import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.Call;
-import okhttp3.Response;
-
-import static com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity.UPLOAD_BASKET_REPAIR_IMAGE;
 
 public class SkillEditActivity extends AppCompatActivity implements View.OnClickListener {
 
@@ -72,7 +71,7 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
     private final static int GET_UPLOAD_INFO = 100;  // 上传图片成功
     private final static int GET_UPLOAD_WRONG = 101;  // 上传图片失败
     private final static int UPLOAD_PROGRESS_PARAMS = 102; // 更新文件进度条
-    private final static int APPLY_REPAIR_BASKET = 103; // 申請報修
+    private final static int UPDATE_CAPACITY_IMAGE = 107;  // 更新资质证书
 
 
     //相册位置
@@ -86,7 +85,7 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
     private ImageView mSendImageView; // 发送 图标
 
     private Spinner spinnerSkill;
-    private String skillType;
+    private CardType cardType = CardType.WELDCUT;
     private List<String> type_list;
     private ArrayAdapter<String> typeAdapter;
 
@@ -94,7 +93,6 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
     private GridView mImageGridView;
     private List<Bitmap> mUploadImageList = new ArrayList<>();
     private ArrayList<String> mUploadImageUrlList = new ArrayList<>();
-    private ArrayList<String> tempFileNameList = new ArrayList<>();
     private UploadImageLikeWxAdapter mUploadImageLikeWxAdapter;
 
     //CAMERA
@@ -107,16 +105,10 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
     private SharedPreferences.Editor editor;
 
     private String token; // 验证token
-    private String managerId; // 申请人Id
-    private String mProjectId;  // 報修的项目编号
-    private String mBasketId; // 報修的吊籃編號
-    private String uploadType; // 上传图片类型
+    private String workerId; // 工人Id
     private int maxUploadImageNumer; // 最大上传图片数量
     private String uploadHint; // 上传提示信息
-    private String uploadUrl; // 上传地址
-    private String reason;
-    private Map<String, String> params = new HashMap<String, String>(); // 上传参数
-    private EditText edtCommit;
+
 
     // FTP 文件服务器
     private FTPUtil mFTPClient;
@@ -140,11 +132,11 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
                     setResult(RESULT_CANCELED, intent);
                     mProgressDialog.dismiss();
                     break;
-                case UPLOAD_PROGRESS_PARAMS:  // 更新文件上傳進度軸參數
+                case UPLOAD_PROGRESS_PARAMS:  // 更新文件上传进度轴参数
                     mProgressDialog.setProgress(msg.arg1);
                     break;
-                case APPLY_REPAIR_BASKET:  // 申请報停
-                    applyRepair();
+                case UPDATE_CAPACITY_IMAGE:   // 工人更新资质证书
+                    workerUpdateCapacityImage();
                     break;
                 default:
                     break;
@@ -157,8 +149,10 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_skill_edit);
+
         // 获取权限
         if(!isHasPermission()) requestPermission();
+
         // 初始化控件
         initWidgetResource();
 
@@ -179,14 +173,13 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
         mToolbar.setTitle("技能资质");
         setSupportActionBar(mToolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
-        mSendTextView = (TextView) findViewById(R.id.toolbar_send_textview);
+        mSendTextView = (TextView) findViewById(R.id.btn_commit);
         mSendTextView.setOnClickListener(this);
         mSendImageView = (ImageView) findViewById(R.id.toolbar_send_imageview);
         mSendImageView.setOnClickListener(this);
 
         //其余控件
         spinnerSkill = findViewById(R.id.spinner_skill);
-
 
         // 图片选择框
         mImageGridView = (GridView) findViewById(R.id.release_gridview_image);
@@ -201,6 +194,8 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
                     showAddImageWayMenu(view);
                 }else{
                     // 点击其它图片
+
+
                 }
             }
         });
@@ -208,7 +203,6 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
         initSpinner();
 
         //技能选择
-       skillType = null;
         if(type_list == null || type_list.isEmpty()){
             return;
         }
@@ -216,14 +210,28 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
         typeAdapter = new ArrayAdapter<String>(this,R.layout.spinner_left_item,type_list);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSkill.setAdapter(typeAdapter);
+        spinnerSkill.setSelection(0, true); // 设置默认值为:焊切割操作证
         spinnerSkill.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                skillType= (String) spinnerSkill.getSelectedItem();
+                String type = (String) spinnerSkill.getSelectedItem();
+                cardType = CardType.getByChinese(type);
+                setUploadParameters();//更新地址信息
+                /*switch (type){
+                    case "焊切割操作证":
+                        skillType = "1";
+                        break;
+                    case "高空作业证":
+                        skillType = "2";
+                        break;
+                    case "吊篮操作证":
+                        skillType = "3";
+                        break;
+                }*/
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                skillType = "未选择";
+
             }
         });
 
@@ -231,10 +239,9 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
     private void initSpinner() {
         //技能选择
         type_list = new ArrayList<String>();
-        type_list.add("电焊");
-        type_list.add("高空作业");
-        type_list.add("吊篮操作");
-        type_list.add("其他");
+        type_list.add("焊切割操作证");
+        type_list.add("高空作业证");
+        type_list.add("吊篮操作证");
     }
 
 
@@ -257,62 +264,24 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
     }
 
 
-
-
     @Override
     public void onClick(View v) {
         switch (v.getId()){
-            case R.id.toolbar_send_textview:  // 发送监听
-                break;
+            case R.id.btn_commit:  // 发送监听
             case R.id.toolbar_send_imageview: // 发送监听
-                if(mUploadImageUrlList.size()==0){
-                    Toast.makeText(SkillEditActivity.this, "请上传技能证书图片！", Toast.LENGTH_SHORT).show();
+                if(spinnerSkill == null){
+                    Toast.makeText(SkillEditActivity.this, "未选择技能类型！", Toast.LENGTH_SHORT).show();
+                } else if(mUploadImageUrlList.size()==0){
+                    Toast.makeText(SkillEditActivity.this, "未上传技能证书图片！", Toast.LENGTH_SHORT).show();
                 } else {
                     showUploadProgressDialog();
                     startSendImage();
                 }
                 break;
-            case R.id.btn_pro_commit:
-                if(mUploadImageUrlList.size()==0){
-                    Toast.makeText(SkillEditActivity.this, "请上传技能证书图片！", Toast.LENGTH_SHORT).show();
-                } else {
-                    showUploadProgressDialog();
-                    startSendImage();
-                }
-                break;
-
-        }
-    }
-    /*
-     * 获取基本信息
-     */
-    // 用户信息
-    private void getBaseInfoFromPred(){
-        pref = PreferenceManager.getDefaultSharedPreferences(this);
-        managerId = pref.getString("userId", "");
-        token = pref.getString("loginToken", "");
-    }
-
-    // 设置上传图片的参数、路径等
-    private void setUploadParameters(){
-        if(uploadType==null || uploadType.equals(""))
-            return;
-        switch (uploadType){
-            case UPLOAD_BASKET_REPAIR_IMAGE: // 预验收申请图片地址
-                mRemotePath = "storageRepair";
-                mToolbar.setTitle("申请吊篮保修");
-                uploadHint = "吊篮故障图片";
-                maxUploadImageNumer = 9;
-                break;
         }
     }
 
 
-    // FTP 初始化
-    private void initFTPClient(){
-        mFTPClient = new FTPUtil(AppConfig.FILE_SERVER_YBLIU_IP, AppConfig.FILE_SERVER_YBLIU_PORT,
-                AppConfig.FILE_SERVER_USERNAME, AppConfig.FILE_SERVER_PASSWORD);
-    }
 
     /*
      * 活动返回监听
@@ -326,6 +295,9 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
                     Toast.makeText(SkillEditActivity.this, "取消了拍照", Toast.LENGTH_SHORT).show();
                     return;
                 }
+                String photoFilePath = CAMERA_PATH + "IMAGE_"+ fileName +".jpg";
+                String compressFilePath = CAMERA_PATH + "IMAGE_"+ fileName +"_compress.jpg";
+                compressImage(photoFilePath, compressFilePath);  // 压缩图片
                 Bitmap  photo = BitmapFactory.decodeFile(CAMERA_PATH + "IMAGE_"+ fileName +".jpg");
                 if(mUploadImageList.size() >= 1) {
                     mUploadImageList.remove(mUploadImageList.size() - 1); //移除最后一张图片
@@ -351,6 +323,11 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
                     mUploadImageUrlList = data.getStringArrayListExtra(MultiImageSelectorActivity.EXTRA_RESULT);
                     for(int i = 0; i < mUploadImageUrlList.size(); i++){
                         Log.d("ReleaseHouseActivity", mUploadImageUrlList.get(i));
+                        String imageFilePath = mUploadImageUrlList.get(i);
+                        String saveImageFilePath = imageFilePath.replace(".", "_compress.");
+                        if(!(new File(saveImageFilePath)).exists()){  // 压缩文件不存在就压缩文件
+                            compressImage(imageFilePath, saveImageFilePath);
+                        }
                         Bitmap bitmap = BitmapFactory.decodeFile(mUploadImageUrlList.get(i));
                         mUploadImageList.add(bitmap);
                     }
@@ -390,6 +367,7 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
         intent.putExtra(MediaStore.EXTRA_OUTPUT, photoUrl);
         startActivityForResult(intent, TAKE_PHOTO_FROM_CAMERA);
     }
+
     // 相册
     public void startMultiImageSelectorActivity(){
         Intent intent = new Intent(this, MultiImageSelectorActivity.class);
@@ -421,32 +399,31 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
                     // 上传文件
                     mFTPClient.openConnect();  // 建立连接
                     mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
-                    tempFileNameList.clear();
-                    SimpleDateFormat simpleDateFormat = new SimpleDateFormat("yyyy-MM-dd HH:mm");// HH:mm:ss
-                    //获取当前时间
-                    Date date = new Date(System.currentTimeMillis());
-                    String time = simpleDateFormat.format(date);
+                    int startIndex = 0; // 图片命名起始编号
                     for(int i=0; i < mUploadImageUrlList.size(); i++){
                         Message message = new Message();
                         message.what = UPLOAD_PROGRESS_PARAMS;
                         message.arg1 = i;
                         mHandler.sendMessage(message);
                         String tempFileName = "";
-                        if(uploadType.equals(UPLOAD_BASKET_REPAIR_IMAGE)) {  // 报修命名 projectId_deviceId_num.jpg
-                            tempFileName = mProjectId + "_" + mBasketId + "_" + (i + 1) + "_" + time + ".jpg";
-                            tempFileNameList.add(tempFileName);
+                        if(i==0) startIndex = getCapacityIndex();
+                        tempFileName = workerId + "_" + cardType.getType() + "_" + (i+1+startIndex) + ".jpg";
+                        String originFilePath = mUploadImageUrlList.get(i);
+                        File originalFile = new File(originFilePath);  // 原图
+                        String compressFilePath = originFilePath.replace(".", "_compress.");
+                        File compressFile = new File(compressFilePath);  // 压缩图
+                        if(!compressFile.exists()){  // 默认选择压缩图上传
+                            mFTPClient.uploadingSingleRenameFile(originalFile, tempFileName);  // 上传图片
+                        }else{
+                            mFTPClient.uploadingSingleRenameFile(compressFile, tempFileName);  // 上传图片
+                            myDeleteFile(compressFile); // 删除压缩图
                         }
-
-                        mFTPClient.uploadingSingleRenameFile(new File(mUploadImageUrlList.get(i)), tempFileName);
                     }
                     mFTPClient.closeConnect();  // 关闭连接
 
                     // 文件上传成功后操作
-                    switch(uploadType){
-                        case UPLOAD_BASKET_REPAIR_IMAGE:  // 报修申請
-                            mHandler.sendEmptyMessage(APPLY_REPAIR_BASKET);
-                            break;
-                    }
+                    mHandler.sendEmptyMessage(UPDATE_CAPACITY_IMAGE);
+
                 } catch (IOException e) {
                     // 上传文件失败
                     e.printStackTrace();
@@ -456,54 +433,93 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
         }.start();
     }
 
-
-    // 申請報停
-    private void applyRepair(){
-        String reason = edtCommit.getText().toString();
-        if(params != null){
-            params.clear();
-        }
-        params.put("deviceId",mBasketId);
-        params.put("managerId",managerId);
-        params.put("reason",reason);
-        for(int i=1;i<=tempFileNameList.size();i++){
-            params.put("pic_"+i,tempFileNameList.get(i-1));
-        }
-        String json = new Gson().toJson(params);
-        HttpUtil.sendRentAdminRepairOkHttpRequest(new okhttp3.Callback() {
-            @Override
-            public void onFailure(Call call, IOException e) {
-                //异常情况处理
-                Looper.prepare();
-                Toast.makeText(SkillEditActivity.this, "网络连接失败！", Toast.LENGTH_SHORT).show();
-                Looper.loop();
-            }
-
-            @Override
-            public void onResponse(Call call, Response response) throws IOException {
-                if (response.code() != 200) {
-                    Looper.prepare();
-                    Toast.makeText(SkillEditActivity.this, "网络连接超时,请稍后重试！", Toast.LENGTH_SHORT).show();
-                    Looper.loop();
-                }
-                // 返回服务器数据
-                String responseData = response.body().string();
-                try {
-                    Message msg = new Message();
-                    JSONObject jsonObject = JSON.parseObject(responseData);
-                    String create = jsonObject.getString("create");
-                    if(create.equals("success")){
-                        msg.what = GET_UPLOAD_INFO;
-                    }else{
-                        msg.what = GET_UPLOAD_WRONG;
-                    }
-                    mHandler.sendEmptyMessage(msg.what);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        },json, token);
+    // FTP 初始化
+    private void initFTPClient(){
+        mFTPClient = new FTPUtil(AppConfig.FILE_SERVER_YBLIU_IP, AppConfig.FILE_SERVER_YBLIU_PORT,
+                AppConfig.FILE_SERVER_USERNAME, AppConfig.FILE_SERVER_PASSWORD);
     }
+
+
+    // 获取当前资质证书
+    private int getCapacityIndex(){
+        try {
+            List<FTPFile> files = mFTPClient.listCurrentFiles();
+            if(files.size()==0) return 0;
+            String lastFileName = files.get(files.size()-1).getName();
+            return Integer.parseInt(lastFileName.substring(lastFileName.indexOf('_')+1, lastFileName.indexOf('.')));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    // 工人更新资质证书
+    private void workerUpdateCapacityImage(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", token)
+                .addParam("userId", workerId)
+                .addParam("type", cardType.getType())
+                .addParam("picNum", mUploadImageUrlList.size())
+                .post()
+                .url(AppConfig.WORKER_UPDATE_CAPACITY_IMAGE)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.i(TAG, "更新资质证书成功" );
+                        JSONObject jsonObject = JSON.parseObject(o.toString());
+                        if(jsonObject.getString("update").equals("success")) {
+                            // 申请成功
+                            mHandler.sendEmptyMessage(GET_UPLOAD_INFO);
+                        }else{
+                            // 申请失败
+                            mHandler.sendEmptyMessage(GET_UPLOAD_WRONG);
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "更新资质证书错误：" + code);
+                        switch (code){
+                            case 401: // 未授权
+                                ToastUtil.showToastTips(SkillEditActivity.this, "登录已过期，请重新登陆");
+                                startActivity(new Intent(SkillEditActivity.this, LoginActivity.class));
+                                finish();
+                                break;
+                            case 403: // 禁止
+                                break;
+                            case 404: // 404
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "更新资质证书失败：" + e.toString());
+                        mHandler.sendEmptyMessage(GET_UPLOAD_WRONG);
+                    }
+                });
+    }
+
+
+    /*
+     * 获取基本信息
+     */
+    // 用户信息
+    private void getBaseInfoFromPred(){
+        pref = PreferenceManager.getDefaultSharedPreferences(this);
+        workerId = pref.getString("userId", "");
+        token = pref.getString("loginToken", "");
+    }
+
+    // 设置上传图片的参数、路径等
+    private void setUploadParameters(){
+        mRemotePath = "userImage/" + workerId + "/" + cardType.getEnglish();
+        //mRemotePath = "userImage/" + workerId ;
+        uploadHint = "资质证书";
+        maxUploadImageNumer = 9;
+    }
+
     /*
      * 申请权限
      */
@@ -540,7 +556,46 @@ public class SkillEditActivity extends AppCompatActivity implements View.OnClick
                 });
     }
 
+    /*
+     * 工具类
+     */
+    // 进行Luban算法压缩图片
+    private void compressImage(final String filePath, final String savePath){
+        runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                CompressImage.getInstance().imageLubrnCompress(filePath, savePath, new CompressLubanListener() {
+                    @Override
+                    public void onCompressLubanSuccessed(String imgPath, Bitmap bitmap) {
+                        /**
+                         * 返回值: imgPath----压缩后图片的绝对路径
+                         *        bitmap----返回的图片
+                         */
+                        Log.i(TAG, "Compress Success:" + imgPath);
+                    }
 
+                    @Override
+                    public void onCompressLubanFailed(String imgPath, String msg) {
+                        /**
+                         * 返回值: imgPath----原图片的绝对路径
+                         *        msg----返回的错误信息
+                         */
+                        Log.i(TAG, "Compress Failed:"+ imgPath + " " + msg);
+                    }
+
+                });
+            }
+        });
+    }
+
+    // 删除压缩的图片
+    private void myDeleteFile (File file){
+        String path = file.getPath();
+        // 删除系统缩略图
+        getContentResolver().delete(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, MediaStore.Images.Media.DATA + "=?", new String[]{path});
+        // 删除手机中图片
+        file.delete();
+    }
 
     /*
      * 弹窗

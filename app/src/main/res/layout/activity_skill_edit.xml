@@ -52,7 +52,8 @@
                 android:layout_marginBottom="15dp"
                 android:padding="10dp"
                 android:background="#FFF"
-                android:orientation="horizontal">
+                android:orientation="horizontal"
+                android:visibility="gone">
                 <TextView
                     android:id="@+id/txt_description_1"
                     style="@style/usertextStyle"
@@ -85,19 +86,32 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginBottom="15dp"
-                android:padding="15dp"
+                android:padding="5dp"
                 android:background="#FFF"
                 android:orientation="horizontal">
                 <TextView
                     style="@style/usertextStyle"
                     android:text="选择技能  "
-                    android:textSize="18.5sp" />
-                <Spinner
-                    android:id="@+id/spinner_skill"
+                    android:textSize="@dimen/textSize_18" />
+
+                <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    style="@style/usertextStyle"
-                    android:spinnerMode="dropdown"/>
+                    android:layout_height="50dp">
+                    <Spinner
+                        android:id="@+id/spinner_skill"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:paddingLeft="15dp"
+                        android:spinnerMode="dropdown"/>
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentEnd="true"
+                        android:layout_centerVertical="true"
+                        android:paddingRight="@dimen/activity_horizontal_margin"
+                        android:src="@mipmap/icon_dropdown"/>
+                </RelativeLayout>
+
             </LinearLayout>
 
             <LinearLayout
@@ -106,7 +120,8 @@
                 android:orientation="vertical"
                 android:padding="15dp"
                 android:layout_marginBottom="15dp"
-                android:background="#FFF">
+                android:background="#FFF"
+                android:visibility="gone">
 
                 <EditText
                     android:id="@+id/edt_repair_txt"
@@ -122,13 +137,13 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
-                android:padding="15dp"
+                android:padding="5dp"
                 android:background="#FFF">
                 <TextView
                     style="@style/usertextStyle"
-                    android:text="上传技能图片"
-                    android:textSize="18.5sp" />
-                <!-- 上传技能图片 -->
+                    android:text="上传证书图片"
+                    android:textSize="@dimen/textSize_18" />
+                <!-- 上传证书图片 -->
                 <GridView
                     android:id="@+id/release_gridview_image"
                     android:layout_width="match_parent"

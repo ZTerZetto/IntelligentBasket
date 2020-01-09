@@ -26,6 +26,15 @@
                 android:id="@+id/text_input_username"
                 style="@style/editStyle"
                 android:hint="@string/prompt_username" />
+
+            <ImageView
+                android:id="@+id/iv_clear_username"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:paddingRight="10dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_clear"
+                android:visibility="gone"/>
         </LinearLayout>
 
         <LinearLayout
@@ -43,6 +52,14 @@
                 style="@style/editStyle"
                 android:inputType="textPassword"
                 android:hint="@string/prompt_password" />
+            <ImageView
+                android:id="@+id/iv_clear_password"
+                android:layout_width="25dp"
+                android:layout_height="25dp"
+                android:paddingRight="10dp"
+                android:layout_gravity="center"
+                android:src="@mipmap/ic_clear"
+                android:visibility="gone"/>
         </LinearLayout>
     </LinearLayout>
 

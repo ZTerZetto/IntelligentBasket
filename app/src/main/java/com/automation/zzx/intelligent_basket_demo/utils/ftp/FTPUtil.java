@@ -62,7 +62,7 @@ public class FTPUtil {
     /**
      * FTP根目录.
      */
-    public static final String BASE_REMOTE_PATH = "../var/ftp/nacelleRent";
+    public static final String BASE_REMOTE_PATH = "../var/ftp/smartNacelle";
 
     /**
      * FTP当前目录.
@@ -205,7 +205,6 @@ public class FTPUtil {
         }
         return list;
     }
-
     public List<String> listCurrentFileNames() throws IOException {
         if (ftpClient != null) {
             // 获取文件

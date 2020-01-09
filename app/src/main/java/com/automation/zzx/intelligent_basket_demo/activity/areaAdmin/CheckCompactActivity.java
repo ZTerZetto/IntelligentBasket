@@ -99,8 +99,8 @@ public class CheckCompactActivity extends AppCompatActivity {
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle("");
-        titleText.setText("项目合同");
+        toolbar.setTitle("项目合同");
+        titleText.setText("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 

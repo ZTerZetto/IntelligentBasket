@@ -343,7 +343,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             }*/
 
             @Override
-            public void onUploadCertClick(View view, int position) {
+            public void onAcceptInstallClick(View view, int position) {
                 // 点击安监证书
                 Log.i(TAG, "You have clicked the " + position + " item's PreAssAndAcept");
                 Intent intent;

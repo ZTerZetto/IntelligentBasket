@@ -346,7 +346,7 @@
                             android:layout_height="wrap_content"
                             android:layout_below="@+id/txt_record"
                             android:horizontalSpacing="1dp"
-                            android:numColumns="3"
+                            android:numColumns="4"
                             android:padding="3dp"
                             android:stretchMode="columnWidth"
                             android:verticalSpacing="2dp" />

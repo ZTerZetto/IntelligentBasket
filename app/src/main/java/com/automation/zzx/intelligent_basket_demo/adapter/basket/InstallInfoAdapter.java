@@ -79,8 +79,14 @@ public class InstallInfoAdapter extends RecyclerView.Adapter<InstallInfoAdapter.
             viewHolder.ivWorkerInfo.setText("待分配");
             viewHolder.ivWorkerInfo.setTextColor(Color.DKGRAY);
         }
-        if(basket.getEndTime() != null){
-            viewHolder.ivFinishTime.setText(basket.getEndTime());
+        if(basket.getStartTime() != null ){
+            String time;
+            if( basket.getEndTime() != null) {
+                time = basket.getStartTime() + "至" + basket.getEndTime();
+            } else {
+                time = basket.getStartTime() + "至——";
+            }
+            viewHolder.ivFinishTime.setText(time);
         } else {
             viewHolder.ivFinishTime.setText("暂无");
             viewHolder.ivFinishTime.setTextColor(Color.DKGRAY);

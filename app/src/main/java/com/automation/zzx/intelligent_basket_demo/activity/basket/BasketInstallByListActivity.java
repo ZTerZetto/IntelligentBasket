@@ -1,6 +1,7 @@
 package com.automation.zzx.intelligent_basket_demo.activity.basket;
 
 import android.annotation.SuppressLint;
+import android.app.Activity;
 import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -152,8 +153,7 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
         Intent intent =getIntent();
         mProjectId = intent.getStringExtra(PROJECT_ID);
         mProjectName = intent.getStringExtra(PROJECT_NAME);
-        mgBasketStatementList = (List<MgBasketStatement>) getIntent().getSerializableExtra("basket_list");
-
+        mgBasketStatementList =(List<MgBasketStatement>) getIntent().getSerializableExtra("basket_list");
     }
 
     /*
@@ -164,8 +164,8 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
         // 顶部导航栏
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         titleText = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle("");
-        titleText.setText(mProjectName);
+        toolbar.setTitle("安装指派");
+        titleText.setText("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
@@ -191,7 +191,7 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
             @Override
             public void onItemClick(View view, int position) {
                 // item 点击响应
-                Log.i(TAG, "You have clicked the "+ position +" item");if(mBasketIdList==null || mBasketIdList.equals("")){
+                Log.i(TAG, "You have clicked the "+ position +" item");if( mBasketIdList==null || mBasketIdList.equals("")){
                     DialogToast("提示", "该吊篮信息有误，无法分配安装队伍");
                 }
                 /*startActivityForResult(new Intent(BasketInstallByListActivity.this, CaptureActivity.class), ADD_INSTALL_RESULT);*/
@@ -240,6 +240,7 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
                 if(Integer.parseInt(basketNumber.getText().toString()) == 0) {  // 尚未选择吊篮
                     ToastUtil.showToastTips(BasketInstallByListActivity.this, "您尚未选择任何吊篮");
                 } else {
+                    mBasketIdList = getInstallBasketList();
                     startActivityForResult(new Intent(BasketInstallByListActivity.this, CaptureActivity.class), ADD_INSTALL_RESULT);
                 }
 
@@ -277,7 +278,7 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
                     int colon = userInfo.indexOf(":");
                     final String installId = userInfo.substring(colon + 1);
                     if (userInfo.contains("InstallTeam")) {  // 是安装队伍Id
-                        String content = "您分配安装吊篮的编号为" + getInstallBasketList();
+                        String content = "您分配安装吊篮的编号为" + mBasketIdList +"\n 安装队伍人员编号为"+installId;
                         // 弹窗二次确认
                         new CommonDialog(BasketInstallByListActivity.this, R.style.dialog, content,
                                 new CommonDialog.OnCloseListener() {
@@ -315,7 +316,6 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
     // 获取选中待安装的吊篮列表
     private String getInstallBasketList(){
         String results = "";
-
         Map<Integer,Boolean> isCheck = mgBasketListAdapter.getMap();
         for(int i=0; i<isCheck.size(); i++){
             if(isCheck.get(i)){
@@ -330,6 +330,7 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
     public void onClick(View v) {
 
     }
+
 
     // 添加施工人员
     private void addInstallWithBasket(String installId,String mBasketIdList){
@@ -349,13 +350,13 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
                         String create = jsonObject.getString("create");
                         Boolean isLogin = jsonObject.getBoolean("isLogin");
                         if(isLogin.equals(true)){
-                            if(create.contains("成功")) {
+                            if(create.contains("success")) {
                                 Log.i(TAG, "分配安装队伍成功");
-                                DialogToast("提示", "您已成功分配安装队伍").show();
-                            }else if(create.contains("存在项目中")){
+                                CloseDialog("提示", "您已成功分配安装队伍").show();
+                            }else {
                                 DialogToast("提示", "分配安装队伍失败").show();
                             }
-                        }else{
+                        } else {
                             DialogToast("提示", "权限认证失败,分配安装队伍失败").show();
                         }
                     }
@@ -432,6 +433,27 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
                             dialog.dismiss();
                         }else{
                             dialog.dismiss();
+                        }
+                    }
+                }).setTitle(mTitle);
+    }
+
+    /*
+     * 确定提示弹框
+     */
+    private CommonDialog CloseDialog(String mTitle, String mMsg){
+        return new CommonDialog(BasketInstallByListActivity.this, R.style.dialog, mMsg,
+                new CommonDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if(confirm){
+                            dialog.dismiss();
+                            Intent intent = new Intent();
+                            setResult(RESULT_OK, intent);
+                            BasketInstallByListActivity.this.finish();
+                        }else{
+                            dialog.dismiss();
+                            BasketInstallByListActivity.this.finish();
                         }
                     }
                 }).setTitle(mTitle);

@@ -82,9 +82,11 @@ public class WorkerMoreActivity extends AppCompatActivity implements View.OnClic
             case R.id.upload_capacity_layout:
                 // 点击安监证书
                 Log.i(TAG, "You have clicked the upload_capacity button");
-                intent = new Intent(WorkerMoreActivity.this, UploadImageFTPActivity.class);
+               /* intent = new Intent(WorkerMoreActivity.this, UploadImageFTPActivity.class);
                 intent.putExtra(WORKER_ID, mWorkerId);
                 intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_WORKER_CAPACITY_IMAGE);
+                startActivity(intent);*/
+                intent = new Intent(WorkerMoreActivity.this, SkillEditActivity.class);
                 startActivity(intent);
                 break;
             case R.id.check_homepage_layout:
