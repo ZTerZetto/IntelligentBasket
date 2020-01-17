@@ -15,6 +15,12 @@ public class MgBasketInstallInfo implements Serializable {
     private int picFlag; // 图片上传标志位
     private int flag; // 整体安装状态标志位
 
+    /*
+     * 2or21：安检证书已上传
+     */
+    private int stateInPro; //项目中吊篮状态
+
+
     public MgBasketInstallInfo( ) {
     }
 
@@ -96,6 +102,9 @@ public class MgBasketInstallInfo implements Serializable {
     public void setFlag(int flag) {
         this.flag = flag;
     }
+    public int getFlag( ) {
+        return flag;
+    }
 
     public int getPicFlag() {
         return picFlag;
@@ -103,5 +112,13 @@ public class MgBasketInstallInfo implements Serializable {
 
     public void setPicFlag(int picFlag) {
         this.picFlag = picFlag;
+    }
+
+    public int getStateInPro() {
+        return stateInPro;
+    }
+
+    public void setStateInPro(int stateInPro) {
+        this.stateInPro = stateInPro;
     }
 }

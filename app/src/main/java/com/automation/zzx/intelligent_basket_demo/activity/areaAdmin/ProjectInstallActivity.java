@@ -287,8 +287,9 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
                 Intent intent;
                 switch (position) {
                     case 0: //安装方案
-                        intent = new Intent(ProjectInstallActivity.this, PlaneFigureActivity.class);
-                        startActivity(intent);
+                        intent = new Intent(ProjectInstallActivity.this, ConfigurationActivity.class);
+                        intent.putExtra(PROJECT_ID, mProjectId);
+                        startActivityForResult(intent, UPLOAD_CONFIGURATION_RESULT);
                         break;
                     case 1: //平面图
                         intent = new Intent(ProjectInstallActivity.this, PlaneFigureActivity.class);

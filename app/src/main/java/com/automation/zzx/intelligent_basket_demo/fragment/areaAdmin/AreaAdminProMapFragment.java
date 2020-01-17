@@ -645,7 +645,7 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
             List<AreaAdminProMapFragment.MyItem> items = new ArrayList<MyItem>();
             for (int i = 0; i < mgProjectInfoList.size(); i++) {
                 double dbl_1, dbl_2;
-                if (!mgProjectInfoList.get(i).getCoordinate().equals("")) {
+                if (!mgProjectInfoList.get(i).getCoordinate().equals(",") && !mgProjectInfoList.get(i).getCoordinate().equals("")){
 
                     String str[] = mgProjectInfoList.get(i).getCoordinate().split(",");
                     dbl_1 = Double.valueOf(str[0]);//经度

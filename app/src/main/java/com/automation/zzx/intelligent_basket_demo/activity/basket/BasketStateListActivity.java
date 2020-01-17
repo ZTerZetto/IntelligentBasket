@@ -37,6 +37,8 @@ import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActi
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
+import com.automation.zzx.intelligent_basket_demo.entity.BasketInfo;
+import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInstallInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
@@ -345,13 +347,44 @@ public class BasketStateListActivity extends AppCompatActivity {
                 if(mInstallBasketId==null || mInstallBasketId.equals("")){
                     DialogToast("提示", "该吊篮信息有误，无法查看安装详情");
                 }else {
+                    MgBasketInstallInfo installInfo = new MgBasketInstallInfo();
+                    installInfo.setBasketId(mgBasketStatementList.get(position).getBasketId());
+                    installInfo.setFlag(0);// flag: 0 进行中 1 未完成
+                    installInfo.setStateInPro(1);// StateInPro: 2 安装证书待上传
                     Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
                     intent.putExtra("project_id", mProjectId);
-                    intent.putExtra("basket_id", mgBasketStatementList.get(position).getBasketId());
+                    intent.putExtra("basket_info",installInfo);
                     startActivity(intent);
                 }
             }
-/*
+
+            //验收安装结果
+            @Override
+            public void onAcceptInstallClick(View view, int position) {
+                mInstallBasketId = mgBasketStatementList.get(position).getBasketId();
+                // 验收安装结果
+                if(mInstallBasketId==null || mInstallBasketId.equals("")){
+                    DialogToast("提示", "该吊篮信息有误，无法验收安装结果");
+                }else {
+                    MgBasketInstallInfo installInfo = new MgBasketInstallInfo();
+                    installInfo.setBasketId(mgBasketStatementList.get(position).getBasketId());
+                    installInfo.setStateInPro(2);// StateInPro: 2 安装证书待上传
+                    installInfo.setFlag(1);// flag: 0 进行中 1 未完成
+                    Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
+                    intent.putExtra("project_id", mProjectId);
+                    intent.putExtra("basket_info", installInfo);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
+            public void onPreApplyStopClick(View view, int position) {
+                // 点击预报停申请
+                Log.i(TAG, "You have clicked the "+ position +" item's PreApplyStop");
+            }
+        });
+
+        /*
             @Override
             public void onUploadAccept(View view, int position) {
                 // 点击上传预验收照片
@@ -363,28 +396,6 @@ public class BasketStateListActivity extends AppCompatActivity {
                 intent.putExtra(AreaAdminPrimaryActivity.UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
                 startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
             }*/
-
-            //验收安装结果
-            @Override
-            public void onAcceptInstallClick(View view, int position) {
-                mInstallBasketId = mgBasketStatementList.get(position).getBasketId();
-                // 验收安装结果
-                if(mInstallBasketId==null || mInstallBasketId.equals("")){
-                    DialogToast("提示", "该吊篮信息有误，无法验收安装结果");
-                }else {
-                    Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
-                    intent.putExtra("project_id", mProjectId);
-                    intent.putExtra("basket_id", mgBasketStatementList.get(position).getBasketId());
-                    startActivity(intent);
-                }
-            }
-
-            @Override
-            public void onPreApplyStopClick(View view, int position) {
-                // 点击预报停申请
-                Log.i(TAG, "You have clicked the "+ position +" item's PreApplyStop");
-            }
-        });
 
         // 无吊篮提示信息
         mBlankRelativeLayout = (RelativeLayout) findViewById(R.id.basket_no_avaliable);

@@ -120,7 +120,7 @@
         <TextView
             android:id="@+id/assessment_acceptance"
             style="@style/MgBasketOperationTextView"
-            android:text="查看安装结果"
+            android:text="安装审核"
             android:visibility="gone"/>
 
         <!-- 预验收申请 -->
