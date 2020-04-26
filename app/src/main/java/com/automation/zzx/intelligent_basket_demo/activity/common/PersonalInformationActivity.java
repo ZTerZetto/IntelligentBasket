@@ -91,22 +91,28 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
         mUserIdTv.setText(mUserInfo.getUserId());
         mUserNameTv.setText(mUserInfo.getUserName());
         switch(mUserInfo.getUserRole()){
-            case "worker":
-                mUserRoleTv.setText("施工人员");
-                break;
             case "rentAdmin":
+                mUserMoreRv.setVisibility(View.GONE);
                 mUserRoleTv.setText("租方管理员");
                 break;
             case "areaAdmin":
+                mUserMoreRv.setVisibility(View.GONE);
                 mUserRoleTv.setText("区域管理员");
                 break;
             case "inspector":
+                mUserMoreRv.setVisibility(View.GONE);
                 mUserRoleTv.setText("巡检人员");
                 break;
             case "projectAdmin":
+                mUserMoreRv.setVisibility(View.GONE);
                 mUserRoleTv.setText("项目管理员");
                 break;
+            default:
+                if(mUserInfo.getUserRole().contains("worker")){
+                    mUserRoleTv.setText("施工人员");
+                }
         }
+
         mUserPhoneTv.setText(mUserInfo.getUserPhone());
     }
 

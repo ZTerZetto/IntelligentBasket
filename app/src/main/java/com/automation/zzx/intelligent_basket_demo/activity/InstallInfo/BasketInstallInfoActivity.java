@@ -7,14 +7,18 @@ import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.PortionAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
+import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInstallInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.Portion;
 import com.automation.zzx.intelligent_basket_demo.entity.PortionMap;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
@@ -28,6 +32,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
+
 public class BasketInstallInfoActivity extends AppCompatActivity {
 
     private static final String TAG = "FinishImgActivity";
@@ -40,15 +46,25 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
     public static final String BASKET_ID = "basket_id";  // 吊篮ID
     public static final String IMAGE_TYPE_ID = "image_type_id";  // 上传图片类型
 
+    public final static String UPLOAD_IMAGE_TYPE = "uploadImageType"; // 上传图片的类型
+    public final static String UPLOAD_CERTIFICATE_IMAGE = "certificate"; // 安监证书
+
+
+    //页面返回变量
+    private final static int UPLOAD_CERTIFICATE_IMAGE_RESULT = 4;  // 上传安检证书返回页面
+
     // 全局变量
     private String projectId = "201910110001";
-    private String basketId = "201910110001";
+    private MgBasketInstallInfo basketinfo;
 
     // 控件声明
     private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private SmartGridView mPortionGv;  // 部件网格控件
     private TextView txtBasketId;  //吊篮编号
     private TextView txtBasketState; //吊篮状态
+
+    private RelativeLayout rlCertificateUpdate; //上传安监证书
+    private RelativeLayout rlCertificate; //查看安监证书
 
     // var switch gridview
     private List<Portion> mPortions;  // 部件变量列表
@@ -109,9 +125,8 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
 
         //头部信息栏
         txtBasketId = (TextView) findViewById(R.id.basket_id);
-        txtBasketId.setText(basketId);
+        txtBasketId.setText(basketinfo.getBasketId());
         txtBasketState = (TextView) findViewById(R.id.basket_state);
-        txtBasketState.setText("安装中");
         txtBasketState.setTextColor(R.color.gray01);
 
         // GridView: 部件变量状态显示
@@ -124,22 +139,64 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 if (position < 4){
-                    // 上传单张图片
+                    // 单张图片
                     Intent intent = new Intent(BasketInstallInfoActivity.this, SingleImgUploadActivity.class);
                     intent.putExtra(PROJECT_ID, projectId);
-                    intent.putExtra(BASKET_ID, basketId);
+                    intent.putExtra(BASKET_ID, basketinfo.getBasketId());
                     intent.putExtra(IMAGE_TYPE_ID, position);
                     startActivity(intent);
                 }else{
-                    // 上传左、右图片
+                    // 左、右图片
                     Intent intent = new Intent(BasketInstallInfoActivity.this, MultiImgUploadActivity.class);
                     intent.putExtra(PROJECT_ID, projectId);
-                    intent.putExtra(BASKET_ID, basketId);
+                    intent.putExtra(BASKET_ID, basketinfo.getBasketId());
                     intent.putExtra(IMAGE_TYPE_ID, position);
                     startActivity(intent);
                 }
             }
         });
+
+        rlCertificateUpdate = findViewById(R.id.rl_certificate_update);
+        rlCertificateUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转至上传安检证书页面
+                Intent intent;
+                intent = new Intent(BasketInstallInfoActivity.this, UploadImageFTPActivity.class);
+                intent.putExtra("projectId", projectId);
+                intent.putExtra("basketId",  basketinfo.getBasketId());
+                intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
+                startActivityForResult(intent, UPLOAD_CERTIFICATE_IMAGE_RESULT);
+            }
+        });
+
+        rlCertificate = findViewById(R.id.rl_certificate_info);
+        rlCertificate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转至查看安检证书页面
+
+            }
+        });
+
+
+        //根据flag显示不同状态, flag: 0 进行中 1 已完成
+        if(basketinfo.getFlag()==0){
+            txtBasketState.setText("安装中");
+            rlCertificateUpdate.setVisibility(View.GONE);
+            rlCertificate.setVisibility(View.GONE);
+        } else {
+            txtBasketState.setText("已完成");
+            if(basketinfo.getStateInPro()==2 || basketinfo.getStateInPro()==21){
+                //安检证书已上传
+                rlCertificateUpdate.setVisibility(View.GONE);
+                rlCertificate.setVisibility(View.VISIBLE);
+            }else{
+                //安检证书未上传
+                rlCertificateUpdate.setVisibility(View.VISIBLE);
+                rlCertificate.setVisibility(View.GONE);
+            }
+        }
     }
 
     // 顶部导航栏消息响应
@@ -158,7 +215,7 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
      */
     // 检查文件是否存在
     private void checkImageExist(){
-        mRemotePath = "project/" + projectId + "/" + basketId;  // 图片上传地址
+        mRemotePath = "project/" + projectId + "/" + basketinfo.getBasketId();  // 图片上传地址
         new Thread() {
             public void run() {
                 try {
@@ -198,7 +255,7 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
     private void getIntentData(){
         Intent intent = getIntent();
         projectId = intent.getStringExtra("project_id");
-        basketId = intent.getStringExtra("basket_id");
+        basketinfo = (MgBasketInstallInfo)intent.getSerializableExtra("basket_info");
     }
 
     /*
@@ -242,6 +299,28 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
         mPortions.add(bigArm);
         Portion balanceWeight = new Portion("配重", R.mipmap.ic_balance_weight, 0);
         mPortions.add(balanceWeight);
+    }
+
+    /*
+     * 处理Activity返回结果
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case UPLOAD_CERTIFICATE_IMAGE_RESULT:  // 上传安监证书返回值
+                if(resultCode == RESULT_OK) {
+                    // 更新按钮展示页面
+                    rlCertificateUpdate.setVisibility(View.GONE);
+                    rlCertificate.setVisibility(View.VISIBLE);
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                }
+                break;
+
+            default:
+                break;
+        }
     }
 
 

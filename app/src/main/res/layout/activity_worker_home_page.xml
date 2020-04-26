@@ -2,11 +2,46 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@color/colorParameterBackground"
     android:orientation="vertical">
 
     <!-- 顶部导航栏 -->
-    <include layout="@layout/toolbar_with_title_and_back"/>
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/worker_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ToolBarPopupThem"
+        app:navigationIcon="@mipmap/ic_navi_back_48px">
+        <!-- 居中项目标题 -->
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:singleLine="true"
+            android:layout_gravity="center"
+            android:text="工人主页"
+            android:textColor="@color/colorWhiteText"
+            android:textSize="@dimen/textSize_18"
+            android:layout_marginHorizontal="15dp"
+            android:textStyle="bold" />
+
+        <!-- 右侧入口 -->
+        <TextView
+            android:id="@+id/entrance_edit_skill"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"
+            android:textSize="@dimen/textSize_14"
+            android:textColor="@color/colorWhiteText"
+            android:text="新增"
+            android:visibility="gone"
+            />
+
+    </android.support.v7.widget.Toolbar>
 
     <!-- header 登录状态 -->
     <RelativeLayout
@@ -35,37 +70,52 @@
             android:layout_centerVertical="true"
             android:layout_marginLeft="5dp"
             android:orientation="vertical">
-            <!-- 用户姓名 -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal">
+                <!-- 用户姓名 -->
+                <TextView
+                    android:id="@+id/login_user_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:singleLine="true"
+                    android:ellipsize="end"
+                    android:textColor="@color/colorWhiteText"
+                    android:text="张晓明"
+                    android:textSize="20sp"
+                    android:textStyle="bold" />
+            </LinearLayout>
+
             <TextView
-                android:id="@+id/login_user_name"
+                android:id="@+id/login_id_card"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:singleLine="true"
                 android:ellipsize="end"
+                android:maxLength="18"
                 android:textColor="@color/colorWhiteText"
-                android:text="张晓明"
-                android:textSize="20sp"
-                android:textStyle="bold" />
+                android:text="330xxxxxxxxxxxxxxx"
+                android:textSize="14sp"/>
 
             <!-- 信息 -->
             <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                android:layout_marginTop="5dp">
+                android:orientation="horizontal">
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="工种:"
                     android:textColor="@color/colorWhiteText"
-                    android:textSize="@dimen/me_login_balance_size"/>
+                    android:textSize="@dimen/textSize_14"/>
                 <TextView
                     android:id="@+id/login_user_type"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="其它"
                     android:textColor="@color/colorWhiteText"
-                    android:textSize="@dimen/me_login_balance_size"/>
+                    android:textSize="@dimen/textSize_14"/>
             </LinearLayout>
         </LinearLayout>
 

@@ -356,7 +356,7 @@
                             android:layout_height="wrap_content"
                             android:paddingHorizontal="5dp"
                             android:singleLine="true"
-                            android:text="查看安装方案"
+                            android:text="查看吊篮分布"
                             android:textColor="@color/colorTextDark"
                             android:textSize="16sp" />
 

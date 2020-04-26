@@ -43,8 +43,10 @@ import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 
+import com.automation.zzx.intelligent_basket_demo.activity.worker.SkillEditActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
+import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
@@ -67,6 +69,8 @@ public class RegistWorkerActivity extends AppCompatActivity {
     public static final int TAKE_PHOTO = 1;
     public static final int CHOOSE_PHOTO = 2;
 
+    private final static int UPDATE_DETAIL_WORKTYPE = 101;  // 更新具体工种spinner
+
     private ImageView ivIdPicture;
     private Uri imageUri;
     private Bitmap bitmap;
@@ -74,7 +78,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
     private Boolean photo_exist;
 
     private EditText edt_userName;
-    private EditText edt_userAge;
+    //private EditText edt_userAge;
     private EditText edt_userLocal;
     private Spinner spinnerGender;
     private EditText edt_userPhone;
@@ -90,12 +94,16 @@ public class RegistWorkerActivity extends AppCompatActivity {
 
     private UserInfo userinfo;
     private Spinner spinnerType;
+    private Spinner spinnerTypeDetail;
     private List<String> gender_list;
     private List<String> type_list;
+    private List<String> detail_list;
     private ArrayAdapter<String> genderAdapter;
     private ArrayAdapter<String> typeAdapter;
+    private ArrayAdapter<String> detailTypeAdapter;
     private String genderType;
     private String workerType;
+    private String workerDetail;
 
     private ImageView ivAddSkill;
     private ListView lvSkill;
@@ -144,6 +152,9 @@ public class RegistWorkerActivity extends AppCompatActivity {
                     mCommonDialog.show();
                     break;
                 }
+                case UPDATE_DETAIL_WORKTYPE:
+                    detailTypeAdapter.notifyDataSetChanged();
+                    break;
                 default: {
                     break;
                 }
@@ -173,7 +184,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
 
         //基本信息
         edt_userName = findViewById(R.id.edt_register_userName);
-        edt_userAge = findViewById(R.id.edt_register_age);
+        //edt_userAge = findViewById(R.id.edt_register_age);
         edt_userLocal = findViewById(R.id.edt_register_native);
         spinnerGender = findViewById(R.id.spinner_gender);
         //账号信息
@@ -188,6 +199,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
         llSpinner = findViewById(R.id.ll_spinner);
         llSpinner.setVisibility(View.VISIBLE);
         spinnerType = (Spinner) findViewById(R.id.spinner_type_choose);
+        spinnerTypeDetail = (Spinner) findViewById(R.id.spinner_detail);
 
         //技能资质
         lvSkill = findViewById(R.id.listView_skill);
@@ -252,7 +264,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
                     Toast.makeText(getApplicationContext(), "身份证号填写有误！", Toast.LENGTH_LONG).show();
                 }else {
                     userinfo = new UserInfo(edt_userName.getText().toString(), edt_userPwd.getText().toString(),edt_userPhone.getText().toString(),
-                            workerType,genderType,edt_userAge.getText().toString(),edt_userLocal.getText().toString(),edt_userIDNum.getText().toString());
+                            workerType,genderType,edt_userLocal.getText().toString(),edt_userIDNum.getText().toString());
                     mLoadingDialog.show();
                     uploadIdentityCardImage();
                 }
@@ -264,7 +276,7 @@ public class RegistWorkerActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 Toast.makeText(getApplicationContext(), "添加技能证书", Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(RegistWorkerActivity.this,SkillEditActivity.class);
+                Intent intent = new Intent(RegistWorkerActivity.this, SkillEditActivity.class);
                 startActivity(intent);
             }
         });
@@ -304,24 +316,57 @@ public class RegistWorkerActivity extends AppCompatActivity {
         typeAdapter = new ArrayAdapter<String>(this,R.layout.spinner_left_item,type_list);
         typeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerType.setAdapter(typeAdapter);
-        spinnerType.setSelection(5, true); // 设置默认值为:其它
+        spinnerType.setSelection(2, true); // 设置默认值为:其它
 
         spinnerType.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String type = (String) spinnerType.getSelectedItem();
                 switch (type){
-                    case "涂料": workerType = "worker_1";break;
-                    case "幕墙": workerType = "worker_2";break;
-                    case "内装": workerType = "worker_3";break;
-                    case "土建": workerType = "worker_4";break;
-                    case "车辆": workerType = "worker_5";break;
-                    default: workerType = "worker";break;
+                    case "幕墙类":
+                        detail_list.clear();
+                        detail_list.add(WorkerType.ELECTRIC.getChineseDetail());
+                        detail_list.add(WorkerType.STONE.getChineseDetail());
+                        detail_list.add(WorkerType.GLASSPLATE.getChineseDetail());
+                        detail_list.add(WorkerType.GLUEWORKER.getChineseDetail());
+                        handler.sendEmptyMessage(UPDATE_DETAIL_WORKTYPE);
+                        break;
+                    case "涂料类":
+                        detail_list.clear();
+                        detail_list.add(WorkerType.PAINTER.getChineseDetail());
+                        detail_list.add(WorkerType.REALSTONE.getChineseDetail());
+                        handler.sendEmptyMessage(UPDATE_DETAIL_WORKTYPE);
+                        break;
+                    case "其他类":
+                        detail_list.clear();
+                        detail_list.add(WorkerType.OTHERS.getChineseDetail());
+                        handler.sendEmptyMessage(UPDATE_DETAIL_WORKTYPE);
+                        break;
                 }
             }
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                workerType = "worker";
+                detail_list.clear();
+                detail_list.add(WorkerType.OTHERS.getChineseDetail());
+            }
+        });
+
+        //具体工种
+        spinnerTypeDetail.setDropDownVerticalOffset(50); //下拉的纵向偏移
+        detailTypeAdapter = new ArrayAdapter<String>(this,R.layout.spinner_left_item,detail_list);
+        detailTypeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTypeDetail.setAdapter(detailTypeAdapter);
+
+        spinnerTypeDetail.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String typeString = (String) spinnerTypeDetail.getSelectedItem();
+                WorkerType enumType = WorkerType.getByChineseDetail(typeString);
+                workerType = enumType.getDetailtype();
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                workerType = WorkerType.OTHERS.getDetailtype();
             }
         });
 
@@ -335,14 +380,12 @@ public class RegistWorkerActivity extends AppCompatActivity {
 
         //工种选择
         type_list = new ArrayList<String>();
-        type_list.add("涂料");
-        type_list.add("幕墙");
-        type_list.add("内装");
-        type_list.add("土建");
-        type_list.add("车辆");
-        type_list.add("其他");
+        type_list.add(WorkerType.ELECTRIC.getChineseType());
+        type_list.add(WorkerType.PAINTER.getChineseType());
+        type_list.add(WorkerType.OTHERS.getChineseType());
 
-        //技能选择
+        //具体工种
+        detail_list = new ArrayList<String>();
     }
 
     private void openAlbum() {

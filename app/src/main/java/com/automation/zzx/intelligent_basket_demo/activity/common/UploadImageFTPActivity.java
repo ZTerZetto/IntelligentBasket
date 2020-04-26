@@ -64,7 +64,6 @@ import me.nereo.multi_image_selector.MultiImageSelectorActivity;
 import okhttp3.Call;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_APPLY_INSTALL;
-import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.PROJECT_ID;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRE_INSTALL_IMAGE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRE_STOP_IMAGE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_CERTIFICATE_IMAGE;
@@ -78,6 +77,12 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
 
     private final static int GET_PHOTO_FROM_ALBUM = 1;  // 相册
     public static final int TAKE_PHOTO_FROM_CAMERA= 2;  // 照相机
+
+
+    // intent 消息参数
+    public final static String PROJECT_ID = "projectId";  // 上传图片的项目Id
+    public final static String BASKET_ID = "basketId"; // 上传图片的吊篮ID
+
 
     // Handler消息
     private final static int GET_UPLOAD_INFO = 100;  // 上传图片成功
@@ -653,7 +658,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 mToolbar.setTitle("上传安监证书");
                 uploadHint = "安监证书";
                 maxUploadImageNumer = 1;
-                deviceId = getIntent().getStringExtra(AreaAdminMgProjectFragment.BASKET_ID);
+                deviceId = getIntent().getStringExtra(BASKET_ID);
                 break;
             case UPLOAD_BASKETS_PRE_INSTALL_IMAGE: // 预验收申请图片地址
                 mRemotePath = "project";
@@ -666,7 +671,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 mToolbar.setTitle("上传吊篮预报停图片");
                 uploadHint = "吊篮预报停图片";
                 maxUploadImageNumer = 9;
-                deviceId = getIntent().getStringExtra(AreaAdminMgProjectFragment.BASKET_ID);
+                deviceId = getIntent().getStringExtra(BASKET_ID);
                 break;
             case UPLOAD_BASKETS_APPLY_STOP_IMAGE: // 报停
                 mRemotePath = "storeIn";

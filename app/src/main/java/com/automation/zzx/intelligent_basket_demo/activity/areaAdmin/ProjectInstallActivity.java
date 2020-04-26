@@ -24,6 +24,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketInstallByListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketStateListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.PlaneFigureActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.RepairInfoListActivity;
@@ -46,6 +47,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -75,7 +77,7 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
 
     // 页面跳转
     private final static int CAPTURE_ACTIVITY_RESULT = 1;  // 扫码返回
-    private final static int UPLOAD_BASKET_IMAGE_RESULT = 2;  // 上传预验收图片
+    private final static int ADD_INSTALL_RESULT = 2;  // 获取安装人员信息
     private final static int UPLOAD_CERTIFICATE_IMAGE_RESULT = 3;  // 上传安监证书页面
     private final static int UPLOAD_PRE_STOP_BASKET_IMAGE_RESULT = 4;  // 上传吊篮预报停图片页面
     private final static int UPLOAD_CONFIGURATION_RESULT = 5;  // 上传配置清单结果
@@ -105,6 +107,7 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
 
     //吊篮数据
     private List<MgBasketStatement> mgBasketStatementList;
+    private List<MgBasketStatement> mgBasketToAllocate;  //待分配安装任务的吊篮列表
     private List<List<MgBasketStatement>> mgBasketStatementClassifiedList;
 
     //标题栏内容
@@ -145,6 +148,7 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
             switch(msg.what) {
                 case UPDATE_CURRENT_PROJECT_MSG:  //更换当前项目，更新UI
                     mgBasketStatementList.clear();
+                    mgBasketToAllocate.clear();
                     mgBasketStatementClassifiedList.clear();
                     parseBasketListInfo((String)msg.obj);  // 更新吊篮
                     break;
@@ -226,6 +230,7 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
 
         //吊篮
         mgBasketStatementList = new ArrayList<>();
+        mgBasketToAllocate = new ArrayList<>();
         mgBasketStatementClassifiedList = new ArrayList<>();
 
         //初始化标题栏及进度条，并显示内容
@@ -282,14 +287,22 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
                 Intent intent;
                 switch (position) {
                     case 0: //安装方案
-                        intent = new Intent(ProjectInstallActivity.this, PlaneFigureActivity.class);
-                        startActivity(intent);
+                        intent = new Intent(ProjectInstallActivity.this, ConfigurationActivity.class);
+                        intent.putExtra(PROJECT_ID, mProjectId);
+                        startActivityForResult(intent, UPLOAD_CONFIGURATION_RESULT);
                         break;
                     case 1: //平面图
                         intent = new Intent(ProjectInstallActivity.this, PlaneFigureActivity.class);
                         startActivity(intent);
                         break;
-                    case 2: //安装进度
+                    case 2: //安装指派
+                        intent = new Intent(ProjectInstallActivity.this, BasketInstallByListActivity.class);
+                        intent.putExtra("projectName",projectInfo.getProjectName());
+                        intent.putExtra("project_id",mProjectId);
+                        intent.putExtra("basket_list", (Serializable)mgBasketToAllocate);
+                        startActivity(intent);
+                        break;
+                    case 3: //安装进度
                         intent = new Intent(ProjectInstallActivity.this, InstallInfoListActivity.class);
                         intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
                         startActivity(intent);
@@ -322,6 +335,8 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
         mRecordFunctions.add(compact);
         Function preApply = new Function("平面图", R.mipmap.icon_func_confirm,true);
         mRecordFunctions.add(preApply);
+        Function allocate = new Function("安装指派", R.mipmap.icon_func_certificate,true);
+        mRecordFunctions.add(allocate);
         Function certification = new Function("安装进度", R.mipmap.icon_func_certificate,true);
         mRecordFunctions.add(certification);
     }
@@ -367,8 +382,13 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode){
-
-
+            case ADD_INSTALL_RESULT:  // 上传分配安装人员返回
+                if (resultCode == RESULT_OK) {
+                    if (mProjectId != null) {
+                        areaAdminGetAllBasket();
+                    }
+                }
+                break;
             default:
                 break;
         }
@@ -452,6 +472,9 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
             MgBasketStatement mgBasketStatement = mgBasketStatements.get(i);
             mgBasketStatementClassifiedList.get(Integer.valueOf(mgBasketStatement.getBasketStatement().substring(0,1))).
                     add(mgBasketStatement);
+            if(mgBasketStatement.getBasketStatement().equals("1")){ //加入吊篮状态为待分配安装队伍，则将其加入列表
+                mgBasketToAllocate.add(mgBasketStatement);
+            }
         }
         mgBasketStatementClassifiedList.get(0).addAll(mgBasketStatements);
     }

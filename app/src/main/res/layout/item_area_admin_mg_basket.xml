@@ -116,11 +116,11 @@
             android:text="查看预验收照片"
             android:visibility="gone"/>
 
-        <!-- 安监证书上传 -->
+        <!-- 安装审核阶段 -->
         <TextView
-            android:id="@+id/upload_certificate"
+            android:id="@+id/assessment_acceptance"
             style="@style/MgBasketOperationTextView"
-            android:text="上传安监证书"
+            android:text="安装审核"
             android:visibility="gone"/>
 
         <!-- 预验收申请 -->

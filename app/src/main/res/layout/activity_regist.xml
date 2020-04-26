@@ -17,123 +17,6 @@
             android:layout_height="wrap_content"
             android:orientation="vertical">
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
-                android:padding="5dp"
-                android:text="@string/basic_info"
-                android:background="#FFF"
-                android:textColor="@color/colorTextDark"
-                android:textSize="@dimen/textSize_18" />
-
-            <!-- 基本注册信息 -->
-            <LinearLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:background="#FFF"
-                android:orientation="vertical">
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="70dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="5dp"
-                        android:text="用户名"
-                        android:textColor="@color/colorTextDark" />
-
-                    <EditText
-                        android:id="@+id/edt_register_userName"
-                        style="@style/editStyle"
-                        android:hint="未设置"
-                        android:maxLength="14"/>
-                </LinearLayout>
-
-                <View style="@style/me_horizontal_view_style" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="70dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="5dp"
-                        android:text="年龄"
-                        android:textColor="@color/colorTextDark" />
-
-                    <EditText
-                        android:id="@+id/edt_register_age"
-                        style="@style/editStyle"
-                        android:inputType="number"
-                        android:maxLength="3"
-                        android:hint="未设置" />
-                </LinearLayout>
-
-                <View style="@style/me_horizontal_view_style" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="70dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="5dp"
-                        android:text="籍贯"
-                        android:textColor="@color/colorTextDark" />
-
-                    <EditText
-                        android:id="@+id/edt_register_native"
-                        style="@style/editStyle"
-                        android:maxLength="11"
-                        android:hint="未设置" />
-                </LinearLayout>
-
-                <View style="@style/me_horizontal_view_style" />
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="50dp"
-                    android:orientation="horizontal">
-
-                    <TextView
-                        android:layout_width="70dp"
-                        android:layout_height="20dp"
-                        android:layout_gravity="center"
-                        android:layout_marginLeft="15dp"
-                        android:layout_marginRight="5dp"
-                        android:text="性别"
-                        android:textColor="@color/colorTextDark" />
-
-                    <RelativeLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="50dp"
-                        android:orientation="horizontal">
-
-                        <Spinner
-                            android:id="@+id/spinner_gender"
-                            android:layout_width="match_parent"
-                            android:layout_height="50dp"
-                            android:paddingLeft="15dp"
-                            android:spinnerMode="dropdown" />
-                    </RelativeLayout>
-                </LinearLayout>
-
-            </LinearLayout>
-
             <!-- 账号信息 -->
             <TextView
                 android:layout_width="match_parent"
@@ -230,6 +113,261 @@
                 android:layout_height="wrap_content"
                 android:layout_marginTop="10dp"
                 android:padding="5dp"
+                android:text="@string/basic_info"
+                android:background="#FFF"
+                android:textColor="@color/colorTextDark"
+                android:textSize="@dimen/textSize_18" />
+
+            <!-- 基本注册信息 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:background="#FFF"
+                android:orientation="vertical">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="5dp"
+                        android:text="姓名"
+                        android:textColor="@color/colorTextDark" />
+
+                    <EditText
+                        android:id="@+id/edt_register_userName"
+                        style="@style/editStyle"
+                        android:hint="填写您的真实姓名"
+                        android:maxLength="14"/>
+                </LinearLayout>
+
+                <View style="@style/me_horizontal_view_style" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="5dp"
+                        android:text="性别"
+                        android:textColor="@color/colorTextDark" />
+
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+                        <Spinner
+                            android:id="@+id/spinner_gender"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:paddingLeft="15dp"
+                            android:spinnerMode="dropdown" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:src="@mipmap/icon_dropdown"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <!--<LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="5dp"
+                        android:text="年龄"
+                        android:textColor="@color/colorTextDark" />
+
+                    <EditText
+                        android:id="@+id/edt_register_age"
+                        style="@style/editStyle"
+                        android:inputType="number"
+                        android:maxLength="3"
+                        android:hint="未设置" />
+                </LinearLayout>-->
+
+                <View style="@style/me_horizontal_view_style" />
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal">
+
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="5dp"
+                        android:text="籍贯"
+                        android:textColor="@color/colorTextDark" />
+
+                    <EditText
+                        android:id="@+id/edt_register_native"
+                        style="@style/editStyle"
+                        android:maxLength="11"
+                        android:hint="填写您的籍贯所在地" />
+                </LinearLayout>
+
+                <View style="@style/me_horizontal_view_style" />
+
+
+
+            </LinearLayout>
+
+            <!-- 选择工种 -->
+            <LinearLayout
+                android:id="@+id/ll_spinner"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="visible">
+
+                <TextView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="10dp"
+                    android:padding="5dp"
+                    android:text="@string/type_info"
+                    android:background="#FFF"
+                    android:textColor="@color/colorTextDark"
+                    android:textSize="@dimen/textSize_18" />
+
+                <!-- 工种类别 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:background="@color/white"
+                    android:orientation="horizontal">
+                <TextView
+                    android:layout_width="70dp"
+                    android:layout_height="20dp"
+                    android:layout_gravity="center"
+                    android:layout_marginLeft="15dp"
+                    android:layout_marginRight="5dp"
+                    android:text="工种类别"
+                    android:textColor="@color/colorTextDark" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+                        <Spinner
+                            android:id="@+id/spinner_type_choose"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:paddingLeft="15dp"
+                            android:spinnerMode="dropdown" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:src="@mipmap/icon_dropdown"/>
+                    </RelativeLayout>
+                </LinearLayout>
+
+                <!-- 具体工种 -->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="50dp"
+                    android:orientation="horizontal"
+                    android:background="@color/white">
+                    <TextView
+                        android:layout_width="70dp"
+                        android:layout_height="20dp"
+                        android:layout_gravity="center"
+                        android:layout_marginLeft="15dp"
+                        android:layout_marginRight="5dp"
+                        android:text="具体工种"
+                        android:textColor="@color/colorTextDark" />
+                    <RelativeLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        android:orientation="horizontal">
+                        <Spinner
+                            android:id="@+id/spinner_detail"
+                            android:layout_width="match_parent"
+                            android:layout_height="50dp"
+                            android:paddingLeft="15dp"
+                            android:spinnerMode="dropdown" />
+                        <ImageView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_alignParentEnd="true"
+                            android:layout_centerVertical="true"
+                            android:paddingRight="@dimen/activity_horizontal_margin"
+                            android:src="@mipmap/icon_dropdown"/>
+                    </RelativeLayout>
+                </LinearLayout>
+            </LinearLayout>
+
+            <!-- 技能证书 -->
+            <LinearLayout
+                android:id="@+id/ll_skill"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:visibility="gone">
+
+                <RelativeLayout
+                    android:id="@+id/ll_add_skill"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:layout_marginTop="@dimen/textSize_10"
+                    android:background="#FFF"
+                    android:padding="5dp">
+
+                    <TextView
+                        android:id="@+id/txt_skill_title"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="10dp"
+                        android:text="技能证书"
+                        android:textSize="@dimen/textSize_18"
+                        android:textColor="@color/colorTextDark"/>
+                    <ImageView
+                        android:id="@+id/iv_add_skill"
+                        android:layout_width="40dp"
+                        android:layout_height="40dp"
+                        android:layout_alignParentEnd="true"
+                        android:layout_alignParentBottom="true"
+                        android:layout_marginRight="@dimen/size_20"
+                        android:background="@mipmap/ic_add_upload_image" />
+                </RelativeLayout>
+
+                <ListView
+                    android:id="@+id/listView_skill"
+                    android:layout_width="match_parent"
+                    android:background="@color/white"
+                    android:layout_height="wrap_content">
+                </ListView>
+            </LinearLayout>
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:padding="5dp"
                 android:text="身份认证"
                 android:background="#FFF"
                 android:textColor="@color/colorTextDark"
@@ -299,67 +437,6 @@
                     android:layout_width="0dp"
                     android:layout_weight="1"
                     android:text="从相册中选择" />
-            </LinearLayout>
-
-            <!-- 选择工种 -->
-            <LinearLayout
-                android:id="@+id/ll_spinner"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="visible">
-
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="10dp"
-                    android:padding="5dp"
-                    android:text="@string/type_info"
-                    android:textSize="@dimen/textSize_18" />
-
-                <include layout="@layout/drop_down_menu" />
-            </LinearLayout>
-
-            <!-- 技能证书 -->
-            <LinearLayout
-                android:id="@+id/ll_skill"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="vertical"
-                android:visibility="gone">
-
-                <RelativeLayout
-                    android:id="@+id/ll_add_skill"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="horizontal"
-                    android:paddingTop="@dimen/size_20"
-                    android:paddingBottom="@dimen/size_20">
-
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="10dp"
-                        android:padding="5dp"
-                        android:text="技能证书"
-                        android:textSize="@dimen/textSize_18" />
-
-                    <ImageView
-                        android:id="@+id/iv_add_skill"
-                        android:layout_width="40dp"
-                        android:layout_height="40dp"
-                        android:layout_alignParentEnd="true"
-                        android:layout_alignParentBottom="true"
-                        android:layout_marginRight="@dimen/size_20"
-                        android:background="@mipmap/ic_add_upload_image" />
-                </RelativeLayout>
-
-                <ListView
-                    android:id="@+id/listView_skill"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:visibility="gone">
-                </ListView>
             </LinearLayout>
 
             <Button

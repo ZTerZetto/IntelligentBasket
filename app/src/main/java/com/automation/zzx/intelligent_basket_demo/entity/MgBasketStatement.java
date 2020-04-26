@@ -13,12 +13,12 @@ public class MgBasketStatement  implements Serializable {
     private String basketIndexImage; // 首页数据
     /*
      * 0: 草稿
-     * 1：待成立项目部
-     * 11：清单待配置
-     * 12：清单待审核
+     * 1：待分配安装队伍/待安装
+     * 11：安装进行中
+     * //12：清单待审核
      * 2：吊篮安装验收
-     * 21：安检证书验收
-     * 3：进行中
+     * //21：安检证书验收
+     * 3：使用中
      * 4：已结束
      */
     private String basketStatement; // 吊篮出/入状态

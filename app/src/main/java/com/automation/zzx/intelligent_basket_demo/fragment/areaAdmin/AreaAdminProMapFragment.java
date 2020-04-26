@@ -417,16 +417,16 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
                         .direction(mCurrentDirection).latitude(location.getLatitude())
                         .longitude(location.getLongitude()).build();
                 mBaiduMap.setMyLocationData(locData);
-                /*if (isFirstLoc) {  // 是否首次定位
-                    isFirstLoc = false;*/
+                if (isFirstLoc) {  // 是否首次定位
+                    isFirstLoc = false;
                     LatLng ll = new LatLng(location.getLatitude(),
                             location.getLongitude());
                     ms = new MapStatus.Builder().target(ll).zoom(18.0f).build();
                     mBaiduMap.animateMapStatus(MapStatusUpdateFactory.newMapStatus(ms));
-                /*}
+                }
                 if(mCurrentLat<3.85 || mCurrentLat>53.55 // 定位不在中国境内，重新定位
                         || mCurrentLon<73.55 || mCurrentLon>135.08 )
-                    isFirstLoc = true;*/
+                    isFirstLoc = true;
             }
 
             public void onReceivePoi(BDLocation poiLocation) {
@@ -645,7 +645,7 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
             List<AreaAdminProMapFragment.MyItem> items = new ArrayList<MyItem>();
             for (int i = 0; i < mgProjectInfoList.size(); i++) {
                 double dbl_1, dbl_2;
-                if (!mgProjectInfoList.get(i).getCoordinate().equals("")) {
+                if (!mgProjectInfoList.get(i).getCoordinate().equals(",") && !mgProjectInfoList.get(i).getCoordinate().equals("")){
 
                     String str[] = mgProjectInfoList.get(i).getCoordinate().split(",");
                     dbl_1 = Double.valueOf(str[0]);//经度

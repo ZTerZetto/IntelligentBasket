@@ -105,8 +105,8 @@ public class ProDetailActivity extends AppCompatActivity {
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle("");
-        titleText.setText(getString(R.string.projectDetail_tile));
+        toolbar.setTitle(getString(R.string.projectDetail_tile));
+        titleText.setText("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 

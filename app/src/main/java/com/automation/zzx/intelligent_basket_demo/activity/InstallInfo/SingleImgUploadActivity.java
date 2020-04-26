@@ -102,7 +102,27 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
         remoteFileUrl = AppConfig.FILE_SERVER_YBLIU_PATH + mRemotePath + remoteFileName + ".jpg";
     }
 
-/*
+    // 顶部导航栏消息响应
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case android.R.id.home: // 返回按钮
+                onBackPressed();
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onClick(View v) {
+        switch (v.getId()){
+            case R.id.image_display_iv:  // 点击图片，查看大图，尚未完成
+
+                break;
+        }
+    }
+
+    /*
     // Luban算法压缩图片
     private void compressImage(final String filePath, final String savePath){
         runOnUiThread(new Runnable() {
@@ -113,9 +133,9 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
                     public void onCompressLubanSuccessed(String imgPath, Bitmap bitmap) {
                         */
 /**
-                         * 返回值: imgPath----压缩后图片的绝对路径
-                         *        bitmap----返回的图片
-                         *//*
+ * 返回值: imgPath----压缩后图片的绝对路径
+ *        bitmap----返回的图片
+ *//*
 
                         Log.i(TAG, "Compress Success:" + imgPath);
                     }
@@ -124,9 +144,9 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
                     public void onCompressLubanFailed(String imgPath, String msg) {
                         */
 /**
-                         * 返回值: imgPath----原图片的绝对路径
-                         *        msg----返回的错误信息
-                         *//*
+ * 返回值: imgPath----原图片的绝对路径
+ *        msg----返回的错误信息
+ *//*
 
                         Log.i(TAG, "Compress Failed:"+ imgPath + " " + msg);
                     }
@@ -144,24 +164,4 @@ public class SingleImgUploadActivity extends AppCompatActivity implements View.O
     }
 */
 
-    // 顶部导航栏消息响应
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case android.R.id.home: // 返回按钮
-                onBackPressed();
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    @Override
-    public void onClick(View v) {
-        switch (v.getId()){
-            case R.id.image_display_iv:  // 点击图片，查看大图，尚未完成
-
-
-                break;
-        }
-    }
 }

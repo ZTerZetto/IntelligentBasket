@@ -43,6 +43,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
+import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -57,10 +58,13 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
 
     // 页面消息传递
     public final static String PROJECT_ID = "project_id";
-    public final static String BASKET_ID = "basket_id";
+    public final static String BASKET_INFO = "basket_info";
 
     // Handler 消息
     private final static int SWITCH_BASKET_STATE_MSG = 101;
+
+    //页面返回变量
+    private final static int UPLOAD_CERTIFICATE_IMAGE_RESULT = 4;  // 上传安检证书返回页面
 
     // 吊篮状态选择
     private GridView mBasketStateGv;  // 吊篮状态
@@ -158,7 +162,7 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle("安装信息");
+        toolbar.setTitle("安装进度");
         titleText.setText("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -232,8 +236,8 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
                 Log.i(TAG, "You have clicked the "+position+" item");
                 Intent intent = new Intent(InstallInfoListActivity.this, BasketInstallInfoActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
-                intent.putExtra(BASKET_ID, mBasketSelectedList.get(position).getBasketId());
-                startActivity(intent);
+                intent.putExtra(BASKET_INFO, mBasketSelectedList.get(position));
+                startActivityForResult(intent,UPLOAD_CERTIFICATE_IMAGE_RESULT);
             }
         });
 //        initBasketList();
@@ -309,7 +313,6 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
                         boolean isLogin = jsonObject.getBooleanValue("isLogin");
                         if(isLogin)
                             parseProjectDetails(jsonObject.getString("info"));
-
                     }
 
                     @Override
@@ -337,7 +340,9 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
             MgBasketInstallInfo basket = new MgBasketInstallInfo();
             basket.setBasketId(basketId);
             basket.setUserState(basketObject.getIntValue(basketId+"_userState"));
-            basket.setDeviceState(basketObject.getIntValue(basketId+"deviceState"));
+            basket.setDeviceState(basketObject.getIntValue(basketId+"_deviceState"));
+            //获取吊篮项目中状态
+            basket.setStateInPro(basketObject.getIntValue(basketId+"_stateInPro"));
 
             basket.setProjectId(mProjectId);
             basket.setUserId(basketInfo.getString("user_id"));
@@ -345,12 +350,12 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
             basket.setFlag(basketInfo.getIntValue("flag"));
             basket.setStartTime(basketInfo.getString("start_time").substring(0,10));
             if(basketInfo.getString("end_time") != null) {
-                basket.setEndTime(basketInfo.getString("end_time").substring(0, 10));
+                basket.setEndTime(basketInfo.getString("end_time").substring(0,10));
             }
 
-            int flag = basketInfo.getIntValue("flag");
-            if(flag==0) mBasketSummaryList.get(1).add(basket);
-            else if(flag==1) mBasketSummaryList.get(0).add(basket);
+            int flag = basketInfo.getIntValue("flag");   // flag: 0 进行中 1 未完成
+            if(flag==0) mBasketSummaryList.get(0).add(basket);
+            else if(flag==1) mBasketSummaryList.get(1).add(basket);
         }
         mHandler.sendEmptyMessage(SWITCH_BASKET_STATE_MSG);
     }
@@ -423,4 +428,24 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
             mBasketSummaryList.add(new ArrayList<MgBasketInstallInfo>());
         }
     }
+
+    /*
+     * 处理Activity返回结果
+     */
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        switch (requestCode) {
+            case UPLOAD_CERTIFICATE_IMAGE_RESULT:  // 上传安监证书返回值
+                if(resultCode == RESULT_OK) {
+                    getBasketInfoFromInternet();
+                }
+                break;
+
+            default:
+                break;
+        }
+    }
+
+
 }

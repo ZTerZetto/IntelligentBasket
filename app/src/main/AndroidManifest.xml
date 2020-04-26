@@ -38,7 +38,9 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.areaAdmin.ProjectInstallActivity"></activity>
+        <activity android:name=".activity.common.MultipleImageActivity"></activity>
+        <activity android:name=".activity.worker.WorkerSkillListActivity" />
+        <activity android:name=".activity.areaAdmin.ProjectInstallActivity" />
         <activity android:name=".activity.areaAdmin.ProjectFinishedActivity" />
         <activity android:name=".activity.basket.EquipCopyRightActivity" />
         <activity android:name=".activity.InstallInfo.MultiImgUploadActivity" />
@@ -50,10 +52,9 @@
         <activity android:name=".activity.basket.BasketParameterNewActivity" />
         <activity android:name=".activity.basket.AlarmRecordBasketActivity" />
         <activity android:name=".activity.basket.PlaneFigureActivity" />
-        <activity android:name=".activity.basket.AlarmRecordBasketActivity" />
         <activity android:name=".activity.areaAdmin.StopRecordActivity" />
         <activity android:name=".activity.areaAdmin.AlarmRecordProjectActivity" />
-        <activity android:name=".activity.loginRegist.SkillEditActivity" />
+        <activity android:name=".activity.worker.SkillEditActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminProListActivity" />
         <activity android:name=".activity.basket.BasketInstallTeamActivity" />
         <activity android:name=".activity.proAdmin.ProAdminSetActivity" />

@@ -22,7 +22,7 @@
     <LinearLayout
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_weight="2"
+        android:layout_weight="3"
         android:orientation="vertical"
         android:layout_gravity="center_vertical">
 
@@ -36,7 +36,7 @@
                 android:layout_weight="1"
                 android:text="电柜编号："/>
             <TextView style="@style/ItemContentTextView"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:id="@+id/basket_id_tv"
                 android:text="201906220001"/>
         </LinearLayout>
@@ -51,7 +51,7 @@
                 android:layout_weight="1"
                 android:text="安装人员："/>
             <TextView style="@style/ItemContentTextView"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:id="@+id/worker_info_iv"
                 android:text="9922"/>
         </LinearLayout>
@@ -65,7 +65,7 @@
                 android:layout_weight="1"
                 android:text="安装期限："/>
             <TextView style="@style/ItemContentTextView"
-                android:layout_weight="2"
+                android:layout_weight="2.5"
                 android:id="@+id/end_time_tv"
                 android:text="2019-12-12"/>
         </LinearLayout>
