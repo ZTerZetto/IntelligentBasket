@@ -39,7 +39,7 @@ public class ManageBasketFragment extends Fragment {
 
         List<String> titleList = new ArrayList<>();  // 添加fragment说明
         //titleList.add("地图");
-        titleList.add("列表");
+        titleList.add("吊篮列表");
 
         MgBasketContentFragmentAdapter mgBasketContentFragmentAdapter =
                 new MgBasketContentFragmentAdapter(getFragmentManager(), fragmentList, titleList);

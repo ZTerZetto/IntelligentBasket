@@ -15,6 +15,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketHistoryInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.PortionAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
@@ -175,7 +176,11 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //跳转至查看安检证书页面
-
+                Intent intent;
+                intent = new Intent(BasketInstallInfoActivity.this, BasketHistoryInfoActivity.class);
+                intent.putExtra("project_id", projectId);
+                intent.putExtra("basket_id", basketinfo.getBasketId());
+                startActivity(intent);
             }
         });
 

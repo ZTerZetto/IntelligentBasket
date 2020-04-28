@@ -22,6 +22,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -148,13 +149,22 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
         mgBasketListAdapter.setOnItemClickListener(new MgBasketListAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
-                // item 点击响应
-                Log.i(TAG, "You have clicked the "+ position +" item");
-                Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
-                intent.putExtra("project_id",projectId);
-                intent.putExtra("basket_id", mgBasketInfoList.get(position).getId());
-                intent.putExtra("principal_name", mgBasketInfoList.get(position).getPrincipal());
-                startActivity(intent);
+                switch (mgBasketInfoList.get(position).getStorageState().substring(0,1)) {
+                    case "1":
+                    case "2":
+                        ToastUtil.showToastTips(getActivity(), "无法查看，该吊篮尚未安装！");
+                        break;
+                    default:
+                        // item 点击响应
+                        Log.i(TAG, "You have clicked the "+ position +" item");
+                        Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
+                        intent.putExtra("project_id",projectId);
+                        intent.putExtra("basket_id", mgBasketInfoList.get(position).getId());
+                        intent.putExtra("basket_state", mgBasketInfoList.get(position).getStorageState());
+                        intent.putExtra("principal_name", mgBasketInfoList.get(position).getPrincipal());
+                        startActivity(intent);
+                        break;
+                }
             }
 
             @Override
