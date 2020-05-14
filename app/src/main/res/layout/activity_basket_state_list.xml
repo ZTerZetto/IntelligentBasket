@@ -51,6 +51,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_above="@id/rl_drop_menu"
+                    android:paddingBottom="50dp"
                     android:visibility="gone">
                     <android.support.v7.widget.RecyclerView
                         android:id="@+id/basket_recycler_view"

@@ -56,8 +56,8 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
             basketIdTextView = (TextView)  itemView.findViewById(R.id.basket_id);
             basketAllotTeam = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance);  // 分配安装队伍
             basketInstallTv = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance_2); //查看安装详情
-            basketInstallPhoto = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance_3);
-            basketAccept = (TextView)  itemView.findViewById(R.id.assessment_acceptance); // 安监证书上传
+            basketInstallPhoto = (TextView)  itemView.findViewById(R.id.pre_assessment_acceptance_3);//预检审核
+            basketAccept = (TextView)  itemView.findViewById(R.id.assessment_acceptance); // 终检证明上传
             basketPreApplyStop = (TextView)  itemView.findViewById(R.id.pre_apply_stop); // 预报停申请
 
             // 消息监听
@@ -72,6 +72,12 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
                 @Override
                 public void onClick(View v) {
                     onItemClickListener.onInstallDetail(v, getAdapterPosition());
+                }
+            });
+            basketInstallPhoto.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onInstallPreAccept(v, getAdapterPosition());
                 }
             });
 
@@ -129,19 +135,26 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
         viewHolder.basketPreApplyStop.setVisibility(View.GONE); // 预报停
         switch(mgBasketStatement.getBasketStatement()){ // 吊篮状态
             case "0":
-                viewHolder.basketStatementTextView.setText("待入库");
+                viewHolder.basketStatementTextView.setText("--");
                 break;
             case "1":
-                viewHolder.basketStatementTextView.setText("待安装");
+                viewHolder.basketStatementTextView.setText("待分配安装");
                 viewHolder.basketAllotTeam.setVisibility(View.VISIBLE);
                 break;
             case "11":
                 viewHolder.basketStatementTextView.setText("安装进行中");
-                viewHolder.basketInstallTv.setVisibility(View.VISIBLE);
+                viewHolder.basketInstallTv.setVisibility(View.VISIBLE);//查看安装详情
+                break;
+            case "12":
+                viewHolder.basketStatementTextView.setText("安装预检中");
+                viewHolder.basketInstallPhoto.setVisibility(View.VISIBLE); //预检审核
                 break;
             case "2":
-                viewHolder.basketStatementTextView.setText("安装审核");
-                viewHolder.basketAccept.setVisibility(View.VISIBLE);
+                viewHolder.basketStatementTextView.setText("安装终检中");
+                viewHolder.basketAccept.setVisibility(View.VISIBLE); //终检证明上传
+                break;
+            case "21":
+                viewHolder.basketStatementTextView.setText("安检证书审核中");
                 break;
             case "3":
                 viewHolder.basketStatementTextView.setText("使用中");
@@ -213,8 +226,8 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
          * @param view     点击item的视图
          * @param position 点击得到位置
          */
-       /* public void onUploadAccept(View view, int position);
-        *//**
+        public void onInstallPreAccept(View view, int position);
+        /**
          * 当RecyclerView某个被点击的时候回调
          *
          * @param view     点击item的视图

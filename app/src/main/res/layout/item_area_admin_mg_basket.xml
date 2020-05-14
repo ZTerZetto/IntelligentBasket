@@ -17,7 +17,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
-            android:text="待审核"
+            android:text="--"
             android:textColor="@color/colorPrimary" />
     </RelativeLayout>
 
@@ -113,14 +113,14 @@
         <TextView
             android:id="@+id/pre_assessment_acceptance_3"
             style="@style/MgBasketOperationTextView"
-            android:text="查看预验收照片"
+            android:text="预检审核"
             android:visibility="gone"/>
 
         <!-- 安装审核阶段 -->
         <TextView
             android:id="@+id/assessment_acceptance"
             style="@style/MgBasketOperationTextView"
-            android:text="安装审核"
+            android:text="终检证明上传"
             android:visibility="gone"/>
 
         <!-- 预验收申请 -->

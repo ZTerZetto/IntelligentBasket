@@ -325,6 +325,11 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
 
             }
 
+            @Override
+            public void onInstallPreAccept(View view, int position) {
+
+            }
+
            /* @Override
             public void onAddInstall(View view, int position) {
 

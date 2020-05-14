@@ -358,18 +358,36 @@ public class BasketStateListActivity extends AppCompatActivity {
                 }
             }
 
-            //验收安装结果
+            //安装预检--点击审核通过
             @Override
-            public void onAcceptInstallClick(View view, int position) {
+            public void onInstallPreAccept(View view, int position) {
                 mInstallBasketId = mgBasketStatementList.get(position).getBasketId();
-                // 验收安装结果
                 if(mInstallBasketId==null || mInstallBasketId.equals("")){
                     DialogToast("提示", "该吊篮信息有误，无法验收安装结果");
                 }else {
                     MgBasketInstallInfo installInfo = new MgBasketInstallInfo();
                     installInfo.setBasketId(mgBasketStatementList.get(position).getBasketId());
+                    installInfo.setStateInPro(12);// StateInPro: 12 安装预检中
+                    //TODO
+                    installInfo.setFlag(1);// flag: 0 进行中 1 已完成
+                    Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
+                    intent.putExtra("project_id", mProjectId);
+                    intent.putExtra("basket_info", installInfo);
+                    startActivity(intent);
+                }
+            }
+
+            //安装终检--上传证明
+            @Override
+            public void onAcceptInstallClick(View view, int position) {
+                mInstallBasketId = mgBasketStatementList.get(position).getBasketId();
+                if(mInstallBasketId==null || mInstallBasketId.equals("")){
+                    DialogToast("提示", "该吊篮信息有误，无法上传终检证明");
+                }else {
+                    MgBasketInstallInfo installInfo = new MgBasketInstallInfo();
+                    installInfo.setBasketId(mgBasketStatementList.get(position).getBasketId());
                     installInfo.setStateInPro(2);// StateInPro: 2 安装证书待上传
-                    installInfo.setFlag(1);// flag: 0 进行中 1 未完成
+                    installInfo.setFlag(1);// flag: 0 进行中 1 已完成
                     Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
                     intent.putExtra("project_id", mProjectId);
                     intent.putExtra("basket_info", installInfo);
@@ -617,8 +635,13 @@ public class BasketStateListActivity extends AppCompatActivity {
         // 将数据装载进对应位置
         for(int i=0; i<mgBasketStatements.size(); i++){
             MgBasketStatement mgBasketStatement = mgBasketStatements.get(i);
-            mgBasketStatementClassifiedList.get(Integer.valueOf(mgBasketStatement.getBasketStatement().substring(0,1))).
-                    add(mgBasketStatement);
+            //额外判断状态为12的吊篮（安装已完成--待上传安检证书）
+            if(mgBasketStatement.getBasketStatement().equals("12")){
+                mgBasketStatementClassifiedList.get(2).add(mgBasketStatement);
+            }else {
+                mgBasketStatementClassifiedList.get(Integer.valueOf(mgBasketStatement.getBasketStatement().substring(0, 1))).
+                        add(mgBasketStatement);
+            }
             if(mgBasketStatement.getBasketStatement().equals("1")){ //加入吊篮状态为待分配安装队伍，则将其加入列表
                 mgBasketToAllocate.add(mgBasketStatement);
             }

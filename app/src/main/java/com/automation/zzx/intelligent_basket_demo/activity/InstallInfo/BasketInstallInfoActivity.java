@@ -14,7 +14,10 @@ import android.widget.AdapterView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminSumitReportActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketHistoryInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.PortionAdapter;
@@ -23,6 +26,8 @@ import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInstallInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.Portion;
 import com.automation.zzx.intelligent_basket_demo.entity.PortionMap;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.SmartGridView;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -33,6 +38,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import okhttp3.Call;
+
 import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
 
 public class BasketInstallInfoActivity extends AppCompatActivity {
@@ -41,6 +48,9 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
 
     // 消息处理变量
     private static final int UPDATE_IMAGE_STATE_MSG = 101;
+
+    // 吊篮状态及页面显示动态更新
+    private static final int UPDATE_BASKET_STATE = 104;
 
     // 页面跳转全局变量
     public static final String PROJECT_ID = "project_id";  // 项目ID
@@ -52,6 +62,7 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
 
 
     //页面返回变量
+    private final static int UPLOAD_PRE_CHECK_RESULT = 3;  // 提交预检结果返回页面
     private final static int UPLOAD_CERTIFICATE_IMAGE_RESULT = 4;  // 上传安检证书返回页面
 
     // 全局变量
@@ -64,6 +75,7 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
     private TextView txtBasketId;  //吊篮编号
     private TextView txtBasketState; //吊篮状态
 
+    private RelativeLayout rlPreCheck; //安装预检
     private RelativeLayout rlCertificateUpdate; //上传安监证书
     private RelativeLayout rlCertificate; //查看安监证书
 
@@ -83,6 +95,9 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
                 case UPDATE_IMAGE_STATE_MSG:
                     mPortionAdapter.notifyDataSetChanged();
                     break;
+                    case UPDATE_BASKET_STATE:
+                        updateUI();
+                        break;
                 default: break;
             }
         }
@@ -157,6 +172,21 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
             }
         });
 
+        //提交安装预检结果
+        rlPreCheck = findViewById(R.id.rl_pre_check);
+        rlPreCheck.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //跳转至填写预检信息页面
+                Intent intent;
+                intent = new Intent(BasketInstallInfoActivity.this, AreaAdminSumitReportActivity.class);
+                intent.putExtra("projectId", projectId);
+                intent.putExtra("basketId",  basketinfo.getBasketId());
+                startActivityForResult(intent, UPLOAD_PRE_CHECK_RESULT);
+            }
+        });
+
+        //上传终检证明--安检证书
         rlCertificateUpdate = findViewById(R.id.rl_certificate_update);
         rlCertificateUpdate.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -184,22 +214,43 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
             }
         });
 
+        updateUI();
+    }
 
+
+    private void updateUI(){
         //根据flag显示不同状态, flag: 0 进行中 1 已完成
         if(basketinfo.getFlag()==0){
             txtBasketState.setText("安装中");
+            rlPreCheck.setVisibility(View.GONE);
             rlCertificateUpdate.setVisibility(View.GONE);
             rlCertificate.setVisibility(View.GONE);
         } else {
             txtBasketState.setText("已完成");
-            if(basketinfo.getStateInPro()==2 || basketinfo.getStateInPro()==21){
-                //安检证书已上传
+            if(basketinfo.getStateInPro()==12){
+                txtBasketState.setText("安装预检中");
+                rlPreCheck.setVisibility(View.VISIBLE);
                 rlCertificateUpdate.setVisibility(View.GONE);
-                rlCertificate.setVisibility(View.VISIBLE);
-            }else{
+                rlCertificate.setVisibility(View.GONE);
+            }
+            else if(basketinfo.getStateInPro()==2){
+                txtBasketState.setText("安装终检中");
                 //安检证书未上传
+                rlPreCheck.setVisibility(View.GONE);
                 rlCertificateUpdate.setVisibility(View.VISIBLE);
                 rlCertificate.setVisibility(View.GONE);
+            }else if(basketinfo.getStateInPro()==21){
+                txtBasketState.setText("安装已完成");
+                //安检证书已上传
+                rlPreCheck.setVisibility(View.GONE);
+                rlCertificateUpdate.setVisibility(View.GONE);
+                rlCertificate.setVisibility(View.VISIBLE);
+            } else {
+                txtBasketState.setText("已完成");
+                //使用中or已停用
+                rlPreCheck.setVisibility(View.GONE);
+                rlCertificateUpdate.setVisibility(View.GONE);
+                rlCertificate.setVisibility(View.VISIBLE);
             }
         }
     }
@@ -313,16 +364,28 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
         super.onActivityResult(requestCode, resultCode, data);
         switch (requestCode) {
+            case UPLOAD_PRE_CHECK_RESULT:  // 提交预检结果返回值
+                if(resultCode == RESULT_OK) {
+                    basketinfo.setStateInPro(2);
+                    mHandler.sendEmptyMessage(UPDATE_BASKET_STATE);
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+                }else if(resultCode == RESULT_FIRST_USER){
+                    basketinfo.setStateInPro(1);
+                    basketinfo.setFlag(0);
+                    mHandler.sendEmptyMessage(UPDATE_BASKET_STATE);
+                    Intent intent = new Intent();
+                    setResult(RESULT_OK, intent);
+            }
+                break;
             case UPLOAD_CERTIFICATE_IMAGE_RESULT:  // 上传安监证书返回值
                 if(resultCode == RESULT_OK) {
-                    // 更新按钮展示页面
-                    rlCertificateUpdate.setVisibility(View.GONE);
-                    rlCertificate.setVisibility(View.VISIBLE);
+                    basketinfo.setStateInPro(21);
+                    mHandler.sendEmptyMessage(UPDATE_BASKET_STATE);
                     Intent intent = new Intent();
                     setResult(RESULT_OK, intent);
                 }
                 break;
-
             default:
                 break;
         }
