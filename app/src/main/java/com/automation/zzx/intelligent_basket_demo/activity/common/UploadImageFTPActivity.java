@@ -464,6 +464,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 .addParam("projectId", projectId)
                 .addParam("storageList", deviceId)
                 .addParam("managerId", managerId)
+                .addParam("check",1)
                 .post()
                 .url(AppConfig.AREA_ADMIN_BEGIN_PROJECT)
                 .build()

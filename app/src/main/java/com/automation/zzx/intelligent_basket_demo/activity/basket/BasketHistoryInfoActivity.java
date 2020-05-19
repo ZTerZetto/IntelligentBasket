@@ -169,6 +169,7 @@ public class BasketHistoryInfoActivity extends AppCompatActivity {
                 scaleImageView.create();
             }
         });
+
         /* 安监证书照片 */
         mPreStopPhotoGv = findViewById(R.id.pre_stop_photo_gv);
         mPreStopPhotoAdapter = new WorkPhotoAdapter(BasketHistoryInfoActivity.this,

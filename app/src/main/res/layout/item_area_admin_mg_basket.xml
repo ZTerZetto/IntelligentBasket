@@ -123,6 +123,13 @@
             android:text="终检证明上传"
             android:visibility="gone"/>
 
+        <!-- 安检证书审核阶段 -->
+        <TextView
+            android:id="@+id/assessment_acceptance_4"
+            style="@style/MgBasketOperationTextView"
+            android:text="查看安检证书"
+            android:visibility="gone"/>
+
         <!-- 预验收申请 -->
         <TextView
             android:id="@+id/pre_apply_stop"

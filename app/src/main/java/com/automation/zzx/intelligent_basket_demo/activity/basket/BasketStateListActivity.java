@@ -396,6 +396,23 @@ public class BasketStateListActivity extends AppCompatActivity {
             }
 
             @Override
+            public void onWatchCreditClick(View view, int position) {
+                mInstallBasketId = mgBasketStatementList.get(position).getBasketId();
+                if(mInstallBasketId==null || mInstallBasketId.equals("")){
+                    DialogToast("提示", "该吊篮信息有误，无法查看安检证书");
+                }else {
+                    MgBasketInstallInfo installInfo = new MgBasketInstallInfo();
+                    installInfo.setBasketId(mgBasketStatementList.get(position).getBasketId());
+                    installInfo.setStateInPro(21);// StateInPro: 21 安装证书待审核
+                    installInfo.setFlag(1);// flag: 0 进行中 1 已完成
+                    Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
+                    intent.putExtra("project_id", mProjectId);
+                    intent.putExtra("basket_info", installInfo);
+                    startActivity(intent);
+                }
+            }
+
+            @Override
             public void onPreApplyStopClick(View view, int position) {
                 // 点击预报停申请
                 Log.i(TAG, "You have clicked the "+ position +" item's PreApplyStop");

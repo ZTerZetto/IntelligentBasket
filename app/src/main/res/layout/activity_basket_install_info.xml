@@ -124,7 +124,7 @@
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
                     android:singleLine="true"
-                    android:text="上传安检证书"
+                    android:text="提交终检结果"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 

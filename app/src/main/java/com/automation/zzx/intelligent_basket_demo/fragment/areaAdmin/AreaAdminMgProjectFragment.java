@@ -360,6 +360,11 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             }
 
             @Override
+            public void onWatchCreditClick(View view, int position) {
+
+            }
+
+            @Override
             public void onPreApplyStopClick(View view, int position) {
                 // 点击预报停申请
                 Log.i(TAG, "You have clicked the " + position + " item's PreApplyStop");
