@@ -22,6 +22,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminSumitReportActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketCertActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketHistoryInfoActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.PortionAdapter;
@@ -222,7 +223,7 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //跳转至查看安检证书页面
                 Intent intent;
-                intent = new Intent(BasketInstallInfoActivity.this, BasketHistoryInfoActivity.class);
+                intent = new Intent(BasketInstallInfoActivity.this, BasketCertActivity.class);
                 intent.putExtra("project_id", projectId);
                 intent.putExtra("basket_id", basketinfo.getBasketId());
                 startActivity(intent);

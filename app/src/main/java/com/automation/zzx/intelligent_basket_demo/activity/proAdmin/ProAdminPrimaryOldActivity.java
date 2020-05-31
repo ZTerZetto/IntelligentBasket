@@ -13,6 +13,7 @@ import android.view.View;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminFirstFragment;
+import com.automation.zzx.intelligent_basket_demo.fragment.proAdmin.ProAdminFirstFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.proAdmin.ProAdminFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.proAdmin.ProAdminMessageFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.proAdmin.ProAdminMgProjectFragment;
@@ -61,7 +62,7 @@ public class ProAdminPrimaryOldActivity extends AppCompatActivity {
                 .setFontSize(30)
                 //.setTabPadding(5,0,5)
                 .setChangeColor(Color.parseColor("#009688"),Color.parseColor("#cccccc"))
-                .addTabItem("项目", R.mipmap.ic_navi_project, AreaAdminFirstFragment.class)
+                .addTabItem("项目", R.mipmap.ic_navi_project, ProAdminFirstFragment.class)
                 .addTabItem("消息", R.mipmap.ic_navi_message, ProAdminMessageFragment.class)
                 .addTabItem("我", R.mipmap.ic_navi_me, ProAdminFragment.class)
                 .isShowDivider(false)
@@ -76,6 +77,8 @@ public class ProAdminPrimaryOldActivity extends AppCompatActivity {
                 })
                 .setSpot(1, true);
     }
+
+
 
     /*
      * 解析用户信息

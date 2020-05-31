@@ -32,7 +32,6 @@ import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPr
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryOldActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basketSupervisor.SupervisorPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
