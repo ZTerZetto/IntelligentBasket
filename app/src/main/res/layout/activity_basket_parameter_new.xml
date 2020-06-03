@@ -26,6 +26,20 @@
                 android:layout_height="match_parent"
                 android:orientation="vertical">
 
+                <RelativeLayout
+                    style="@style/ParameterRelativeLayout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="设备状态"
+                        style="@style/ParameterItemTextView"/>
+                    <ImageView
+                        android:id="@+id/device_state"
+                        android:layout_alignParentRight="true"
+                        android:src="@mipmap/ic_motor_stop"
+                        style="@style/ParameterRightImageView"/>
+                </RelativeLayout>
+
                 <!-- 开关变量组 -->
                 <TextView
                     android:layout_width="wrap_content"
@@ -37,7 +51,7 @@
                     android:id="@+id/var_switch_gv"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:numColumns="3"
+                    android:numColumns="4"
                     android:scrollbars="none"
                     android:stretchMode="columnWidth"
                     android:horizontalSpacing="2dp"
@@ -65,34 +79,64 @@
                     <ImageView
                         android:id="@+id/motor_right"
                         android:layout_alignParentRight="true"
-                        android:src="@mipmap/ic_motor_up"
+                        android:src="@mipmap/ic_motor_stop"
                         style="@style/ParameterRightImageView"/>
                 </RelativeLayout>
-                <!-- 其它数据 -->
+                <!-- 传感器数据 -->
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/basket_data"
                     android:textColor="@color/colorSilverText"
                     style="@style/ParameterSubTitleTextView"/>
-                <!-- 变频器采集参数 -->
+                <!-- 移动信号强度 -->
+                <RelativeLayout
+                    style="@style/ParameterRelativeLayout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="移动信号强度"
+                        style="@style/ParameterItemTextView"/>
+                    <TextView
+                        android:id="@+id/csq_tv"
+                        android:layout_alignParentRight="true"
+                        style="@style/ParameterItemContentTextView"
+                        android:text="--.-- dB"/>
+                </RelativeLayout>
+                <!-- 分割线 -->
+                <View
+                    style="@style/ParameterSplitLineView"/>
                 <!-- 称重 -->
                 <RelativeLayout
                     style="@style/ParameterRelativeLayout">
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/parameter_weight"
+                        android:text="重量总和"
+                        style="@style/ParameterItemTextView"/>
+                    <TextView
+                        android:id="@+id/weight_all_tv"
+                        android:layout_alignParentRight="true"
+                        style="@style/ParameterItemContentTextView"
+                        android:text="--.-- Kg"/>
+                </RelativeLayout>
+                <!-- 分割线 -->
+                <View
+                    style="@style/ParameterSplitLineView"/>
+                <!-- 称重细分 -->
+                <RelativeLayout
+                    style="@style/ParameterRelativeLayout">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:text="重量细分"
                         style="@style/ParameterItemTextView"/>
                     <TextView
                         android:id="@+id/weight_tv"
                         android:layout_alignParentRight="true"
                         style="@style/ParameterItemContentTextView"
-                        android:text="333.2 Kg"/>
+                        android:text="(--.- Kg, --.- Kg)"/>
                 </RelativeLayout>
-                <!-- 分割线 -->
-                <View
-                    style="@style/ParameterSplitLineView"/>
                 <!-- 分割线 -->
                 <View
                     style="@style/ParameterSplitLineView"/>
@@ -102,13 +146,13 @@
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="倾斜角度"
+                        android:text="倾斜角(x, y, z)"
                         style="@style/ParameterItemTextView"/>
                     <TextView
                         android:id="@+id/clinometer_degree_tv"
                         android:layout_alignParentRight="true"
                         style="@style/ParameterItemContentTextView"
-                        android:text="22.4°"/>
+                        android:text="(--.--°,--.--°,--.--°)"/>
                 </RelativeLayout>
 
                 <!-- 其它数据 -->
@@ -130,7 +174,7 @@
                         android:id="@+id/location_msg_tv"
                         android:layout_alignParentRight="true"
                         style="@style/ParameterItemContentTextView"
-                        android:text="(112.5°,26.9°,112.5m)"/>
+                        android:text="(--.--°,--.--°,--.--m)"/>
                 </RelativeLayout>
                 <!-- 分割线 -->
                 <View
@@ -146,7 +190,7 @@
                         android:id="@+id/date_msg_tv"
                         android:layout_alignParentRight="true"
                         style="@style/ParameterItemContentTextView"
-                        android:text="2018-3-13 12:30:12"/>
+                        android:text="YY-MM-DD hh:mm:ss"/>
                 </RelativeLayout>
             </LinearLayout>
         </ScrollView>
