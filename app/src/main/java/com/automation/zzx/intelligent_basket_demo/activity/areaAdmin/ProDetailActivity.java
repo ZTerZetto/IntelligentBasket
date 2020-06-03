@@ -21,6 +21,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
@@ -42,6 +43,10 @@ public class ProDetailActivity extends AppCompatActivity {
 
 
     private ProjectInfo projectInfo;
+    private UserInfo adminAreaUser = new UserInfo(); //区域管理员
+    private UserInfo adminRentUser = new UserInfo(); //租方管理员
+    private String projectAdminName; //项目负责人名字
+
     private String mProjectId;
 
     private TextView txtProName;
@@ -71,9 +76,14 @@ public class ProDetailActivity extends AppCompatActivity {
                         txtProState.setText(projectInfo.getProjectState());
                         txtProStart.setText(projectInfo.getProjectStart());
                         txtProEnd.setText(projectInfo.getProjectEnd());
-                        txtProRent.setText(projectInfo.getAdminRentId());
-                        txtProArea.setText(projectInfo.getAdminAreaId());
+                        String rentAdmin = adminRentUser.getUserName()+"("+projectInfo.getAdminRentId()+")";//张三(9999)
+                        txtProRent.setText(rentAdmin);
+                        String areaAdmin = adminAreaUser.getUserName()+"("+projectInfo.getAdminAreaId()+")";//张三(9999)
+                        txtProArea.setText(areaAdmin);
                         txtProBuilder.setText(projectInfo.getProjectBuilders());
+                        String proAdmin = projectAdminName+"("+projectInfo.getAdminProjectId()+")";//张三(9999)
+                        txtProAreaUser.setText(proAdmin);
+
                         //“项目验收申请”按键设置可见
                         if(projectInfo.getProjectState().equals("进行中")){
                             btnProCommit.setVisibility(View.VISIBLE);
@@ -194,6 +204,20 @@ public class ProDetailActivity extends AppCompatActivity {
                     String isAllowed = jsonObject.getString("isAllowed");
                     Message msg = new Message();
                     if(isAllowed.equals("true")){
+                        projectAdminName = jsonObject.getString("projectAdminName");
+                        JSONObject projectObj = jsonObject.getJSONObject("projectDetail");
+                        if(projectObj != null){
+                            JSONObject adminArea = projectObj.getJSONObject("adminAreaUser");
+                            adminAreaUser = new UserInfo(adminArea.getString("userId"),adminArea.getString("userName"),adminArea.getString("userPassword"),
+                                    adminArea.getString("userPhone"),adminArea.getString("userRole"),adminArea.getString("userPerm"),
+                                    adminArea.getString("userImage"),adminArea.getBoolean("checked"));
+                            //String userId, String userName, String userPassword, String userPhone, String userRole,
+                            //                    String userPerm, String userImage, boolean checked
+                            JSONObject adminRent = projectObj.getJSONObject("adminRentUser");
+                            adminRentUser = new UserInfo(adminRent.getString("userId"),adminRent.getString("userName"),adminRent.getString("userPassword"),
+                                    adminRent.getString("userPhone"),adminRent.getString("userRole"),adminRent.getString("userPerm"),
+                                    adminRent.getString("userImage"),adminRent.getBoolean("checked"));
+                        }
                         msg.obj = jsonObject.get("projectDetail");
                         msg.what = GET_PROJECT_INFO;
                     } else{

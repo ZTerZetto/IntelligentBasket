@@ -457,7 +457,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
                 startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
                 break;
-            case R.id.send_examine_certificate_layout: // 上传/查看安监证书(已放弃)
+            case R.id.send_examine_certificate_layout: // 上传/查看安监证书
                 Log.i(TAG, "You have clicked the examine certification button");
                 intent = new Intent(getActivity(), UploadImageFTPActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectInfoList.get(currentSelectedProject).getProjectId());

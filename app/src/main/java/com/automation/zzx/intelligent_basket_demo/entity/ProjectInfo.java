@@ -30,6 +30,8 @@ public class ProjectInfo implements Serializable {
     private String adminAreaId;
     // 负责的租方管理员ID
     private String adminRentId;
+    //负责的项目管理员ID
+    private String adminProjectId;
     // 本项目中用到的电柜
     private String boxList;
     // 包含吊篮数量
@@ -193,6 +195,15 @@ public class ProjectInfo implements Serializable {
     public void setAdminRentId(String adminRentId) {
         this.adminRentId = adminRentId;
     }
+
+    public String getAdminProjectId() {
+        return adminProjectId;
+    }
+
+    public void setAdminProjectId(String adminProjectId) {
+        this.adminProjectId = adminProjectId;
+    }
+
 
     public String getBoxList() {
         return boxList;

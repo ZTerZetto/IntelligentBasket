@@ -371,7 +371,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                         if(uploadType.equals(UPLOAD_BASKETS_PRE_STOP_IMAGE)) {  // 预报停命名
                             tempFileName = projectId + "_" + deviceId + "_" + (i+1) + ".jpg";
                         }else if(uploadType.equals(UPLOAD_CERTIFICATE_IMAGE)){  // 区域管理员->安监证书
-                            tempFileName = projectId + "_" + deviceId  + ".jpg";
+                            tempFileName = "safety_certificate.jpg";
                         }else if(uploadType.equals(UPLOAD_BASKETS_PRE_INSTALL_IMAGE)){ // 区域管理员->预安装验收
                             tempFileName = projectId + "_" + (i+1) + ".jpg";
                         }else if(uploadType.equals(UPLOAD_BASKETS_APPLY_STOP_IMAGE)){  // 租方管理员->报停
@@ -655,7 +655,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
             return;
         switch (uploadType){
             case UPLOAD_CERTIFICATE_IMAGE: // 安监证书地址
-                mRemotePath = "cert";
+                mRemotePath = "project/" + projectId + File.separator + deviceId ;
                 mToolbar.setTitle("上传安监证书");
                 uploadHint = "安监证书";
                 maxUploadImageNumer = 1;

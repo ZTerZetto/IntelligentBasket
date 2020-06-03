@@ -52,9 +52,10 @@ public class BasketCertActivity extends AppCompatActivity {
 
         initWidgetResource();
 
-        String root_url = AppConfig.FILE_SERVER_YBLIU_PATH + File.separator +"cert" + File.separator + mProjectId+"_"+ mDeviceId + ".jpg";
+        String root_url = AppConfig.FILE_SERVER_YBLIU_PATH + File.separator +"project" + File.separator +
+                mProjectId + File.separator +  mDeviceId + File.separator + "safety_certificate.jpg";
         mCertificatePhotoUrls.add(root_url);
-        String cert_name =  mProjectId+"_"+ mDeviceId + ".jpg";
+        String cert_name = "safety_certificate.jpg";
         mFileNameList.add(cert_name);
 
     }

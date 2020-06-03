@@ -51,11 +51,7 @@ public class UserInfo implements Serializable, Parcelable {
         this.userPhone = userPhone;
         this.userPassword = userPassword;
     }
-    public UserInfo(String userId,String userRole,String userName) {
-        this.userId = userId;
-        this.userRole = userRole;
-        this.userPhone = userName;
-    }
+
     public UserInfo(String userId, String userName, String userPassword, String userPhone, String userRole,
                     String userPerm, String userImage, boolean checked) {
         this.userId = userId;
