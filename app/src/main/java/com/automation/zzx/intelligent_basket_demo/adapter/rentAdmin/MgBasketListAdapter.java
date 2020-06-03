@@ -105,12 +105,25 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
         viewHolder.basketSelected.setChecked(isCheck.get(position));  // 设置状态
         //viewHolder.basketImage.setImageUrl();
         viewHolder.basketId.setText(mgBasketInfo.getId());
-        switch (mgBasketInfo.getStorageState().substring(0,1)){
+        switch (mgBasketInfo.getStorageState()){
+            case "0":
+                viewHolder.basketState.setText("--");
+                break;
             case "1":
-                viewHolder.basketState.setText("等待安装");
+                viewHolder.basketState.setText("待分配安装");
+                viewHolder.basketState.setVisibility(View.VISIBLE);
+                break;
+            case "11":
+                viewHolder.basketState.setText("安装进行中");
+                break;
+            case "12":
+                viewHolder.basketState.setText("安装预检中");
                 break;
             case "2":
-                viewHolder.basketState.setText("等待安装审核");
+                viewHolder.basketState.setText("安装终检中");
+                break;
+            case "21":
+                viewHolder.basketState.setText("安检证书审核中");
                 break;
             case "3":
                 if(mgBasketInfo.getState().equals("1")){
@@ -122,6 +135,7 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
             case "4":
                 //viewHolder.basketState.setText("预报停申请中");
                 //viewHolder.basketState.setText("报停申请中");
+                viewHolder.basketState.setText("已结束");
                 break;
             case "5":
                 viewHolder.basketState.setText("报停审核中");

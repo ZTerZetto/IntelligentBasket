@@ -16,6 +16,7 @@ import android.widget.GridView;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.common.RepairDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.WorkPhotoAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
@@ -141,6 +142,8 @@ public class BasketHistoryInfoActivity extends AppCompatActivity {
         mInstallPhotoGv = findViewById(R.id.install_photo_gv);
         mInstallPhotoAdapter = new WorkPhotoAdapter(BasketHistoryInfoActivity.this,
                 R.layout.item_work_photo,mInstallPhotoUrls);
+
+
         mInstallPhotoGv.setAdapter(mInstallPhotoAdapter);
         mInstallPhotoGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -165,10 +168,12 @@ public class BasketHistoryInfoActivity extends AppCompatActivity {
 
                 // 显示dislog
                 ScaleImageView scaleImageView = new ScaleImageView(BasketHistoryInfoActivity.this);
-                scaleImageView.setUrls_and_Bitmaps(mFileNameList2, mCertificatePhotos, position);
+                scaleImageView.setUrls_and_Bitmaps(mFileNameList2, mCertificatePhotos, position-1);
                 scaleImageView.create();
             }
         });
+
+
         /* 安监证书照片 */
         mPreStopPhotoGv = findViewById(R.id.pre_stop_photo_gv);
         mPreStopPhotoAdapter = new WorkPhotoAdapter(BasketHistoryInfoActivity.this,

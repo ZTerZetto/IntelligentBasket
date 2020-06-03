@@ -325,6 +325,11 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
 
             }
 
+            @Override
+            public void onInstallPreAccept(View view, int position) {
+
+            }
+
            /* @Override
             public void onAddInstall(View view, int position) {
 
@@ -352,6 +357,11 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
                 intent.putExtra(BASKET_ID, mgBasketStatementList.get(position).getBasketId());
                 intent.putExtra(UPLOAD_IMAGE_TYPE, UPLOAD_CERTIFICATE_IMAGE);
                 startActivityForResult(intent, UPLOAD_PRE_STOP_BASKET_IMAGE_RESULT);
+            }
+
+            @Override
+            public void onWatchCreditClick(View view, int position) {
+
             }
 
             @Override

@@ -261,7 +261,7 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
                 Intent intent;
                 switch(position){
                     case 0:  // 安监证书
-                        intent = new Intent(BasketDetailActivity.this, BasketHistoryInfoActivity.class);
+                        intent = new Intent(BasketDetailActivity.this, BasketCertActivity.class);
                         intent.putExtra(UPLOAD_PROJECT_ID, mProjectId);
                         intent.putExtra(UPLOAD_BASKET_ID, mBasketId);
                         startActivity(intent);

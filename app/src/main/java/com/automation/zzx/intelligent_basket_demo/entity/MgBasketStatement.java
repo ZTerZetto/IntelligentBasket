@@ -15,7 +15,7 @@ public class MgBasketStatement  implements Serializable {
      * 0: 草稿
      * 1：待分配安装队伍/待安装
      * 11：安装进行中
-     * //12：清单待审核
+     * 12：安装已完成--待上传安检证书
      * 2：吊篮安装验收
      * //21：安检证书验收
      * 3：使用中

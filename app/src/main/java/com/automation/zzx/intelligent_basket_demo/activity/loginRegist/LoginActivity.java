@@ -32,9 +32,9 @@ import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPr
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryOldActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basketSupervisor.SupervisorPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
@@ -260,7 +260,7 @@ public class LoginActivity extends AppCompatActivity {
                                 StartAndFinishActicity(SupervisorPrimaryActivity.class);
                                 break;
                             default:
-                                if(userRole.contains("worker")){
+                                if(userRole.contains("worker")||(WorkerType.getByDetailtype(userRole)!=null)){
                                      //判断是否为项目管理员
                                       judgeProAdminHttp(token);
                                 } break;

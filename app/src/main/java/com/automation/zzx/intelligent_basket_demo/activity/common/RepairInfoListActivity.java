@@ -43,7 +43,7 @@ public class RepairInfoListActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.fragment_rent_mg_basket);
+        setContentView(R.layout.fragment_repair_basket);
 
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);

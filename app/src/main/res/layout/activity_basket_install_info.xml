@@ -99,6 +99,21 @@
                 android:layout_marginBottom="@dimen/activity_vertical_margin"/>
 
             <RelativeLayout
+                android:id="@+id/rl_pre_check"
+                style="@style/btnStyle">
+                <TextView
+                    android:id="@+id/tv_pre_check"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_centerVertical="true"
+                    android:layout_centerHorizontal="true"
+                    android:singleLine="true"
+                    android:text="提交预检结果"
+                    android:textColor="@color/white"
+                    android:textSize="16sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
                 android:id="@+id/rl_certificate_update"
                 style="@style/btnStyle">
 
@@ -109,7 +124,7 @@
                     android:layout_centerVertical="true"
                     android:layout_centerHorizontal="true"
                     android:singleLine="true"
-                    android:text="上传安检证书"
+                    android:text="提交终检结果"
                     android:textColor="@color/white"
                     android:textSize="16sp" />
 

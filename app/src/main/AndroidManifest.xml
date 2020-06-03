@@ -38,7 +38,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.common.MultipleImageActivity"></activity>
+        <activity android:name=".activity.basket.BasketCertActivity"></activity>
+        <activity android:name=".activity.common.MultipleImageActivity" />
         <activity android:name=".activity.worker.WorkerSkillListActivity" />
         <activity android:name=".activity.areaAdmin.ProjectInstallActivity" />
         <activity android:name=".activity.areaAdmin.ProjectFinishedActivity" />
@@ -59,6 +60,7 @@
         <activity android:name=".activity.basket.BasketInstallTeamActivity" />
         <activity android:name=".activity.proAdmin.ProAdminSetActivity" />
         <activity android:name=".activity.proAdmin.ProAdminMessageActivity" />
+        <activity android:name=".activity.proAdmin.ProAdminPrimaryOld1Activity" />
         <activity android:name=".activity.proAdmin.ProAdminPrimaryActivity" />
 
         <meta-data
@@ -92,6 +94,7 @@
         <activity android:name=".activity.areaAdmin.UploadPreStopInfoActivity" />
         <activity android:name=".activity.areaAdmin.CheckCompactActivity" />
         <activity android:name=".activity.areaAdmin.UploadImageActivity" />
+        <activity android:name=".activity.areaAdmin.AreaAdminSumitReportActivity" />
         <activity android:name=".activity.common.UploadImageFTPActivity" />
         <activity android:name=".activity.common.QRcodeCardActivity" />
         <activity android:name=".activity.common.UserMessageActivity" />

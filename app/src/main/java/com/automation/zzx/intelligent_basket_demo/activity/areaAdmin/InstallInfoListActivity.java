@@ -33,7 +33,6 @@ import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapt
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.InstallInfoAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInstallInfo;
-import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
@@ -43,7 +42,6 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
-import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;

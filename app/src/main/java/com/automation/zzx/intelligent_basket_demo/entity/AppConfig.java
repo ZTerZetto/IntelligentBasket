@@ -166,8 +166,10 @@ public class AppConfig {
     public static final String AREA_ADMIN_CONFIGURATION = ANDROID_URL_PATH.concat("/pushConfigurationList");
     // 区域管理员上传项目预安装验收启动图片
     public static final String AREA_ADMIN_CREATE_PREINSTALL_FILE = ANDROID_URL_PATH.concat("/createProjectFile");
-    // 区域管理员请求预验收申请
+    // 区域管理员请求安装预检申请
     public static final String AREA_ADMIN_APPLY_INSTALL = ANDROID_URL_PATH.concat("/installApply");
+    // 区域管理员请求预验收申请
+    public static final String AREA_ADMIN_CHECK_INSTALL = ANDROID_URL_PATH.concat("/installCheck");
     // 区域管理员请求项目开始
     public static final String AREA_ADMIN_BEGIN_PROJECT = ANDROID_URL_PATH.concat("/beginProject");
     // 区域管理员请求吊篮预报停(丢弃)

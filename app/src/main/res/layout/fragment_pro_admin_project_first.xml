@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <android.support.v7.widget.Toolbar
+        android:id="@+id/project_more_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?attr/colorPrimary"
+        android:minHeight="?attr/actionBarSize"
+        app:popupTheme="@style/ToolBarPopupThem">
+
+        <TextView
+            android:id="@+id/project_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:text="项    目"
+            android:singleLine="true"
+            android:textColor="@color/colorWhiteText"
+            android:textSize="19sp" />
+    </android.support.v7.widget.Toolbar>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+
+        <!-- 用户名 -->
+        <RelativeLayout
+            android:id="@+id/rl_project_1"
+            style="@style/me_common_item_relativeLayout_style">
+            <TextView
+                style="@style/more_common_item_textView_style"
+                android:text="进入项目"/>
+            <ImageView
+                android:id="@+id/user_name_arrow"
+                style="@style/me_common_item_arrow_right_imageView_style"/>
+        </RelativeLayout>
+
+        <View
+            style="@style/me_horizontal_view_style"/>
+
+
+    </LinearLayout>
+
+
+</LinearLayout>
