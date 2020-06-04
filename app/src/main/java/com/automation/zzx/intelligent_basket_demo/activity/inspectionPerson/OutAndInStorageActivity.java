@@ -175,6 +175,7 @@ public class OutAndInStorageActivity extends AppCompatActivity implements View.O
             case CAPTURE_ACTIVITY_REQUEST:  // 扫描工人二维码名片返回结果
                 if(resultCode == RESULT_OK){
                     String basketId = data.getStringExtra(QR_CODE_RESULT);
+                    basketId = basketId.replaceAll("\\s*", "");  // 过滤空白等无效字符
                     Log.i(TAG, "QR_Content: "+ basketId);
                     if(mOperateType==0)
                         outStorage(basketId);
