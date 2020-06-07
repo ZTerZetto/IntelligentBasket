@@ -30,6 +30,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActi
 import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
+import com.automation.zzx.intelligent_basket_demo.utils.StringUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
@@ -137,7 +138,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 case OPEN_VERIFY_DIALOG_MSG:  // 打开上/下工确认
                     final String basketId = msg.obj.toString();
                     mVerifyWorkDialog = new VerifyWorkDialog(WorkerPrimaryActivity.this,
-                            R.style.verify_dialog, mWorkState, mUserHeadUrl, basketId, new VerifyWorkDialog.OnDialogOperateListener() {
+                            R.style.verify_dialog, mWorkState, mUserHeadUrl, basketId,
+                            new VerifyWorkDialog.OnDialogOperateListener() {
                         @Override
                         public void getVerifyResult(String result) {
                             if(result.contains("Success")) {  // 密码验证通过
@@ -361,6 +363,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
             case CAPTURE_ACTIVITY_RESULT:
                 if(resultCode == RESULT_OK){
                     String basket_id = data.getStringExtra(QR_CODE_RESULT);
+                    basket_id = StringUtil.replaceBlank(basket_id);  // 过滤空白、制表符等无效字符
                     Log.i(TAG, "Device ID: "+ basket_id);
                     Message msg = new Message();
                     msg.what = OPEN_VERIFY_DIALOG_MSG;
@@ -417,7 +420,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         JSONObject jsonObject = JSON.parseObject(data);
         int state;
         String hint = "";
-        if(mWorkState == 0) { // 等待开工
+        if(mWorkState == 0) { // 下工状态，等待开工
             boolean beginWork = jsonObject.getBoolean("beginWork");
             if(beginWork) {  // 允许上工
                 mWorkState = 1;
@@ -425,7 +428,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
             } else {  // 吊篮与工人不匹配
                 state = 11;
             }
-        }else if(mWorkState == 1){ // 等待下工
+        }else if(mWorkState == 1){ // 上工状态，等待下工
             boolean endWork = jsonObject.getBoolean("endWork");
             boolean hasPeople = jsonObject.getBoolean("hasPeople");
             if(endWork) {

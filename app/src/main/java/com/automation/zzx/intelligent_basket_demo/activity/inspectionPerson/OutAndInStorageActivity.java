@@ -27,6 +27,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryA
 import com.automation.zzx.intelligent_basket_demo.adapter.inspectPerson.AddedBasketAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
+import com.automation.zzx.intelligent_basket_demo.utils.StringUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
@@ -175,7 +176,7 @@ public class OutAndInStorageActivity extends AppCompatActivity implements View.O
             case CAPTURE_ACTIVITY_REQUEST:  // 扫描工人二维码名片返回结果
                 if(resultCode == RESULT_OK){
                     String basketId = data.getStringExtra(QR_CODE_RESULT);
-                    basketId = basketId.replaceAll("\\s*", "");  // 过滤空白等无效字符
+                    basketId = StringUtil.replaceBlank(basketId); // 过滤空白等无效字符
                     Log.i(TAG, "QR_Content: "+ basketId);
                     if(mOperateType==0)
                         outStorage(basketId);
