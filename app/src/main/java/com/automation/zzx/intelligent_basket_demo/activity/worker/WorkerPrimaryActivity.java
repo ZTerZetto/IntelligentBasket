@@ -27,13 +27,17 @@ import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UserMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.RegistWorkerActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
+import com.automation.zzx.intelligent_basket_demo.utils.CustomTimeTask;
 import com.automation.zzx.intelligent_basket_demo.utils.StringUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.VerifyWorkDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 import com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity;
@@ -43,6 +47,7 @@ import com.hjq.permissions.XXPermissions;
 
 import java.io.IOException;
 import java.util.List;
+import java.util.TimerTask;
 
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -70,6 +75,13 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private final static int OPEN_VERIFY_DIALOG_MSG = 102;
     private final static int UPDATE_USER_DISPLAY_MSG = 103;
     private final static int NOTIFY_DEVICE_OPERATION_MSG = 104;
+    private final static int PARAMETER_INFO_MSG = 105;
+    private final static int TIMER_START_MSG = 106;
+    private final static int TIMER_STOP_MSG = 107;
+    private final static int TIMER_TASK_MSG = 108;
+    private final static int SHOW_LOADING_MSG = 109;
+    private final static int DISMISS_LOADING_MSG = 110;
+
 
     // header
     private RelativeLayout mWorkerLoginLayout; // 登录总布局
@@ -96,7 +108,6 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private LinearLayout llSwitch;
     private RelativeLayout rlSwitch;
 
-
     // 退出登录
     private RelativeLayout mLogout; // 退出登录
 
@@ -110,6 +121,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     // dialog
     private CommonDialog mCommonDialog;
     private VerifyWorkDialog mVerifyWorkDialog;
+    private LoadingDialog mLoadingDialog;
 
     // 用户信息
     private UserInfo mUserInfo;
@@ -118,6 +130,12 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
 
     //是否为项目负责人
     private String isProAdmin;
+
+    // 定时器，每秒钟轮询一次的定时器
+    private CustomTimeTask customTimeTask;
+    // 轮询次数
+    private int mQueryCnt = 0;
+    private int mMaxQueryCnt = 60;
 
     // mHandler 处理消息
     @SuppressLint("HandlerLeak")
@@ -176,11 +194,13 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                         case 11:  // 吊篮与施工人员不匹配
                             Toast.makeText(WorkerPrimaryActivity.this,
                                     "此吊篮不是您的工作吊篮，无法打开！", Toast.LENGTH_SHORT).show();
+
                             break;
                         case 200:  // 吊篮上有人，只执行下工，不关闭吊篮
                             Toast.makeText(WorkerPrimaryActivity.this,
                                     "下工成功，吊篮尚有其他作业人员，等待其他施工人员断电!",
                                     Toast.LENGTH_SHORT).show();
+                            mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);  // 调整页面显示
                             break;
                         case 201:  // 吊篮上没人其他工人，下工+关闭吊篮
                             Toast.makeText(WorkerPrimaryActivity.this,
@@ -196,6 +216,45 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                             break;
                     }
                     break;
+                case PARAMETER_INFO_MSG:  // 吊篮状态
+                    int basket_state = parseParameterInfo(msg.obj); // 获取吊篮参数
+                    if(basket_state == mWorkState){
+                        mQueryCnt = 0;
+                        ToastUtil.showToastTips(WorkerPrimaryActivity.this, "操作成功");
+                        mHandler.sendEmptyMessage(TIMER_STOP_MSG);
+                        mHandler.sendEmptyMessage(DISMISS_LOADING_MSG);
+                        mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);  // 调整页面显示
+                    }else{
+                        mQueryCnt += 1;
+                        if (mQueryCnt == mMaxQueryCnt){  // 达到最大的轮询上限
+                            mQueryCnt = 0;
+                            ToastUtil.showToastTips(WorkerPrimaryActivity.this, "操作失败");
+                            mWorkState = Math.abs(1-mWorkState);  // 还原状态
+                            mHandler.sendEmptyMessage(TIMER_STOP_MSG);
+                            mHandler.sendEmptyMessage(DISMISS_LOADING_MSG);
+                        }
+                    }
+                    break;
+
+                case TIMER_TASK_MSG:
+                    deviceParameterHttp();  // 获取吊篮最新的数据
+                    break;
+
+                case TIMER_START_MSG:  // 打开定时器
+                    customTimeTask.start();
+                    break;
+
+                case TIMER_STOP_MSG:  // 停止定时器
+                    customTimeTask.stop();
+                    break;
+
+                case SHOW_LOADING_MSG:  // 弹出弹窗
+                    mLoadingDialog.show();
+                    break;
+
+                case DISMISS_LOADING_MSG:  // 关闭弹窗
+                    mLoadingDialog.dismiss();
+                    break;
             }
         }
     };
@@ -208,6 +267,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         getUserInfo();
         if(!isHasPermission()) requestPermission();  // 权限申请
         initWidget();  // 初始化控件
+        initTimer();
+        initLoadingDialog();
 
         MiPushUtil.initMiPush(WorkerPrimaryActivity.this, mUserInfo.getUserId(), null);
     }
@@ -343,6 +404,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     protected void onDestroy(){
         super.onDestroy();
         //CustomApplication.setMainActivity(null);
+        customTimeTask.stop();
     }
     // 退出但不销毁
     @Override
@@ -383,12 +445,10 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
             Log.i(TAG, "Now, you can open the basket");
             url = WORKER_BEGIN_WORK;
         }
-        else if(mWorkState == 1) { //等待下工
+        else { //等待下工
             Log.i(TAG, "Now, you can close the basket");
             url = WORKER_END_WORK;
         }
-        else
-            return;
 
         HttpUtil.workerBeginOrEndWorkOkHttpRequest(new Callback() {
             @Override
@@ -419,7 +479,6 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private int parseBeginOrEndWork(String data){
         JSONObject jsonObject = JSON.parseObject(data);
         int state;
-        String hint = "";
         if(mWorkState == 0) { // 下工状态，等待开工
             boolean beginWork = jsonObject.getBoolean("beginWork");
             if(beginWork) {  // 允许上工
@@ -460,20 +519,22 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 switch (response.code()){
                     case 200:
                         Log.i(TAG, "成功返回值");
-                        // 返回服务器数据
-                        String responseData = response.body().string();
-                        if(responseData.equals("success")){
-                            mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
-                            Looper.prepare();
-                            Toast.makeText(WorkerPrimaryActivity.this,
-                                    "操作成功！", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
-                        }else{
-                            Looper.prepare();
-                            Toast.makeText(WorkerPrimaryActivity.this,
-                                    "操作失败！", Toast.LENGTH_SHORT).show();
-                            Looper.loop();
-                        }
+                        customTimeTask.start();  // 开启定时器
+                        mHandler.sendEmptyMessage(SHOW_LOADING_MSG);
+//                        // 返回服务器数据
+//                        String responseData = response.body().string();
+//                        if(responseData.equals("success")){
+//                            mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);
+//                            Looper.prepare();
+//                            Toast.makeText(WorkerPrimaryActivity.this,
+//                                    "操作成功！", Toast.LENGTH_SHORT).show();
+//                            Looper.loop();
+//                        }else{
+//                            Looper.prepare();
+//                            Toast.makeText(WorkerPrimaryActivity.this,
+//                                    "操作失败！", Toast.LENGTH_SHORT).show();
+//                            Looper.loop();
+//                        }
                         break;
                     default:
                         Log.i(TAG, "错误编码：" + response.code());
@@ -487,6 +548,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         }, mBasketId, mWorkState);
     }
 
+    // 更换工作状态显示
     private void changeWorkState(int workState){
         if(workState == 0){
             mWorkState = 1;
@@ -497,6 +559,56 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
             mWorkIv.setImageResource(R.mipmap.ic_worker_open);
             mWorkTv.setText(R.string.worker_start_basket);
         }
+    }
+
+    // 轮询查看状态改变与否
+    private void deviceParameterHttp(){
+        HttpUtil.getDeviceParameterOkHttpRequest(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "失败：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                // 成功
+                String responseData = response.body().string();
+                Log.i(TAG, "成功：" +  responseData);
+                Message msg = new Message();
+                msg.what = PARAMETER_INFO_MSG;
+                msg.obj = responseData;
+                mHandler.sendMessage(msg);
+
+            }
+        }, mToken, mBasketId);
+    }
+
+    // 解析设备参数
+    private int parseParameterInfo(Object obj) {
+        String json = obj.toString();  // object 转 string
+        JSONObject jsonObject = JSON.parseObject(json);  // string 转 jsonobject
+        String electric_data_json = jsonObject.getString("realTimeData");
+        JSONObject electric_data_json_object = JSON.parseObject(electric_data_json);
+        if (electric_data_json_object == null) {
+            return -1;
+        }
+
+        // 设备状态
+        int deviceState = electric_data_json_object.getIntValue("bketStat");
+        return deviceState;  // 吊篮状态：0-关闭，1打开
+    }
+
+    /*
+     * 定时器
+     */
+    private void initTimer(){
+        customTimeTask = new CustomTimeTask(1000, new TimerTask() {
+            @Override
+            public void run() {
+                mHandler.sendEmptyMessage(TIMER_TASK_MSG);
+                Log.d(TAG, "定时任务：获取最新吊篮数据");
+            }
+        });
     }
 
     /*
@@ -580,6 +692,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                         }
                     }
                 }).setTitle("提示");
+    }
+    // 加载弹窗
+    private void initLoadingDialog(){
+        mLoadingDialog = new LoadingDialog(WorkerPrimaryActivity.this, "正在操作中...");
+        mLoadingDialog.setCancelable(false);
     }
 
     /*

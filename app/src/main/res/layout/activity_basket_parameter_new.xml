@@ -159,7 +159,7 @@
                 <TextView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="@string/control_out"
+                    android:text="其他数据"
                     android:textColor="@color/colorSilverText"
                     style="@style/ParameterSubTitleTextView"/>
                 <!-- 北斗采集参数 -->

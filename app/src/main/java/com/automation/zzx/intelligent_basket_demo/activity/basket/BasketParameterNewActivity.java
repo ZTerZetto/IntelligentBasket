@@ -95,8 +95,8 @@ public class BasketParameterNewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mBasketId = intent.getStringExtra(BasketDetailActivity.BASKET_ID);  // 获取吊篮id
-//        if(mBasketId==null || mBasketId.equals("")) mBasketId = "js_nj_00003";
-        mBasketId = "05D8FF333930484257037205";
+        if(mBasketId==null || mBasketId.equals("")) mBasketId = "05D8FF333930484257037205";
+//        mBasketId = "05D8FF333930484257037205";
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -238,11 +238,6 @@ public class BasketParameterNewActivity extends AppCompatActivity {
         mVarSwitches.add(weight);
         VarSwitch angle = new VarSwitch("倾斜", R.mipmap.ic_param_angle, 0);
         mVarSwitches.add(angle);
-//        VarSwitch leftLimit = new VarSwitch("左上限", R.mipmap.ic_param_left_limit, 0);
-//        mVarSwitches.add(leftLimit);
-//        mVarSwitches.add(new VarSwitch());
-//        VarSwitch rightLimit = new VarSwitch("右上限", R.mipmap.ic_param_right_limit, 0);
-//        mVarSwitches.add(rightLimit);
     }
 
     // 更新控件状态
