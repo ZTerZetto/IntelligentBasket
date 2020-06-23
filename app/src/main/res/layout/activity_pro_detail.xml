@@ -150,7 +150,7 @@
                 <TextView
                     style="@style/usertextStyle"
                     android:layout_weight="10"
-                    android:text="租方管理员" />
+                    android:text="承租方管理员" />
                 <TextView
                     android:id="@+id/txt_pro_rent_admin"
                     style="@style/usertextStyle"
@@ -185,7 +185,7 @@
                 <TextView
                     style="@style/usertextStyle"
                     android:layout_weight="10"
-                    android:text="项目负责人" />
+                    android:text="现场管理员" />
                 <TextView
                     android:id="@+id/txt_pro_area_user"
                     style="@style/usertextStyle"

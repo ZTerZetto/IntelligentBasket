@@ -450,10 +450,10 @@ public class BasketInstallByListActivity extends AppCompatActivity implements Vi
                             dialog.dismiss();
                             Intent intent = new Intent();
                             setResult(RESULT_OK, intent);
-                            BasketInstallByListActivity.this.finish();
+                            finish();
                         }else{
                             dialog.dismiss();
-                            BasketInstallByListActivity.this.finish();
+                            finish();
                         }
                     }
                 }).setTitle(mTitle);

@@ -105,7 +105,7 @@ public class ProAdminFragment extends Fragment implements View.OnClickListener {
         //mWorkerHead.setImageUrl(mUserHeadUrl);
         mWorkerName = (TextView) view.findViewById(R.id.login_username);  // 用户名
         tvRole = (TextView) view.findViewById(R.id.tv_role_name);//角色名
-        tvRole.setText("项目管理员");
+        tvRole.setText("现场管理员");
         mWorkerProjectState = (TextView) view.findViewById(R.id.worker_project_state); // 项目状态
 
 

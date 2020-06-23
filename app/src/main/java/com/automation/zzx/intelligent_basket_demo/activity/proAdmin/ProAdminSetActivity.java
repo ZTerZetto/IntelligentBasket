@@ -127,7 +127,7 @@ public class ProAdminSetActivity extends AppCompatActivity implements View.OnCli
         //mWorkerHead.setImageUrl(mUserHeadUrl);
         mWorkerName = (TextView) findViewById(R.id.login_username);  // 用户名
         tvRole = (TextView) findViewById(R.id.tv_role_name);//角色名
-        tvRole.setText("项目管理员");
+        tvRole.setText("现场管理员");
         mWorkerProjectState = (TextView) findViewById(R.id.worker_project_state); // 项目状态
 
         // other function

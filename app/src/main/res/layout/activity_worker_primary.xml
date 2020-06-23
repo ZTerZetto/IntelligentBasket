@@ -244,7 +244,7 @@
                     style="@style/me_common_item_relativeLayout_style">
                     <TextView
                         style="@style/more_common_item_textView_style"
-                        android:text="切换至项目管理员"/>
+                        android:text="切换至现场管理员"/>
                 </RelativeLayout>
             </LinearLayout>
 

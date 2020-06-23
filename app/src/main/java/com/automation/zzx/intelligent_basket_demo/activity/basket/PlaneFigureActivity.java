@@ -13,6 +13,7 @@ import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
@@ -20,13 +21,20 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.BasketPlaneAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.PositionInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
+import com.automation.zzx.intelligent_basket_demo.widget.image.WebImage;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -34,10 +42,19 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
+
+import java.io.File;
+
+import android.net.Uri;
+
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
 
 import static java.lang.Math.sqrt;
 
@@ -52,7 +69,6 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
     private double DISTANCE; // 点击范围阈值
     private final static double COMPENSATION_X = 0; // 水平位置偏移量30
     private final static double COMPENSATION_Y = 0; // 竖直位置偏移量34
-
     private List<String> urls  = new ArrayList<>(); // bitmap 位图
     private List<Bitmap> bitmaps  = new ArrayList<>(); // 文件Url
     private PositionInfo positionInfoA= new PositionInfo("A","A",-75686.174,32863.739);
@@ -125,44 +141,88 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         // 获取相关图片
         displayPlanePhoto(0, "");
 
-
         //初始化坐标点信息
         initPosition();
+
+        //网络获取总平面图及坐标信息
+        getPlaneFigureWithInfo();
+
     }
 
+    private void getPlaneFigureWithInfo() {
+        //从FTP上获取总平面图
+        String root_url = AppConfig.FILE_SERVER_YBLIU_PATH + File.separator +"project" + File.separator +
+                mProjectId + File.separator + "plan_figure_all.jpg";
+        Uri uri = Uri.parse(root_url);
+        String cert_name = "plan_figure_all.jpg";
+        photoView.setImageURI(uri);
+
+        //TODO 判断是否有图片
+
+        //从后台获取平面图信息
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("projectId", mProjectId)
+                .addParam("buildingNum", 0)
+                .addParam("type", 1) //请求整个项目的平面图信息
+                .get()
+                .url(AppConfig.GET_PLANE_GRAPH_INFO)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String response = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(response);
+                        Boolean isLogin = jsonObject.getBoolean("isLogin");
+                        if(isLogin){
+//                            parseGraghInfo(jsonObject.getString("planeGraghInfo"));
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        switch(code){
+                            case 401:
+                                ToastUtil.showToastTips(PlaneFigureActivity.this, "登陆已过期，请重新登录");
+                                startActivity(new Intent(PlaneFigureActivity.this, LoginActivity.class));
+                                PlaneFigureActivity.this.finish();
+                                break;
+                            case 403:
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+                });
+
+    }
+
+//    private void parseGraghInfo(String data){
+//        infoList.clear();
+//
+//        JSONObject jsonObject = JSON.parseObject(data);
+//        Iterator<String> planeInfos = jsonObject.keySet().iterator();
+//        while(planeInfos.hasNext()) {
+//            String basketId = planeInfos.next();
+//            String buildingId = JSON.parseObject(jsonObject.getString("building_id");
+//
+//        }
+//        mHandler.sendEmptyMessage(SWITCH_BASKET_STATE_MSG);
+//    }
+
+
+
+
     private void initPosition(){
-        PositionInfo positionInfo1= new PositionInfo("1","1,3,5,7",-30053.379,63739.285);
+        PositionInfo positionInfo1= new PositionInfo("1","1,2",-30053.379,63739.285);
         infoList.add(positionInfo1);
-        PositionInfo positionInfo2= new PositionInfo("2","1,3,5,7",-30053.379,43249.445);
+        PositionInfo positionInfo2= new PositionInfo("7","3,4,5",-30053.379,43249.445);
         infoList.add(positionInfo2);
-        PositionInfo positionInfo3= new PositionInfo("3","1,3,5,7",-208.307,65478.735);
+        PositionInfo positionInfo3= new PositionInfo("8","6,7",-208.307,65478.735);
         infoList.add(positionInfo3);
-        PositionInfo positionInfo4= new PositionInfo("4","1,3,5,7",-129.566,73575.676);
-        infoList.add(positionInfo4);
-        PositionInfo positionInfo5= new PositionInfo("5","1,3,5,7",27000.872,75108.255);
-        infoList.add(positionInfo5);
-        PositionInfo positionInfo6= new PositionInfo("6","1,3,5,7",37196.703,84486.968);
-        infoList.add(positionInfo6);
-        PositionInfo positionInfo7= new PositionInfo("7","1,3,5,7",37407.298,105384.505);
-        infoList.add(positionInfo7);
-        PositionInfo positionInfo8= new PositionInfo("8","1,3,5,7",26941.406,115620.630);
-        infoList.add(positionInfo8);
-        PositionInfo positionInfo9= new PositionInfo("9","1,3,5,7",3027.207,115108.735);
-        infoList.add(positionInfo9);
-        PositionInfo positionInfo10= new PositionInfo("10","1,3,5,7",-21230.465,115518.278);
-        infoList.add(positionInfo10);
-        PositionInfo positionInfo11= new PositionInfo("11","1,3,5,7",-58505.545,115657.204);
-        infoList.add(positionInfo11);
-        PositionInfo positionInfo12= new PositionInfo("12","1,3,5,7",-67864.128,106087.881);
-        infoList.add(positionInfo12);
-        PositionInfo positionInfo13= new PositionInfo("13","1,3,5,7",-67930.382,84659.387);
-        infoList.add(positionInfo13);
-        PositionInfo positionInfo14= new PositionInfo("14","1,3,5,7",-57878.567,75146.626);
-        infoList.add(positionInfo14);
-        PositionInfo positionInfo15= new PositionInfo("15","1,3,5,7",-25181.852,89459.565);
-        infoList.add(positionInfo15);
-        PositionInfo positionInfo16= new PositionInfo("16","1,3,5,7",7611.330,75545.110);
-        infoList.add(positionInfo16);
 
         for(int i = 0; i < infoList.size();i++){
             positionMap.put(infoList.get(i).getId(),infoList.get(i));
@@ -202,6 +262,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         buildPlaneAdapter = new BasketPlaneAdapter(this,R.layout.item_area_plane,infoList);
         lvBuild.setAdapter(buildPlaneAdapter);
 
+
         //消息响应
         lvBuild.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -213,7 +274,6 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
                 startActivity(intent);
             }
         });
-
     }
 
 

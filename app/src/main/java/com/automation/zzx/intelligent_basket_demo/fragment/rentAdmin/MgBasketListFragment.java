@@ -30,6 +30,7 @@ import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.BasketDetailByRentActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketListAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
@@ -157,7 +158,7 @@ public class MgBasketListFragment extends Fragment implements View.OnClickListen
                     default:
                         // item 点击响应
                         Log.i(TAG, "You have clicked the "+ position +" item");
-                        Intent intent = new Intent(getActivity(), BasketDetailActivity.class);
+                        Intent intent = new Intent(getActivity(), BasketDetailByRentActivity.class);
                         intent.putExtra("project_id",projectId);
                         intent.putExtra("basket_id", mgBasketInfoList.get(position).getId());
                         intent.putExtra("basket_state", mgBasketInfoList.get(position).getStorageState());

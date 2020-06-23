@@ -127,9 +127,9 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
                 break;
             case "3":
                 if(mgBasketInfo.getState().equals("1")){
-                    viewHolder.basketState.setText("正在施工");
+                    viewHolder.basketState.setText("使用中(正在施工)");
                 }else if(mgBasketInfo.getState().equals("0")){
-                    viewHolder.basketState.setText("停止运行");
+                    viewHolder.basketState.setText("使用中(停止运行)");
                 }
                 break;
             case "4":

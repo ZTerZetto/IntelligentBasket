@@ -37,7 +37,7 @@
                 android:layout_centerHorizontal="true"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:src="@mipmap/test_plan"
+                android:src="@mipmap/totle_test_plane"
                 android:scaleType="fitXY"/>
 
             <LinearLayout

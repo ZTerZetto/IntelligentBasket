@@ -107,6 +107,7 @@
         <activity android:name=".activity.rentAdmin.AlarmMessageActivity" />
         <activity android:name=".activity.proAdmin.ProAdminPrimaryOldActivity" /> <!-- 百度地图Ket -->
         <activity android:name=".activity.basket.BasketDetailActivity" />
+        <activity android:name=".activity.rentAdmin.BasketDetailByRentActivity" />
         <activity android:name=".activity.basket.BasketParameterActivity" />
         <activity
             android:name=".activity.basket.BasketRepairActivity"

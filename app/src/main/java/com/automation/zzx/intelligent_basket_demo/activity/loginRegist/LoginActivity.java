@@ -210,7 +210,7 @@ public class LoginActivity extends AppCompatActivity {
     private void initProAdminRoleList(){
         mProAdminRoleList = new String[2];
         mProAdminRoleList[0] = "施工人员";
-        mProAdminRoleList[1] = "项目管理员";
+        mProAdminRoleList[1] = "现场管理员";
     }
 
     //登录请求连接

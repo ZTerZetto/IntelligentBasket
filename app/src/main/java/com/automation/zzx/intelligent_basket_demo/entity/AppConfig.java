@@ -192,6 +192,9 @@ public class AppConfig {
     // 区域管理员根据项目获取获取安装队伍信息
     public static final String GET_PROJECT_BY_PROJECTID = ANDROID_URL_PATH.concat("/getProjectInstallInfoByProjectId");
 
+    //获取工程方案（平面图坐标信息）
+    public static final String GET_PLANE_GRAPH_INFO = ANDROID_URL_PATH.concat("/getPlaneGraphInfo");
+
 
     /*
      * 项目管理员请求

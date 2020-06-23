@@ -337,7 +337,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                 intent.putExtra("projectName",mProjectName);
                 intent.putExtra("project_id",mProjectId);
                 intent.putExtra("basket_list", (Serializable)mgBasketToAllocate);
-                startActivity(intent);
+                startActivityForResult(intent,ADD_INSTALL_RESULT);
             }
 
             @Override

@@ -17,6 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basketSupervisor.SupervisorBasketActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.BasketDetailByRentActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.SvBasketListAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketListAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;

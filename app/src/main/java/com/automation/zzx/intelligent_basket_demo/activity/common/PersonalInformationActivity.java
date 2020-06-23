@@ -93,7 +93,7 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
         switch(mUserInfo.getUserRole()){
             case "rentAdmin":
                 mUserMoreRv.setVisibility(View.GONE);
-                mUserRoleTv.setText("租方管理员");
+                mUserRoleTv.setText("承租方管理员");
                 break;
             case "areaAdmin":
                 mUserMoreRv.setVisibility(View.GONE);
@@ -105,7 +105,7 @@ public class PersonalInformationActivity extends AppCompatActivity implements Vi
                 break;
             case "projectAdmin":
                 mUserMoreRv.setVisibility(View.GONE);
-                mUserRoleTv.setText("项目管理员");
+                mUserRoleTv.setText("现场管理员");
                 break;
             default:
                 if(mUserInfo.getUserRole().contains("worker")){
