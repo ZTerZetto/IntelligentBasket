@@ -1,20 +1,37 @@
 package com.automation.zzx.intelligent_basket_demo.activity.worker;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Message;
+import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.worker.WorkerOrderAdapter;
+import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
+import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.WorkerOrder;
+import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+
+import okhttp3.Call;
 
 /**
  * Created by pengchenghu on 2019/3/17.
@@ -32,8 +49,13 @@ public class WorkerOrderActivity extends AppCompatActivity {
 
     // RecyclerView相关变量
     private RecyclerView mWorkerOrderRv; // 工单列表
-    private List<List<WorkerOrder>> mWorkerOrderList; // 内容
+    private List<List<WorkerOrder>> mWorkerOrderList = new ArrayList<>(); // 内容
     private WorkerOrderAdapter mWorkerOrderAdapter; // 适配器
+
+    // 用户信息
+    private UserInfo mUserInfo;
+    private String mToken;
+    private SharedPreferences mPref;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -63,13 +85,16 @@ public class WorkerOrderActivity extends AppCompatActivity {
         // 工单列表
         mWorkerOrderRv = (RecyclerView) findViewById(R.id.parent_order_recyclerview);
         mWorkerOrderRv.setLayoutManager(new LinearLayoutManager(this));
-        initWorkOrders();
+//        initWorkOrders();
         mWorkerOrderAdapter = new WorkerOrderAdapter(this,mWorkerOrderList);
         mWorkerOrderRv.setAdapter(mWorkerOrderAdapter);
+
+        // 获取工单时常
+
     }
 
     /*
-     * d顶部导航栏消息响应
+     * 顶部导航栏消息响应
      */
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -79,6 +104,50 @@ public class WorkerOrderActivity extends AppCompatActivity {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    /*
+     * 后台通信相关
+     */
+    public void getWorkerIdByBasket(){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("userId", mUserInfo.getUserId())
+                .get()
+                .url(AppConfig.WORKER_GET_WORE_TIME)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        Log.d(TAG, "成功获取工时信息");
+                        JSONObject jsonObject = JSON.parseObject(o.toString());
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.d(TAG, "获取工时信息错误，错误编码："+code);
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.d(TAG, "获取工时信息失败");
+                    }
+                });
+    }
+
+
+    /*
+     * 获取本地信息
+     */
+    // 获取用户数据
+    private void getUserInfo(){
+        // 从本地获取数据
+        mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserInfo = new UserInfo();
+        mUserInfo.setUserId(mPref.getString("userId", ""));
+        mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mUserInfo.setUserRole(mPref.getString("userRole", ""));
+        mToken = mPref.getString("loginToken","");
     }
 
     /*

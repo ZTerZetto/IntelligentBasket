@@ -128,6 +128,8 @@ public class AppConfig {
     public static final String WORKER_UPDATE_CAPACITY_IMAGE = ANDROID_URL_PATH.concat("/updateQualifications");
     // 施工人员资质证书URL
     public static final String WORKER_GET_CAPACITY_IMAGE = ANDROID_URL_PATH.concat("/getQualifications");
+    // 施工人员查看历史上工记录
+    public static final String WORKER_GET_WORE_TIME = ANDROID_URL_PATH.concat("/getWorkerTime");
 
     /*
      * 租方管理员活动请求

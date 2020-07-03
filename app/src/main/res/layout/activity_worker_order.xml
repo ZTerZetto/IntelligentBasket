@@ -29,7 +29,8 @@
             android:layout_height="16dp"
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
-            android:src="@mipmap/ic_order_filter"/>
+            android:src="@mipmap/ic_order_filter"
+            android:visibility="invisible"/>
         <!-- 筛选 -->
         <TextView
             android:layout_width="wrap_content"
@@ -37,7 +38,8 @@
             android:layout_toLeftOf="@id/order_filter_iv"
             android:layout_marginRight="10dp"
             android:text="@string/order_filter"
-            android:textColor="@color/light_red"/>
+            android:textColor="@color/light_red"
+            android:visibility="invisible"/>
 
     </RelativeLayout>
 
