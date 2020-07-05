@@ -1,6 +1,7 @@
 package com.automation.zzx.intelligent_basket_demo.activity.areaAdmin;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.Canvas;
 import android.os.Environment;
 import android.os.Handler;
@@ -17,6 +18,8 @@ import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
+import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
+import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
@@ -40,8 +43,11 @@ public class CheckCompactActivity extends AppCompatActivity {
 
     private final static String TAG = "CheckCompactActivity";
 
+    private String projectId;
+
     // Message
     private final static int DISPLAY_COMPACT = 101;
+    private final static int DISPLAY_EMPTY = 102;
 
     // 控件
     private PDFView mCompactPDFView;
@@ -50,13 +56,11 @@ public class CheckCompactActivity extends AppCompatActivity {
 
     // FTP
     private FTPUtil mFTPClient;
-    private String mRemotePath = "contract";
-    private String mFileName = "sample.pdf";
-
+    private String mRemotePath ;
+    private String mFileName;
     // 合同位置
     public static final String CONTRACT_PATH = Environment.getExternalStorageDirectory() +
             File.separator + "IntelligenceBasket" + File.separator+"contract"+ File.separator;
-
     /*
      * Handler 线程消息
      */
@@ -67,6 +71,11 @@ public class CheckCompactActivity extends AppCompatActivity {
                 case DISPLAY_COMPACT:
                     showCompactPDFView();
                     break;
+                case DISPLAY_EMPTY:
+                    mCompactLoadingRv.setVisibility(View.GONE);
+                    ToastUtil.showToastTips(CheckCompactActivity.this, "暂无文件，请联系超级管理员");
+                    break;
+
             }
         }
     };
@@ -77,13 +86,21 @@ public class CheckCompactActivity extends AppCompatActivity {
         setContentView(R.layout.activity_check_compact);
 
         if(!isHasPermission()) requestPermission();
+
+        Intent intent = this.getIntent();
+        projectId = intent.getStringExtra("projectId");
+        mRemotePath = "project/" + projectId;
         initWidgetResource();  // 初始化控件
         initFTPClient();
         initLocalDir();
 
-        if(new File(CONTRACT_PATH + mFileName).exists()){
+        if(new File(CONTRACT_PATH +mRemotePath + projectId + ".pdf").exists()){
+            mFileName =projectId+ ".pdf";
             mHandler.sendEmptyMessage(DISPLAY_COMPACT);
-        }else {
+        }else if(new File(CONTRACT_PATH + mRemotePath +projectId+ ".jpg").exists()) {
+            mFileName = projectId+ ".jpg";
+            mHandler.sendEmptyMessage(DISPLAY_COMPACT);
+        }else{
             new Thread() {
                 public void run() {
                     downloadCompactFile();
@@ -144,9 +161,26 @@ public class CheckCompactActivity extends AppCompatActivity {
     private void downloadCompactFile(){
         try {
             mFTPClient.openConnect();  // 建立连接
-            mFTPClient.download(mRemotePath, mFileName, CONTRACT_PATH);
-            mFTPClient.closeConnect();  // 关闭连接
-            mHandler.sendEmptyMessage(DISPLAY_COMPACT);
+            //先看看有哪个文件存在
+            mFTPClient.uploadingInit(mRemotePath); // 上传文件初始化
+            if(mFTPClient.listCurrentFileNames()!=null ){
+                List<String>  filenames = mFTPClient.listCurrentFileNames();
+                if (filenames.contains(projectId+".pdf")){
+                    mFileName = projectId+".pdf";
+                    mFTPClient.download(mRemotePath, mFileName, CONTRACT_PATH);
+                    mFTPClient.closeConnect();  // 关闭连接
+                    mHandler.sendEmptyMessage(DISPLAY_COMPACT);
+                }else if(filenames.contains(projectId+".jpg")){
+                    mFileName = projectId+".jpg";
+                    mFTPClient.download(mRemotePath, mFileName, CONTRACT_PATH);
+                    mFTPClient.closeConnect();  // 关闭连接
+                    mHandler.sendEmptyMessage(DISPLAY_COMPACT);
+                } else {
+                    //无可下载文件
+                    mFTPClient.closeConnect();  // 关闭连接
+                    mHandler.sendEmptyMessage(DISPLAY_EMPTY);
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -156,14 +190,14 @@ public class CheckCompactActivity extends AppCompatActivity {
      * UI 相关
      */
     // 显示下载的文件
-    private void showCompactPDFView(){
+    private void showCompactPDFView() {
         mCompactLoadingRv.setVisibility(View.GONE);
         mCompactPDFView.setVisibility(View.VISIBLE);
 
         mCompactPDFView.fromFile(new File(CONTRACT_PATH + mFileName))
                 .defaultPage(1)          //设置默认显示第1页
                 .showMinimap(false)      //pdf放大的时候，是否在屏幕的右上角生成小地图
-                .swipeVertical( false )  //pdf文档翻页是否是垂直翻页，默认是左右滑动翻页
+                .swipeVertical(false)  //pdf文档翻页是否是垂直翻页，默认是左右滑动翻页
                 .enableSwipe(true)       //是否允许翻页，默认是允许翻
                 .onDraw(new OnDrawListener() {  //绘图监听
                     @Override
@@ -179,7 +213,6 @@ public class CheckCompactActivity extends AppCompatActivity {
                 })
                 .load();
     }
-
 
     /*
      * 申请权限

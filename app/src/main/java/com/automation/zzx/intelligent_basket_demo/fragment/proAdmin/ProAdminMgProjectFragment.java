@@ -423,6 +423,7 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
             case R.id.examine_compact_layout:  // 查看合同
                 Log.i(TAG, "You have clicked the examine compact button");
                 intent = new Intent(getActivity(), CheckCompactActivity.class);
+                intent.putExtra("projectId", mProjectInfoList.get(currentSelectedProject).getProjectId());
                 startActivity(intent);
                 break;
             case R.id.project_pre_apply_layout:  // 预验收申请

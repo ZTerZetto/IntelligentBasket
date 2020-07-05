@@ -655,11 +655,11 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
             return;
         switch (uploadType){
             case UPLOAD_CERTIFICATE_IMAGE: // 安监证书地址
+                deviceId = getIntent().getStringExtra(BASKET_ID);
                 mRemotePath = "project/" + projectId + File.separator + deviceId ;
                 mToolbar.setTitle("上传安监证书");
                 uploadHint = "安监证书";
                 maxUploadImageNumer = 1;
-                deviceId = getIntent().getStringExtra(BASKET_ID);
                 break;
             case UPLOAD_BASKETS_PRE_INSTALL_IMAGE: // 预验收申请图片地址
                 mRemotePath = "project";
@@ -668,18 +668,19 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
                 maxUploadImageNumer = 9;
                 break;
             case UPLOAD_BASKETS_PRE_STOP_IMAGE:  // 预报停
+                deviceId = getIntent().getStringExtra(BASKET_ID);
                 mRemotePath = "storeIn";
                 mToolbar.setTitle("上传吊篮预报停图片");
                 uploadHint = "吊篮预报停图片";
                 maxUploadImageNumer = 9;
-                deviceId = getIntent().getStringExtra(BASKET_ID);
+
                 break;
             case UPLOAD_BASKETS_APPLY_STOP_IMAGE: // 报停
+                deviceList = getIntent().getStringExtra(MgBasketListFragment.DEVICES_LIST);
                 mRemotePath = "storeIn";
                 mToolbar.setTitle("上传吊篮报停图片");
                 uploadHint = "吊篮报停图片";
                 maxUploadImageNumer = 9;
-                deviceList = getIntent().getStringExtra(MgBasketListFragment.DEVICES_LIST);
                 break;
             case WorkerMoreActivity.UPLOAD_WORKER_CAPACITY_IMAGE:  // 施工人员上传资质证书
                 workerId = getIntent().getStringExtra(WorkerMoreActivity.WORKER_ID);

@@ -343,6 +343,8 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
             basket.setStateInPro(basketObject.getIntValue(basketId+"_stateInPro"));
 
             basket.setProjectId(mProjectId);
+            basket.setUserName(basketObject.getString("installTeamName"));
+
             basket.setUserId(basketInfo.getString("user_id"));
             basket.setPicFlag(basketInfo.getIntValue("pic_flg"));
             basket.setFlag(basketInfo.getIntValue("flag"));

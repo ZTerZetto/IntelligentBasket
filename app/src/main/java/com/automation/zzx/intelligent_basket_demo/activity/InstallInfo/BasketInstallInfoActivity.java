@@ -87,6 +87,7 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
     private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private SmartGridView mPortionGv;  // 部件网格控件
     private TextView txtBasketId;  //吊篮编号
+    private TextView txtAreaId;  //现场编号
     private TextView txtBasketState; //吊篮状态
 
     private RelativeLayout rlPreCheck; //安装预检
@@ -163,6 +164,8 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
         //头部信息栏
         txtBasketId = (TextView) findViewById(R.id.basket_id);
         txtBasketId.setText(basketinfo.getBasketId());
+        txtAreaId = findViewById(R.id.area_id);
+        txtAreaId.setText(basketinfo.getUserName());
         txtBasketState = (TextView) findViewById(R.id.basket_state);
         txtBasketState.setTextColor(R.color.gray01);
 

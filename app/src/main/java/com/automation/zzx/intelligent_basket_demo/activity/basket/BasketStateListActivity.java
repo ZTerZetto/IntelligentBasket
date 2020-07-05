@@ -349,6 +349,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                 }else {
                     MgBasketInstallInfo installInfo = new MgBasketInstallInfo();
                     installInfo.setBasketId(mgBasketStatementList.get(position).getBasketId());
+                    installInfo.setSiteNo(mgBasketStatementList.get(position).getSiteNo());
                     installInfo.setFlag(0);// flag: 0 进行中 1 未完成
                     installInfo.setStateInPro(1);// StateInPro: 2 安装证书待上传
                     Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
@@ -368,6 +369,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                     MgBasketInstallInfo installInfo = new MgBasketInstallInfo();
                     installInfo.setBasketId(mgBasketStatementList.get(position).getBasketId());
                     installInfo.setStateInPro(12);// StateInPro: 12 安装预检中
+                    installInfo.setSiteNo(mgBasketStatementList.get(position).getSiteNo());
                     //TODO
                     installInfo.setFlag(1);// flag: 0 进行中 1 已完成
                     Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
@@ -387,6 +389,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                     MgBasketInstallInfo installInfo = new MgBasketInstallInfo();
                     installInfo.setBasketId(mgBasketStatementList.get(position).getBasketId());
                     installInfo.setStateInPro(2);// StateInPro: 2 安装证书待上传
+                    installInfo.setSiteNo(mgBasketStatementList.get(position).getSiteNo());
                     installInfo.setFlag(1);// flag: 0 进行中 1 已完成
                     Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
                     intent.putExtra("project_id", mProjectId);
@@ -404,6 +407,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                     MgBasketInstallInfo installInfo = new MgBasketInstallInfo();
                     installInfo.setBasketId(mgBasketStatementList.get(position).getBasketId());
                     installInfo.setStateInPro(21);// StateInPro: 21 安装证书待审核
+                    installInfo.setSiteNo(mgBasketStatementList.get(position).getSiteNo());
                     installInfo.setFlag(1);// flag: 0 进行中 1 已完成
                     Intent intent = new Intent(BasketStateListActivity.this, BasketInstallInfoActivity.class);
                     intent.putExtra("project_id", mProjectId);
@@ -637,8 +641,11 @@ public class BasketStateListActivity extends AppCompatActivity {
             if(deviceId==null || deviceId.equals("")) continue;
             String workingState = basketObj.getString("workingState");
             if(workingState==null || workingState.equals("")) continue;
-            mgBasketStatementList.add(new MgBasketStatement(basketObj.getString("deviceId"),
-                    null, basketObj.getString("storageState"),basketObj.getString("workingState")));
+            String siteNo = basketObj.getString("siteNo");
+            MgBasketStatement mgBasketStatement = new MgBasketStatement(basketObj.getString("deviceId"),
+                    null, basketObj.getString("storageState"),basketObj.getString("workingState"));
+            if(siteNo!=null && siteNo.isEmpty()) mgBasketStatement.setSiteNo(siteNo);
+            mgBasketStatementList.add(mgBasketStatement);
         }
         parseMgBasketStatementList(mgBasketStatementList);
     }

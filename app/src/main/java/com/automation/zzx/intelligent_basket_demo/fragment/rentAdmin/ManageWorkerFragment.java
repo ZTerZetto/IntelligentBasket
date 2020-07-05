@@ -36,6 +36,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerHomePage
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgWorkerListAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MgWorkerInfo;
+import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
@@ -240,7 +241,7 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                     Log.i(TAG, "QR_Content: "+ userInfo);
                     int colon = userInfo.indexOf(":");
                     String workerId = userInfo.substring(colon+1);
-                    if(userInfo.contains("worker")){  // 是工人Id
+                    if(userInfo.contains("worker")||(WorkerType.getByDetailtype(userInfo)!=null)){  // 是工人Id
                         if(isWorkerInProject(workerId))  // 已存在于项目中
                             DialogToast("提示", "施工人员已经在本项目中").show();
                         else  // 待添加

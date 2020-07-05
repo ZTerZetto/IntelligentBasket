@@ -74,7 +74,7 @@ public class InstallInfoAdapter extends RecyclerView.Adapter<InstallInfoAdapter.
         MgBasketInstallInfo basket = mBasketList.get(i);
         viewHolder.tvId.setText(basket.getBasketId());
         if(basket.getUserId() != null){
-            viewHolder.ivWorkerInfo.setText(basket.getUserId());
+            viewHolder.ivWorkerInfo.setText(basket.getUserName());
         }else{
             viewHolder.ivWorkerInfo.setText("待分配");
             viewHolder.ivWorkerInfo.setTextColor(Color.DKGRAY);

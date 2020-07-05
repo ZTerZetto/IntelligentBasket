@@ -15,6 +15,19 @@ public class MgBasketInstallInfo implements Serializable {
     private int picFlag; // 图片上传标志位
     private int flag; // 整体安装状态标志位
 
+    public String getSiteNo() {
+        return siteNo;
+    }
+
+    public void setSiteNo(String siteNo) {
+        this.siteNo = siteNo;
+    }
+
+    private String siteNo; //现场编号
+
+    private String userName; // 安装负责人姓名
+
+
     /*
      * 2or21：安检证书已上传
      */
@@ -29,9 +42,10 @@ public class MgBasketInstallInfo implements Serializable {
         this.projectId = projectId;
     }
 
-    public MgBasketInstallInfo(String basketId, String userId, String projectId, String startTime, int userState, int deviceState, int flag) {
+    public MgBasketInstallInfo(String basketId, String userId, String userName, String projectId, String startTime, int userState, int deviceState, int flag) {
         this.basketId = basketId;
         this.userId = userId;
+        this.userName = userName;
         this.projectId = projectId;
         this.startTime = startTime;
         this.userState = userState;
@@ -120,5 +134,13 @@ public class MgBasketInstallInfo implements Serializable {
 
     public void setStateInPro(int stateInPro) {
         this.stateInPro = stateInPro;
+    }
+
+    public String getUserName() {
+        return userName;
+    }
+
+    public void setUserName(String userName) {
+        this.userName = userName;
     }
 }

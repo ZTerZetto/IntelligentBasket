@@ -393,7 +393,7 @@
                             android:layout_marginTop="@dimen/size_20"
                             android:layout_toRightOf="@id/iv_compact_info_tips"
                             android:singleLine="true"
-                            android:text="分状态查看吊篮列表"
+                            android:text="点击查看项目合同文件"
                             android:textColor="@color/gray01"
                             android:textSize="14sp" />
 

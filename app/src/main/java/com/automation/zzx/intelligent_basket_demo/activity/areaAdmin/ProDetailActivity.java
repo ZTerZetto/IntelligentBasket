@@ -179,6 +179,7 @@ public class ProDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View view) {
                 Intent intent = new Intent(ProDetailActivity.this,CheckCompactActivity.class);
+                intent.putExtra("projectId",projectInfo.getProjectId());
                 startActivity(intent);
             }
         });

@@ -370,6 +370,7 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
             case R.id.rl_compact_info:  // 查看合同
                 Log.i(TAG, "You have clicked the examine compact button");
                 intent = new Intent(ProjectInstallActivity.this, CheckCompactActivity.class);
+                intent.putExtra("projectId", mProjectId);
                 startActivity(intent);
                 break;
         }

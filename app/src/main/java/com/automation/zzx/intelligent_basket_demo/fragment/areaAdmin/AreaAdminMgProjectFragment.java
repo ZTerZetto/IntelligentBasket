@@ -442,6 +442,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             case R.id.examine_compact_layout:  // 查看合同
                 Log.i(TAG, "You have clicked the examine compact button");
                 intent = new Intent(getActivity(), CheckCompactActivity.class);
+                intent.putExtra("projectId",mProjectInfoList.get(currentSelectedProject).getProjectId() );
                 startActivity(intent);
                 break;
             case R.id.configuration_apply_layout:

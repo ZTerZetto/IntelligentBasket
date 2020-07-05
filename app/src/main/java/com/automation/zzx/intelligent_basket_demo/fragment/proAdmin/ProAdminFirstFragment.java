@@ -180,7 +180,7 @@ public class ProAdminFirstFragment extends Fragment implements View.OnClickListe
         mgProjectInfoList.clear();
         JSONObject jsonObject = JSON.parseObject(responseData);
         String projectStr = jsonObject.getString("project");
-        if(!projectStr.equals("false") && !projectStr.equals("") ){
+        if(projectStr != null && !projectStr.equals("false") && !projectStr.equals("") ){
             ProjectInfo projectInfo = JSON.parseObject(projectStr, ProjectInfo.class);
             mgProjectInfoList.add(projectInfo);
         }

@@ -31,6 +31,19 @@ public class MgBasketStatement  implements Serializable {
      */
     private String workStatement; // 吊篮工作状态
 
+    public String getSiteNo() {
+        return siteNo;
+    }
+
+    public void setSiteNo(String siteNo) {
+        this.siteNo = siteNo;
+    }
+
+    /*
+    * 现场编号
+    * */
+    private String siteNo; //现场编号
+
     /*
      * 构造函数
      */

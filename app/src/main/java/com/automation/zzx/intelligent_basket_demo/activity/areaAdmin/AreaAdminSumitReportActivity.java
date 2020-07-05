@@ -177,8 +177,10 @@ public class AreaAdminSumitReportActivity extends AppCompatActivity implements V
                 switch (type){
                     case "不通过":
                         isCheck = 0;
+                        break;
                     case "通过":
                         isCheck = 1;
+                        break;
                 }
             }
             @Override

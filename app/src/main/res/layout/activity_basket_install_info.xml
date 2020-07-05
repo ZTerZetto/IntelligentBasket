@@ -65,13 +65,13 @@
                 android:orientation="horizontal">
                 <TextView
                     style="@style/usertextStyle"
-                    android:text="所属区域 "
+                    android:text="现场编号"
                     />
                 <TextView
                     android:id="@+id/area_id"
                     style="@style/usertextStyle"
                     android:layout_weight="1"
-                    android:hint="3号楼" />
+                    android:hint="xxx" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>
