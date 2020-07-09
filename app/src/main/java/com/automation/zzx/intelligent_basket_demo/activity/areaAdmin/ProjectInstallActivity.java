@@ -293,6 +293,7 @@ public class ProjectInstallActivity extends AppCompatActivity implements View.On
                         break;
                     case 1: //平面图
                         intent = new Intent(ProjectInstallActivity.this, PlaneFigureActivity.class);
+                        intent.putExtra("projectId", mProjectId);
                         startActivity(intent);
                         break;
                     case 2: //安装指派

@@ -19,7 +19,7 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
-            <com.github.chrisbanes.photoview.PhotoView
+            <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
                 android:id="@+id/general_layout"
                 android:adjustViewBounds="true"
                 android:layout_alignParentTop="true"
@@ -37,6 +37,7 @@
                 android:layout_marginTop="8dp">
 
                 <TextView
+                    android:id="@+id/tv_title"
                     style="@style/modularTitleStyle"
                     android:background="@color/white"
                     android:text="吊篮列表" />

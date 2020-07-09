@@ -385,6 +385,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
             case R.id.rl_install_info:  // 查看安装方案
                 Log.i(TAG, "You have clicked the select projectList button");
                 intent = new Intent(AreaAdminPrimaryActivity.this, PlaneFigureActivity.class);
+                intent.putExtra("projectId", mProjectId);
                 startActivity(intent);
                 break;
             case R.id.rl_basket_info:  // 查看吊篮列表

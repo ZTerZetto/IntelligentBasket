@@ -20,13 +20,21 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
+import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.basket.BasketPlaneAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.PositionInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
+import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -35,10 +43,14 @@ import com.scwang.smartrefresh.layout.constant.SpinnerStyle;
 import com.scwang.smartrefresh.layout.footer.BallPulseFooter;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import okhttp3.Call;
 
 import static java.lang.Math.sqrt;
 
@@ -49,9 +61,12 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
     private final static int UPDATE_FAILED = 105; // 更新失败
     private final static int UPDATE_SUCESS = 106; // 更新成功
 
+    private final static int SHOW_LOCATION_FAIL = 110;//无坐标信息时
+    private final static int SHOW_LOCATION = 111; //显示坐标信息
+
     private double DISTANCE; // 点击范围阈值
-    private final static double COMPENSATION_X = 30; // 水平位置偏移量
-    private final static double COMPENSATION_Y = 34; // 竖直位置偏移量
+    private final static double COMPENSATION_X = 0; // 水平位置偏移量30
+    private final static double COMPENSATION_Y = 0; // 竖直位置偏移量34
 
     private List<String> urls  = new ArrayList<>(); // bitmap 位图
     private List<Bitmap> bitmaps  = new ArrayList<>(); // 文件Url
@@ -62,7 +77,8 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
 
     // 控件声明
     private RefreshLayout mSmartRefreshLayout;
-    private PhotoView photoView;
+    private SmartImageView mSmartIv;
+    private TextView tvTitle;
     private ListView lvBasket;
     private BasketPlaneAdapter basketPlaneAdapter;
 
@@ -95,15 +111,17 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
                 case PULL_DOWN:  // 下拉刷新
                     //displayWorkPhoto(1, mFileNameList.get(0));
                     break;
-                case UPDATE_IMAGE:  // 更新图片
-                    // 下拉刷新：加载最新图片，并且定位在第一行
-                    /*mFileNameList.addAll(0, (List<String>)msg.obj);
-                       generateWorkPhotoUrls((List<String>)msg.obj, msg.arg1);
-                       mWorkPhotoAdapter.notifyDataSetChanged();
-                       mWorkPhotoGv.smoothScrollToPosition(0);*/
+                case SHOW_LOCATION:  // 更新图片
+                    //更新适配器
+                    basketPlaneAdapter.notifyDataSetChanged();
                     break;
+
+                case SHOW_LOCATION_FAIL:
+                    //隐藏适配器
+                    lvBasket.setVisibility(View.GONE);
+                    tvTitle.setVisibility(View.GONE);
+
                 case NO_MORE_IMAGE: // 尚无更多的图片
-                    ToastUtil.showToastTips(PlaneBasketActivity.this, "尚无更多的图片");
                     mSmartRefreshLayout.finishRefresh(500); // 刷新动画结束
                     mSmartRefreshLayout.finishLoadMore(500); // 加载动画结束
                     break;
@@ -111,16 +129,11 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
         }
     };
     @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
+    protected void onCreate(Bundle savedInstanceState) {        super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_plane_basket);
 
-        //获取intent数据
-        Intent intent = getIntent();
-        buildId = intent.getStringExtra("build_id");
-
         //初始化坐标点信息
-        initPosition();
+        //initPosition();
 
         // 初始化控件
         initWidgetResource();
@@ -131,16 +144,23 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
         // 初始化用户信息
         getUserInfo();
 
-
-
+        Intent intent = getIntent();
+        buildId = intent.getStringExtra("build_id");
+        mProjectId = intent.getStringExtra("project_id");
+        //获取intent数据
+        if(buildId != null && mProjectId != null){
+            String root_url = AppConfig.FILE_SERVER_YBLIU_PATH + "project" + File.separator +
+                    mProjectId + File.separator + "plane_graph_"+ buildId +".jpg";
+            mSmartIv.setImageUrl(root_url, R.mipmap.ic_empty);
+            getPlaneFigureWithInfo();
+        }
 
         // 获取相关图片
-        displayPlanePhoto(0, "");
-
+        //displayPlanePhoto(0, "");
 
     }
 
-    private void initPosition(){
+   /* private void initPosition(){
         PositionInfo positionInfo1= new PositionInfo("1","20191112",-30053.379,63739.285);
         infoList.add(positionInfo1);
         PositionInfo positionInfo2= new PositionInfo("2","20191112",-30053.379,43249.445);
@@ -177,6 +197,90 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
         for(int i = 0; i < infoList.size();i++){
             positionMap.put(infoList.get(i).getId(),infoList.get(i));
         }
+    }*/
+
+    private void getPlaneFigureWithInfo() {
+
+        //从后台获取平面图信息
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", mToken)
+                .addParam("projectId", mProjectId)
+                .addParam("buildingNum", buildId)
+                .addParam("type", 2) //请求某栋楼的平面图信息
+                .get()
+                .url(AppConfig.GET_PLANE_GRAPH_INFO)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String response = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(response);
+                        Boolean isLogin = jsonObject.getBoolean("isLogin");
+                        if(isLogin){
+                            JSONArray data = jsonObject.getJSONArray("planeGraphInfo");
+                            parseGraghInfo(data);
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        switch(code){
+                            case 401:
+                                ToastUtil.showToastTips(PlaneBasketActivity.this, "登陆已过期，请重新登录");
+                                startActivity(new Intent(PlaneBasketActivity.this, LoginActivity.class));
+                                PlaneBasketActivity.this.finish();
+                                break;
+                            case 403:
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+                });
+
+    }
+
+    private void parseGraghInfo(JSONArray data){
+        infoList.clear();
+        if(data.size() != 0){
+            for(int index=0; index <data.size();index++) {
+                JSONObject basketObj = (JSONObject)data.get(index);
+                String buildId = basketObj.getString("device_id");
+                if(buildId.equals("A")){
+                    //分隔符得到XY坐标
+                    String location =  basketObj.getString("location");
+                    String[] locations = location.split(",");
+                    Double location_x = Double.valueOf(locations[0]);
+                    double location_y = Double.valueOf(locations[1]);
+                    positionInfoA = new PositionInfo(buildId, "", location_x,location_y);
+                }else if(buildId.equals("B")){
+                    //分隔符得到XY坐标
+                    String location =  basketObj.getString("location");
+                    String[] locations = location.split(",");
+                    Double location_x = Double.valueOf(locations[0]);
+                    double location_y = Double.valueOf(locations[1]);
+                    positionInfoB = new PositionInfo(buildId, "", location_x,location_y);
+                }else{
+
+                    //分隔符得到XY坐标
+                    String location =  basketObj.getString("location");
+                    String[] locations = location.split(",");
+                    Double location_x = Double.valueOf(locations[0]);
+                    double location_y = Double.valueOf(locations[1]);
+                    PositionInfo positionInfo = new PositionInfo(String.valueOf(index), buildId, location_x,location_y);
+                    infoList.add(positionInfo);
+                }
+            }
+            for(int i = 0; i < infoList.size();i++){
+                positionMap.put(infoList.get(i).getId(),infoList.get(i));
+            }
+            mHandler.sendEmptyMessage(SHOW_LOCATION);
+        }else{
+            mHandler.sendEmptyMessage(SHOW_LOCATION_FAIL);
+        }
     }
 
     /*
@@ -201,16 +305,16 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle(buildId+"号楼吊篮平面图");
-
+        toolbar.setTitle("吊篮平面图");
 
         titleText.setText("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
-        photoView = findViewById(R.id.general_layout);
-        photoView.setOnTouchListener(onTouchListener);
+        mSmartIv = findViewById(R.id.general_layout);
+        mSmartIv.setOnTouchListener(onTouchListener);
         lvBasket = findViewById(R.id.lv_basket);
+        tvTitle = findViewById(R.id.tv_title);
         basketPlaneAdapter = new BasketPlaneAdapter(this,R.layout.item_position_list,infoList);
         lvBasket.setAdapter(basketPlaneAdapter);
 
@@ -226,7 +330,6 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
             }
         });
     }
-
 
     // FTP初始化
     private void initFTPClient(){
@@ -305,11 +408,11 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
                 case MotionEvent.ACTION_DOWN:
                     //转换控件边界
                     //Matrix matrix = new Matrix();
-                    //Matrix inverse = photoView.getImageMatrix();
-                    Matrix matrix = new Matrix(photoView.getImageMatrix());
+                    //Matrix inverse = mSmartIv.getImageMatrix();
+                    Matrix matrix = new Matrix(mSmartIv.getImageMatrix());
                     Matrix inverse = new Matrix();
                     matrix.invert(inverse);
-                    inverse.mapPoints(dst_2, new float[]{photoView.getWidth(), photoView.getHeight()});
+                    inverse.mapPoints(dst_2, new float[]{mSmartIv.getWidth(), mSmartIv.getHeight()});
                     DISTANCE = 0.05*(dst_2[0]+dst_2[1]);
 
                     List<PositionInfo> positionInfos = areaJudge(v, event);
@@ -318,7 +421,7 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
                     // 目标点的坐标
                     float dst[] = new float[2];
                     // 获取到ImageView的matrix
-                    Matrix imageMatrix = photoView.getImageMatrix();
+                    Matrix imageMatrix = mSmartIv.getImageMatrix();
                     // 创建一个逆矩阵
                     Matrix inverseMatrix = new Matrix();
 
@@ -361,7 +464,7 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
         // 目标点的坐标
         float dst[] = new float[2];
         // 获取到ImageView的matrix
-        Matrix imageMatrix = photoView.getImageMatrix();
+        Matrix imageMatrix = mSmartIv.getImageMatrix();
         // 创建一个逆矩阵
         Matrix inverseMatrix = new Matrix();
         // 求逆，逆矩阵被赋值
@@ -386,16 +489,16 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
         Double y = (positionInfo.getPosition_Y()-positionInfoB.getPosition_Y())
                 /(positionInfoA.getPosition_Y()-positionInfoB.getPosition_Y());
         mPosition = new PositionInfo(positionInfo.getId(),positionInfo.getItemId(),
-                (photoView.getRight()-photoView.getLeft())*x+COMPENSATION_X,
-                (photoView.getBottom()-photoView.getTop())*y+COMPENSATION_Y);
+                (mSmartIv.getRight()-mSmartIv.getLeft())*x+COMPENSATION_X,
+                (mSmartIv.getBottom()-mSmartIv.getTop())*y+COMPENSATION_Y);
         return mPosition;
     }
 
 
-    // 弹出身份选择框
+    // 弹出选择框
     public void showSelectDialog(){
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
-        alertBuilder.setTitle("选择楼号");
+        alertBuilder.setTitle("选择吊篮编号");
         alertBuilder.setSingleChoiceItems(mBuildString, currentSelected, new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int position) {
@@ -407,12 +510,12 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 currentSelected = tmpSelected;
-                //跳转至所选择的楼号主界面
-                Toast.makeText(PlaneBasketActivity.this, mBuildString[currentSelected] + "号楼",
+               /* //跳转至所选择的楼号主界面
+                Toast.makeText(PlaneBasketActivity.this, mBuildString[currentSelected] + "号吊篮",
                         Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PlaneBasketActivity.this, PlaneBasketActivity.class);
                 intent.putExtra("build_id", mBuildString[currentSelected]);
-                startActivity(intent);
+                startActivity(intent);*/
                 mSelectProjectDialog.dismiss();
             }
         });

@@ -372,6 +372,7 @@ public class ProjectFinishedActivity extends AppCompatActivity implements View.O
             case R.id.rl_install_info:  // 查看安装方案
                 Log.i(TAG, "You have clicked the select projectList button");
                 intent = new Intent(ProjectFinishedActivity.this, PlaneFigureActivity.class);
+                intent.putExtra("projectId", mProjectId);
                 startActivity(intent);
                 break;
             case R.id.rl_compact_info:  // 查看合同

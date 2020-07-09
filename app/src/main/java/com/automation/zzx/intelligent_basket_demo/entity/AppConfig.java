@@ -195,7 +195,6 @@ public class AppConfig {
     //获取工程方案（平面图坐标信息）
     public static final String GET_PLANE_GRAPH_INFO = ANDROID_URL_PATH.concat("/getPlaneGraphInfo");
 
-
     /*
      * 项目管理员请求
      */

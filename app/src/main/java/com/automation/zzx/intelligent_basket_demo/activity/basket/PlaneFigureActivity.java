@@ -18,11 +18,13 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
@@ -34,7 +36,7 @@ import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
-import com.automation.zzx.intelligent_basket_demo.widget.image.WebImage;
+import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 import com.github.chrisbanes.photoview.PhotoView;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
@@ -48,6 +50,7 @@ import java.io.File;
 import android.net.Uri;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -66,6 +69,9 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
     private final static int UPDATE_FAILED = 105; // 更新失败
     private final static int UPDATE_SUCESS = 106; // 更新成功
 
+    private final static int SHOW_LOCATION_FAIL = 110;//无坐标信息时
+    private final static int SHOW_LOCATION = 111; //显示坐标信息
+
     private double DISTANCE; // 点击范围阈值
     private final static double COMPENSATION_X = 0; // 水平位置偏移量30
     private final static double COMPENSATION_Y = 0; // 竖直位置偏移量34
@@ -78,7 +84,8 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
 
     // 控件声明
     private RefreshLayout mSmartRefreshLayout;
-    private PhotoView photoView;
+    private SmartImageView mSmartIv;
+    private TextView tvTitle;
     private ListView lvBuild;
     private BasketPlaneAdapter buildPlaneAdapter;
 
@@ -109,15 +116,17 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
                 case PULL_DOWN:  // 下拉刷新
                     //displayWorkPhoto(1, mFileNameList.get(0));
                     break;
-                case UPDATE_IMAGE:  // 更新图片
-                    // 下拉刷新：加载最新图片，并且定位在第一行
-                    /*mFileNameList.addAll(0, (List<String>)msg.obj);
-                       generateWorkPhotoUrls((List<String>)msg.obj, msg.arg1);
-                       mWorkPhotoAdapter.notifyDataSetChanged();
-                       mWorkPhotoGv.smoothScrollToPosition(0);*/
+                case SHOW_LOCATION:  // 更新图片
+                    //更新适配器
+                    buildPlaneAdapter.notifyDataSetChanged();
                     break;
+
+                case SHOW_LOCATION_FAIL:
+                    //隐藏适配器
+                    lvBuild.setVisibility(View.GONE);
+                    tvTitle.setVisibility(View.GONE);
+
                 case NO_MORE_IMAGE: // 尚无更多的图片
-                    ToastUtil.showToastTips(PlaneFigureActivity.this, "尚无更多的图片");
                     mSmartRefreshLayout.finishRefresh(500); // 刷新动画结束
                     mSmartRefreshLayout.finishLoadMore(500); // 加载动画结束
                     break;
@@ -138,26 +147,26 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         // 初始化用户信息
         getUserInfo();
 
-        // 获取相关图片
-        displayPlanePhoto(0, "");
-
         //初始化坐标点信息
-        initPosition();
+        //initPosition();
 
         //网络获取总平面图及坐标信息
-        getPlaneFigureWithInfo();
-
+        Intent intent = this.getIntent();
+        mProjectId = intent.getStringExtra("projectId");
+        if(mProjectId != null){
+            getPlaneFigureWithInfo();
+        }
     }
 
     private void getPlaneFigureWithInfo() {
         //从FTP上获取总平面图
-        String root_url = AppConfig.FILE_SERVER_YBLIU_PATH + File.separator +"project" + File.separator +
-                mProjectId + File.separator + "plan_figure_all.jpg";
-        Uri uri = Uri.parse(root_url);
-        String cert_name = "plan_figure_all.jpg";
-        photoView.setImageURI(uri);
+        String root_url = AppConfig.FILE_SERVER_YBLIU_PATH + "project" + File.separator +
+                mProjectId + File.separator + "plane_graph_all.jpg";
+        mSmartIv.setImageUrl(root_url, R.mipmap.ic_empty);
 
-        //TODO 判断是否有图片
+        // 获取相关图片
+
+        // displayPlanePhoto(0, mRemotePath,cert_name);
 
         //从后台获取平面图信息
         BaseOkHttpClient.newBuilder()
@@ -175,7 +184,8 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
                         JSONObject jsonObject = JSON.parseObject(response);
                         Boolean isLogin = jsonObject.getBoolean("isLogin");
                         if(isLogin){
-//                            parseGraghInfo(jsonObject.getString("planeGraghInfo"));
+                            JSONArray data = jsonObject.getJSONArray("planeGraphInfo");
+                            parseGraghInfo(data);
                         }
                     }
 
@@ -200,23 +210,49 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
 
     }
 
-//    private void parseGraghInfo(String data){
-//        infoList.clear();
-//
-//        JSONObject jsonObject = JSON.parseObject(data);
-//        Iterator<String> planeInfos = jsonObject.keySet().iterator();
-//        while(planeInfos.hasNext()) {
-//            String basketId = planeInfos.next();
-//            String buildingId = JSON.parseObject(jsonObject.getString("building_id");
-//
-//        }
-//        mHandler.sendEmptyMessage(SWITCH_BASKET_STATE_MSG);
-//    }
+    private void parseGraghInfo(JSONArray data){
+        infoList.clear();
+        if(data.size() != 0){
+            for(int index=0; index <data.size();index++) {
+                JSONObject basketObj = (JSONObject)data.get(index);
+                String buildId = basketObj.getString("building_id");
+                if(buildId.equals("A")){
+                    //分隔符得到XY坐标
+                    String location =  basketObj.getString("location");
+                    String[] locations = location.split(",");
+                    Double location_x = Double.valueOf(locations[0]);
+                    double location_y = Double.valueOf(locations[1]);
+                    positionInfoA = new PositionInfo(buildId, "", location_x,location_y);
+                }else if(buildId.equals("B")){
+                    //分隔符得到XY坐标
+                    String location =  basketObj.getString("location");
+                    String[] locations = location.split(",");
+                    Double location_x = Double.valueOf(locations[0]);
+                    double location_y = Double.valueOf(locations[1]);
+                    positionInfoB = new PositionInfo(buildId, "", location_x,location_y);
+                }else{
+                    //分隔符得到XY坐标
+                    String location =  basketObj.getString("location");
+                    String[] locations = location.split(",");
+                    Double location_x = Double.valueOf(locations[0]);
+                    double location_y = Double.valueOf(locations[1]);
+                    PositionInfo positionInfo = new PositionInfo(buildId, "", location_x,location_y);
+                    infoList.add(positionInfo);
+                }
+            }
+            for(int i = 0; i < infoList.size();i++){
+                positionMap.put(infoList.get(i).getId(),infoList.get(i));
+            }
+                mHandler.sendEmptyMessage(SHOW_LOCATION);
+        }else{
+            mHandler.sendEmptyMessage(SHOW_LOCATION_FAIL);
+        }
+    }
 
 
 
 
-    private void initPosition(){
+   /* private void initPosition(){
         PositionInfo positionInfo1= new PositionInfo("1","1,2",-30053.379,63739.285);
         infoList.add(positionInfo1);
         PositionInfo positionInfo2= new PositionInfo("7","3,4,5",-30053.379,43249.445);
@@ -228,7 +264,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
             positionMap.put(infoList.get(i).getId(),infoList.get(i));
         }
     }
-
+*/
     /*
      * 控件初始化
      */
@@ -256,8 +292,10 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
-        photoView = findViewById(R.id.general_layout);
-        photoView.setOnTouchListener(onTouchListener);
+        mSmartIv = findViewById(R.id.general_layout);
+        mSmartIv.setOnTouchListener(onTouchListener);
+
+        tvTitle = findViewById(R.id.tv_title);
         lvBuild = findViewById(R.id.lv_build);
         buildPlaneAdapter = new BasketPlaneAdapter(this,R.layout.item_area_plane,infoList);
         lvBuild.setAdapter(buildPlaneAdapter);
@@ -271,6 +309,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
                         Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PlaneFigureActivity.this, PlaneBasketActivity.class);
                 intent.putExtra("build_id", infoList.get(position).getId());
+                intent.putExtra("project_id", mProjectId);
                 startActivity(intent);
             }
         });
@@ -298,13 +337,13 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         mProjectId = mPref.getString("projectId","");
     }
 
-    // 获取要显示图片的url
-    private void displayPlanePhoto(final int direction, final String filename){
-        /*new Thread(){
+   /* // 获取要显示图片的url
+    private void displayPlanePhoto(final int direction, final String url,final String filename){
+        new Thread(){
             public void run(){
                 try{
                     mFTPClient.openConnect();  // 建立连接
-                    mFTPClient.downloadingInit(REMOTE_WORK_PHOTO_PATH + "/" + mBasketId);  // 切换工作环境
+                    mFTPClient.downloadingInit(url+filename);  // 切换工作环境
                     List<String> newFileNames = mFTPClient.getDownloadFileName(direction, filename);
                     if(newFileNames.size() == 0){  // 没有更多的图片
                         mHandler.sendEmptyMessage(NO_MORE_IMAGE);
@@ -316,15 +355,14 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
                         mHandler.sendMessage(msg);
                     }
                     mFTPClient.closeConnect();  // 关闭连接
-                    mHandler.sendEmptyMessage(UPDATE_SUCESS);
+                    mHandler.sendEmptyMessage(DISPLAY_PLANE);
                 }catch(IOException e){
                     e.printStackTrace();
-                    mHandler.sendEmptyMessage(UPDATE_FAILED);
                 }
             }
-        }.start();*/
+        }.start();
     }
-
+*/
     /*
     * 点击事件
     * */
@@ -354,11 +392,11 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
                 case MotionEvent.ACTION_DOWN:
                     //转换控件边界
                     //Matrix matrix = new Matrix();
-                    //Matrix inverse = photoView.getImageMatrix();
-                    Matrix matrix = new Matrix(photoView.getImageMatrix());
+                    //Matrix inverse = mSmartIv.getImageMatrix();
+                    Matrix matrix = new Matrix(mSmartIv.getImageMatrix());
                     Matrix inverse = new Matrix();
                     matrix.invert(inverse);
-                    inverse.mapPoints(dst_2, new float[]{photoView.getWidth(), photoView.getHeight()});
+                    inverse.mapPoints(dst_2, new float[]{mSmartIv.getWidth(), mSmartIv.getHeight()});
                     DISTANCE = 0.05*(dst_2[0]+dst_2[1]);
 
                     List<PositionInfo> positionInfos = areaJudge(v, event);
@@ -367,7 +405,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
                     // 目标点的坐标
                     float dst[] = new float[2];
                     // 获取到ImageView的matrix
-                    Matrix imageMatrix = photoView.getImageMatrix();
+                    Matrix imageMatrix = mSmartIv.getImageMatrix();
                     // 创建一个逆矩阵
                     Matrix inverseMatrix = new Matrix();
 
@@ -408,7 +446,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
         // 目标点的坐标
         float dst[] = new float[2];
         // 获取到ImageView的matrix
-        Matrix imageMatrix = photoView.getImageMatrix();
+        Matrix imageMatrix = mSmartIv.getImageMatrix();
         // 创建一个逆矩阵
         Matrix inverseMatrix = new Matrix();
         // 求逆，逆矩阵被赋值

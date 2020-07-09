@@ -31,7 +31,7 @@
                 android:text="放大图片" />
 -->
 
-            <com.github.chrisbanes.photoview.PhotoView
+            <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
                 android:id="@+id/general_layout"
                 android:adjustViewBounds="true"
                 android:layout_centerHorizontal="true"
@@ -49,6 +49,7 @@
                 android:layout_marginTop="8dp">
 
                 <TextView
+                    android:id="@+id/tv_title"
                     style="@style/modularTitleStyle"
                     android:background="@color/white"
                     android:text="项目内所有建筑"/>

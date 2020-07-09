@@ -165,7 +165,7 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
         txtBasketId = (TextView) findViewById(R.id.basket_id);
         txtBasketId.setText(basketinfo.getBasketId());
         txtAreaId = findViewById(R.id.area_id);
-        txtAreaId.setText(basketinfo.getUserName());
+        txtAreaId.setText(basketinfo.getSiteNo());
         txtBasketState = (TextView) findViewById(R.id.basket_state);
         txtBasketState.setTextColor(R.color.gray01);
 
