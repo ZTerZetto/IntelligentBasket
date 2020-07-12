@@ -178,7 +178,7 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
         mPortionGv.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                if (position < 4){
+                if (position < 7){
                     // 单张图片
                     Intent intent = new Intent(BasketInstallInfoActivity.this, SingleImgUploadActivity.class);
                     intent.putExtra(PROJECT_ID, projectId);
@@ -410,6 +410,15 @@ public class BasketInstallInfoActivity extends AppCompatActivity {
     // 初始化部件列表
     private void initPortionList(){
         mPortions = new ArrayList<>();
+
+        Portion basketLeft = new Portion("吊篮左视", R.mipmap.ic_left_align, 0);
+        mPortions.add(basketLeft);
+        Portion basketMiddle = new Portion("吊篮主视", R.mipmap.ic_middle_align, 0);
+        mPortions.add(basketMiddle);
+        Portion basketRight = new Portion("吊篮右视", R.mipmap.ic_right_align, 0);
+        mPortions.add(basketRight);
+
+
         Portion electricalBox = new Portion("电柜", R.mipmap.ic_electrical_box, 0);
         mPortions.add(electricalBox);
         Portion camera = new Portion("摄像头", R.mipmap.ic_camera, 0);

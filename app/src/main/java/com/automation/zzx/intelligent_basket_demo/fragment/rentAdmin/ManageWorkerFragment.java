@@ -241,7 +241,11 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                     Log.i(TAG, "QR_Content: "+ userInfo);
                     int colon = userInfo.indexOf(":");
                     String workerId = userInfo.substring(colon+1);
-                    if(userInfo.contains("worker")||(WorkerType.getByDetailtype(userInfo)!=null)){  // 是工人Id
+                    if(userInfo.contains("worker")||userInfo.contains("curtain_electricWorker")||
+                            userInfo.contains("curtain_stoneWorker")||userInfo.contains("curtain_glassPlate")||
+                            userInfo.contains("curtain_glueWorker")||userInfo.contains("coating_painter")||
+                            userInfo.contains("coating_realStone")||userInfo.contains("others_others")
+                    ){  // 是工人Id
                         if(isWorkerInProject(workerId))  // 已存在于项目中
                             DialogToast("提示", "施工人员已经在本项目中").show();
                         else  // 待添加

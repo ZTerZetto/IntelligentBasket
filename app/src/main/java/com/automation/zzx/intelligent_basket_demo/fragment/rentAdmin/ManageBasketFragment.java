@@ -35,15 +35,22 @@ public class ManageBasketFragment extends Fragment {
 
         List<Fragment> fragmentList = new ArrayList<>();   // 添加fragment
         //fragmentList.add(new MgBasketMapFragment());
-        fragmentList.add(new MgBasketListFragment());
+        fragmentList.add(new MgInstallBasketListFragment());//安装中
+        fragmentList.add(new MgWorkingBasketListFragment());//使用中
+        fragmentList.add(new MgStopBasketListFragment());//报停中
 
         List<String> titleList = new ArrayList<>();  // 添加fragment说明
         //titleList.add("地图");
-        titleList.add("吊篮列表");
+        titleList.add("安装中");
+        titleList.add("使用中");
+        titleList.add("报停中");
+
+
 
         MgBasketContentFragmentAdapter mgBasketContentFragmentAdapter =
                 new MgBasketContentFragmentAdapter(getFragmentManager(), fragmentList, titleList);
         mViewPager.setAdapter(mgBasketContentFragmentAdapter);
+        mViewPager.setCurrentItem(1);
 
         mTabLayout.setupWithViewPager(mViewPager);
 

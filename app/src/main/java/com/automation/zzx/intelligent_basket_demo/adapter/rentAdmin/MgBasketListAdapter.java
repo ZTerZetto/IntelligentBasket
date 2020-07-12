@@ -112,18 +112,23 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
             case "1":
                 viewHolder.basketState.setText("待分配安装");
                 viewHolder.basketState.setVisibility(View.VISIBLE);
+                viewHolder.basketSelected.setVisibility(View.INVISIBLE);
                 break;
             case "11":
                 viewHolder.basketState.setText("安装进行中");
+                viewHolder.basketSelected.setVisibility(View.INVISIBLE);
                 break;
             case "12":
                 viewHolder.basketState.setText("安装预检中");
+                viewHolder.basketSelected.setVisibility(View.INVISIBLE);
                 break;
             case "2":
                 viewHolder.basketState.setText("安装终检中");
+                viewHolder.basketSelected.setVisibility(View.INVISIBLE);
                 break;
             case "21":
                 viewHolder.basketState.setText("安检证书审核中");
+                viewHolder.basketSelected.setVisibility(View.INVISIBLE);
                 break;
             case "3":
                 if(mgBasketInfo.getState().equals("1")){
@@ -136,9 +141,11 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
                 //viewHolder.basketState.setText("预报停申请中");
                 //viewHolder.basketState.setText("报停申请中");
                 viewHolder.basketState.setText("已结束");
+                viewHolder.basketSelected.setVisibility(View.INVISIBLE);
                 break;
             case "5":
                 viewHolder.basketState.setText("报停审核中");
+                viewHolder.basketSelected.setVisibility(View.INVISIBLE);
                 break;
         }
         viewHolder.basketOutStorage.setText(mgBasketInfo.getOutStorage().substring(0,10));

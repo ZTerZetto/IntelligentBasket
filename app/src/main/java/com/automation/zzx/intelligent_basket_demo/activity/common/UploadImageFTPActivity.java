@@ -34,7 +34,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerMoreActi
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.UploadImageLikeWxAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment;
-import com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.MgBasketListFragment;
+import com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.MgWorkingBasketListFragment;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ftp.FTPUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
@@ -68,7 +68,7 @@ import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.Area
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_BASKETS_PRE_STOP_IMAGE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_CERTIFICATE_IMAGE;
 import static com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment.UPLOAD_IMAGE_TYPE;
-import static com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.MgBasketListFragment.UPLOAD_BASKETS_APPLY_STOP_IMAGE;
+import static com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin.MgWorkingBasketListFragment.UPLOAD_BASKETS_APPLY_STOP_IMAGE;
 
 
 public class UploadImageFTPActivity extends AppCompatActivity implements View.OnClickListener {
@@ -676,7 +676,7 @@ public class UploadImageFTPActivity extends AppCompatActivity implements View.On
 
                 break;
             case UPLOAD_BASKETS_APPLY_STOP_IMAGE: // 报停
-                deviceList = getIntent().getStringExtra(MgBasketListFragment.DEVICES_LIST);
+                deviceList = getIntent().getStringExtra(MgWorkingBasketListFragment.DEVICES_LIST);
                 mRemotePath = "storeIn";
                 mToolbar.setTitle("上传吊篮报停图片");
                 uploadHint = "吊篮报停图片";
