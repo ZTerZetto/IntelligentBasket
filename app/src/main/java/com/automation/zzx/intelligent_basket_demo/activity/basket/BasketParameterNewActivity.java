@@ -27,9 +27,13 @@ import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
+import org.w3c.dom.Text;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Formatter;
 import java.util.List;
+import java.util.Locale;
 import java.util.TimerTask;
 
 import okhttp3.Call;
@@ -49,10 +53,13 @@ public class BasketParameterNewActivity extends AppCompatActivity {
 
     // 控件声明
     private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
+    private ImageView mDeviceState; // 设备状态
     private SmartGridView mVarSwitchGv;  // 开关变量网格控件
     private ImageView mMotorLeft;  // 左电机
     private ImageView mMotorRight; // 右电机
-    private TextView mDeviceWight; // 设备总重
+    private TextView mCSQ;  // 移动信号强度
+    private TextView mDeviceWeightTotal; // 设备总重
+    private TextView mDeviceWeight; // 细分设备重量
     private TextView mClinometerDegree; // 倾斜仪角度
     private TextView mLocationMsg;  // 位置信息
     private TextView mDateMsg; // 时间信息
@@ -88,8 +95,8 @@ public class BasketParameterNewActivity extends AppCompatActivity {
 
         Intent intent = getIntent();
         mBasketId = intent.getStringExtra(BasketDetailActivity.BASKET_ID);  // 获取吊篮id
-        if(mBasketId==null || mBasketId.equals("")) mBasketId = "js_nj_00003";
-//        mBasketId = "36FFD6054154393207782457";
+        if(mBasketId==null || mBasketId.equals("")) mBasketId = "05D8FF333930484257037205";
+//        mBasketId = "05D8FF333930484257037205";
 
         pref = PreferenceManager.getDefaultSharedPreferences(this);
 
@@ -122,6 +129,9 @@ public class BasketParameterNewActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
+        // 设备状态
+        mDeviceState = (ImageView) findViewById(R.id.device_state); // 设备状态
+
         // GridView:开关变量状态显示
         mVarSwitchGv = (SmartGridView) findViewById(R.id.var_switch_gv);  // 获取资源控件
         initVarSwitchList();    // 初始化列表内容
@@ -133,8 +143,10 @@ public class BasketParameterNewActivity extends AppCompatActivity {
         mMotorLeft = (ImageView) findViewById(R.id.motor_left);
         mMotorRight = (ImageView) findViewById(R.id.motor_right);
 
-        // 吊篮数据
-        mDeviceWight = (TextView) findViewById(R.id.weight_tv);
+        // 传感器参数
+        mCSQ = (TextView) findViewById(R.id.csq_tv);
+        mDeviceWeightTotal = (TextView) findViewById(R.id.weight_all_tv);
+        mDeviceWeight = (TextView) findViewById(R.id.weight_tv);
         mClinometerDegree = (TextView) findViewById(R.id.clinometer_degree_tv);
 
         // 其他数据
@@ -218,17 +230,14 @@ public class BasketParameterNewActivity extends AppCompatActivity {
     // 初始化开关列表
     private void initVarSwitchList(){
         mVarSwitches = new ArrayList<>();
-        VarSwitch cable = new VarSwitch("电缆", R.mipmap.ic_param_cable, 0);
-        mVarSwitches.add(cable);
-        VarSwitch angle = new VarSwitch("角度", R.mipmap.ic_param_angle, 0);
-        mVarSwitches.add(angle);
+        VarSwitch rope = new VarSwitch("预紧绳", R.mipmap.ic_main_rope, 0);
+        mVarSwitches.add(rope);
+        VarSwitch limit = new VarSwitch("限位", R.mipmap.ic_limit_position, 0);
+        mVarSwitches.add(limit);
         VarSwitch weight = new VarSwitch("重量", R.mipmap.ic_param_weight, 0);
         mVarSwitches.add(weight);
-        VarSwitch leftLimit = new VarSwitch("左上限", R.mipmap.ic_param_left_limit, 0);
-        mVarSwitches.add(leftLimit);
-//        mVarSwitches.add(new VarSwitch());
-        VarSwitch rightLimit = new VarSwitch("右上限", R.mipmap.ic_param_right_limit, 0);
-        mVarSwitches.add(rightLimit);
+        VarSwitch angle = new VarSwitch("倾斜", R.mipmap.ic_param_angle, 0);
+        mVarSwitches.add(angle);
     }
 
     // 更新控件状态
@@ -244,6 +253,13 @@ public class BasketParameterNewActivity extends AppCompatActivity {
         }
 
         /*
+         * 设备状态
+         */
+        int deviceState = electric_data_json_object.getIntValue("bketStat");
+        if(deviceState==1) mDeviceState.setImageResource(R.mipmap.ic_contactor_on);
+        else mDeviceState.setImageResource(R.mipmap.ic_contactor_off);
+
+        /*
          * bool 数据
          */
         String boolData32 = electric_data_json_object.getString("bool_data_int32");
@@ -256,22 +272,42 @@ public class BasketParameterNewActivity extends AppCompatActivity {
         StringBuffer stringBuffer = new StringBuffer(boolData32);
         boolData32 = stringBuffer.reverse().toString();
         // 开关变量
-        String varswitch = boolData32.substring(0, 5);
+//        String varswitch = boolData32.substring(4, 8);
+        String varswitch = boolData32.substring(0, 4);
         updateVarSwitch(varswitch);
         // 控制输入
-        String control_input = boolData32.substring(5, 8);
+//        String control_input = boolData32.substring(0, 4);
+        String control_input = boolData32.substring(4, 8);
         updateControInput(control_input);
 
         /*
          * 吊篮数据
          */
-        // 称重
+        // 信号强度
+        StringBuilder sb = new StringBuilder();
+        Formatter formatter = new Formatter(sb, Locale.US);
+        String csq = electric_data_json_object.getString("csq");
+        mCSQ.setText(formatter.format("%.2f dB", Float.parseFloat(csq)).toString());
+
+        // 称重全
         String device_weight = electric_data_json_object.getString("weight");
-        mDeviceWight.setText(device_weight + " Kg");
+        String [] weights = device_weight.split(",");
+        sb = new StringBuilder();
+        formatter = new Formatter(sb, Locale.US);
+        mDeviceWeightTotal.setText(formatter.format("%.2f Kg", Float.parseFloat(weights[0])).toString());
+        // 称重明细
+        sb = new StringBuilder();
+        formatter = new Formatter(sb, Locale.US);
+        mDeviceWeight.setText(formatter.format("(%.2f Kg, %.2f Kg)",
+                Float.parseFloat(weights[1]), Float.parseFloat(weights[2])).toString());
 
         // 倾斜仪
         String clinometer_degree = electric_data_json_object.getString("degree");
-        mClinometerDegree.setText(clinometer_degree + "°");
+        String[] degrees = clinometer_degree.split(",");
+        sb = new StringBuilder();
+        formatter = new Formatter(sb, Locale.US);
+        mClinometerDegree.setText(formatter.format("(%.2f°, %.2f°, %.2f°)",
+                Float.parseFloat(degrees[0]), Float.parseFloat(degrees[1]), Float.parseFloat(degrees[2])).toString());
 
         /*
          * 其他数据
@@ -279,8 +315,8 @@ public class BasketParameterNewActivity extends AppCompatActivity {
         // 经纬度
         String longitude = electric_data_json_object.getString("longitude");
         String latitude = electric_data_json_object.getString("latitude");
-
-        mLocationMsg.setText("(" + longitude + "°," + latitude + "°)");
+        String str = "(" + longitude + "°," + latitude + "°)";
+        mLocationMsg.setText(str);
         // 时间
         String timestamp = electric_data_json_object.getString("timestamp");
         mDateMsg.setText(timestamp);
@@ -288,47 +324,35 @@ public class BasketParameterNewActivity extends AppCompatActivity {
 
     // 开关变量
     private void updateVarSwitch(String varswitch){
-        mVarSwitches.get(0).setState(varswitch.charAt(0) - 48);  // 拉紧
-        mVarSwitches.get(1).setState(varswitch.charAt(3) - 48);  // 限重
-        mVarSwitches.get(2).setState(varswitch.charAt(4) - 48);  // 角度
-        mVarSwitches.get(3).setState(varswitch.charAt(1) - 48);  // 左限位器
-        mVarSwitches.get(4).setState(varswitch.charAt(2) - 48);  // 右限位器
+        mVarSwitches.get(0).setState(varswitch.charAt(0) - 48);  // 预紧绳
+        mVarSwitches.get(1).setState(varswitch.charAt(1) - 48);  // 限位
+        mVarSwitches.get(2).setState(varswitch.charAt(3) - 48);  // 重量
+        mVarSwitches.get(3).setState(varswitch.charAt(2) - 48);  // 倾斜
         mVarSwitchAdapter.notifyDataSetChanged();
     }
 
     // 控制输入
     private void updateControInput(String control_input){
-        if (control_input.length() == 3) {
-            if (control_input.charAt(0) == '0') { // 左右同
-                if (control_input.charAt(1) == '0') { // 静止
-                    mMotorLeft.setImageResource(R.mipmap.ic_motor_stop);
-                    mMotorRight.setImageResource(R.mipmap.ic_motor_stop);
-                } else if(control_input.charAt(1) == '1'){ // 运动
-                    if (control_input.charAt(2) == '0') { // 向下
-                        mMotorLeft.setImageResource(R.mipmap.ic_motor_down);
-                        mMotorRight.setImageResource(R.mipmap.ic_motor_down);
-                    } else if(control_input.charAt(2) == '1'){ // 向上
-                        mMotorLeft.setImageResource(R.mipmap.ic_motor_up);
-                        mMotorRight.setImageResource(R.mipmap.ic_motor_up);
-                    }
-                }
-            } else if (control_input.charAt(0) == '1') { // 左右异
-                if (control_input.charAt(1) == '0') { // 左电机运动，右电机静止
-                    mMotorRight.setImageResource(R.mipmap.ic_motor_stop);
-                    if (control_input.charAt(2) == '0') { // 向下
-                        mMotorLeft.setImageResource(R.mipmap.ic_motor_down);
-                    } else if (control_input.charAt(2) == '1'){ // 向上
-                        mMotorLeft.setImageResource(R.mipmap.ic_motor_up);
-                    }
-                } else if (control_input.charAt(1) == '1') { // 右电机运动，左电机静止
-                    mMotorLeft.setImageResource(R.mipmap.ic_motor_stop);
-                    if (control_input.charAt(2) == '0') { // 向下
-                        mMotorRight.setImageResource(R.mipmap.ic_motor_down);
-                    } else if (control_input.charAt(2) == '1'){ // 向上
-                        mMotorRight.setImageResource(R.mipmap.ic_motor_up);
-                    }
-                }
+        // 左电机
+        if (control_input.charAt(0) == '0'){
+            if (control_input.charAt(1) == '0'){
+                mMotorLeft.setImageResource(R.mipmap.ic_motor_stop);
+            }else{
+                mMotorLeft.setImageResource(R.mipmap.ic_motor_up);
             }
+        }else{
+            mMotorLeft.setImageResource(R.mipmap.ic_motor_down);
+        }
+
+        // 右电机
+        if (control_input.charAt(2) == '0'){
+            if (control_input.charAt(3) == '0'){
+                mMotorRight.setImageResource(R.mipmap.ic_motor_stop);
+            }else{
+                mMotorRight.setImageResource(R.mipmap.ic_motor_up);
+            }
+        }else{
+            mMotorRight.setImageResource(R.mipmap.ic_motor_down);
         }
     }
 
@@ -341,8 +365,11 @@ public class BasketParameterNewActivity extends AppCompatActivity {
         mVarSwitchAdapter.notifyDataSetChanged();
         mMotorLeft.setImageResource(R.mipmap.ic_motor_stop);
         mMotorRight.setImageResource(R.mipmap.ic_motor_stop);
-        mDeviceWight.setText(" -- Kg");
-        mClinometerDegree.setText("(--,--)");
+        mCSQ.setText("-- dB");
+        mDeviceWeightTotal.setText("--.-- Kg");
+        mDeviceWeight.setText("(--.-- Kg, --.-- Kg)");
+        mClinometerDegree.setText("(--.--,--.--,--.--)");
         mLocationMsg.setText("(--°,--°,--m");
+        mDateMsg.setText("1990-01-01 00:00:00");
     }
 }

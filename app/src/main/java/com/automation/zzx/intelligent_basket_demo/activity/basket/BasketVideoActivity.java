@@ -226,7 +226,7 @@ public class BasketVideoActivity extends AppCompatActivity {
                         if(isLogin){
                             JSONObject electricBoxConfig = JSON.parseObject(jsonObject.getString("electricBoxConfig"));
                             String cameraId = electricBoxConfig.getString("cameraId");
-                            if(cameraId.equals("") || cameraId.isEmpty()){
+                            if(cameraId==null || cameraId.equals("") || cameraId.isEmpty()){
                                 Message msg = new Message();
                                 msg.what = FINISH_ACTIVITY_MSG;
                                 msg.arg1 = 2;
