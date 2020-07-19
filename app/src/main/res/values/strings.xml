@@ -131,7 +131,7 @@
 
     <!-- worker primary activity -->
     <string name="user_type">区域管理员</string>
-    <string name="worker_project_state">项目状态：</string>
+    <string name="worker_project_state">项目：</string>
     <string name="worker_no_project">无项目</string>
     <string name="worker_start_basket">上工</string>
     <string name="worker_stop_basket">下工</string>

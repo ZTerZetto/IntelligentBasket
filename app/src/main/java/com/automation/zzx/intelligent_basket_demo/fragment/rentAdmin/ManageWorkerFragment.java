@@ -56,6 +56,7 @@ import okhttp3.Call;
 
 import static android.app.Activity.RESULT_OK;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_ADD_WORKER;
+import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_DELETE_WORKER;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_GET_ALL_WORKER_INFO;
 import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
 
@@ -111,7 +112,7 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                         workerRv.setVisibility(View.GONE);
                         noWorkerListRelativeLayout.setVisibility(View.VISIBLE);
                         noWorkerListTextView.setText("您还没有相关的项目");
-                    }else {  // 获取吊篮列表
+                    }else {  // 获取工人列表
                         rentAdminGetWorkerInfo();
                     }
                     break;
@@ -214,6 +215,21 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                 if(Integer.parseInt(workerCheckedNumberTv.getText().toString()) == 0) {
                     ToastUtil.showToastTips(getActivity(), "您尚未选择任何施工人员!");
                     break;
+                }else {
+                    String content = "您想删除的工人为" + getDeleteWorkerList();
+                    // 弹窗二次确认
+                    new CommonDialog(getActivity(), R.style.dialog, content,
+                            new CommonDialog.OnCloseListener() {
+                                @Override
+                                public void onClick(Dialog dialog, boolean confirm) {
+                                    if(confirm){
+                                        deleteWorker(getDeleteWorkerList());
+                                        dialog.dismiss();
+                                    }else{
+                                        dialog.dismiss();
+                                    }
+                                }
+                            }).setTitle("提示").show();
                 }
                 break;
             case R.id.worker_add_image_view:
@@ -241,11 +257,7 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                     Log.i(TAG, "QR_Content: "+ userInfo);
                     int colon = userInfo.indexOf(":");
                     String workerId = userInfo.substring(colon+1);
-                    if(userInfo.contains("worker")||userInfo.contains("curtain_electricWorker")||
-                            userInfo.contains("curtain_stoneWorker")||userInfo.contains("curtain_glassPlate")||
-                            userInfo.contains("curtain_glueWorker")||userInfo.contains("coating_painter")||
-                            userInfo.contains("coating_realStone")||userInfo.contains("others_others")
-                    ){  // 是工人Id
+                    if(isWorker(userInfo)){  // 是工人Id
                         if(isWorkerInProject(workerId))  // 已存在于项目中
                             DialogToast("提示", "施工人员已经在本项目中").show();
                         else  // 待添加
@@ -305,7 +317,7 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
         while(iterator.hasNext()) {
             JSONObject workerInfoJsonObject = (JSONObject) iterator.next();
             if(workerInfoJsonObject==null || workerInfoJsonObject.equals("")) continue;
-            if(workerInfoJsonObject.getString("userRole").contains("worker")) {
+            if(isWorker(workerInfoJsonObject.getString("userRole"))) {
                 MgWorkerInfo mgWorkerInfo = new MgWorkerInfo();
                 mgWorkerInfo.setId(workerInfoJsonObject.getString("userId"));
                 mgWorkerInfo.setName(workerInfoJsonObject.getString("userName"));
@@ -359,6 +371,65 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
 
                     }
                 });
+    }
+
+    //删除施工人员
+    private void deleteWorker(String workerStr){
+        BaseOkHttpClient.newBuilder()
+                .addHeader("Authorization", token)
+                .addParam("userId", workerStr)
+                .post()
+                .url(RENT_ADMIN_DELETE_WORKER)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String response = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(response);
+                        String increase = jsonObject.getString("delete");
+                        if(increase.contains("success")) {
+                            Log.i(TAG, "删除施工人员成功");
+                            DialogToast("提示", "您已成功删除施工人员").show();
+                            handler.sendEmptyMessage(UPDATE_WORKER_LIST_MSG);  // 更新本地列表
+                        }else if(increase.contains("fail")){
+                            Log.i(TAG, "删除施工人员失败");
+                            DialogToast("提示", "删除施工人员失败，请稍后重试").show();
+                        }
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "删除施工人员错误：" + code);
+                        switch(code){
+                            case 401:
+                                ToastUtil.showToastTips(getActivity(), "登陆已过期，请重新登录");
+                                startActivity(new Intent(getActivity(), LoginActivity.class));
+                                getActivity().finish();
+                                break;
+                            case 403:
+                                break;
+                        }
+                    }
+
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+
+                    }
+                });
+    }
+
+    // 获取预报停吊篮列表
+    private String getDeleteWorkerList(){
+        String results = "";
+
+        Map<Integer,Boolean> isCheck = mgWorkerListAdapter.getMap();
+        for(int i=0; i<isCheck.size(); i++){
+            if(isCheck.get(i)){
+                results += mgWorkerInfoList.get(i).getId() + ",";
+            }
+        }
+        results = results.substring(0, results.length()-1);
+        return results;
     }
 
     /*
@@ -484,6 +555,20 @@ public class ManageWorkerFragment extends Fragment implements View.OnClickListen
                     }
                 }).setTitle(mTitle);
     }
+
+    /*
+    * 判断是否为施工人员
+    * */
+    private boolean isWorker(String userRole){
+       if( userRole.contains("worker")||userRole.contains("curtain_electricWorker")||
+               userRole.contains("curtain_stoneWorker")||userRole.contains("curtain_glassPlate")||
+               userRole.contains("curtain_glueWorker")||userRole.contains("coating_painter")||
+               userRole.contains("coating_realStone")||userRole.contains("others_others"))
+           return true;
+       else return false;
+    }
+
+
     /*
      * 列表初始化
      */

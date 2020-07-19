@@ -148,6 +148,8 @@ public class AppConfig {
     public static final String RENT_ADMIN_GET_ALL_WORKER_INFO = ANDROID_URL_PATH.concat("/getUserList");
     // 租方管理员添加施工人员
     public static final String RENT_ADMIN_ADD_WORKER= ANDROID_URL_PATH.concat("/androidIncreaseWorker");
+    // 租方管理员删除施工人员
+    public static final String RENT_ADMIN_DELETE_WORKER= ANDROID_URL_PATH.concat("/deleteUser");
     // 租方管理员报修某个吊篮
     public static final String RENT_ADMIN_REPARI_BASKET= ANDROID_URL_PATH.concat("/createRepairBox");
 
