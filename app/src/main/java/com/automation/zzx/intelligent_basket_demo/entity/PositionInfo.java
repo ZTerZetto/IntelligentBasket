@@ -7,6 +7,16 @@ public class PositionInfo {
     private Double position_X;  // X坐标
     private Double position_Y;  // Y坐标
 
+    public String getBasketState() {
+        return basketState;
+    }
+
+    public void setBasketState(String basketState) {
+        this.basketState = basketState;
+    }
+
+    private String basketState;
+
 
     public PositionInfo() {
     }

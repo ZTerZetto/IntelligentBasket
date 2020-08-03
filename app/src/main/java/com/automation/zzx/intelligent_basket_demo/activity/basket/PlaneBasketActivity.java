@@ -75,6 +75,10 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
     private List<PositionInfo> infoList = new ArrayList<>();
     private Map<String, PositionInfo> positionMap = new HashMap<>();
 
+    //项目信息
+    private String projectId;
+    private String projectState;
+
     // 控件声明
     private RefreshLayout mSmartRefreshLayout;
     private SmartImageView mSmartIv;
@@ -255,6 +259,7 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
                     String[] locations = location.split(",");
                     Double location_x = Double.valueOf(locations[0]);
                     double location_y = Double.valueOf(locations[1]);
+                    projectId = basketObj.getString("project_id");
                     positionInfoA = new PositionInfo(buildId, "", location_x,location_y);
                 }else if(buildId.equals("B")){
                     //分隔符得到XY坐标
@@ -262,15 +267,20 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
                     String[] locations = location.split(",");
                     Double location_x = Double.valueOf(locations[0]);
                     double location_y = Double.valueOf(locations[1]);
+                    projectId = basketObj.getString("project_id");
                     positionInfoB = new PositionInfo(buildId, "", location_x,location_y);
                 }else{
 
                     //分隔符得到XY坐标
                     String location =  basketObj.getString("location");
+                    String basketId =  basketObj.getString("location_id");
                     String[] locations = location.split(",");
                     Double location_x = Double.valueOf(locations[0]);
                     double location_y = Double.valueOf(locations[1]);
-                    PositionInfo positionInfo = new PositionInfo(String.valueOf(index), buildId, location_x,location_y);
+                    projectId = basketObj.getString("project_id");
+                    projectState = basketObj.getString("project_state");
+                    PositionInfo positionInfo = new PositionInfo(basketId, buildId, location_x,location_y);
+                    positionInfo.setBasketState(basketObj.getString("basket_state"));
                     infoList.add(positionInfo);
                 }
             }
@@ -324,9 +334,12 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 Toast.makeText(PlaneBasketActivity.this, infoList.get(position).getId() + "号吊篮",
                         Toast.LENGTH_SHORT).show();
-                /*Intent intent = new Intent(PlaneBasketActivity.this, PlaneBasketActivity.class);
+                Intent intent = new Intent(PlaneBasketActivity.this, BasketDetailActivity.class);
                 intent.putExtra("basket_id", infoList.get(position).getId());
-                startActivity(intent);*/
+                intent.putExtra("project_state",projectState);
+                intent.putExtra("project_id",projectId);
+                intent.putExtra("basket_state", infoList.get(position).getBasketState());
+                startActivity(intent);
             }
         });
     }
