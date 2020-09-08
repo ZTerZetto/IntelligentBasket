@@ -71,7 +71,7 @@
                     android:id="@+id/area_id"
                     style="@style/usertextStyle"
                     android:layout_weight="1"
-                    android:hint="xxx" />
+                    android:hint="暂无" />
             </LinearLayout>
         </LinearLayout>
     </LinearLayout>

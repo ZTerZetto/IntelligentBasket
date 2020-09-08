@@ -2,6 +2,7 @@ package com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin;
 
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -18,6 +19,10 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.PlaneBasketActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.ConfigurationListActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.SearchProjectActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgAreaMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.hjq.permissions.OnPermission;
@@ -91,6 +96,8 @@ public class AreaAdminMessageFragment extends Fragment {
             });
             recyclerView = mView.findViewById(R.id.rv_message);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setStackFromEnd(true);//列表在底部开始展示，反转后由上面开始展示
+            linearLayoutManager.setReverseLayout(true);//列表翻转
             recyclerView.setLayoutManager(linearLayoutManager);
             mgAreaMessageAdapter = new MgAreaMessageAdapter(getActivity(),mMessageInfoList);
             // 点击消息列表item响应
@@ -98,7 +105,22 @@ public class AreaAdminMessageFragment extends Fragment {
                 @Override
                 public void onItemClick(View view, int position) {
                     MessageInfo messageInfo = mMessageInfoList.get(position);
-                    // do something
+                    Intent intent;
+                    switch(messageInfo.getmType()){
+                        case "1": // 报警消息
+                            intent = new Intent(getActivity(), BasketDetailActivity.class);
+                            intent.putExtra(SearchProjectActivity.PROJECT_ID, messageInfo.getmProjectId());  // 传入项目Id
+                            intent.putExtra("basket_id", messageInfo.getmBasketId());
+                            intent.putExtra("project_id",messageInfo.getmProjectId());
+                            intent.putExtra("basket_state", "3");//3-进行中
+                            startActivity(intent);
+                            break;
+                        case "5": // 配置清单
+                            intent = new Intent(getActivity(), ConfigurationListActivity.class);
+                            intent.putExtra(SearchProjectActivity.PROJECT_ID, messageInfo.getmProjectId());  // 传入项目Id
+                            startActivity(intent);
+                            break;
+                    }
 
                     // 更新页面与数据库
                     if(!messageInfo.ismIsChecked()) {
@@ -121,7 +143,7 @@ public class AreaAdminMessageFragment extends Fragment {
      */
     private void getHistoryMessageInfo(){
         if(!isHasPermission()) requestPermission();
-        List<MessageInfo> messageInfos = DataSupport.where("mType = 3 or mType = 2")
+        List<MessageInfo> messageInfos = DataSupport.where("mType = 1 or mType = 3 or mType = 2")
                                                     .find(MessageInfo.class);
         mMessageInfoList.clear();
         mMessageInfoList.addAll(messageInfos);

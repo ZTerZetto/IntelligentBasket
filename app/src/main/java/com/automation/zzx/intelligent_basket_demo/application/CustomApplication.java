@@ -279,8 +279,19 @@ public class CustomApplication extends Application {
         if(messageInfo.getmType()==null || messageInfo.getmType().equals("")) return;
         switch (messageInfo.getmType()){
             case "1":  // 报警消息
+                if (keyValuePair.get("alarmType").equals("1")){
+                    messageInfo.setmAlarmType("图像报警");
+                }else if (keyValuePair.get("alarmType").equals("2")){
+                    messageInfo.setmAlarmType("参数报警");
+                }
                 messageInfo.setmBasketId(keyValuePair.get("deviceId"));
                 messageInfo.setmWorkerList(keyValuePair.get("worker"));
+                messageInfo.setmProjectName(keyValuePair.get("projectName"));
+                messageInfo.setmBasketId(keyValuePair.get("deviceId"));
+                messageInfo.setmDescription(keyValuePair.get("description"));
+                messageInfo.setmSiteNo(keyValuePair.get("siteNo"));
+                messageInfo.setmProjectName(keyValuePair.get("projectName"));
+                messageInfo.setmTime(keyValuePair.get("time"));
                 break;
             case "2": // 验收申请
                 break;

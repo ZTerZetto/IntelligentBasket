@@ -19,6 +19,8 @@
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent">
+
+
             <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
                 android:id="@+id/general_layout"
                 android:adjustViewBounds="true"
@@ -35,6 +37,27 @@
                 android:orientation="vertical"
                 android:background="@color/white"
                 android:layout_marginTop="8dp">
+
+                <LinearLayout
+                    android:id="@+id/ll_error"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="horizontal"
+                    android:padding="8dp"
+                    android:visibility="gone">
+
+                    <ImageView
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:src="@mipmap/ic_tips" />
+
+                    <TextView
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:textSize="@dimen/textSize_12"
+                        android:text="部分吊篮坐标信息缺失，可能会导致点击无效。"
+                        android:background="@color/white"/>
+                </LinearLayout>
 
                 <TextView
                     android:id="@+id/tv_title"

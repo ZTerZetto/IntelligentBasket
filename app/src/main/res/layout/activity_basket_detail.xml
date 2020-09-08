@@ -55,22 +55,44 @@
                 android:text="进行中" />
 
         </LinearLayout>
+
         <LinearLayout
+            android:id="@+id/ll_location"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_vertical"
             android:layout_marginStart="10dp"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            >
             <TextView
                 style="@style/usertextStyle"
-                android:text="所属区域 "
+                android:text="现场编号 "
                 />
             <TextView
-                android:id="@+id/area_id"
+                android:id="@+id/location_id"
                 style="@style/usertextStyle"
                 android:layout_weight="1"
-                android:hint="3号楼" />
+                android:hint="#1" />
         </LinearLayout>
+
+            <LinearLayout
+                android:id="@+id/ll_area"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:gravity="center_vertical"
+                android:layout_marginStart="10dp"
+                android:orientation="horizontal"
+                >
+                <TextView
+                    style="@style/usertextStyle"
+                    android:text="所属区域 "
+                    />
+                <TextView
+                    android:id="@+id/area_id"
+                    style="@style/usertextStyle"
+                    android:layout_weight="1"
+                    android:hint="3号楼" />
+            </LinearLayout>
         </LinearLayout>
     </LinearLayout>
 

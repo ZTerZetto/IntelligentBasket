@@ -17,6 +17,7 @@ import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -46,6 +47,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -82,6 +84,7 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
     // 控件声明
     private RefreshLayout mSmartRefreshLayout;
     private SmartImageView mSmartIv;
+    private LinearLayout llError;
     private TextView tvTitle;
     private ListView lvBasket;
     private BasketPlaneAdapter basketPlaneAdapter;
@@ -270,13 +273,21 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
                     projectId = basketObj.getString("project_id");
                     positionInfoB = new PositionInfo(buildId, "", location_x,location_y);
                 }else{
-
                     //分隔符得到XY坐标
+                    //空坐标判断
                     String location =  basketObj.getString("location");
-                    String basketId =  basketObj.getString("location_id");
-                    String[] locations = location.split(",");
-                    Double location_x = Double.valueOf(locations[0]);
-                    double location_y = Double.valueOf(locations[1]);
+                    String basketId =  basketObj.getString("site_no");
+                    double location_x;
+                    double location_y;
+                    if(location == null || location.isEmpty()){
+                        location_x = 0;
+                        location_y = 0;
+                        llError.setVisibility(View.VISIBLE);
+                    } else {
+                        String[] locations = location.split(",");
+                        location_x = Double.valueOf(locations[0]);
+                        location_y = Double.valueOf(locations[1]);
+                    }
                     projectId = basketObj.getString("project_id");
                     projectState = basketObj.getString("project_state");
                     PositionInfo positionInfo = new PositionInfo(basketId, buildId, location_x,location_y);
@@ -284,6 +295,9 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
                     infoList.add(positionInfo);
                 }
             }
+            // 排个序号
+            orderPosition();
+
             for(int i = 0; i < infoList.size();i++){
                 positionMap.put(infoList.get(i).getId(),infoList.get(i));
             }
@@ -323,6 +337,7 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
 
         mSmartIv = findViewById(R.id.general_layout);
         mSmartIv.setOnTouchListener(onTouchListener);
+        llError = findViewById(R.id.ll_error);
         lvBasket = findViewById(R.id.lv_basket);
         tvTitle = findViewById(R.id.tv_title);
         basketPlaneAdapter = new BasketPlaneAdapter(this,R.layout.item_position_list,infoList);
@@ -335,10 +350,12 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
                 Toast.makeText(PlaneBasketActivity.this, infoList.get(position).getId() + "号吊篮",
                         Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PlaneBasketActivity.this, BasketDetailActivity.class);
-                intent.putExtra("basket_id", infoList.get(position).getId());
+                intent.putExtra("basket_id", infoList.get(position).getItemId());
                 intent.putExtra("project_state",projectState);
                 intent.putExtra("project_id",projectId);
                 intent.putExtra("basket_state", infoList.get(position).getBasketState());
+                intent.putExtra("location_num",infoList.get(position).getId());
+                intent.putExtra("area_num",buildId);
                 startActivity(intent);
             }
         });
@@ -443,21 +460,27 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
                     // 通过逆矩阵映射得到目标点 dst 的值
                     inverseMatrix.mapPoints(dst, new float[]{x, y});
 
-                    Toast.makeText(PlaneBasketActivity.this, "("+dst[0]+","+dst[1]+")",
-                            Toast.LENGTH_SHORT).show();
+                   /* Toast.makeText(PlaneBasketActivity.this, "("+dst[0]+","+dst[1]+")",
+                            Toast.LENGTH_SHORT).show();*/
                     if(positionInfos != null) {
                         if(positionInfos.size() == 1) {
                             Toast.makeText(PlaneBasketActivity.this, positionInfos.get(0).getId() + "号吊篮",
                                     Toast.LENGTH_SHORT).show();
-                            /*Intent intent = new Intent(PlaneBasketActivity.this, PlaneBasketActivity.class);
-                            intent.putExtra("build_id", positionInfos.get(0).getId());
-                            startActivity(intent);*/
+                            Intent intent = new Intent(PlaneBasketActivity.this, BasketDetailActivity.class);
+                            intent.putExtra("basket_id", positionInfos.get(0).getItemId());
+                            intent.putExtra("project_state",projectState);
+                            intent.putExtra("project_id",projectId);
+                            intent.putExtra("basket_state", positionInfos.get(0).getBasketState());
+                            intent.putExtra("location_num",positionInfos.get(0).getId());
+                            intent.putExtra("area_num",buildId);
+                            startActivity(intent);
+
                         } else if(positionInfos.size() > 1) {
                             mBuildString =  new String[positionInfos.size()];
                             for(int i=0;i<positionInfos.size();i++){
                                 mBuildString[i] = positionInfos.get(i).getId();
                             }
-                            showSelectDialog();
+                            showSelectDialog(positionInfos);
 
                         }
 
@@ -509,7 +532,7 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
 
 
     // 弹出选择框
-    public void showSelectDialog(){
+    public void showSelectDialog( final List<PositionInfo> positions){
         final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
         alertBuilder.setTitle("选择吊篮编号");
         alertBuilder.setSingleChoiceItems(mBuildString, currentSelected, new DialogInterface.OnClickListener() {
@@ -523,17 +546,20 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 currentSelected = tmpSelected;
-               /* //跳转至所选择的楼号主界面
-                Toast.makeText(PlaneBasketActivity.this, mBuildString[currentSelected] + "号吊篮",
+                //跳转至所选择的楼号主界面
+                Toast.makeText(PlaneBasketActivity.this, positions.get(currentSelected).getId() + "号吊篮",
                         Toast.LENGTH_SHORT).show();
-                Intent intent = new Intent(PlaneBasketActivity.this, PlaneBasketActivity.class);
-                intent.putExtra("build_id", mBuildString[currentSelected]);
-                startActivity(intent);*/
+                Intent intent = new Intent(PlaneBasketActivity.this, BasketDetailActivity.class);
+                intent.putExtra("basket_id", positions.get(currentSelected).getItemId());
+                intent.putExtra("project_state", projectState);
+                intent.putExtra("project_id", projectId);
+                intent.putExtra("basket_state", positions.get(currentSelected).getBasketState());
+                intent.putExtra("location_num",positions.get(currentSelected).getId());
+                intent.putExtra("area_num",buildId);
+                startActivity(intent);
                 mSelectProjectDialog.dismiss();
             }
-        });
-
-        alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+        }).setNegativeButton("取消", new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialogInterface, int i) {
                 mSelectProjectDialog.dismiss();
@@ -542,5 +568,22 @@ public class PlaneBasketActivity extends AppCompatActivity implements View.OnCli
 
         mSelectProjectDialog = alertBuilder.create();
         mSelectProjectDialog.show();
+    }
+
+    // 排序
+    private void orderPosition(){
+        for(int i = 1; i < infoList.size();i++ ){
+            for(int j = 0; j < infoList.size()-i;j++){
+                if(infoList.get(j).getId().equals("未录入") ){
+                    Collections.swap(infoList,j,j+1);
+                } else {
+                    int int1 = Integer.parseInt(infoList.get(j).getId());
+                    int int2 = Integer.parseInt(infoList.get(j+1).getId());
+                    if(int1 > int2){
+                        Collections.swap(infoList,j,j+1);
+                    }
+                }
+            }
+        }
     }
 }

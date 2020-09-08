@@ -17,4 +17,11 @@
 
     </android.support.v7.widget.RecyclerView>
 
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="——到底啦——"
+        android:gravity="center"
+        android:layout_marginVertical="@dimen/size_20"/>
+
 </LinearLayout>

@@ -62,6 +62,10 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
 
     // 控件声明
     private TextView txtBasketId;  //吊篮编号
+    private LinearLayout llLocation;  //现场编号
+    private TextView txtLocationId;  //现场编号
+    private LinearLayout llArea;  //位置区域
+    private TextView txtAreaId;  //位置区域
     private TextView txtBasketState; //吊篮状态
     private GridView mMonitorGridView;  // 功能测试
     private GridView mFunctionGridView;
@@ -87,6 +91,8 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
     // others
     private String mProjectId;  //項目ID
     private String mBasketId;  // 吊篮id
+    private String areaNum;  // 楼号
+    private String locationNum;  // 现场编号
     private String mBasketState;  // 吊篮状态  0 待安装/1 待安监/2 进行中/3 预报停 /4 报停审核
     private UserInfo mPrincipal_1; //1号操作人员
     private UserInfo mPrincipal_2; //2号操作人员
@@ -128,12 +134,13 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
-        getBaseInfoFromPred();
         initWidgetResource();
+        getBaseInfoFromPred();
         getWorkerIdByBasket();
     }
 
     // 項目和吊籃信息获取
+    @SuppressLint("ResourceAsColor")
     public void getBaseInfoFromPred() {
         Intent intent = getIntent();
         mProjectId = intent.getStringExtra("project_id");
@@ -141,29 +148,27 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
         mBasketState = intent.getStringExtra("basket_state");
         mBasketState = mBasketState.substring(0,1);
 
-        // 从本地获取数据
-        mPref = PreferenceManager.getDefaultSharedPreferences(this);
-        mUserInfo = new UserInfo();
-        mUserInfo.setUserId(mPref.getString("userId", ""));
-        mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
-        mUserInfo.setUserRole(mPref.getString("userRole", ""));
-        mUserInfo.setUserName(mPref.getString("userName", ""));
-        mToken = mPref.getString("loginToken","");
-    }
+        //区域楼号
+        if(intent.getStringExtra("area_num") != null){
+            areaNum = intent.getStringExtra("area_num");
+            llArea.setVisibility(View.VISIBLE);
+            txtAreaId.setText(areaNum+"号楼");
+        } else {
+            // 隐藏区域
+            llArea.setVisibility(View.GONE);
+        }
 
-    // 资源句柄初始化及监听
-    @SuppressLint("ResourceAsColor")
-    public void initWidgetResource(){
-        // 获取控件句柄
-        mMonitorGridView = (GridView) findViewById(R.id.function_gridview_1);
-        mFunctionGridView = (GridView) findViewById(R.id.function_gridview_2);
-        mInfoGridView = (GridView) findViewById(R.id.function_gridview_3);
+        //现场编号
+        if(intent.getStringExtra("location_num") != null){
+            locationNum = intent.getStringExtra("location_num");
+            llLocation.setVisibility(View.VISIBLE);
+            txtLocationId.setText("#"+locationNum);
+        } else {
+            //隐藏区域
+            llLocation.setVisibility(View.GONE);
+        }
 
-        //初始化控件并显示内容
-        txtBasketId = (TextView) findViewById(R.id.basket_id);
         txtBasketId.setText(mBasketId);
-        txtBasketState = (TextView) findViewById(R.id.basket_state);
-
         //0 待安装/1 待安监/2 进行中/3 预报停 /4 报停审核
         switch (mBasketState){
             case "1":
@@ -190,6 +195,38 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
                 txtBasketState.setVisibility(View.GONE);
                 break;
         }
+
+
+        // 从本地获取数据
+        mPref = PreferenceManager.getDefaultSharedPreferences(this);
+        mUserInfo = new UserInfo();
+        mUserInfo.setUserId(mPref.getString("userId", ""));
+        mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
+        mUserInfo.setUserRole(mPref.getString("userRole", ""));
+        mUserInfo.setUserName(mPref.getString("userName", ""));
+        mToken = mPref.getString("loginToken","");
+    }
+
+    // 资源句柄初始化及监听
+    public void initWidgetResource(){
+        // 获取控件句柄
+        mMonitorGridView = (GridView) findViewById(R.id.function_gridview_1);
+        mFunctionGridView = (GridView) findViewById(R.id.function_gridview_2);
+        mInfoGridView = (GridView) findViewById(R.id.function_gridview_3);
+
+        //初始化控件并显示内容
+        txtBasketId = (TextView) findViewById(R.id.basket_id);
+
+
+        llLocation = findViewById(R.id.ll_location);
+        txtLocationId = findViewById(R.id.location_id);
+
+        llArea = findViewById(R.id.ll_area);
+        txtAreaId =findViewById(R.id.area_id);
+
+        txtBasketState = (TextView) findViewById(R.id.basket_state);
+
+
 
         // 初始化功能列表
         initFunctionList();
@@ -395,6 +432,7 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
     public void onClick(View v) {
 
     }
+
     // 顶部导航栏消息响应
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -473,5 +511,4 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
                 break;
         }
     }
-
 }

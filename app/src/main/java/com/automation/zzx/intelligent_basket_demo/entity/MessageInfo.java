@@ -16,7 +16,8 @@ public class MessageInfo extends DataSupport implements Parcelable {
     private String mDescription; // 消息内容
 
     // 消息类型
-    private String mType; // 消息类型-》1：报警消息 2.验收申请类 3.项目流程类
+    private String mType; // 消息类型-> 1：报警消息 2.验收申请类 3.项目流程类
+    private String mAlarmType;// 报警消息类型 -> 1：图像报警 2：参数报警
 
     // 项目相关
     private String mProjectId;  // 项目编号
@@ -29,6 +30,7 @@ public class MessageInfo extends DataSupport implements Parcelable {
 
     // 吊篮相关
     private String mBasketId; // 设备Id
+    private String mSiteNo; // 现场编号 2020.09.07
 
     private boolean mIsChecked; // 是否查看过该信息
 
@@ -79,6 +81,14 @@ public class MessageInfo extends DataSupport implements Parcelable {
 
     public void setmType(String mType) {
         this.mType = mType;
+    }
+
+    public String getmAlarmType() {
+        return mAlarmType;
+    }
+
+    public void setmAlarmType(String mAlarmType) {
+        this.mAlarmType = mAlarmType;
     }
 
     public String getmProjectId() {
@@ -137,6 +147,14 @@ public class MessageInfo extends DataSupport implements Parcelable {
         this.mIsChecked = mIsChecked;
     }
 
+    public String getmSiteNo() {
+        return mSiteNo;
+    }
+
+    public void setmSiteNo(String siteNo) {
+        this.mSiteNo = siteNo;
+    }
+
     /*
      * Parcel 序列化
      */
@@ -145,12 +163,14 @@ public class MessageInfo extends DataSupport implements Parcelable {
         mTitle = in.readString();
         mDescription = in.readString();
         mType = in.readString();
+        mAlarmType = in.readString();//2020.09.07
         mProjectId = in.readString();
         mProjectName = in.readString();
         mWorkerList = in.readString();
         mWorkerPhone = in.readString();
         mRentAdminPhone = in.readString();
         mBasketId = in.readString();
+        mSiteNo = in.readString(); //2020.09.07
         mIsChecked = in.readByte() != 0;
     }
 
@@ -177,12 +197,14 @@ public class MessageInfo extends DataSupport implements Parcelable {
         dest.writeString(mTitle);
         dest.writeString(mDescription);
         dest.writeString(mType);
+        dest.writeString(mAlarmType);
         dest.writeString(mProjectId);
         dest.writeString(mProjectName);
         dest.writeString(mWorkerList);
         dest.writeString(mWorkerPhone);
         dest.writeString(mRentAdminPhone);
         dest.writeString(mBasketId);
+        dest.writeString(mSiteNo);
         dest.writeByte((byte) (mIsChecked ? 1 : 0));
     }
 }

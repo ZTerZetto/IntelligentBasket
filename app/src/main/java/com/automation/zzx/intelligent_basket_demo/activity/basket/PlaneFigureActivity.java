@@ -19,6 +19,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -85,6 +86,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
     // 控件声明
     private RefreshLayout mSmartRefreshLayout;
     private SmartImageView mSmartIv;
+    private LinearLayout llError;
     private TextView tvTitle;
     private ListView lvBuild;
     private BasketPlaneAdapter buildPlaneAdapter;
@@ -220,23 +222,33 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
                     //分隔符得到XY坐标
                     String location =  basketObj.getString("location");
                     String[] locations = location.split(",");
-                    Double location_x = Double.valueOf(locations[0]);
+                    double location_x = Double.valueOf(locations[0]);
                     double location_y = Double.valueOf(locations[1]);
                     positionInfoA = new PositionInfo(buildId, "", location_x,location_y);
                 }else if(buildId.equals("B")){
                     //分隔符得到XY坐标
                     String location =  basketObj.getString("location");
                     String[] locations = location.split(",");
-                    Double location_x = Double.valueOf(locations[0]);
+                    double location_x = Double.valueOf(locations[0]);
                     double location_y = Double.valueOf(locations[1]);
                     positionInfoB = new PositionInfo(buildId, "", location_x,location_y);
                 }else{
                     //分隔符得到XY坐标
+                    //空坐标判断
                     String location =  basketObj.getString("location");
-                    String[] locations = location.split(",");
-                    Double location_x = Double.valueOf(locations[0]);
-                    double location_y = Double.valueOf(locations[1]);
-                    PositionInfo positionInfo = new PositionInfo(buildId, "", location_x,location_y);
+                    String basketList = basketObj.getString("deviceList");
+                    double location_x;
+                    double location_y;
+                    if(location == null || location.isEmpty()){
+                        location_x = 0;
+                        location_y = 0;
+                        llError.setVisibility(View.VISIBLE);
+                    } else {
+                        String[] locations = location.split(",");
+                        location_x = Double.valueOf(locations[0]);
+                        location_y = Double.valueOf(locations[1]);
+                    }
+                    PositionInfo positionInfo = new PositionInfo(buildId, basketList, location_x,location_y);
                     infoList.add(positionInfo);
                 }
             }
@@ -294,7 +306,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
 
         mSmartIv = findViewById(R.id.general_layout);
         mSmartIv.setOnTouchListener(onTouchListener);
-
+        llError = findViewById(R.id.ll_error);
         tvTitle = findViewById(R.id.tv_title);
         lvBuild = findViewById(R.id.lv_build);
         buildPlaneAdapter = new BasketPlaneAdapter(this,R.layout.item_area_plane,infoList);
@@ -420,7 +432,9 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
                                     Toast.LENGTH_SHORT).show();
                             Intent intent = new Intent(PlaneFigureActivity.this, PlaneBasketActivity.class);
                             intent.putExtra("build_id", positionInfos.get(0).getId());
+                            intent.putExtra("project_id", mProjectId);
                             startActivity(intent);
+
                         } else if(positionInfos.size() > 1) {
                             mBuildString =  new String[positionInfos.size()];
                             for(int i=0;i<positionInfos.size();i++){
@@ -497,6 +511,7 @@ public class PlaneFigureActivity extends AppCompatActivity implements View.OnCli
                             Toast.LENGTH_SHORT).show();
                 Intent intent = new Intent(PlaneFigureActivity.this, PlaneBasketActivity.class);
                 intent.putExtra("build_id", mBuildString[currentSelected]);
+                intent.putExtra("project_id", mProjectId);
                 startActivity(intent);
                 mSelectProjectDialog.dismiss();
             }

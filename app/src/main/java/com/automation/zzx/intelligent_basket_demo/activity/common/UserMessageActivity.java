@@ -15,11 +15,13 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.ConfigurationListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.OutAndInStorageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.SearchProjectActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.common.UserMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
+import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -87,18 +89,27 @@ public class UserMessageActivity extends AppCompatActivity {
 
         recyclerView = (RecyclerView) findViewById(R.id.rv_message);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
+        linearLayoutManager.setStackFromEnd(true);//列表在底部开始展示，反转后由上面开始展示
+        linearLayoutManager.setReverseLayout(true);//列表翻转
         recyclerView.setLayoutManager(linearLayoutManager);
         mgUserMessageAdapter = new UserMessageAdapter(this,mMessageInfoList);
         mgUserMessageAdapter.setOnItemClickListener(new UserMessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
                 MessageInfo messageInfo = mMessageInfoList.get(position);
-                // do something
+                Intent intent;
                 switch(messageInfo.getmType()){
                     case "1": // 报警消息
+                        intent = new Intent(UserMessageActivity.this, BasketDetailActivity.class);
+                        intent.putExtra(SearchProjectActivity.PROJECT_ID, messageInfo.getmProjectId());  // 传入项目Id
+                        intent.putExtra("basket_id", messageInfo.getmBasketId());
+                        intent.putExtra("project_id",messageInfo.getmProjectId());
+                        intent.putExtra("basket_state", "3");//3-进行中
+                        startActivity(intent);
+
                         break;
                     case "5": // 配置清单
-                        Intent intent = new Intent(UserMessageActivity.this, ConfigurationListActivity.class);
+                        intent = new Intent(UserMessageActivity.this, ConfigurationListActivity.class);
                         intent.putExtra(SearchProjectActivity.PROJECT_ID, messageInfo.getmProjectId());  // 传入项目Id
                         startActivity(intent);
                         break;
@@ -154,7 +165,7 @@ public class UserMessageActivity extends AppCompatActivity {
                         .find(MessageInfo.class);
                 break;
             default:
-                if(mUserMessageType.contains("worker")){
+                if(mUserMessageType.contains("worker")||(WorkerType.getByDetailtype(mUserMessageType)!=null)){
                    messageInfos = DataSupport.where("mType = 1 or mType = 4")
                           .find(MessageInfo.class);
                 }

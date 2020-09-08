@@ -21,13 +21,17 @@
             android:text="2019年4月1日 19:32" />
     </LinearLayout>
 
+
+    <!-- 普通消息展示 -->
+
     <LinearLayout
-        android:id="@+id/ll_message"
+        android:id="@+id/ll_ordinary_message"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="@color/white"
         android:padding="15dp"
-        android:orientation="vertical">
+        android:orientation="vertical"
+        android:visibility="gone">
 
         <RelativeLayout
             android:layout_width="match_parent"
@@ -40,7 +44,7 @@
                 android:textColor="@color/colorTextDark"
                 android:textSize="@dimen/textSize_16"
                 android:textStyle="bold"
-                android:text="报警消息"/>
+                android:text="普通消息"/>
             <ImageView
                 android:id="@+id/iv_message_no_read"
                 android:layout_width="5dp"
@@ -52,6 +56,7 @@
 
         </RelativeLayout>
 
+
         <TextView
             android:id="@+id/tv_message_description"
             android:layout_width="match_parent"
@@ -59,7 +64,134 @@
             android:layout_marginTop="10dp"
             android:textColor="@color/colorGradText"
             android:textSize="@dimen/textSize_15"
-            android:text="施工人员违规操作"/>
+            android:text="项目进度更新"/>
+
+    </LinearLayout>
+
+
+
+    <!-- 报警消息展示 -->
+    <LinearLayout
+        android:id="@+id/ll_alarm_message"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/white"
+        android:padding="15dp"
+        android:orientation="vertical"
+        >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <TextView
+                android:id="@+id/tv_alarm_message_title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/red"
+                android:textSize="@dimen/textSize_16"
+                android:textStyle="bold"
+                android:text="报警消息"/>
+            <ImageView
+                android:id="@+id/iv_alarm_message_no_read"
+                android:layout_width="5dp"
+                android:layout_height="5dp"
+                android:layout_marginLeft="5dp"
+                android:src="@mipmap/bg_num_organge_red"
+                android:layout_toRightOf="@+id/tv_alarm_message_title"
+                android:layout_alignParentTop="true"/>
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorGradText"
+                android:textSize="@dimen/textSize_15"
+                android:text="报警类型："/>
+
+            <TextView
+                android:id="@+id/tv_alarm_message_1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorGradText"
+                android:textSize="@dimen/textSize_15"
+                android:text="倾斜角"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorGradText"
+                android:textSize="@dimen/textSize_15"
+                android:text="吊篮编号："/>
+
+            <TextView
+                android:id="@+id/tv_alarm_message_2"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorGradText"
+                android:textSize="@dimen/textSize_15"
+                android:text="37akkkfhoab"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorGradText"
+                android:textSize="@dimen/textSize_15"
+                android:text="现场编号："/>
+
+            <TextView
+                android:id="@+id/tv_alarm_message_3"
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:layout_marginTop="10dp"
+                android:textColor="@color/colorGradText"
+                android:textSize="@dimen/textSize_15"
+                android:text="11111"/>
+
+        </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:id="@+id/tv_alarm_message_4"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="4"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/colorGradText"
+            android:textSize="@dimen/textSize_12"
+            android:text="项目名称"/>
+
+        <TextView
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/font_blue"
+            android:textSize="@dimen/textSize_12"
+            android:text="查看详情"/>
+    </LinearLayout>
+
+
 
     </LinearLayout>
 

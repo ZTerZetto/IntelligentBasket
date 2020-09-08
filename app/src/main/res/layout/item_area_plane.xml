@@ -42,7 +42,7 @@
             android:layout_height="wrap_content" />
         <TextView
             android:id="@+id/tv_item_id"
-            android:hint="20190801,20191102,1,201911021"
+            android:hint="暂无编号"
             android:textSize="@dimen/textSize_16"
             android:textColor="@color/colorSilverText"
             android:singleLine="true"

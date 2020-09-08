@@ -3,7 +3,7 @@ package com.automation.zzx.intelligent_basket_demo.entity;
 public class PositionInfo {
 
     private String id; // 所属楼层内吊篮编号 or 总平面图里的楼号
-    private String itemId; // 关联吊篮ID or 该楼所包含的所有吊篮ID
+    private String itemId; // 关联设备ID or 该楼所包含的所有吊篮ID
     private Double position_X;  // X坐标
     private Double position_Y;  // Y坐标
 

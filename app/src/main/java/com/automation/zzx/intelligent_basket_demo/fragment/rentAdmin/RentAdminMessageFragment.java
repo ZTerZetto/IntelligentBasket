@@ -18,6 +18,8 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.SearchProjectActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.AlarmMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgRentMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
@@ -94,6 +96,8 @@ public class RentAdminMessageFragment extends Fragment {
 
             recyclerView = mView.findViewById(R.id.rv_message);
             LinearLayoutManager linearLayoutManager = new LinearLayoutManager(getContext());
+            linearLayoutManager.setStackFromEnd(true);//列表在底部开始展示，反转后由上面开始展示
+            linearLayoutManager.setReverseLayout(true);//列表翻转
             recyclerView.setLayoutManager(linearLayoutManager);
             mgRentMessageAdapter = new MgRentMessageAdapter(getActivity(),mMessageInfoList);
             // 点击消息列表item响应
@@ -101,11 +105,17 @@ public class RentAdminMessageFragment extends Fragment {
                 @Override
                 public void onItemClick(View view, int position) {
                     MessageInfo messageInfo = mMessageInfoList.get(position);
-                    // do something
+                    Intent intent;
                     switch(messageInfo.getmType()){
                         case "1":  // 报警消息
-                            Intent intent = new Intent(getContext(), AlarmMessageActivity.class);
+                            /*intent = new Intent(getContext(), AlarmMessageActivity.class);
                             intent.putExtra(ALARM_MESSAGE_MSG, (Parcelable) messageInfo);
+                            startActivity(intent);*/
+                            intent = new Intent(getActivity(), BasketDetailActivity.class);
+                            intent.putExtra(SearchProjectActivity.PROJECT_ID, messageInfo.getmProjectId());  // 传入项目Id
+                            intent.putExtra("basket_id", messageInfo.getmBasketId());
+                            intent.putExtra("project_id",messageInfo.getmProjectId());
+                            intent.putExtra("basket_state", "3");//3-进行中
                             startActivity(intent);
                             break;
                     }
