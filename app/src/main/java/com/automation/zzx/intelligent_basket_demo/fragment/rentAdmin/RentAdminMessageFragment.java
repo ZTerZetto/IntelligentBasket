@@ -1,7 +1,11 @@
 package com.automation.zzx.intelligent_basket_demo.fragment.rentAdmin;
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -21,8 +25,10 @@ import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.SearchProjectActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.AlarmMessageActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgRentMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
+import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -54,6 +60,9 @@ public class RentAdminMessageFragment extends Fragment {
     private MgRentMessageAdapter mgRentMessageAdapter;
     private List<MessageInfo> mMessageInfoList = new ArrayList<>();
     private RecyclerView recyclerView;
+
+    // 用户信息
+    private UserInfo mUserInfo;
 
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
@@ -141,8 +150,10 @@ public class RentAdminMessageFragment extends Fragment {
      */
     private void getHistoryMessageInfo(){
         if(!isHasPermission()) requestPermission();
-        List<MessageInfo> messageInfos = DataSupport.where("mType = 3 or mType = 1")
-                .find(MessageInfo.class);
+//        List<MessageInfo> messageInfos = DataSupport.where("mType = 3 or mType = 1")
+//                .find(MessageInfo.class);
+        List<MessageInfo> messageInfos = DataSupport.where(String.format("mType in (%s) and mRentAdminId = ?","1,3"),
+                mUserInfo.getUserId()).find(MessageInfo.class);
         mMessageInfoList.clear();
         mMessageInfoList.addAll(messageInfos);
         mgRentMessageAdapter.notifyDataSetChanged();
@@ -189,6 +200,29 @@ public class RentAdminMessageFragment extends Fragment {
         if (XXPermissions.isHasPermission(getActivity(), Permission.Group.STORAGE))
             return true;
         return false;
+    }
+
+    /*
+     * 登录相关
+     */
+    // 从本地获取用户信息
+    protected void onAttachToContext(Context context) {
+        //do something
+        mUserInfo = ((RentAdminPrimaryActivity) context).pushUserInfo();
+    }
+    @TargetApi(23)
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        onAttachToContext(context);
+    }
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            onAttachToContext(activity);
+        }
     }
 
 }

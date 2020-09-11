@@ -358,6 +358,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 Log.i(TAG, "You have clicked message button");
                 intent = new Intent(WorkerPrimaryActivity.this, UserMessageActivity.class);
                 intent.putExtra("user_type", "worker");
+                intent.putExtra("user_id", mUserInfo.getUserId());
                 startActivity(intent);
                 break;
             case R.id.warning_layout:  // 报警

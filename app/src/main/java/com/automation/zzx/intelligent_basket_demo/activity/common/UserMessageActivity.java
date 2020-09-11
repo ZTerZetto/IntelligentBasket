@@ -51,6 +51,9 @@ public class UserMessageActivity extends AppCompatActivity {
     // 页面类型
     private String mUserMessageType;
 
+    // 用户信息
+    private String mUserId;
+
     @SuppressLint("HandlerLeak")
     private Handler mHandler = new Handler() {
         public void handleMessage(Message msg) {
@@ -71,6 +74,7 @@ public class UserMessageActivity extends AppCompatActivity {
         if(!isHasPermission()) requestPermission();
         Intent intent = getIntent();
         mUserMessageType = intent.getStringExtra("user_type");
+        mUserId = intent.getStringExtra("user_id");
 
         initWidgetResource();
     }
@@ -106,7 +110,6 @@ public class UserMessageActivity extends AppCompatActivity {
                         intent.putExtra("project_id",messageInfo.getmProjectId());
                         intent.putExtra("basket_state", "3");//3-进行中
                         startActivity(intent);
-
                         break;
                     case "5": // 配置清单
                         intent = new Intent(UserMessageActivity.this, ConfigurationListActivity.class);
@@ -166,8 +169,10 @@ public class UserMessageActivity extends AppCompatActivity {
                 break;
             default:
                 if(mUserMessageType.contains("worker")||(WorkerType.getByDetailtype(mUserMessageType)!=null)){
-                   messageInfos = DataSupport.where("mType = 1 or mType = 4")
-                          .find(MessageInfo.class);
+//                   messageInfos = DataSupport.where("mType = 1 or mType = 4")
+//                          .find(MessageInfo.class);
+                    messageInfos = DataSupport.where(String.format("mType in (%s) and mWorkerList = ?","1,4"),
+                            mUserId).find(MessageInfo.class);
                 }
                 break;
         }
