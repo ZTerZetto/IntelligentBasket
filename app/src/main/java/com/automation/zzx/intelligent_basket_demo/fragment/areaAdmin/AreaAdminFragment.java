@@ -30,6 +30,7 @@ import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
+import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 
 import java.io.IOException;
@@ -221,6 +222,10 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
         SharedPreferences.Editor editor = mPref.edit();
         editor.remove("loginToken");
         editor.commit();
+
+        // 200911: 退出登录，去除别名设置
+        MiPushUtil.clearAlias(getActivity(), mUserInfo.getUserId());
+
         startActivity(new Intent(getActivity(), LoginActivity.class));
         getActivity().finish();
     }

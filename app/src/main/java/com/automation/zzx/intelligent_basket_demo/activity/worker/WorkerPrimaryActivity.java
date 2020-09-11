@@ -673,6 +673,10 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         SharedPreferences.Editor editor = mPref.edit();
         editor.remove("loginToken");
         editor.commit();
+
+        // 200911: 退出登录，去除别名设置
+        MiPushUtil.clearAlias(this, mUserInfo.getUserId());
+
         startActivity(new Intent(WorkerPrimaryActivity.this, LoginActivity.class));
         this.finish();  // 销毁此活动
     }

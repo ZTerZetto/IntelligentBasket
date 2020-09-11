@@ -29,4 +29,13 @@ public class MiPushUtil {
         }
 
     }
+
+    /*
+     * 去除别名设置
+     */
+    public static void clearAlias(Activity activity, String alias){
+//        CustomApplication.setMainActivity(activity);
+
+        MiPushClient.unsetAlias(activity, alias, null);
+    }
 }
