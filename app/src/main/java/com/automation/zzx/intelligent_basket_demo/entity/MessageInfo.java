@@ -28,6 +28,11 @@ public class MessageInfo extends DataSupport implements Parcelable {
     private String mWorkerPhone; // 施工人员联系方式
     private String mRentAdminPhone; // 租方管理员联系方式
 
+    // ID 类
+    private String mAreaAdminId;
+    private String mRentAdminId;
+    private String mProjectAdaminId;
+
     // 吊篮相关
     private String mBasketId; // 设备Id
     private String mSiteNo; // 现场编号 2020.09.07
@@ -129,6 +134,30 @@ public class MessageInfo extends DataSupport implements Parcelable {
 
     public void setmRentAdminPhone(String mRentAdminPhone) {
         this.mRentAdminPhone = mRentAdminPhone;
+    }
+
+    public String getmAreaAdminId(){
+        return mAreaAdminId;
+    }
+
+    public void setmAreaAdminId(String mAreaAdminId){
+        this.mAreaAdminId = mAreaAdminId;
+    }
+
+    public String getmRentAdminId(){
+        return mRentAdminId;
+    }
+
+    public void setmRentAdminId(String mRentAdminId){
+        this.mRentAdminId = mRentAdminId;
+    }
+
+    public String getmProjectAdaminId(){
+        return mProjectAdaminId;
+    }
+
+    public void setmProjectAdaminId(String mProjectAdaminId){
+        this.mProjectAdaminId = mProjectAdaminId;
     }
 
     public String getmBasketId() {

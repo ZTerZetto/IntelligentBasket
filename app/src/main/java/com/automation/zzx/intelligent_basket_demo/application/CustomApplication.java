@@ -286,6 +286,9 @@ public class CustomApplication extends Application {
                 }
                 messageInfo.setmBasketId(keyValuePair.get("deviceId"));
                 messageInfo.setmWorkerList(keyValuePair.get("worker"));
+                messageInfo.setmAreaAdminId(keyValuePair.get("areaAdminId"));
+                messageInfo.setmRentAdminId(keyValuePair.get("rentAdminId"));
+                messageInfo.setmProjectName(keyValuePair.get("projectAdminId"));
                 messageInfo.setmProjectName(keyValuePair.get("projectName"));
                 messageInfo.setmBasketId(keyValuePair.get("deviceId"));
                 messageInfo.setmDescription(keyValuePair.get("description"));

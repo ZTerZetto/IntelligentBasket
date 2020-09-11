@@ -2,7 +2,12 @@ package com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin;
 
 
 import android.annotation.SuppressLint;
+import android.annotation.TargetApi;
+import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
@@ -19,12 +24,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryOldActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminProListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.PlaneBasketActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.ConfigurationListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.SearchProjectActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgAreaMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
+import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -56,6 +64,9 @@ public class AreaAdminMessageFragment extends Fragment {
     private List<MessageInfo> mMessageInfoList = new ArrayList<>();
     private RecyclerView recyclerView;
 
+    public SharedPreferences pref;
+    private UserInfo userInfo; // 个人信息
+    private String token; //
 
     @SuppressLint("HandlerLeak")
     public final Handler mHandler = new Handler() {
@@ -143,8 +154,10 @@ public class AreaAdminMessageFragment extends Fragment {
      */
     private void getHistoryMessageInfo(){
         if(!isHasPermission()) requestPermission();
-        List<MessageInfo> messageInfos = DataSupport.where("mType = 1 or mType = 3 or mType = 2")
-                                                    .find(MessageInfo.class);
+//        List<MessageInfo> messageInfos = DataSupport.where("mType = 1 or mType = 3 or mType = 2")
+//                                                    .find(MessageInfo.class);
+        List<MessageInfo> messageInfos = DataSupport.where(String.format("mType in (%s) and mAreaAdminId =?","1,2,3"),
+                userInfo.getUserId()).find(MessageInfo.class);
         mMessageInfoList.clear();
         mMessageInfoList.addAll(messageInfos);
         mgAreaMessageAdapter.notifyDataSetChanged();
@@ -205,4 +218,29 @@ public class AreaAdminMessageFragment extends Fragment {
         Log.i(TAG, "onPause");
     }
 
+    /*
+     *  生命周期函数
+     */
+    /*
+     * 登录相关
+     */
+    protected void onAttachToContext(Context context) {
+        //do something
+        userInfo = ((AreaAdminPrimaryOldActivity) context).pushUserInfo();
+        token = ((AreaAdminPrimaryOldActivity) context).pushToken();
+    }
+    @TargetApi(23)
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        onAttachToContext(context);
+    }
+    @SuppressWarnings("deprecation")
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
+            onAttachToContext(activity);
+        }
+    }
 }
