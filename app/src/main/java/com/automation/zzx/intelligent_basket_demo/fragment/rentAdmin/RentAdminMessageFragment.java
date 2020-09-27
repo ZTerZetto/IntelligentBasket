@@ -5,6 +5,7 @@ import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
@@ -29,6 +30,8 @@ import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPr
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgRentMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
+import com.automation.zzx.intelligent_basket_demo.widget.ScaleImageView;
+import com.automation.zzx.intelligent_basket_demo.widget.image.WebImage;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -40,6 +43,7 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -50,7 +54,8 @@ import java.util.List;
 public class RentAdminMessageFragment extends Fragment {
 
     // Message
-    private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;;
+    private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;
+    private final static int CHECK_ALARM_PICTURE = 101;
 
     // 页面跳转
     public final static String ALARM_MESSAGE_MSG = "alarm_message_info";
@@ -60,6 +65,8 @@ public class RentAdminMessageFragment extends Fragment {
     private MgRentMessageAdapter mgRentMessageAdapter;
     private List<MessageInfo> mMessageInfoList = new ArrayList<>();
     private RecyclerView recyclerView;
+    private List<Bitmap> mAlarmPicList = new ArrayList<>();//报警图片
+    private List<String> mPicUrls = new ArrayList<>();//报警图片链接
 
     // 用户信息
     private UserInfo mUserInfo;
@@ -71,6 +78,13 @@ public class RentAdminMessageFragment extends Fragment {
                 case UPDATE_HISTORY_MESSAGE_INFO:
                     getHistoryMessageInfo();
                     mSmartRefreshLayout.finishRefresh(100);
+                    break;
+                case CHECK_ALARM_PICTURE:
+                    int position = msg.arg1;
+                    getAlarmPics(position);
+                    ScaleImageView scaleImageView = new ScaleImageView((AppCompatActivity) getActivity());
+                    scaleImageView.setUrls_and_Bitmaps(mPicUrls, mAlarmPicList, 0);
+                    scaleImageView.create();
                     break;
             }
         }
@@ -113,6 +127,22 @@ public class RentAdminMessageFragment extends Fragment {
             mgRentMessageAdapter.setOnItemClickListener(new MgRentMessageAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
+
+                }
+
+                @Override
+                public void onPicRead(View view, int position) {
+                    //点击查看图片
+                    Message msg = new Message();
+                    msg.what = CHECK_ALARM_PICTURE;
+                    msg.arg1 = position;
+                    mHandler.sendMessage(msg);
+//                    mHandler.handleMessage(msg);
+
+                }
+
+                @Override
+                public void onDetail(View view, int position) {
                     MessageInfo messageInfo = mMessageInfoList.get(position);
                     Intent intent;
                     switch(messageInfo.getmType()){
@@ -125,6 +155,8 @@ public class RentAdminMessageFragment extends Fragment {
                             intent.putExtra("basket_id", messageInfo.getmBasketId());
                             intent.putExtra("project_id",messageInfo.getmProjectId());
                             intent.putExtra("basket_state", "3");//3-进行中
+                            intent.putExtra("location_num",messageInfo.getmSiteNo());
+
                             startActivity(intent);
                             break;
                     }
@@ -158,6 +190,26 @@ public class RentAdminMessageFragment extends Fragment {
         mMessageInfoList.addAll(messageInfos);
         mgRentMessageAdapter.notifyDataSetChanged();
     }
+
+
+    /*
+     * 获取报警识别图片
+     */
+    private void getAlarmPics(int position){
+        //获取urls
+        String[] urls = mMessageInfoList.get(position).getUrl().split(",");
+        mPicUrls = Arrays.asList(urls);
+        //根据url得到bitmaps
+        mAlarmPicList.clear();
+        for(int i=0; i < mPicUrls.size(); i++){
+            String url = mPicUrls.get(i);
+//            mAlarmPicList.add(WebImage.webImageCache.get(url));
+            WebImage webImage = new WebImage(url);
+            Bitmap bitmap = webImage.getBitmap(getActivity());
+            mAlarmPicList.add(bitmap);
+        }
+    }
+
 
     /*
         用xxpermissions申请权限

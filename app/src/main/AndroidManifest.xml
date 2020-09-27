@@ -60,7 +60,6 @@
         <activity android:name=".activity.basket.BasketInstallTeamActivity" />
         <activity android:name=".activity.proAdmin.ProAdminSetActivity" />
         <activity android:name=".activity.proAdmin.ProAdminMessageActivity" />
-        <activity android:name=".activity.proAdmin.ProAdminPrimaryOld1Activity" />
         <activity android:name=".activity.proAdmin.ProAdminPrimaryActivity" />
 
         <meta-data

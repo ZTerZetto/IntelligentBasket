@@ -37,6 +37,9 @@ public class MessageInfo extends DataSupport implements Parcelable {
     private String mBasketId; // 设备Id
     private String mSiteNo; // 现场编号 2020.09.07
 
+    //报警描述类
+    private String url; // 识别图片链接
+
     private boolean mIsChecked; // 是否查看过该信息
 
     /**
@@ -184,6 +187,14 @@ public class MessageInfo extends DataSupport implements Parcelable {
         this.mSiteNo = siteNo;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     /*
      * Parcel 序列化
      */
@@ -200,6 +211,7 @@ public class MessageInfo extends DataSupport implements Parcelable {
         mRentAdminPhone = in.readString();
         mBasketId = in.readString();
         mSiteNo = in.readString(); //2020.09.07
+        url = in.readString();
         mIsChecked = in.readByte() != 0;
     }
 
@@ -234,6 +246,7 @@ public class MessageInfo extends DataSupport implements Parcelable {
         dest.writeString(mRentAdminPhone);
         dest.writeString(mBasketId);
         dest.writeString(mSiteNo);
+        dest.writeString(url);
         dest.writeByte((byte) (mIsChecked ? 1 : 0));
     }
 }

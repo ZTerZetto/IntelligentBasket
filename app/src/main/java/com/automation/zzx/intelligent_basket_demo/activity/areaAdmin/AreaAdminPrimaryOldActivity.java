@@ -2,6 +2,8 @@ package com.automation.zzx.intelligent_basket_demo.activity.areaAdmin;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
+import android.os.Build;
+import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -18,6 +20,7 @@ import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminFr
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMessageFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment;
 import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
+import com.automation.zzx.intelligent_basket_demo.widget.ScaleImageView;
 import com.hjm.bottomtabbar.BottomTabBar;
 
 import java.util.ArrayList;
@@ -47,6 +50,10 @@ public class AreaAdminPrimaryOldActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_area_admin_primary);
+
+        // 忽略如NetworkOnMainThreadException这样的限制策略
+        StrictMode.setThreadPolicy(new StrictMode.ThreadPolicy.Builder().detectDiskReads().detectDiskWrites().detectNetwork().penaltyLog().build());
+        StrictMode.setVmPolicy(new StrictMode.VmPolicy.Builder().detectLeakedSqlLiteObjects().detectLeakedClosableObjects().penaltyLog().penaltyDeath().build());
 
         getUserInfo();
         initWidget();

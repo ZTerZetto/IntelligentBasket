@@ -262,18 +262,18 @@ public class BasketHistoryInfoActivity extends AppCompatActivity {
         String root_url;
         switch (type) {
             case INSTALL_IMAGE:
-                root_url = AppConfig.FILE_SERVER_YBLIU_PATH + File.separator + REMOTE_INSTALL_PHOTO_PATH +
+                root_url = AppConfig.FILE_SERVER_YBLIU_PATH  + REMOTE_INSTALL_PHOTO_PATH +
                         File.separator + mDeviceId + File.separator;
                 for(String filename : newAddFileName)
                     mInstallPhotoUrls.add(0, root_url + filename);
                 break;
             case CERTIFIVATE_IMAGE:
-                root_url = AppConfig.FILE_SERVER_YBLIU_PATH + File.separator + REMOTE_CERTIFICATE_PHOTO_PATH +
+                root_url = AppConfig.FILE_SERVER_YBLIU_PATH + REMOTE_CERTIFICATE_PHOTO_PATH +
                         File.separator + mProjectId+"_"+ mDeviceId + ".jpg";
                 mCertificatePhotoUrls.add(0, root_url);
                 break;
             case PRESTOP_IMAGE:
-                root_url = AppConfig.FILE_SERVER_YBLIU_PATH + File.separator + REMOTE_PRE_STOP_PHOTO_PATH +
+                root_url = AppConfig.FILE_SERVER_YBLIU_PATH  + REMOTE_PRE_STOP_PHOTO_PATH +
                         File.separator + mDeviceId + File.separator;
                 for(String filename : newAddFileName)
                     mPreStopPhotoUrls.add(0, root_url + filename);

@@ -8,7 +8,7 @@ public class AppConfig {
 //    public final static String ANDROID_URL_PATH = "http://10.193.118.189:8080"; // 老刘
     public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
-    public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082/smartNacelle/"; // 刘跃博HTTP文件服务器地址
+    public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082/var/ftp/smartNacelle/"; // 刘跃博HTTP文件服务器地址
     //public final static String FILE_SERVER_YBLIU_PATH_SMART = "http://47.100.1.211:8082/smartNacelle/"; // 刘跃博HTTP文件服务器地址_安装队伍相关
     public final static String COMMUNICATION_SERVER_PATH = "http://47.100.1.211:8081"; // 通讯服务器地址
 //    public final static String COMMUNICATION_SERVER_PATH = "http://10.193.7.58:8081"; // 通讯服务器地址-老刘暂时

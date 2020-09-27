@@ -80,6 +80,12 @@
         android:orientation="vertical"
         >
 
+        <LinearLayout
+            android:id="@+id/ll_alarm_click"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
@@ -101,38 +107,77 @@
                 android:layout_toRightOf="@+id/tv_alarm_message_title"
                 android:layout_alignParentTop="true"/>
 
+          <!--  <TextView
+                android:id="@+id/btn_pic_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_toLeftOf="@+id/iv_pic_read"
+                android:textColor="@color/font_blue"
+                android:textSize="@dimen/textSize_14"
+                android:layout_centerVertical="true"
+                android:text="查看图片"/>
+            <ImageView
+                android:id="@+id/iv_pic_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@mipmap/arrow_right_my_gray"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true" />-->
+
         </RelativeLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="horizontal">
+            android:orientation="horizontal"
+            android:layout_marginTop="5dp">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:textColor="@color/colorGradText"
                 android:textSize="@dimen/textSize_15"
-                android:text="报警类型："/>
+                android:text="类型："/>
 
             <TextView
                 android:id="@+id/tv_alarm_message_1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:textColor="@color/colorGradText"
                 android:textSize="@dimen/textSize_15"
-                android:text="倾斜角"/>
+                android:hint="暂无"/>
         </LinearLayout>
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
             android:orientation="horizontal">
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
+                android:textColor="@color/colorGradText"
+                android:textSize="@dimen/textSize_15"
+                android:text="描述："/>
+
+            <TextView
+                android:id="@+id/tv_alarm_description"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textColor="@color/colorGradText"
+                android:textSize="@dimen/textSize_15"
+                android:hint="暂无"/>
+        </LinearLayout>
+
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp"
+            android:orientation="horizontal">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
                 android:textColor="@color/colorGradText"
                 android:textSize="@dimen/textSize_15"
                 android:text="吊篮编号："/>
@@ -142,15 +187,13 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="10dp"
                 android:textColor="@color/colorGradText"
                 android:textSize="@dimen/textSize_15"
-                android:text="37akkkfhoab"/>
+                android:hint="暂无"/>
 
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="10dp"
                 android:textColor="@color/colorGradText"
                 android:textSize="@dimen/textSize_15"
                 android:text="现场编号："/>
@@ -160,37 +203,69 @@
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:layout_marginTop="10dp"
                 android:textColor="@color/colorGradText"
                 android:textSize="@dimen/textSize_15"
-                android:text="11111"/>
+                android:hint="暂无"/>
 
         </LinearLayout>
 
-    <LinearLayout
+    <RelativeLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        android:layout_marginVertical="5dp"
+        android:layout_gravity="center_vertical">
+        <TextView
+            android:id="@+id/tv_alarm_text_1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:textColor="@color/colorGradText"
+            android:textSize="@dimen/textSize_14"
+            android:text="项目：" />
+
         <TextView
             android:id="@+id/tv_alarm_message_4"
-            android:layout_width="0dp"
+            android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_weight="4"
-            android:layout_marginTop="10dp"
+            android:layout_toEndOf="@+id/tv_alarm_text_1"
             android:textColor="@color/colorGradText"
-            android:textSize="@dimen/textSize_12"
-            android:text="项目名称"/>
+            android:textSize="@dimen/textSize_14"
+            android:hint="暂无"/>
+    </RelativeLayout>
+        </LinearLayout>
 
-        <TextView
-            android:layout_width="0dp"
+        <RelativeLayout
+            android:id="@+id/rl_pic_read"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_weight="1"
-            android:layout_marginTop="10dp"
-            android:textColor="@color/font_blue"
-            android:textSize="@dimen/textSize_12"
-            android:text="查看详情"/>
-    </LinearLayout>
+            android:layout_marginTop="5dp">
 
+            <View
+                style="@style/me_horizontal_view_style"/>
+
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginRight="5dp"
+                android:layout_alignParentLeft="true"
+                android:paddingTop="8dp"
+                android:textColor="@color/colorGradText"
+                android:textStyle="bold"
+                android:textSize="@dimen/textSize_14"
+                android:layout_centerVertical="true"
+                android:text="查看图片"/>
+            <ImageView
+                android:id="@+id/iv_pic_read"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingTop="8dp"
+                android:src="@mipmap/arrow_right_my_gray"
+                android:layout_alignParentRight="true"
+                android:layout_centerVertical="true" />
+
+        </RelativeLayout>
 
 
     </LinearLayout>

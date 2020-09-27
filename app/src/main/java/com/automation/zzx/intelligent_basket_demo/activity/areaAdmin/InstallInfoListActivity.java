@@ -344,7 +344,8 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
             basket.setSiteNo(basketObject.getString(basketId+"_siteNo"));
 
             basket.setProjectId(mProjectId);
-            basket.setUserName(basketObject.getString("installTeamName"));
+            JSONObject installTeam = JSON.parseObject(basketObject.getString("installTeamName"));
+            basket.setUserName(installTeam.getString("userName"));
 
             basket.setUserId(basketInfo.getString("user_id"));
             basket.setPicFlag(basketInfo.getIntValue("pic_flg"));

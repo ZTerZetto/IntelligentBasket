@@ -417,9 +417,10 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
                 tvWorkerPhone_2.setText(mPrincipal_2.getUserPhone());
                 llWorker_2.setClickable(true);
             } else {
-                tvWorkerName_2.setText("暂无");
+                llWorker_2.setVisibility(View.GONE);
+                /*tvWorkerName_2.setText("暂无");
                 tvWorkerPhone_2.setText(" ");
-                llWorker_2.setClickable(false);
+                llWorker_2.setClickable(false);*/
             }
         }
     }
