@@ -35,6 +35,8 @@ import com.automation.zzx.intelligent_basket_demo.utils.CustomTimeTask;
 import com.automation.zzx.intelligent_basket_demo.utils.StringUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
+import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
@@ -81,6 +83,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private final static int TIMER_TASK_MSG = 108;
     private final static int SHOW_LOADING_MSG = 109;
     private final static int DISMISS_LOADING_MSG = 110;
+    private final static int SHOW_BASKET_MSG= 111;
 
 
     // header
@@ -88,6 +91,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private SmartImageView mWorkerHead; // 头像
     private TextView mWorkerName;  // 名字
     private TextView mWorkerProjectState;  // 项目
+
+    // basket
+    private LinearLayout mBasketLayout; // 吊篮信息
+    private TextView tvBasketID;
+    private TextView tvSiteNo;
 
     // function choose
     private LinearLayout mWorkLayout; // 开工/下工
@@ -116,6 +124,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private String mWorkProjectName; // 项目名称
     private int mWorkState = 0; // 0:等待上工 1:等待下工
     private String mBasketId; //s 吊篮ID
+    private String mSiteNo; //s 现场ID
     private String mUserHeadUrl;
 
     // dialog
@@ -145,11 +154,17 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
             switch (msg.what) {
                 case CHANGE_WORK_STATE_MSG:  // 更改上工状态
                     if(mWorkState == 0){
+                        //当前为下工状态，展示改为可上工
                         mWorkTv.setText(R.string.worker_start_basket);
                         mWorkIv.setImageResource(R.mipmap.ic_worker_open);
+                        //下工状态隐藏并清空吊篮信息
+                        mBasketLayout.setVisibility(View.GONE);
                     }else if(mWorkState ==1){
+                        //当前为上工状态，展示改为可下工
                         mWorkTv.setText(R.string.worker_stop_basket);
                         mWorkIv.setImageResource(R.mipmap.ic_worker_close);
+                        //上工状态获取吊篮编号+现场编号（获取——>显示）
+                        getBasketInfo();
                     }
                     break;
 
@@ -236,6 +251,12 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     }
                     break;
 
+                case SHOW_BASKET_MSG:
+                    tvBasketID.setText(mBasketId);
+                    tvSiteNo.setText(mSiteNo);
+                    mBasketLayout.setVisibility(View.VISIBLE);
+                    break;
+
                 case TIMER_TASK_MSG:
                     deviceParameterHttp();  // 获取吊篮最新的数据
                     break;
@@ -283,6 +304,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mWorkerHead.setImageUrl(mUserHeadUrl);
         mWorkerName = (TextView) findViewById(R.id.login_username);  // 用户名
         mWorkerProjectState = (TextView) findViewById(R.id.worker_project_state); // 项目状态
+
+        // 吊篮信息
+        mBasketLayout = (LinearLayout) findViewById(R.id.ll_basket_info);  // 吊篮信息（仅上工状态）
+        tvBasketID = (TextView) findViewById(R.id.tv_basket_num);
+        tvSiteNo = (TextView) findViewById(R.id.tv_basket_siteno);
 
         // function choose
         mWorkLayout = (LinearLayout) findViewById(R.id.work_layout);  // 开工/下工
@@ -611,6 +637,43 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
             }
         });
     }
+
+
+    /*
+    * 获取吊篮信息
+    * */
+    public void getBasketInfo() {
+        BaseOkHttpClient.newBuilder()
+               .addHeader("Authorization",mToken)
+                .addParam("deviceId",mBasketId)
+                .addParam("userId",mUserInfo.getUserId())
+                                     .get()
+                .url(AppConfig.GET_SITENO)
+                .build()
+                .enqueue(new BaseCallBack() {
+                    @Override
+                    public void onSuccess(Object o) {
+                        String data = o.toString();
+                        JSONObject jsonObject = JSON.parseObject(data);
+                        boolean isLogin = jsonObject.getBooleanValue("isLogin");
+                        if (isLogin) {
+                            JSONObject result = jsonObject.getJSONObject("result");
+                            mSiteNo = result.getString("siteNo");
+                        }
+                        mHandler.sendEmptyMessage(SHOW_BASKET_MSG);
+                    }
+
+                    @Override
+                    public void onError(int code) {
+                        Log.i(TAG, "Error:" + code);
+                    }
+                    @Override
+                    public void onFailure(Call call, IOException e) {
+                        Log.i(TAG, "Failure:" + e.toString());
+                    }
+                });
+    }
+
 
     /*
      * 解析用户信息

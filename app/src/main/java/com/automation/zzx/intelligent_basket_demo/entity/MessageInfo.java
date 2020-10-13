@@ -25,6 +25,16 @@ public class MessageInfo extends DataSupport implements Parcelable {
 
     // 相关人员
     private String mWorkerList;  // 施工人员列表
+
+    public String getmWorkerName() {
+        return mWorkerName;
+    }
+
+    public void setmWorkerName(String mWorkerName) {
+        this.mWorkerName = mWorkerName;
+    }
+
+    private String mWorkerName;  //施工人员名称
     private String mWorkerPhone; // 施工人员联系方式
     private String mRentAdminPhone; // 租方管理员联系方式
 
@@ -207,6 +217,7 @@ public class MessageInfo extends DataSupport implements Parcelable {
         mProjectId = in.readString();
         mProjectName = in.readString();
         mWorkerList = in.readString();
+        mWorkerName = in.readString();
         mWorkerPhone = in.readString();
         mRentAdminPhone = in.readString();
         mBasketId = in.readString();
@@ -242,6 +253,7 @@ public class MessageInfo extends DataSupport implements Parcelable {
         dest.writeString(mProjectId);
         dest.writeString(mProjectName);
         dest.writeString(mWorkerList);
+        dest.writeString(mWorkerName);
         dest.writeString(mWorkerPhone);
         dest.writeString(mRentAdminPhone);
         dest.writeString(mBasketId);

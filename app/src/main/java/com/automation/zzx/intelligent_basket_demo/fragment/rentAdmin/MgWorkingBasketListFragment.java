@@ -54,7 +54,6 @@ import java.util.Map;
 import okhttp3.Call;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_APPLY_PRE_STOP_BASKETS;
-import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_MG_ALL_BASKET_INFO;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.RENT_ADMIN_MG_ALL_PRE_STOP_BASKET_INFO;
 
 /**

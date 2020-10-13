@@ -42,6 +42,7 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
         TextView tvAlarmTitle;//消息标题
         ImageView ivAlarmChecked; // 消息未读提示
         TextView tvAlarmType;// 报警类型
+        TextView tvWorker;// 有关工人
         TextView tvDescription;// 描述信息
         TextView tvBasketId;// 吊篮编号
         TextView tvSiteNo;// 现场编号
@@ -66,6 +67,7 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
             tvAlarmTitle = itemView.findViewById(R.id.tv_alarm_message_title);
             ivAlarmChecked = itemView.findViewById(R.id.iv_alarm_message_no_read);
             tvAlarmType = itemView.findViewById(R.id.tv_alarm_message_1);
+            tvWorker = itemView.findViewById(R.id.tv_worker_name);
             tvDescription = itemView.findViewById(R.id.tv_alarm_description);
             tvBasketId = itemView.findViewById(R.id.tv_alarm_message_2);
             tvSiteNo = itemView.findViewById(R.id.tv_alarm_message_3);
@@ -122,12 +124,12 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
                 //数据写入
                 viewHolder.tvAlarmTitle.setText(mMessageInfo.getmTitle());
                 viewHolder.tvAlarmType.setText(mMessageInfo.getmAlarmType());
+                viewHolder.tvWorker.setText(mMessageInfo.getmWorkerName());
                 viewHolder.tvDescription.setText(mMessageInfo.getmDescription());
                 viewHolder.tvBasketId.setText(mMessageInfo.getmBasketId());
                 viewHolder.tvSiteNo.setText(mMessageInfo.getmSiteNo());
                 viewHolder.tvProjectName.setText(mMessageInfo.getmProjectName());
                 //若图片有数据，则展示最后一条，若无则不展示
-                String str = mMessageInfo.getUrl();
                 if (mMessageInfo.getUrl()==null || mMessageInfo.getUrl().equals(""))
                     viewHolder.rlPic.setVisibility(View.GONE);
                 else viewHolder.rlPic.setVisibility(View.VISIBLE);

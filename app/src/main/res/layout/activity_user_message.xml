@@ -27,9 +27,10 @@
         <TextView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="——到底啦——"
+            android:text="— 到底啦 —"
             android:gravity="center"
-            android:layout_marginBottom="@dimen/size_20"/>
+            android:layout_marginBottom="@dimen/size_20"
+            android:layout_below="@+id/rv_message"/>
 
     </com.scwang.smartrefresh.layout.SmartRefreshLayout>
 
