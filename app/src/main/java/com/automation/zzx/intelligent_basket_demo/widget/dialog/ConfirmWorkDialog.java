@@ -21,6 +21,9 @@ import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 import com.jungly.gridpasswordview.GridPasswordView;
 
+import java.util.Timer;
+import java.util.TimerTask;
+
 /**
  * Created by pengchenghu on 2020/10/13.
  * Author Email: 15651851181@163.com
@@ -32,6 +35,7 @@ public class ConfirmWorkDialog extends Dialog implements View.OnClickListener{
     private final static int HIDE_KEYBOARD_MSG = 102;  // 关闭软键盘
     private final static int CONFIRM_WORK_MSG = 103;   // 确认上下工操作
     private final static int CANCEL_WORK_MSG = 104;    // 取消上下工操作
+    private final static int TIMER_SCHDULE_MSG = 105;  // 滴答定时任务
 
     private ImageView closeImg;  // 关闭按钮
     private SmartImageView headImg; // 头像
@@ -41,10 +45,11 @@ public class ConfirmWorkDialog extends Dialog implements View.OnClickListener{
     private Button cancelBtn;
 
     private Context mContext;
-    private int mPasswordType = 0;  // 默认密码输入类型
     private int mScanType;    // 扫码确认工作类型 0:上工 1:下工
     private String mUserHeadUrl;  // 头像地址
     private String mBasketId; // 吊篮ID
+
+    private int delaySeconds = 10; // 验证延时时间
 
     // 消息监听
     private OnDialogOperateListener mOnDialogOperateListener;
@@ -67,6 +72,13 @@ public class ConfirmWorkDialog extends Dialog implements View.OnClickListener{
                     break;
                 case CANCEL_WORK_MSG:
                     ConfirmWorkDialog.this.dismiss();  // 密码框消失
+                    break;
+                case TIMER_SCHDULE_MSG:
+                    delaySeconds -= 1;
+                    confirmBtn.setText("确认( " + delaySeconds + " s)");
+                    if(delaySeconds == 0){
+                        mHandler.sendEmptyMessage(CONFIRM_WORK_MSG);
+                    }
                     break;
             }
         }
@@ -99,6 +111,7 @@ public class ConfirmWorkDialog extends Dialog implements View.OnClickListener{
         setContentView(R.layout.dialog_confirm_action);
         setCanceledOnTouchOutside(false);
         initView();
+        startTimerSchedule();
     }
 
     private void initView(){
@@ -131,10 +144,27 @@ public class ConfirmWorkDialog extends Dialog implements View.OnClickListener{
                 this.dismiss();
                 break;
             case R.id.confirm_btn:
+                mHandler.sendEmptyMessage(CONFIRM_WORK_MSG);
                 break;
             case R.id.cancel_btn:
+                mHandler.sendEmptyMessage(CANCEL_WORK_MSG);
                 break;
         }
+    }
+
+    /*
+     * 定时任务
+     */
+    // 定时跳转至主页面
+    public void startTimerSchedule(){
+        TimerTask delayTask = new TimerTask() {
+            @Override
+            public void run() {
+               mHandler.sendEmptyMessage(TIMER_SCHDULE_MSG);
+            }
+        };
+        Timer timer = new Timer();
+        timer.schedule(delayTask,10, 1000); // 延时10毫秒没1秒钟执行 run 里面的操作
     }
 
     /*

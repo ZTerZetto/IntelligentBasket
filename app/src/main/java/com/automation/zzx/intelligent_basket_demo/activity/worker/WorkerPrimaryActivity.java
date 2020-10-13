@@ -157,19 +157,6 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
 
                 case OPEN_VERIFY_DIALOG_MSG:  // 打开上/下工确认
                     final String basketId = msg.obj.toString();
-//                    mVerifyWorkDialog = new VerifyWorkDialog(WorkerPrimaryActivity.this,
-//                            R.style.verify_dialog, mWorkState, mUserHeadUrl, basketId,
-//                            new VerifyWorkDialog.OnDialogOperateListener() {
-//                        @Override
-//                        public void getVerifyResult(String result) {
-//                            if(result.contains("Success")) {  // 密码验证通过
-//                                Log.i(TAG, "Now, you can open/close the basket");
-//                                requestBeginOrEndWork(basketId);
-//                                mBasketId = basketId;  // 吊篮ID
-//                            }
-//                        }
-//                    });
-//                    mVerifyWorkDialog.show();
                     mConfirmWorkDialog = new ConfirmWorkDialog(WorkerPrimaryActivity.this,
                             R.style.verify_dialog, mWorkState, mUserHeadUrl, basketId,
                             new ConfirmWorkDialog.OnDialogOperateListener() {
