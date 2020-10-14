@@ -22,6 +22,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
@@ -647,10 +648,9 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     public void getBasketInfo() {
         BaseOkHttpClient.newBuilder()
                .addHeader("Authorization",mToken)
-                .addParam("deviceId",mBasketId)
                 .addParam("userId",mUserInfo.getUserId())
-                                     .get()
-                .url(AppConfig.GET_SITENO)
+                .get()
+                .url(AppConfig.GET_ELECTRIC_RES_INFO)
                 .build()
                 .enqueue(new BaseCallBack() {
                     @Override
@@ -659,10 +659,15 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                         JSONObject jsonObject = JSON.parseObject(data);
                         boolean isLogin = jsonObject.getBooleanValue("isLogin");
                         if (isLogin) {
-                            JSONObject result = jsonObject.getJSONObject("result");
-                            mSiteNo = result.getString("siteNo");
+                            JSONArray result = jsonObject.getJSONArray("result");
+                            JSONObject object = result.getJSONObject(0);
+                            mSiteNo = object.getString("siteNo");
+                            JSONObject electricRes = object.getJSONObject("electricRes");
+                            mBasketId = electricRes.getString("deviceId");
+                            if(mSiteNo != null && !mSiteNo.equals("") && mBasketId != null && !mBasketId.equals("") ){
+                                mHandler.sendEmptyMessage(SHOW_BASKET_MSG);
+                            }
                         }
-                        mHandler.sendEmptyMessage(SHOW_BASKET_MSG);
                     }
 
                     @Override
@@ -715,6 +720,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
             }
         }, mToken, mUserInfo.getUserId());
     }
+
     // 解析后台返回数据
     private void parseUserInfoFromInternet(String data){
         Log.d(TAG, "parse data:" + data);

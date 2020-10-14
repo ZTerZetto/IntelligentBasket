@@ -9,9 +9,11 @@ public class MgBasketInfo {
     //private boolean selected;  // 是否被选中
     private String indexImageUri; // 吊篮首页图片
     private String id;  // 吊篮Id
+    private String siteNo;  // 吊篮现场编号
     private String state; // 吊篮运行状态
     private String outStorage; // 吊篮出库日期
     private String principal; // 主要负责人
+    private String worker; // 施工人员
     private String storageState; // 吊篮出/入库状态
 
     /*
@@ -49,6 +51,22 @@ public class MgBasketInfo {
 //    public void setSelected(boolean selected) {
 //        this.selected = selected;
 //    }
+
+    public String getSiteNo() {
+        return siteNo;
+    }
+
+    public void setSiteNo(String siteNo) {
+        this.siteNo = siteNo;
+    }
+
+    public String getWorker() {
+        return worker;
+    }
+
+    public void setWorker(String worker) {
+        this.worker = worker;
+    }
 
     public String getIndexImageUri() {
         return indexImageUri;

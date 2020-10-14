@@ -45,6 +45,12 @@ public class MgBasketStatement  implements Serializable {
     private String siteNo; //现场编号
 
     /*
+    * 施工人员
+    * */
+    private String workers; //施工人员
+
+
+    /*
      * 构造函数
      */
     public MgBasketStatement(){}
@@ -93,4 +99,11 @@ public class MgBasketStatement  implements Serializable {
         this.workStatement = workStatement;
     }
 
+    public String getWorkers() {
+        return workers;
+    }
+
+    public void setWorkers(String workers) {
+        this.workers = workers;
+    }
 }

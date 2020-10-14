@@ -7,6 +7,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
@@ -45,6 +46,11 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
         TextView basketCredit; // 安监证书
         TextView basketPreApplyStop; // 预报停申请
 
+        LinearLayout llSiteNo; //吊篮现场编号
+        TextView tvSiteNo; //吊篮现场编号
+        LinearLayout llWorkers; //施工人员信息
+        TextView tvWorkers; //施工人员信息
+
         private MgBasketStatementAdapter.OnItemClickListener onItemClickListener;
 
         public ViewHolder(@NonNull View itemView, final OnItemClickListener onItemClickListener) {
@@ -61,6 +67,11 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
             basketAccept = (TextView)  itemView.findViewById(R.id.assessment_acceptance); // 终检证明上传
             basketCredit = (TextView)  itemView.findViewById(R.id.assessment_acceptance_4); // 安监证书查看
             basketPreApplyStop = (TextView)  itemView.findViewById(R.id.pre_apply_stop); // 预报停申请
+
+            llSiteNo = (LinearLayout) itemView.findViewById(R.id.ll_site_no);
+            tvSiteNo = (TextView)  itemView.findViewById(R.id.tv_site_no);
+            llWorkers = (LinearLayout) itemView.findViewById(R.id.ll_workers);
+            tvWorkers = (TextView)  itemView.findViewById(R.id.tv_workers_name);
 
             // 消息监听
             this.onItemClickListener = onItemClickListener;
@@ -142,6 +153,15 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
         viewHolder.basketAccept.setVisibility(View.GONE); // 安监证书
         viewHolder.basketCredit.setVisibility(View.GONE);
         viewHolder.basketPreApplyStop.setVisibility(View.GONE); // 预报停
+
+        viewHolder.llWorkers.setVisibility(View.GONE);
+        if(mgBasketStatement.getSiteNo() != null && !mgBasketStatement.getSiteNo().equals("")){
+            viewHolder.llSiteNo.setVisibility(View.VISIBLE);
+            viewHolder.tvSiteNo.setText(mgBasketStatement.getSiteNo());
+        }else{
+            viewHolder.llSiteNo.setVisibility(View.GONE);
+        }
+
         switch(mgBasketStatement.getBasketStatement()){ // 吊篮状态
             case "0":
                 viewHolder.basketStatementTextView.setText("--");
@@ -168,11 +188,14 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
                 break;
             case "3":
                 viewHolder.basketStatementTextView.setText("使用中");
-                //TODO 吊篮工作状态显示
                 viewHolder.workStateImageView.setVisibility(View.GONE);
                 //根据工作状态显示图标
                 if(mgBasketStatement.getWorkStatement().equals("1")){
                     viewHolder.workStateImageView.setImageResource(R.mipmap.icon_working);
+                    if(mgBasketStatement.getWorkers() != null && !mgBasketStatement.getWorkers().equals("")){
+                        viewHolder.llWorkers.setVisibility(View.VISIBLE);
+                        viewHolder.tvWorkers.setText(mgBasketStatement.getWorkers());
+                    }
                 }else if(mgBasketStatement.getWorkStatement().equals("0")){
                     viewHolder.workStateImageView.setImageResource(R.mipmap.icon_resting);
                 } else {

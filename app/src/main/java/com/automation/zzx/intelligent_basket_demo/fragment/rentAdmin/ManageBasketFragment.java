@@ -46,7 +46,6 @@ public class ManageBasketFragment extends Fragment {
         titleList.add("报停中");
 
 
-
         MgBasketContentFragmentAdapter mgBasketContentFragmentAdapter =
                 new MgBasketContentFragmentAdapter(getFragmentManager(), fragmentList, titleList);
         mViewPager.setAdapter(mgBasketContentFragmentAdapter);

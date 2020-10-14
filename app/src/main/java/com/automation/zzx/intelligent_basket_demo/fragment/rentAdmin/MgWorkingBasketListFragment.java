@@ -25,6 +25,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
@@ -35,6 +36,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPr
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketListAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInfo;
+import com.automation.zzx.intelligent_basket_demo.entity.MgWorkerInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
@@ -46,6 +48,7 @@ import com.scwang.smartrefresh.layout.api.RefreshLayout;
 import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import java.io.IOException;
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -316,9 +319,11 @@ public class MgWorkingBasketListFragment extends Fragment implements View.OnClic
             MgBasketInfo mgBasketInfo = new MgBasketInfo(null, basketObj.getString("deviceId"),
                     String.valueOf(basketObj.getIntValue("workingState")), basketObj.getString("date"),
                     basketObj.getString("projectId"), basketObj.getString("storageState"));
-            if(mgBasketInfo.getStorageState().substring(0,1).equals("3"))
+            if(mgBasketInfo.getStorageState().substring(0,1).equals("3")){
+                mgBasketInfo.setSiteNo(basketObj.getString("siteNo"));
+                mgBasketInfo.setWorker(parseWorkerListInfo(value));
                 mgBasketInfos.add(mgBasketInfo);
-            else
+            } else
                 continue;
 //            mgBasketInfos.add(mgBasketInfo);
         }
@@ -372,6 +377,25 @@ public class MgWorkingBasketListFragment extends Fragment implements View.OnClic
                     }
                 });
     }
+
+    // 解析工作人员信息返回拼接后的姓名
+    private String parseWorkerListInfo(String responseDate){
+        StringBuilder  workerNames = new StringBuilder();
+        JSONObject jsonObject = JSON.parseObject(responseDate);
+        String userListStr = jsonObject.getString("workers");
+        if(userListStr==null) return "";
+        JSONArray userList= JSON.parseArray(userListStr);
+        Iterator<Object> iterator = userList.iterator();  // 迭代获取工人信息
+        while(iterator.hasNext()) {
+            JSONObject workerInfoJsonObject = (JSONObject) iterator.next();
+            if(workerInfoJsonObject==null || workerInfoJsonObject.equals("")) continue;
+            workerNames.append(workerInfoJsonObject.getString("userName"));
+        }
+        return  workerNames.toString();
+    }
+
+
+
     // 获取预报停吊篮列表
     private String getApplyPreStopBasketList(){
         String results = "";

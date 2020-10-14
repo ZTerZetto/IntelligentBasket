@@ -55,6 +55,32 @@
                     android:text="10006731"/>
             </LinearLayout>
 
+            <!-- 现场编号 -->
+            <LinearLayout
+                android:id="@+id/ll_site_no"
+                style="@style/BasketItemLinearLayout">
+                <TextView
+                    style="@style/BasketItemCatTextView"
+                    android:text="现场编号："/>
+                <TextView
+                    android:id="@+id/tv_site_no"
+                    style="@style/BasketItemContentTextView"
+                    android:text="1"/>
+            </LinearLayout>
+
+            <!-- 操作工人 -->
+            <LinearLayout
+                android:id="@+id/ll_workers"
+                style="@style/BasketItemLinearLayout">
+                <TextView
+                    style="@style/BasketItemCatTextView"
+                    android:text="操作工人："/>
+                <TextView
+                    android:id="@+id/tv_workers_name"
+                    style="@style/BasketItemContentTextView"
+                    android:text="张师傅"/>
+            </LinearLayout>
+
             <!-- 最近开工 -->
             <LinearLayout
                 style="@style/BasketItemLinearLayout"

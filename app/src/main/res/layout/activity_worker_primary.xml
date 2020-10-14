@@ -107,9 +107,9 @@
 
                 android:layout_marginTop="10dp"
                 android:orientation="horizontal"
-                android:visibility="gone"
-                >
 
+                >
+                <!--android:visibility="gone"-->
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
@@ -123,12 +123,13 @@
                         android:layout_width="20dp"
                         android:layout_height="20dp"
                         android:layout_centerVertical="true"
-                        android:src="@mipmap/ic_normal" />
+                        android:src="@mipmap/ic_tips" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
+                        android:textStyle="bold"
                         android:text="当前吊篮："
                         android:textSize="14sp" />
                     <TextView
@@ -136,13 +137,15 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="asdihugfgpsssassfwh"
+                        android:textStyle="bold"
+                        android:text="暂无"
                         android:textSize="14sp" />
 
                     <TextView
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:paddingLeft="5dp"
+                        android:textStyle="bold"
                         android:text="现场编号："
                         android:textSize="14sp" />
                     <TextView
@@ -150,7 +153,8 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:singleLine="true"
-                        android:text="4"
+                        android:textStyle="bold"
+                        android:text="暂无"
                         android:textSize="14sp" />
                 </LinearLayout>
 
