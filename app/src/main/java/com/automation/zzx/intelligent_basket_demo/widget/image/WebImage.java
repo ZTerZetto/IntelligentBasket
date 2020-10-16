@@ -54,7 +54,6 @@ public class WebImage implements SmartImage {
     // 根据Url获取网络图片资源
     private Bitmap getBitmapFromUrl(String url) {
         Bitmap bitmap = null;
-
         try {
             URLConnection conn = new URL(url).openConnection();
             conn.setConnectTimeout(CONNECT_TIMEOUT);

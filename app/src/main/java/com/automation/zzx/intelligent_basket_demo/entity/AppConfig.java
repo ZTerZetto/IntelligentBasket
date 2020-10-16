@@ -4,15 +4,27 @@ public class AppConfig {
     /*
      * 服务器地址
      */
-    public final static String ANDROID_URL_PATH = "http://47.100.1.211";  // 阿里云
-//    public final static String ANDROID_URL_PATH = "http://10.193.118.189:8080"; // 老刘
+//    public final static String ANDROID_URL_PATH = "http://39.98.115.183";  // 阿里云
+    public final static String ANDROID_URL_PATH = "http://47.100.1.211"; // 老刘
+
+//    public final static String FILE_SERVER_YBLIU_IP = "39.99.158.73";  // 刘跃博FTP文件服务器
     public final static String FILE_SERVER_YBLIU_IP = "47.100.1.211";  // 刘跃博FTP文件服务器
     public final static int FILE_SERVER_YBLIU_PORT = 21;  // 刘跃博FTP文件服务器的端口
-    public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082/smartNacelle/"; // 刘跃博HTTP文件服务器地址
-    //public final static String FILE_SERVER_YBLIU_PATH_SMART = "http://47.100.1.211:8082/smartNacelle/"; // 刘跃博HTTP文件服务器地址_安装队伍相关
+
+//    public final static String FILE_SERVER_YBLIU_PATH = "http://39.99.158.73:8082/var/ftp/smartNacelle/"; // 刘跃博HTTP文件服务器地址
+    public final static String FILE_SERVER_YBLIU_PATH = "http://47.100.1.211:8082/var/ftp/smartNacelle/"; // 刘跃博HTTP文件服务器地址
+
+//    public final static String COMMUNICATION_SERVER_PATH = "http://39.98.115.183:8081"; // 通讯服务器地址
     public final static String COMMUNICATION_SERVER_PATH = "http://47.100.1.211:8081"; // 通讯服务器地址
-//    public final static String COMMUNICATION_SERVER_PATH = "http://10.193.7.58:8081"; // 通讯服务器地址-老刘暂时
+
+
+    /*
+    * 已废弃
+    * */
+    //    public final static String COMMUNICATION_SERVER_PATH = "http://10.193.7.58:8081"; // 通讯服务器地址-老刘暂时
     public final static String VIDEO_STREAM_PATH = "rtmp://47.96.103.244:1935"; // 流媒体服务器地址
+    //public final static String FILE_SERVER_YBLIU_PATH_SMART = "http://47.100.1.211:8082/smartNacelle/"; // 刘跃博HTTP文件服务器地址_安装队伍相关
+
 
     /*
      * 账户和密码
@@ -114,6 +126,10 @@ public class AppConfig {
      */
     public static final String GET_UIKIT_ACCESS_TOKEN = "https://open.ys7.com/api/lapp/token/get";
     public static final String GET_UIKIT_VIDEO_URL = "https://open.ys7.com/api/lapp/live/video/list";
+    //获取现场编号
+    public static final String GET_ELECTRIC_RES_INFO = ANDROID_URL_PATH.concat("/getElectricResInfo");
+
+
 
     /*
      * 施工人员活动请求
@@ -138,8 +154,6 @@ public class AppConfig {
     public static final String RENT_ADMIN_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
     // 租方管理员请求所有可预报停的吊篮信息
     public static final String RENT_ADMIN_MG_ALL_PRE_STOP_BASKET_INFO = ANDROID_URL_PATH.concat("/forecastStop");
-    // 租方管理员请求所有吊篮信息
-    public static final String RENT_ADMIN_MG_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/getBasketList");
     // 租方管理员请求预报停
     public static final String RENT_ADMIN_APPLY_PRE_STOP_BASKETS = ANDROID_URL_PATH.concat("/prepareEnd");
     // 租方管理员请求报停
@@ -227,6 +241,8 @@ public class AppConfig {
     public static final String INSPECTION_PERSON_EXCEPTION_REPORT = ANDROID_URL_PATH.concat("/createExceptionBox");
     // 巡检人员查看项目清单
     public static final String INSPECTION_PERSON_CHECK_CONFIGURATION_LIST = ANDROID_URL_PATH.concat("/getConfigurationList");
+    // 巡检人员请求所有吊篮信息
+    public static final String RENT_ADMIN_MG_ALL_BASKET_INFO = ANDROID_URL_PATH.concat("/getBasketList");
 
     /*
     * 常量

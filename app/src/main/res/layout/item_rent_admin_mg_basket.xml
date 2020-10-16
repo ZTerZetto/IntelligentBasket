@@ -5,7 +5,8 @@
     android:layout_height="wrap_content"
     android:orientation="horizontal"
     android:background="@drawable/bg_round_white"
-    android:padding="10dp"
+    android:paddingVertical="10dp"
+    android:paddingRight="10dp"
     android:layout_margin="10dp">
 
     <!-- 复选框 -->
@@ -30,12 +31,14 @@
         <LinearLayout
             style="@style/BasketItemLinearLayout">
             <TextView
-                style="@style/BasketItemCatTextView"
-                android:text="吊篮编号："/>
-            <TextView
                 android:id="@+id/basket_id"
                 style="@style/BasketItemContentTextView"
                 android:text="10006731"/>
+            <TextView
+                android:visibility="invisible"
+                android:id="@+id/site_id"
+                style="@style/BasketItemContentTextView"
+                android:text="(#1)"/>
         </LinearLayout>
 
         <!-- 吊篮状态 -->
@@ -43,11 +46,16 @@
             style="@style/BasketItemLinearLayout">
             <TextView
                 style="@style/BasketItemCatTextView"
-                android:text="吊篮状态："/>
+                android:text="状态："/>
             <TextView
                 android:id="@+id/basket_state"
                 style="@style/BasketItemContentTextView"
-                android:text="正在运行"/>
+                android:text="使用中"/>
+            <TextView
+                android:visibility="invisible"
+                android:id="@+id/basket_worker"
+                style="@style/BasketItemContentTextView"
+                android:text="(王鑫,张小鹏)"/>
         </LinearLayout>
 
         <!-- 出库日期 -->
@@ -71,7 +79,7 @@
             <TextView
                 android:id="@+id/basket_principal"
                 style="@style/BasketItemContentTextView"
-                android:text="王鑫、张小鹏"/>
+                android:text="王鑫"/>
         </LinearLayout>
 
     </LinearLayout>

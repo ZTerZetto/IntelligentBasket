@@ -125,8 +125,8 @@ public class ScaleImageView {
         }
         viewPager.setAdapter(adapter);
         viewPager.setCurrentItem(startPosition);
-        imageDate.setText("2019年12月10日");  // 待更改,设置左上角图片信息
-        imageOthers.setText("12:25 | 江苏省 南京市 玄武区");
+//        imageDate.setText("2019年12月10日");  // 待更改,设置左上角图片信息
+//        imageOthers.setText("12:25 | 江苏省 南京市 玄武区");
     }
 
 }

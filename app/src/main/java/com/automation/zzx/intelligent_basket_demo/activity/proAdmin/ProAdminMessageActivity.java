@@ -93,6 +93,16 @@ public class ProAdminMessageActivity extends AppCompatActivity {
         mgAreaMessageAdapter.setOnItemClickListener(new MgAreaMessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onPicRead(View view, int position) {
+
+            }
+
+            @Override
+            public void onDetail(View view, int position) {
                 MessageInfo messageInfo = mMessageInfoList.get(position);
                 // do something
                 switch(messageInfo.getmType()){

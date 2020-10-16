@@ -2,6 +2,7 @@ package com.automation.zzx.intelligent_basket_demo.activity.common;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.graphics.Bitmap;
 import android.os.Handler;
 import android.os.Message;
 import android.support.v7.app.AppCompatActivity;
@@ -22,13 +23,20 @@ import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.Sear
 import com.automation.zzx.intelligent_basket_demo.adapter.common.UserMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
+import com.automation.zzx.intelligent_basket_demo.widget.ScaleImageView;
+import com.automation.zzx.intelligent_basket_demo.widget.image.WebImage;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
+import com.scwang.smartrefresh.header.BezierCircleHeader;
+import com.scwang.smartrefresh.layout.SmartRefreshLayout;
+import com.scwang.smartrefresh.layout.api.RefreshLayout;
+import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.litepal.crud.DataSupport;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -41,12 +49,18 @@ import java.util.List;
 public class UserMessageActivity extends AppCompatActivity {
 
     // Message
-    private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;;
+    private final static int UPDATE_HISTORY_MESSAGE_INFO = 1;
+    private final static int CHECK_ALARM_PICTURE = 101;
 
     // 列表
     private RecyclerView recyclerView;
+    private SmartRefreshLayout mSmartRefreshLayout; // 下拉刷新
     private UserMessageAdapter mgUserMessageAdapter;
     private List<MessageInfo> mMessageInfoList = new ArrayList<>();
+
+    private List<Bitmap> mAlarmPicList = new ArrayList<>();//报警图片
+    private List<String> mPicUrls = new ArrayList<>();//报警图片链接
+
 
     // 页面类型
     private String mUserMessageType;
@@ -60,7 +74,14 @@ public class UserMessageActivity extends AppCompatActivity {
             switch (msg.what){
                 case UPDATE_HISTORY_MESSAGE_INFO:
                     getHistoryMessageInfo();
-                    mgUserMessageAdapter.notifyDataSetChanged();
+                    mSmartRefreshLayout.finishRefresh(100);
+                    break;
+                case CHECK_ALARM_PICTURE:
+                    int position = msg.arg1;
+                    getAlarmPics(position);
+                    ScaleImageView scaleImageView = new ScaleImageView(UserMessageActivity.this);
+                    scaleImageView.setUrls_and_Bitmaps(mPicUrls, mAlarmPicList, 0);
+                    scaleImageView.create();
                     break;
             }
         }
@@ -91,6 +112,18 @@ public class UserMessageActivity extends AppCompatActivity {
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
 
+        // 下拉刷新
+        mSmartRefreshLayout = (SmartRefreshLayout) findViewById(R.id.smart_refresh_layout);
+        mSmartRefreshLayout.setRefreshHeader(  //设置 Header 为 贝塞尔雷达 样式
+                new BezierCircleHeader(UserMessageActivity.this));
+        mSmartRefreshLayout.setPrimaryColorsId(R.color.smart_loading_background_color);
+        mSmartRefreshLayout.setOnRefreshListener(new OnRefreshListener() { // 添加下拉刷新监听
+            @Override
+            public void onRefresh(RefreshLayout refreshlayout) {
+                mHandler.sendEmptyMessage(UPDATE_HISTORY_MESSAGE_INFO);
+            }
+        });
+
         recyclerView = (RecyclerView) findViewById(R.id.rv_message);
         LinearLayoutManager linearLayoutManager = new LinearLayoutManager(this);
         linearLayoutManager.setStackFromEnd(true);//列表在底部开始展示，反转后由上面开始展示
@@ -100,6 +133,20 @@ public class UserMessageActivity extends AppCompatActivity {
         mgUserMessageAdapter.setOnItemClickListener(new UserMessageAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(View view, int position) {
+
+            }
+
+            @Override
+            public void onPicRead(View view, int position) {
+                //
+                Message msg = new Message();
+                msg.what = CHECK_ALARM_PICTURE;
+                msg.arg1 = position;
+                mHandler.sendMessage(msg);
+            }
+
+            @Override
+            public void onDetail(View view, int position) {
                 MessageInfo messageInfo = mMessageInfoList.get(position);
                 Intent intent;
                 switch(messageInfo.getmType()){
@@ -109,6 +156,7 @@ public class UserMessageActivity extends AppCompatActivity {
                         intent.putExtra("basket_id", messageInfo.getmBasketId());
                         intent.putExtra("project_id",messageInfo.getmProjectId());
                         intent.putExtra("basket_state", "3");//3-进行中
+                        intent.putExtra("location_num",messageInfo.getmSiteNo());
                         startActivity(intent);
                         break;
                     case "5": // 配置清单
@@ -152,16 +200,8 @@ public class UserMessageActivity extends AppCompatActivity {
         if(!isHasPermission()) requestPermission();
 
         List<MessageInfo> messageInfos = new ArrayList<>();
+
         switch (mUserMessageType){
-           /* case "worker_1":
-            case "worker_2":
-            case "worker_3":
-            case "worker_4":
-            case "worker":
-                // 施工人员消息：报警
-                messageInfos = DataSupport.where("mType = 1 or mType = 4")
-                        .find(MessageInfo.class);
-                break;*/
             case "inspect_person":
                 // 巡检人员：配置清单
                 messageInfos = DataSupport.where("mType = ?", "5")
@@ -179,6 +219,25 @@ public class UserMessageActivity extends AppCompatActivity {
 
         mMessageInfoList.clear();
         mMessageInfoList.addAll(messageInfos);
+        mgUserMessageAdapter.notifyDataSetChanged();
+    }
+
+    /*
+     * 获取报警识别图片
+     */
+    private void getAlarmPics(int position){
+        //获取urls
+        String[] urls = mMessageInfoList.get(position).getUrl().split(",");
+        mPicUrls = Arrays.asList(urls);
+        //根据url得到bitmaps
+        mAlarmPicList.clear();
+        for(int i=0; i < mPicUrls.size(); i++){
+            String url = mPicUrls.get(i);
+//            mAlarmPicList.add(WebImage.webImageCache.get(url));
+            WebImage webImage = new WebImage(url);
+            Bitmap bitmap = webImage.getBitmap(UserMessageActivity.this);
+            mAlarmPicList.add(bitmap);
+        }
     }
 
     /*

@@ -28,6 +28,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.InstallInfo.BasketInstallInfoActivity;
@@ -328,6 +329,7 @@ public class BasketStateListActivity extends AppCompatActivity {
                 intent.putExtra("project_id",mProjectId);
                 intent.putExtra("basket_id", mgBasketStatementList.get(position).getBasketId());
                 intent.putExtra("basket_state", mgBasketStatementList.get(position).getBasketStatement());
+                intent.putExtra("location_num",mgBasketStatementList.get(position).getSiteNo());
                 startActivity(intent);
             }
 
@@ -644,7 +646,8 @@ public class BasketStateListActivity extends AppCompatActivity {
             String siteNo = basketObj.getString("siteNo");
             MgBasketStatement mgBasketStatement = new MgBasketStatement(basketObj.getString("deviceId"),
                     null, basketObj.getString("storageState"),basketObj.getString("workingState"));
-            if(siteNo!=null && siteNo.isEmpty()) mgBasketStatement.setSiteNo(siteNo);
+            if(siteNo!=null && !siteNo.isEmpty()) mgBasketStatement.setSiteNo(siteNo);
+            mgBasketStatement.setWorkers(parseWorkerListInfo(value));
             mgBasketStatementList.add(mgBasketStatement);
         }
         parseMgBasketStatementList(mgBasketStatementList);
@@ -673,6 +676,21 @@ public class BasketStateListActivity extends AppCompatActivity {
         mgBasketStatementClassifiedList.get(0).addAll(mgBasketStatements);
     }
 
+    // 解析工作人员信息返回拼接后的姓名
+    private String parseWorkerListInfo(String responseDate){
+        StringBuilder  workerNames = new StringBuilder();
+        JSONObject jsonObject = JSON.parseObject(responseDate);
+        String userListStr = jsonObject.getString("workers");
+        if(userListStr==null) return "";
+        JSONArray userList= JSON.parseArray(userListStr);
+        Iterator<Object> iterator = userList.iterator();  // 迭代获取工人信息
+        while(iterator.hasNext()) {
+            JSONObject workerInfoJsonObject = (JSONObject) iterator.next();
+            if(workerInfoJsonObject==null || workerInfoJsonObject.equals("")) continue;
+            workerNames.append(workerInfoJsonObject.getString("userName"));
+        }
+        return  workerNames.toString();
+    }
 
     /*
      * UI 更新类

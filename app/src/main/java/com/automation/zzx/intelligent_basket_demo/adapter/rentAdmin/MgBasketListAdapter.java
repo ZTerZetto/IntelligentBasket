@@ -8,6 +8,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
@@ -38,8 +39,10 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
         CheckBox basketSelected;  // 复选框
         SmartImageView basketImage;
         TextView basketId;
+        TextView siteNo;
         TextView basketState;
         TextView basketOutStorage;
+        TextView basketWorkers;
         TextView basketPrincipal;
 
         private OnItemClickListener onItemClickListener;
@@ -50,8 +53,10 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
             basketSelected = (CheckBox) itemView.findViewById(R.id.basket_checkbox);
             basketImage = (SmartImageView) itemView.findViewById(R.id.basket_realimage);
             basketId = (TextView) itemView.findViewById(R.id.basket_id);
+            siteNo = (TextView) itemView.findViewById(R.id.site_id);
             basketState = (TextView) itemView.findViewById(R.id.basket_state);
             basketOutStorage = (TextView) itemView.findViewById(R.id.basket_out_storage);
+            basketWorkers = (TextView) itemView.findViewById(R.id.basket_worker);
             basketPrincipal = (TextView) itemView.findViewById(R.id.basket_principal);
 
             // 消息监听
@@ -105,9 +110,16 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
         viewHolder.basketSelected.setChecked(isCheck.get(position));  // 设置状态
         //viewHolder.basketImage.setImageUrl();
         viewHolder.basketId.setText(mgBasketInfo.getId());
+        viewHolder.basketWorkers.setVisibility(View.INVISIBLE);
+        viewHolder.siteNo.setVisibility(View.INVISIBLE);
+        if(mgBasketInfo.getSiteNo() != null && !mgBasketInfo.getSiteNo().equals("")){
+            viewHolder.siteNo.setVisibility(View.VISIBLE);
+            viewHolder.siteNo.setText(" (#"+mgBasketInfo.getSiteNo()+")");
+        }
         switch (mgBasketInfo.getStorageState()){
             case "0":
                 viewHolder.basketState.setText("--");
+                viewHolder.basketWorkers.setVisibility(View.INVISIBLE);
                 break;
             case "1":
                 viewHolder.basketState.setText("待分配安装");
@@ -132,7 +144,11 @@ public class MgBasketListAdapter extends RecyclerView.Adapter<MgBasketListAdapte
                 break;
             case "3":
                 if(mgBasketInfo.getState().equals("1")){
-                    viewHolder.basketState.setText("使用中(正在施工)");
+                    viewHolder.basketState.setText("使用中");
+                    if(mgBasketInfo.getWorker() != null && !mgBasketInfo.getWorker().equals("")){
+                        viewHolder.basketWorkers.setVisibility(View.VISIBLE);
+                        viewHolder.basketWorkers.setText("("+mgBasketInfo.getWorker()+")");
+                    }
                 }else if(mgBasketInfo.getState().equals("0")){
                     viewHolder.basketState.setText("使用中(停止运行)");
                 }

@@ -25,6 +25,16 @@ public class MessageInfo extends DataSupport implements Parcelable {
 
     // 相关人员
     private String mWorkerList;  // 施工人员列表
+
+    public String getmWorkerName() {
+        return mWorkerName;
+    }
+
+    public void setmWorkerName(String mWorkerName) {
+        this.mWorkerName = mWorkerName;
+    }
+
+    private String mWorkerName;  //施工人员名称
     private String mWorkerPhone; // 施工人员联系方式
     private String mRentAdminPhone; // 租方管理员联系方式
 
@@ -36,6 +46,9 @@ public class MessageInfo extends DataSupport implements Parcelable {
     // 吊篮相关
     private String mBasketId; // 设备Id
     private String mSiteNo; // 现场编号 2020.09.07
+
+    //报警描述类
+    private String url; // 识别图片链接
 
     private boolean mIsChecked; // 是否查看过该信息
 
@@ -184,6 +197,14 @@ public class MessageInfo extends DataSupport implements Parcelable {
         this.mSiteNo = siteNo;
     }
 
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
+    }
+
     /*
      * Parcel 序列化
      */
@@ -196,10 +217,12 @@ public class MessageInfo extends DataSupport implements Parcelable {
         mProjectId = in.readString();
         mProjectName = in.readString();
         mWorkerList = in.readString();
+        mWorkerName = in.readString();
         mWorkerPhone = in.readString();
         mRentAdminPhone = in.readString();
         mBasketId = in.readString();
         mSiteNo = in.readString(); //2020.09.07
+        url = in.readString();
         mIsChecked = in.readByte() != 0;
     }
 
@@ -230,10 +253,12 @@ public class MessageInfo extends DataSupport implements Parcelable {
         dest.writeString(mProjectId);
         dest.writeString(mProjectName);
         dest.writeString(mWorkerList);
+        dest.writeString(mWorkerName);
         dest.writeString(mWorkerPhone);
         dest.writeString(mRentAdminPhone);
         dest.writeString(mBasketId);
         dest.writeString(mSiteNo);
+        dest.writeString(url);
         dest.writeByte((byte) (mIsChecked ? 1 : 0));
     }
 }

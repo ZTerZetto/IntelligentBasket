@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
@@ -37,12 +38,16 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
         TextView tvContent;//消息内容
 
         LinearLayout llAlarmMessage;//报警消息
+        LinearLayout llAlarmClick;// 消息点击
         TextView tvAlarmTitle;//消息标题
         ImageView ivAlarmChecked; // 消息未读提示
         TextView tvAlarmType;// 报警类型
+        TextView tvWorker;// 有关工人
+        TextView tvDescription;// 描述信息
         TextView tvBasketId;// 吊篮编号
         TextView tvSiteNo;// 现场编号
         TextView tvProjectName;// 项目名称
+        RelativeLayout rlPic;// 查看图片
 
         private OnItemClickListener onItemClickListener;
 
@@ -58,15 +63,31 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
             tvContent = itemView.findViewById(R.id.tv_message_description);
             //报警消息
             llAlarmMessage = itemView.findViewById(R.id.ll_alarm_message);
+            llAlarmClick = itemView.findViewById(R.id.ll_alarm_click);
             tvAlarmTitle = itemView.findViewById(R.id.tv_alarm_message_title);
             ivAlarmChecked = itemView.findViewById(R.id.iv_alarm_message_no_read);
             tvAlarmType = itemView.findViewById(R.id.tv_alarm_message_1);
+            tvWorker = itemView.findViewById(R.id.tv_worker_name);
+            tvDescription = itemView.findViewById(R.id.tv_alarm_description);
             tvBasketId = itemView.findViewById(R.id.tv_alarm_message_2);
             tvSiteNo = itemView.findViewById(R.id.tv_alarm_message_3);
             tvProjectName = itemView.findViewById(R.id.tv_alarm_message_4);
+            rlPic = itemView.findViewById(R.id.rl_pic_read); //查看图片
 
             // 消息监听
             this.onItemClickListener = onItemClickListener;
+            rlPic.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onPicRead(v, getAdapterPosition());
+                }
+            });
+            llAlarmClick.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View v) {
+                    onItemClickListener.onDetail(v, getAdapterPosition());
+                }
+            });
             itemView.setOnClickListener(this);
         }
 
@@ -103,9 +124,16 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
                 //数据写入
                 viewHolder.tvAlarmTitle.setText(mMessageInfo.getmTitle());
                 viewHolder.tvAlarmType.setText(mMessageInfo.getmAlarmType());
+                viewHolder.tvWorker.setText(mMessageInfo.getmWorkerName());
+                viewHolder.tvDescription.setText(mMessageInfo.getmDescription());
                 viewHolder.tvBasketId.setText(mMessageInfo.getmBasketId());
                 viewHolder.tvSiteNo.setText(mMessageInfo.getmSiteNo());
                 viewHolder.tvProjectName.setText(mMessageInfo.getmProjectName());
+                //若图片有数据，则展示最后一条，若无则不展示
+                if (mMessageInfo.getUrl()==null || mMessageInfo.getUrl().equals(""))
+                    viewHolder.rlPic.setVisibility(View.GONE);
+                else viewHolder.rlPic.setVisibility(View.VISIBLE);
+                //已读情况展示
                 if(mMessageInfo.ismIsChecked()) viewHolder.ivAlarmChecked.setVisibility(View.GONE);
                 else viewHolder.ivAlarmChecked.setVisibility(View.VISIBLE);
                 break;
@@ -148,6 +176,21 @@ public class MgAreaMessageAdapter extends RecyclerView.Adapter<MgAreaMessageAdap
          * @param position 点击得到位置
          */
         public void onItemClick(View view, int position);
+        /**
+         * 当RecyclerView某个被点击的时候回调
+         * @param view 点击item的视图
+         * @param position 点击得到位置
+         */
+        public void onPicRead(View view, int position);
+        /**
+         * 当RecyclerView某个被点击的时候回调
+         * @param view 点击item的视图
+         * @param position 点击得到位置
+         */
+        public void onDetail(View view, int position);
+
     }
+
+
 
 }

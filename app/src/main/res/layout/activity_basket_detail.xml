@@ -214,8 +214,8 @@
 
                         <ImageView
                             android:id="@+id/worker1_image"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:layout_marginLeft="25dp"
                             android:src="@mipmap/icon_operator"
                             android:layout_gravity="center"/>
@@ -267,8 +267,8 @@
                         android:background="@drawable/bg_round_pressed">
                         <ImageView
                             android:id="@+id/worker2_image"
-                            android:layout_width="70dp"
-                            android:layout_height="70dp"
+                            android:layout_width="50dp"
+                            android:layout_height="50dp"
                             android:layout_marginLeft="15dp"
                             android:src="@mipmap/icon_operator"
                             android:layout_gravity="center"/>

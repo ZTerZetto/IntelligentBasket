@@ -39,14 +39,14 @@
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorWhiteText"
                 android:textSize="16sp"
-                android:text="2019年10月10日"/>
+                android:text=""/>
             <TextView
                 android:id="@+id/sub_title_tv"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textColor="@color/colorWhiteText"
                 android:textSize="12sp"
-                android:text="12:25 | 江苏省南京市玄武区"/>
+                android:text=""/>
         </LinearLayout>
 
         <!-- 位置信息 -->

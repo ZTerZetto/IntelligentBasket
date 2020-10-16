@@ -99,6 +99,67 @@
             android:orientation="vertical">
 
             <!-- 功能模块 -->
+            <!-- 小气泡展示吊篮编号&现场编号 -->
+            <LinearLayout
+                android:id="@+id/ll_basket_info"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="10dp"
+                android:orientation="horizontal"
+
+                >
+                <!--android:visibility="gone"-->
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/bg_round_pressed"
+                    android:orientation="horizontal"
+                    android:paddingHorizontal="@dimen/textSize_10"
+                    android:paddingVertical="@dimen/textSize_10">
+
+                    <ImageView
+                        android:id="@+id/iv_project_info"
+                        android:layout_width="20dp"
+                        android:layout_height="20dp"
+                        android:layout_centerVertical="true"
+                        android:src="@mipmap/ic_tips" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:textStyle="bold"
+                        android:text="当前吊篮："
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tv_basket_num"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textStyle="bold"
+                        android:text="暂无"
+                        android:textSize="14sp" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:paddingLeft="5dp"
+                        android:textStyle="bold"
+                        android:text="现场编号："
+                        android:textSize="14sp" />
+                    <TextView
+                        android:id="@+id/tv_basket_siteno"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:singleLine="true"
+                        android:textStyle="bold"
+                        android:text="暂无"
+                        android:textSize="14sp" />
+                </LinearLayout>
+
+            </LinearLayout>
+
             <!-- 工作管理 -->
             <LinearLayout
                 android:layout_width="match_parent"
