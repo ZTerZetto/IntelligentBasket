@@ -41,7 +41,7 @@
             android:layout_toRightOf="@+id/head_iv"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
-            android:text="@string/input_operate_password"
+            android:text="请确认操作"
             android:textSize="18sp"
             android:textColor="@color/black"/>
 

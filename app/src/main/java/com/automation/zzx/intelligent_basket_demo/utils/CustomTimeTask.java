@@ -22,6 +22,13 @@ public class CustomTimeTask {
     }
 
     public void start(){
+//        if (timer == null){
+//            timer = new Timer();
+//        } else {
+//            //从此计时器的任务队列中移除所有已取消的任务。
+//            timer.purge();
+//        }
+        timer = new Timer();
         timer.schedule(task, 0, time);//每隔time时间段就执行一次
     }
 

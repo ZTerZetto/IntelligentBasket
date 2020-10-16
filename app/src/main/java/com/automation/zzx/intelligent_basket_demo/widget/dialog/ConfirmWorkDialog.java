@@ -49,6 +49,7 @@ public class ConfirmWorkDialog extends Dialog implements View.OnClickListener{
     private String mUserHeadUrl;  // 头像地址
     private String mBasketId; // 吊篮ID
 
+    private Timer mTimer;
     private int delaySeconds = 10; // 验证延时时间
 
     // 消息监听
@@ -163,8 +164,8 @@ public class ConfirmWorkDialog extends Dialog implements View.OnClickListener{
                mHandler.sendEmptyMessage(TIMER_SCHDULE_MSG);
             }
         };
-        Timer timer = new Timer();
-        timer.schedule(delayTask,10, 1000); // 延时10毫秒没1秒钟执行 run 里面的操作
+        mTimer = new Timer();
+        mTimer.schedule(delayTask,10, 1000); // 延时10毫秒没1秒钟执行 run 里面的操作
     }
 
     /*
@@ -173,6 +174,12 @@ public class ConfirmWorkDialog extends Dialog implements View.OnClickListener{
     @Override
     public void onStart(){
         super.onStart();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+        mTimer.cancel();
     }
 
     /*

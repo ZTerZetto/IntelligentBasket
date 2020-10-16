@@ -170,7 +170,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                                 }
                             });
                     mConfirmWorkDialog.show();
-                    break;  // 原来没有
+//                    break;  // 原来没有
                 case UPDATE_USER_DISPLAY_MSG:  // 更新状态
                     mUserHeadUrl = AppConfig.FILE_SERVER_YBLIU_PATH + "/userImage/" + mUserInfo.getUserId() + "/head.png";
                     mWorkerHead.setImageUrl(mUserHeadUrl, R.mipmap.ic_default_user_head); // 头像
