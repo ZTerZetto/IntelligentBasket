@@ -265,6 +265,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     break;
 
                 case TIMER_START_MSG:  // 打开定时器
+                    initTimer();
                     customTimeTask.start();
                     break;
 
@@ -291,7 +292,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         getUserInfo();
         if(!isHasPermission()) requestPermission();  // 权限申请
         initWidget();  // 初始化控件
-        initTimer();
+//        initTimer();
         initLoadingDialog();
 
         MiPushUtil.initMiPush(WorkerPrimaryActivity.this, mUserInfo.getUserId(), null);
@@ -549,6 +550,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 switch (response.code()){
                     case 200:
                         Log.i(TAG, "成功返回值");
+                        initTimer();
                         customTimeTask.start();  // 开启定时器
                         mHandler.sendEmptyMessage(SHOW_LOADING_MSG);
 //                        // 返回服务器数据
