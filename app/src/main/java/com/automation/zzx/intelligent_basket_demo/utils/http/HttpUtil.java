@@ -215,6 +215,20 @@ public class HttpUtil {
         client.newCall(request).enqueue(callback);
     }
 
+    public static void getEZVideoUrl(okhttp3.Callback callback, String accessToken,
+                                     String source){
+        OkHttpClient client = new OkHttpClient();
+        FormBody builder = new FormBody.Builder()
+                .add("accessToken", accessToken)
+                .add("source", source)
+                .build();
+        final Request request = new Request.Builder()
+                .url(AppConfig.GET_UIKIT_DEVICE_INFO)
+                .post(builder)
+                .build();
+        client.newCall(request).enqueue(callback);
+    }
+
     /*
      * 设置参数获取请求
      * /get

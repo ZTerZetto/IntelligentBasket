@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.content.pm.ActivityInfo;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -66,6 +67,7 @@ public class BasketVideoActivity extends AppCompatActivity {
     public static final int SET_VIDEO_URL_MSG = 101;
     public static final int INIT_VIDEO_URL_MSG = 103;
     public static final int FINISH_ACTIVITY_MSG = 104;
+    public static final int NO_VALID_CAMERA_MSG = 105;
 
     // 控件声明
     private RelativeLayout mVideoViewRelativelayout;
@@ -119,7 +121,8 @@ public class BasketVideoActivity extends AppCompatActivity {
                     mEditor.putLong("expireTime", expireTime);
                     mEditor.putString("accessToken", accessToken);
                     mEditor.commit();
-                    getEzVideoUrl();
+//                    getEzVideoUrl();
+                    getEZDeviceVideoUrl();
                     break;
                 case SET_VIDEO_URL_MSG:  // 设置播放地址
                     openEzVideo();
@@ -127,14 +130,26 @@ public class BasketVideoActivity extends AppCompatActivity {
                 case INIT_VIDEO_URL_MSG:  // 初始化播放地址并打开默认视频流
                     initEzVideoUrl();
                     break;
-                case FINISH_ACTIVITY_MSG:
+                case NO_VALID_CAMERA_MSG:
                     if(msg.arg1 == 1){
                         ToastUtil.showToastTips(BasketVideoActivity.this,
                                 "该摄像头未激活或未添加至萤石云账号，请联系管理员");
                     }else if(msg.arg1 == 2){
-                        ToastUtil.showToastTips(BasketVideoActivity.this, "设备摄像头未绑定");
+                        ToastUtil.showToastTips(BasketVideoActivity.this,
+                                "设备摄像头未绑定");
+                    }else if(msg.arg1 == 3){
+                        ToastUtil.showToastTips(BasketVideoActivity.this,
+                                "该摄像头不在线或未开通直播功能，请联系管理员");
                     }
-                    finish();
+                    mHandler.sendEmptyMessage(FINISH_ACTIVITY_MSG);
+                    break;
+                case FINISH_ACTIVITY_MSG:
+                    try {
+                        Thread.sleep(2000);
+                        finish();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
                     break;
                 default:break;
             }
@@ -350,6 +365,50 @@ public class BasketVideoActivity extends AppCompatActivity {
             }
         }, mAccessToken);
     }
+
+    // 获取指定序列号设备的的直播地址
+    private void getEZDeviceVideoUrl(){
+        HttpUtil.getEZVideoUrl(new Callback() {
+            @Override
+            public void onFailure(Call call, IOException e) {
+                Log.i(TAG, "失败：" + e.toString());
+            }
+
+            @Override
+            public void onResponse(Call call, Response response) throws IOException {
+                String responseData = response.body().string();
+                JSONObject jsonObject = JSON.parseObject(responseData);  // string 转 jsonobject
+                String code = jsonObject.getString("code");
+                if (code.equals("200")){
+                    String data = jsonObject.getString("data");
+                    JSONArray urls = JSON.parseArray(data);
+                    if (urls.size() == 1){
+                        JSONObject row = urls.getJSONObject(0);
+                        String videoUrl = row.getString("rtmp");  // 一般清晰度视频
+                        if(videoUrl != null && !videoUrl.equals("")){
+                            mVideoUrlList.add(videoUrl);
+                            mHandler.sendEmptyMessage(SET_VIDEO_URL_MSG);
+                            return;
+                        }else{
+                            Message msg = new Message();
+                            msg.what = NO_VALID_CAMERA_MSG;
+                            msg.arg1 = 3;  // 设备存在，但不在线或未激活
+                            Looper.prepare();
+                            mHandler.handleMessage(msg);
+                            Looper.loop();
+                        }
+                    }
+                }
+                Message msg = new Message();
+                msg.what = NO_VALID_CAMERA_MSG;
+                msg.arg1 = 1;  // 状态码
+                Looper.prepare();
+                mHandler.handleMessage(msg);
+                Looper.loop();
+            }
+        }, mAccessToken, mDeviceSerial + ":1");
+    }
+
     // 更新状态
     private void updateStatInfo() {
         long bitrate = mVideoView.getVideoBitrate() / 1024;
@@ -376,7 +435,8 @@ public class BasketVideoActivity extends AppCompatActivity {
             if (System.currentTimeMillis() >= mExpireTime*1000) {  // 时间超过7天，重新获取
                 getEzAccessToken();
             }else{
-                getEzVideoUrl();
+//                getEzVideoUrl();
+                getEZDeviceVideoUrl();
             }
         }
     }

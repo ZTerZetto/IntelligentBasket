@@ -435,7 +435,9 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     protected void onDestroy(){
         super.onDestroy();
         //CustomApplication.setMainActivity(null);
-        customTimeTask.stop();
+        if (customTimeTask != null) {
+            customTimeTask.stop();
+        }
     }
     // 退出但不销毁
     @Override

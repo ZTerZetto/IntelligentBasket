@@ -126,6 +126,7 @@ public class AppConfig {
      */
     public static final String GET_UIKIT_ACCESS_TOKEN = "https://open.ys7.com/api/lapp/token/get";
     public static final String GET_UIKIT_VIDEO_URL = "https://open.ys7.com/api/lapp/live/video/list";
+    public static final String GET_UIKIT_DEVICE_INFO = "https://open.ys7.com/api/lapp/live/address/get";
     //获取现场编号
     public static final String GET_ELECTRIC_RES_INFO = ANDROID_URL_PATH.concat("/getElectricResInfo");
 
