@@ -41,7 +41,7 @@
             android:layout_toRightOf="@+id/head_iv"
             android:layout_marginLeft="10dp"
             android:layout_centerVertical="true"
-            android:text="请确认操作"
+            android:text="请等待设备通讯"
             android:textSize="18sp"
             android:textColor="@color/black"/>
 
