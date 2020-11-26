@@ -111,7 +111,7 @@ public class WorkerOrderActivity extends AppCompatActivity {
         mWorkerOrderAdapter = new WorkerOrderAdapter(this,mWorkerOrderList);
         mWorkerOrderRv.setAdapter(mWorkerOrderAdapter);
 
-        // 获取工单时常
+        // 获取工单时长
         getWorkerWorkTime();
     }
 
@@ -174,12 +174,21 @@ public class WorkerOrderActivity extends AppCompatActivity {
         for (int i=jsonArray.size()-1; i >= 0; i--){
             JSONObject jsonObject = (JSONObject) jsonArray.get(i);
             String startTime = jsonObject.getString("startTime");
-            String endTime = "--:--";
+            String endTime = jsonObject.getString("endTime");
             int timeWork = jsonObject.getIntValue("timeWork");
             String strTimeWork = Integer.toString(timeWork) + "Min";
             String projectName = jsonObject.getString("projectName");
-            WorkerOrder workerOrder = new WorkerOrder(startTime.substring(0,10), startTime.substring(11, 16),
-                                                        endTime, strTimeWork, projectName);
+            WorkerOrder workerOrder;
+            if(startTime.substring(0,10).equals(endTime.substring(0,10))){
+                // 开工&结束时间为同一天
+                workerOrder = new WorkerOrder(startTime.substring(0,10), startTime.substring(11, 16),
+                        endTime.substring(11, 16),strTimeWork, projectName);
+            } else {
+                // 开工&结束时间非同一天
+                workerOrder = new WorkerOrder(startTime.substring(0,10), startTime.substring(8,10)+"日"+startTime.substring(11,16),
+                        endTime.substring(8,10)+"日"+endTime.substring(11,16),strTimeWork, projectName);
+            }
+
             String cur_month = startTime.substring(5,7);
             if (pre_month.equals("")) {
                 tmpArray.add(workerOrder);

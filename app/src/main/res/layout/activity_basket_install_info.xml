@@ -155,7 +155,7 @@
                     android:layout_toRightOf="@id/iv_certificate_info_tips"
                     android:paddingHorizontal="10dp"
                     android:singleLine="true"
-                    android:text="查看安监证书"
+                    android:text="查看安检证书"
                     android:textColor="@color/colorTextDark"
                     android:textSize="16sp" />
 

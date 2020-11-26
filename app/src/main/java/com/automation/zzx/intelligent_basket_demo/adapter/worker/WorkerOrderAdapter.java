@@ -77,7 +77,7 @@ public class WorkerOrderAdapter extends RecyclerView.Adapter<WorkerOrderAdapter.
             workerOrderChildAdapter.setOnItemClickListener(new WorkerOrderChildAdapter.OnItemClickListener() {
                 @Override
                 public void onItemClick(View view, int position) {
-                    ToastUtil.showToastTips(mContext, "You clicked the " + position + " item");
+                    //ToastUtil.showToastTips(mContext, "You clicked the " + position + " item");
                 }
             });
         }
