@@ -30,7 +30,7 @@
             style="@style/BasketItemLinearLayout">
             <TextView
                 style="@style/BasketItemCatTextView"
-                android:text="吊篮编号："/>
+                android:text="编号："/>
             <TextView
                 android:id="@+id/basket_id"
                 style="@style/BasketItemContentTextView"
@@ -42,7 +42,7 @@
             style="@style/BasketItemLinearLayout">
             <TextView
                 style="@style/BasketItemCatTextView"
-                android:text="吊篮状态："/>
+                android:text="状态："/>
             <TextView
                 android:id="@+id/basket_state"
                 style="@style/BasketItemContentTextView"

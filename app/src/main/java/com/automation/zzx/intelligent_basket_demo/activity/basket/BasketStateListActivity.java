@@ -3,12 +3,14 @@ package com.automation.zzx.intelligent_basket_demo.activity.basket;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Build;
 import android.os.Handler;
 import android.os.Message;
 import android.preference.PreferenceManager;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -35,6 +37,8 @@ import com.automation.zzx.intelligent_basket_demo.activity.InstallInfo.BasketIns
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
@@ -113,9 +117,12 @@ public class BasketStateListActivity extends AppCompatActivity {
     // 吊篮列表视图
     private RelativeLayout mListRelativeLayout;
     private RecyclerView mBasketListRecyclerView;
-    private String mInstallBasketId;
+    private String mInstallBasketId; //待分配安装队伍的吊篮
+    private String mOpenBasketId; //待上电的吊篮
     private List<MgBasketStatement> mgBasketStatementList;
     private List<MgBasketStatement> mgBasketToAllocate;  //待分配安装任务的吊篮列表
+    private List<MgBasketStatement> mgBasketToOpen;  //待上机的吊篮列表
+    private List<MgBasketStatement> mgBasketToClose;  //待下机的吊篮列表
     private List<List<MgBasketStatement>> mgBasketStatementClassifiedList;
     private MgBasketStatementAdapter mgBasketStatementAdapter;
 
@@ -126,6 +133,11 @@ public class BasketStateListActivity extends AppCompatActivity {
 
     //批量分配安装队伍
     private Button btnInstall;
+    //吊篮批量上下电操作
+    private Button btnOpenAll;
+    private AlertDialog mSelectProjectDialog;  // 选择弹窗
+    private int currentSelected = 0; // 当前角色位置
+
 
     // 底部筛选框
     private LinearLayout llChoose;
@@ -164,6 +176,8 @@ public class BasketStateListActivity extends AppCompatActivity {
                     mgBasketStatementList.clear();
                     mgBasketStatementClassifiedList.clear();
                     mgBasketToAllocate.clear();
+                    mgBasketToOpen.clear();
+                    mgBasketToClose.clear();
                     parseBasketListInfo((String)msg.obj);  // 更新吊篮
                     mgStateAdapter.setSelectedPosition(pre_selectedPosition);
                     sendEmptyMessage(UPDATE_BASKET_STATEMENT_MSG);
@@ -296,6 +310,7 @@ public class BasketStateListActivity extends AppCompatActivity {
             }
         });
 
+        //批量分配安装队伍 响应事件
         btnInstall = findViewById(R.id.install_image_view);
         btnInstall.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -308,6 +323,16 @@ public class BasketStateListActivity extends AppCompatActivity {
             }
         });
 
+        //吊篮批量上电 响应事件
+        btnOpenAll = findViewById(R.id.btn_all_device_open);
+        btnOpenAll.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                // 弹出选择框 选择上电或下电
+                showSelectDialog();
+            }
+        });
+
         // 吊篮列表
         mListRelativeLayout = (RelativeLayout) findViewById(R.id.basket_avaliable);
         mBasketListRecyclerView = (RecyclerView) findViewById(R.id.basket_recycler_view);
@@ -315,6 +340,8 @@ public class BasketStateListActivity extends AppCompatActivity {
         mBasketListRecyclerView.setLayoutManager(layoutManager);
         mgBasketStatementList = new ArrayList<>();
         mgBasketToAllocate = new ArrayList<>();
+        mgBasketToOpen = new ArrayList<>();
+        mgBasketToClose = new ArrayList<>();
         mgBasketStatementClassifiedList = new ArrayList<>();
         mgBasketStatementAdapter = new MgBasketStatementAdapter(BasketStateListActivity.this, mgBasketStatementList);
         mBasketListRecyclerView.setAdapter(mgBasketStatementAdapter);
@@ -468,7 +495,7 @@ public class BasketStateListActivity extends AppCompatActivity {
 
     public void setData(){
         if(list_1 != null && list_2 != null){
-            llChoose.setVisibility(View.VISIBLE);
+            //llChoose.setVisibility(View.VISIBLE); //隐藏上工状态
 
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
                 mySpinner_1.setDropDownVerticalOffset(0);
@@ -672,6 +699,13 @@ public class BasketStateListActivity extends AppCompatActivity {
             if(mgBasketStatement.getBasketStatement().equals("1")){ //加入吊篮状态为待分配安装队伍，则将其加入列表
                 mgBasketToAllocate.add(mgBasketStatement);
             }
+            if(mgBasketStatement.getBasketStatement().equals("3")){ //加入吊篮状态为使用中，则将其加入列表
+                if(mgBasketStatement.getWorkStatement().equals("0")){
+                    mgBasketToOpen.add(mgBasketStatement);// 将下机状态的吊篮加入“待上机列表”
+                } else if(mgBasketStatement.getWorkStatement().equals("1")){
+                    mgBasketToClose.add(mgBasketStatement); // 将上机状态的吊篮加入“待下机列表”
+                }
+            }
         }
         mgBasketStatementClassifiedList.get(0).addAll(mgBasketStatements);
     }
@@ -703,6 +737,7 @@ public class BasketStateListActivity extends AppCompatActivity {
             mBlankRelativeLayout.setVisibility(View.VISIBLE);
             mBlankHintTextView.setText("暂无相关吊篮");
             llChoose.setVisibility(View.GONE);
+            btnOpenAll.setVisibility(View.GONE);
         } else {                                   // 显示可操作吊篮列表
             mBlankRelativeLayout.setVisibility(View.GONE);
             mListRelativeLayout.setVisibility(View.VISIBLE);
@@ -711,12 +746,14 @@ public class BasketStateListActivity extends AppCompatActivity {
             //仅在使用中状态展示筛选栏
             llChoose.setVisibility(View.GONE);
             btnInstall.setVisibility(View.GONE);
+            btnOpenAll.setVisibility(View.GONE);
             switch (pre_selectedPosition){
                 case 0:
                     btnInstall.setVisibility(View.VISIBLE);
                     break;
                 case 2:
-                    llChoose.setVisibility(View.VISIBLE);
+                    //llChoose.setVisibility(View.VISIBLE);
+                    //btnOpenAll.setVisibility(View.VISIBLE);
                     break;
             }
         }
@@ -738,7 +775,6 @@ public class BasketStateListActivity extends AppCompatActivity {
                 break;
             case UPLOAD_CERTIFICATE_IMAGE_RESULT:  // 上传安监证书返回值
                 break;
-
             default:
                 break;
         }
@@ -846,5 +882,50 @@ public class BasketStateListActivity extends AppCompatActivity {
         }
         mHandler.sendEmptyMessage(UPDATE_BASKET_SORT_MSG);
     }
+
+    // 弹出身份选择框
+    public void showSelectDialog(){
+        String[] mList = new String[2];
+        mList[0] = "批量下机";
+        mList[1] = "批量上机";
+
+        final AlertDialog.Builder alertBuilder = new AlertDialog.Builder(this);
+        alertBuilder.setTitle("批量上机/下机");
+        alertBuilder.setSingleChoiceItems(mList, currentSelected, new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int position) {
+                currentSelected = position;
+            }
+        });
+
+        alertBuilder.setPositiveButton("确定", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                //跳转至所选择的角色主界面
+                List<MgBasketStatement> mgBasketToAct;
+                if(currentSelected == 0){
+                    mgBasketToAct = mgBasketToClose;
+                } else {
+                    mgBasketToAct = mgBasketToOpen;
+                }
+                Intent intent = new Intent(BasketStateListActivity.this, BasketOpenByListActivity.class);
+                intent.putExtra("basket_list", (Serializable)mgBasketToAct);
+                intent.putExtra("act_type", currentSelected);// 0=下电，1=上电
+                startActivityForResult(intent,ADD_INSTALL_RESULT);
+                mSelectProjectDialog.dismiss();
+            }
+        });
+
+        alertBuilder.setNegativeButton("取消", new DialogInterface.OnClickListener() {
+            @Override
+            public void onClick(DialogInterface dialogInterface, int i) {
+                mSelectProjectDialog.dismiss();
+            }
+        });
+
+        mSelectProjectDialog = alertBuilder.create();
+        mSelectProjectDialog.show();
+    }
+
 
 }

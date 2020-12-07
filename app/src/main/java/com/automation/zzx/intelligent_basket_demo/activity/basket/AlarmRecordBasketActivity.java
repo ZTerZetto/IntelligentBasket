@@ -1,6 +1,7 @@
 package com.automation.zzx.intelligent_basket_demo.activity.basket;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Color;
@@ -14,6 +15,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.AutoCompleteTextView;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
@@ -33,6 +35,7 @@ import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 
 import java.io.IOException;
 import java.lang.reflect.Field;
@@ -65,6 +68,8 @@ public class AlarmRecordBasketActivity extends AppCompatActivity implements View
     private LinearLayout llRecordSum;
     private TextView tvRecordSum;
     private ListView lvStop;
+
+    private CommonDialog mCommonDialog; //报警详情弹窗
 
     // 空空如也
     private RelativeLayout noRecordListRelativeLayout;
@@ -131,7 +136,7 @@ public class AlarmRecordBasketActivity extends AppCompatActivity implements View
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle("报警记录");
+        toolbar.setTitle("吊篮报警记录");
         titleText.setText("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -146,7 +151,7 @@ public class AlarmRecordBasketActivity extends AppCompatActivity implements View
         mSearchView.setImeOptions(3);//设置输入法搜索选项字段，1:回车2:前往3:搜索4:发送5:下一項6:完成
 //      mSearchView.setInputType(1);//设置输入类型
 //      mSearchView.setMaxWidth(200);//设置最大宽度
-        mSearchView.setQueryHint("输入吊篮ID或描述详情");//设置查询提示字符串
+        mSearchView.setQueryHint("输入描述详情");//设置查询提示字符串
         mSearchView.setSubmitButtonEnabled(true);//设置是否显示搜索框展开时的提交按钮
         mAutoCompleteTextView.setTextColor(Color.GRAY);
         //设置SearchView下划线透明
@@ -164,6 +169,20 @@ public class AlarmRecordBasketActivity extends AppCompatActivity implements View
 
         adapter=new AlarmRecordAdapter(this,R.layout.item_basket_alarm_record,alarmInfoList);
         lvStop.setAdapter(adapter);
+        lvStop.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                String basketId = alarmInfoList.get(position).getDevice_id();
+                String locateId = alarmInfoList.get(position).getId();
+                String worker = alarmInfoList.get(position).getWorkerName();
+                String workerId = alarmInfoList.get(position).getWorkerId();
+                String time = alarmInfoList.get(position).getTime();
+                String detail = alarmInfoList.get(position).getAlarm_detail();
+                mCommonDialog = initDialog("吊篮编号:"+basketId+" / 现场编号:"+locateId
+                        +"\n工人:"+worker+"("+workerId+")\n"+detail+'\n'+time);
+                mCommonDialog.show();
+            }
+        });
     }
 
     private void setListener(){
@@ -231,8 +250,9 @@ public class AlarmRecordBasketActivity extends AppCompatActivity implements View
     public void getAlarmInfoListByProjectId() {
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization",mToken)
-                .addParam("type",1) //获取方式 1：按照吊篮ID获取 2：按照项目ID获取
-                .addParam("value",mBasketId)
+                .addParam("deviceId",mBasketId)
+                .addParam("pageSize",50000)//取无穷大时，表明不限制单页数据条数
+                .addParam("pageIndex",1) //默认页码为1
                 .get()
                 .url(AppConfig.GET_ALARM_INFO)
                 .build()
@@ -285,7 +305,8 @@ public class AlarmRecordBasketActivity extends AppCompatActivity implements View
                 String timeHM = repairObj.getString("time").substring(11,19);
                 String time = timeDate + " " + timeHM;
                 AlarmInfo mAlarmInfo = new AlarmInfo(repairObj.getString("device_id"),repairObj.getString("alarm_type"),
-                        repairObj.getString("id"),time,repairObj.getString("alarm_detail"));
+                        repairObj.getString("id"),time,repairObj.getString("alarm_detail"),
+                        repairObj.getString("worker"),repairObj.getString("workerName"));
                 alarmInfoList.add(mAlarmInfo);
             }
         }
@@ -327,6 +348,24 @@ public class AlarmRecordBasketActivity extends AppCompatActivity implements View
         } catch (IllegalAccessException e) {
             e.printStackTrace();
         }
+    }
+
+
+    /*
+     * 提示弹框
+     */
+    private CommonDialog initDialog(String mMsg){
+        return new CommonDialog(this, R.style.dialog, mMsg,
+                new CommonDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if(confirm){
+                            dialog.dismiss();
+                        }else{
+                            dialog.dismiss();
+                        }
+                    }
+                }).setTitle("报警详情");
     }
 
 

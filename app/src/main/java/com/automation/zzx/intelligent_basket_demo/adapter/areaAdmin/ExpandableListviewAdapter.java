@@ -89,17 +89,18 @@ public class ExpandableListviewAdapter extends BaseExpandableListAdapter {
             groupViewHolder = new GroupViewHolder();
             groupViewHolder.tvParent = convertView.findViewById(R.id.parent_textview_id);
             groupViewHolder.ivParent = convertView.findViewById(R.id.parent_image);
+            groupViewHolder.tvParentDetail = convertView.findViewById(R.id.parent_textview_detail);
             convertView.setTag(groupViewHolder);
         } else {
             groupViewHolder = (GroupViewHolder)convertView.getTag();
         }
         groupViewHolder.tvParent.setText(groups.get(groupPosition));
-
+        groupViewHolder.tvParentDetail.setText("共"+String.valueOf(childs.get(groupPosition).size())+"条记录");
         //展开状态下
         if(isExpanded){
-            groupViewHolder.ivParent.setImageDrawable(ContextCompat.getDrawable(context,R.mipmap.icon_dropdown));
-        } else {
             groupViewHolder.ivParent.setImageDrawable(ContextCompat.getDrawable(context,R.mipmap.icon_dropup));
+        } else {
+            groupViewHolder.ivParent.setImageDrawable(ContextCompat.getDrawable(context,R.mipmap.icon_dropdown));
         }
         return convertView;
     }
@@ -111,12 +112,13 @@ public class ExpandableListviewAdapter extends BaseExpandableListAdapter {
             convertView = LayoutInflater.from(parent.getContext()).inflate(R.layout.expand_child_item,parent,false);
             childViewHolder = new ChildViewHolder();
             childViewHolder.tvChildren = convertView.findViewById(R.id.child_item);
-            childViewHolder.ivChildren = convertView.findViewById(R.id.child_image);
+            //childViewHolder.ivChildren = convertView.findViewById(R.id.child_image);
             convertView.setTag(childViewHolder);
         } else {
             childViewHolder = (ChildViewHolder) convertView.getTag();
         }
         childViewHolder.tvChildren.setText(childs.get(groupPosition).get(childPosition));
+
         return convertView;
     }
 
@@ -128,12 +130,13 @@ public class ExpandableListviewAdapter extends BaseExpandableListAdapter {
 
     static class GroupViewHolder {
         TextView  tvParent;
+        TextView  tvParentDetail;
         ImageView ivParent;
     }
 
     static class ChildViewHolder {
         TextView  tvChildren;
-        ImageView ivChildren;
+        //ImageView ivChildren;
     }
 
 }

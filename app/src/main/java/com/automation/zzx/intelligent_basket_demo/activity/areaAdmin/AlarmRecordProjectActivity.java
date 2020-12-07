@@ -30,6 +30,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.AlarmRecordBasketActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketStateListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.ExpandableListviewAdapter;
@@ -132,7 +133,7 @@ public class AlarmRecordProjectActivity extends AppCompatActivity implements Vie
         // 顶部导航栏
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         TextView titleText = (TextView) findViewById(R.id.toolbar_title);
-        toolbar.setTitle("报警记录");
+        toolbar.setTitle("项目报警记录");
         titleText.setText("");
         setSupportActionBar(toolbar);
         getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
@@ -220,7 +221,7 @@ public class AlarmRecordProjectActivity extends AppCompatActivity implements Vie
         expandListView.setOnGroupClickListener(new ExpandableListView.OnGroupClickListener() {
             @Override
             public boolean onGroupClick(ExpandableListView expandableListView, View view, int groupPosition, long l) {
-                Toast.makeText(AlarmRecordProjectActivity.this, "点击"+mBasketList.get(groupPosition), Toast.LENGTH_SHORT).show();
+                //Toast.makeText(AlarmRecordProjectActivity.this, "点击"+mBasketList.get(groupPosition), Toast.LENGTH_SHORT).show();
                 return false;
             }
         });
@@ -229,11 +230,10 @@ public class AlarmRecordProjectActivity extends AppCompatActivity implements Vie
         expandListView.setOnChildClickListener(new ExpandableListView.OnChildClickListener() {
             @Override
             public boolean onChildClick(ExpandableListView expandableListView, View view, int groupPosition, int childPosition, long l) {
-                if (mCommonDialog == null) {
-                    String time = mRecordList.get(groupPosition).get(childPosition).substring(0,19);
-                    String detail = mRecordList.get(groupPosition).get(childPosition).substring(21);
-                    mCommonDialog = initDialog(detail+'\n'+time);
-                }
+                String basketId = mBasketList.get(groupPosition);
+                String time = mRecordList.get(groupPosition).get(childPosition).substring(0,19);
+                String detail = mRecordList.get(groupPosition).get(childPosition).substring(21);
+                mCommonDialog = initDialog("吊篮编号："+basketId+'\n'+detail+'\n'+time,basketId);
                 mCommonDialog.show();
                 return true;
             }
@@ -321,8 +321,9 @@ public class AlarmRecordProjectActivity extends AppCompatActivity implements Vie
     public void getAlarmInfoListByProjectId() {
         BaseOkHttpClient.newBuilder()
                 .addHeader("Authorization",mToken)
-                .addParam("type",2) //获取方式 1：按照吊篮ID获取 2：按照项目ID获取
-                .addParam("value",mProjectId)
+                .addParam("projectId",mProjectId)
+                .addParam("pageSize",50000)//取无穷大时，表明不限制单页数据条数
+                .addParam("pageIndex",1) //默认页码为1
                 .get()
                 .url(AppConfig.GET_ALARM_INFO)
                 .build()
@@ -376,7 +377,8 @@ public class AlarmRecordProjectActivity extends AppCompatActivity implements Vie
                 String timeHM = repairObj.getString("time").substring(11,19);
                 String time = timeDate + " " + timeHM;
                 AlarmInfo mAlarmInfo = new AlarmInfo(repairObj.getString("device_id"),repairObj.getString("alarm_type"),
-                        repairObj.getString("id"),time,repairObj.getString("alarm_detail"));
+                        repairObj.getString("id"),time,repairObj.getString("alarm_detail"),
+                        repairObj.getString("worker"),repairObj.getString("workerName"));
                 alarmInfoList.add(mAlarmInfo);
             }
         }
@@ -439,18 +441,21 @@ public class AlarmRecordProjectActivity extends AppCompatActivity implements Vie
     /*
      * 提示弹框
      */
-    private CommonDialog initDialog(String mMsg){
+    private CommonDialog initDialog(String mMsg, final String id){
         return new CommonDialog(this, R.style.dialog, mMsg,
                 new CommonDialog.OnCloseListener() {
                     @Override
                     public void onClick(Dialog dialog, boolean confirm) {
                         if(confirm){
                             dialog.dismiss();
+                            Intent intent = new Intent(AlarmRecordProjectActivity.this, AlarmRecordBasketActivity.class);
+                            intent.putExtra("basket_id", id);
+                            startActivity(intent);
                         }else{
                             dialog.dismiss();
                         }
                     }
-                }).setTitle("报警详情");
+                }).setTitle("跳转至吊篮报警详情");
     }
 
     // 顶部导航栏消息响应

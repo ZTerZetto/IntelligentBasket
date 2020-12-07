@@ -36,8 +36,8 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
 
         // 控件
         SmartImageView basketIndexImageView;
-        TextView basketStatementTextView;
-        ImageView workStateImageView;
+        TextView basketStatementTextView;//吊篮状态：安装、使用or报停
+        ImageView workStateImageView;//吊篮上电状态
         TextView basketIdTextView;
         TextView basketAllotTeam; // 分配安装队伍
         TextView basketInstallTv; //预验收文字状态修改
@@ -188,18 +188,18 @@ public class MgBasketStatementAdapter extends RecyclerView.Adapter<MgBasketState
                 break;
             case "3":
                 viewHolder.basketStatementTextView.setText("使用中");
-                viewHolder.workStateImageView.setVisibility(View.GONE);
+                viewHolder.workStateImageView.setVisibility(View.VISIBLE);
                 //根据工作状态显示图标
                 if(mgBasketStatement.getWorkStatement().equals("1")){
-                    viewHolder.workStateImageView.setImageResource(R.mipmap.icon_working);
+                    viewHolder.workStateImageView.setImageResource(R.mipmap.ic_basket_online);
                     if(mgBasketStatement.getWorkers() != null && !mgBasketStatement.getWorkers().equals("")){
                         viewHolder.llWorkers.setVisibility(View.VISIBLE);
                         viewHolder.tvWorkers.setText(mgBasketStatement.getWorkers());
                     }
                 }else if(mgBasketStatement.getWorkStatement().equals("0")){
-                    viewHolder.workStateImageView.setImageResource(R.mipmap.icon_resting);
+                    viewHolder.workStateImageView.setImageResource(R.mipmap.ic_basket_offline);
                 } else {
-                    viewHolder.workStateImageView.setImageResource(R.mipmap.icon_warning);
+                    viewHolder.workStateImageView.setVisibility(View.GONE);
                 }
                 break;
             case "4":

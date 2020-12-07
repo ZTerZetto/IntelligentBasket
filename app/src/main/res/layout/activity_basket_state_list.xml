@@ -41,7 +41,8 @@
                     android:layout_height="wrap_content"
                     android:layout_alignParentBottom="true"
                     android:background="@color/white"
-                    android:paddingBottom="20dp">
+                    android:paddingBottom="20dp"
+                    android:visibility="gone">
                     <include layout="@layout/drop_up_menu" />
                 </RelativeLayout>
 
@@ -102,6 +103,17 @@
                     android:gravity="center_horizontal"
                     android:layout_marginBottom="30dp"
                     android:visibility="gone"/>
+
+                <Button
+                    android:id="@+id/btn_all_device_open"
+                    style="@style/btnStyle"
+                    android:layout_alignParentBottom="true"
+                    android:src="@mipmap/ic_round_add_fill"
+                    android:text="批量上下机操作"
+                    android:gravity="center_horizontal"
+                    android:layout_marginBottom="30dp"
+                    android:visibility="gone"/>
+
             </RelativeLayout>
 
         </com.scwang.smartrefresh.layout.SmartRefreshLayout>

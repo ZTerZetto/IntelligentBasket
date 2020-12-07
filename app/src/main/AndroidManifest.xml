@@ -61,6 +61,7 @@
         <activity android:name=".activity.proAdmin.ProAdminSetActivity" />
         <activity android:name=".activity.proAdmin.ProAdminMessageActivity" />
         <activity android:name=".activity.proAdmin.ProAdminPrimaryActivity" />
+        <activity android:name=".activity.basket.BasketOpenByListActivity" />
 
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"

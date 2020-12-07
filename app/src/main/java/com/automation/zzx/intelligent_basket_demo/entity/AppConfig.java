@@ -148,6 +148,10 @@ public class AppConfig {
     // 施工人员查看历史上工记录
     public static final String WORKER_GET_WORE_TIME = ANDROID_URL_PATH.concat("/getWorkerTime");
 
+    //请求吊篮批量上电/下电
+    public static final String SEND_TO_ALL_DEVICE = ANDROID_URL_PATH.concat("/sendToAllDevice");
+
+
     /*
      * 租方管理员活动请求
      */
@@ -213,6 +217,8 @@ public class AppConfig {
 
     //获取工程方案（平面图坐标信息）
     public static final String GET_PLANE_GRAPH_INFO = ANDROID_URL_PATH.concat("/getPlaneGraphInfo");
+
+
 
     /*
      * 项目管理员请求

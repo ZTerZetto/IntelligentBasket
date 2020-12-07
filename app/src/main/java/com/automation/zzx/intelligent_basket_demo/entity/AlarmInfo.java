@@ -7,6 +7,8 @@ public class AlarmInfo {
     private String id;
     private String time;
     private String alarm_detail;
+    private String workerId;
+    private String workerName;
 
     /*
      * 构造函数
@@ -19,6 +21,16 @@ public class AlarmInfo {
         this.id = id;
         this.time = time;
         this.alarm_detail = alarm_detail;
+    }
+
+    public AlarmInfo(String device_id, String alarm_type, String id, String time, String alarm_detail,String workerId,String workerName) {
+        this.device_id = device_id;
+        this.alarm_type = alarm_type;
+        this.id = id;
+        this.time = time;
+        this.alarm_detail = alarm_detail;
+        this.workerId = workerId;
+        this.workerName = workerName;
     }
 
     //getter & setter
@@ -62,4 +74,19 @@ public class AlarmInfo {
         this.alarm_detail = alarm_detail;
     }
 
+    public String getWorkerId() {
+        return workerId;
+    }
+
+    public void setWorkerId(String workerId) {
+        this.workerId = workerId;
+    }
+
+    public String getWorkerName() {
+        return workerName;
+    }
+
+    public void setWorkerName(String workerName) {
+        this.workerName = workerName;
+    }
 }

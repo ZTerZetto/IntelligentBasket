@@ -35,6 +35,7 @@ import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
+import com.automation.zzx.intelligent_basket_demo.widget.SmartGridView;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -67,9 +68,9 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
     private LinearLayout llArea;  //位置区域
     private TextView txtAreaId;  //位置区域
     private TextView txtBasketState; //吊篮状态
-    private GridView mMonitorGridView;  // 功能测试
-    private GridView mFunctionGridView;
-    private GridView mInfoGridView;
+    private SmartGridView mMonitorGridView;  // 功能测试
+    private SmartGridView mFunctionGridView;
+    private SmartGridView mInfoGridView;
     private TextView tvWorkerName_1;
     private TextView tvWorkerName_2;
     private TextView tvWorkerPhone_1;
@@ -210,9 +211,9 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
     // 资源句柄初始化及监听
     public void initWidgetResource(){
         // 获取控件句柄
-        mMonitorGridView = (GridView) findViewById(R.id.function_gridview_1);
-        mFunctionGridView = (GridView) findViewById(R.id.function_gridview_2);
-        mInfoGridView = (GridView) findViewById(R.id.function_gridview_3);
+        mMonitorGridView = (SmartGridView) findViewById(R.id.function_gridview_1);
+        mFunctionGridView = (SmartGridView) findViewById(R.id.function_gridview_2);
+        mInfoGridView = (SmartGridView) findViewById(R.id.function_gridview_3);
 
         //初始化控件并显示内容
         txtBasketId = (TextView) findViewById(R.id.basket_id);
@@ -225,7 +226,6 @@ public class BasketDetailActivity extends AppCompatActivity implements View.OnCl
         txtAreaId =findViewById(R.id.area_id);
 
         txtBasketState = (TextView) findViewById(R.id.basket_state);
-
 
 
         // 初始化功能列表

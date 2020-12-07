@@ -213,17 +213,35 @@
     <TextView
         android:text="技能展示区"
         style="@style/content_title_textview"/>
-    <GridView
-        android:id="@+id/login_capacity_display"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:numColumns="3"
-        android:verticalSpacing="5dp"
-        android:horizontalSpacing="5dp"
-        android:paddingLeft="8dp"
-        android:paddingRight="8dp"
-        android:visibility="visible">
-    </GridView>
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+        <GridView
+            android:id="@+id/login_capacity_display"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="3"
+            android:verticalSpacing="5dp"
+            android:horizontalSpacing="5dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:visibility="visible">
+        </GridView>
+
+        <GridView
+            android:id="@+id/login_capacity_display_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:numColumns="3"
+            android:verticalSpacing="5dp"
+            android:horizontalSpacing="5dp"
+            android:paddingLeft="8dp"
+            android:paddingRight="8dp"
+            android:visibility="visible">
+        </GridView>
+    </LinearLayout>
+
 
     <!-- 空空如也 -->
     <TextView

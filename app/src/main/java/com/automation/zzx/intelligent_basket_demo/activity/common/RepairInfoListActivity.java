@@ -64,7 +64,7 @@ public class RepairInfoListActivity extends AppCompatActivity {
         fragmentList.add(new BasketRepairEndFragment());
 
         List<String> titleList = new ArrayList<>();  // 添加fragment说明
-        titleList.add("正在保修");
+        titleList.add("正在报修");
         titleList.add("历史记录");
 
         getUserInfo();
@@ -72,7 +72,6 @@ public class RepairInfoListActivity extends AppCompatActivity {
         MgBasketContentFragmentAdapter mgBasketContentFragmentAdapter =
                 new MgBasketContentFragmentAdapter(getSupportFragmentManager(), fragmentList, titleList);
         mViewPager.setAdapter(mgBasketContentFragmentAdapter);
-
         mTabLayout.setupWithViewPager(mViewPager);
     }
 

@@ -17,8 +17,18 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentRight="true"
+            android:layout_marginRight="@dimen/size_24"
             android:text="--"
             android:textColor="@color/colorPrimary" />
+        <ImageView
+            android:id="@+id/basket_index_state_iv"
+            android:layout_width="@dimen/size_20"
+            android:layout_height="@dimen/size_20"
+            android:layout_centerVertical="true"
+            android:layout_alignParentRight="true"
+            android:src="@mipmap/ic_basket_online"
+            android:background="@mipmap/icon_resting"
+            android:visibility="gone"/>
     </RelativeLayout>
 
     <!-- 吊篮信息栏 -->
@@ -107,13 +117,6 @@
                     android:text="125h 32min"/>
             </LinearLayout>
         </LinearLayout>
-        <ImageView
-            android:id="@+id/basket_index_state_iv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentRight="true"
-            android:background="@mipmap/icon_resting"
-            android:visibility="gone"/>
     </RelativeLayout>
 
     <!-- 吊篮操作栏 -->

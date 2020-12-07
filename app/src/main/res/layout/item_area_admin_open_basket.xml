@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:background="@drawable/bg_round_white"
+    android:padding="10dp"
+    android:layout_margin="10dp">
+
+    <!-- 复选框 -->
+    <CheckBox
+        android:id="@+id/basket_checkbox"
+        style="@style/CustomCheckboxTheme" />
+    <!-- 最新图片 -->
+    <com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView
+        android:id="@+id/basket_realimage"
+        android:layout_width="80dp"
+        android:layout_height="60dp"
+        android:src="@mipmap/test"/>
+    <!-- 文字信息 -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:layout_marginLeft="10dp"
+        android:layout_gravity="center_vertical">
+
+        <!-- 吊篮编号 -->
+        <LinearLayout
+            style="@style/BasketItemLinearLayout">
+            <TextView
+                style="@style/BasketItemCatTextView"
+                android:text="编号："/>
+            <TextView
+                android:id="@+id/basket_id"
+                style="@style/BasketItemContentTextView"
+                android:text="10006731"/>
+        </LinearLayout>
+
+        <!-- 吊篮状态 -->
+        <LinearLayout
+            style="@style/BasketItemLinearLayout">
+            <TextView
+                style="@style/BasketItemCatTextView"
+                android:text="状态："/>
+            <TextView
+                android:id="@+id/basket_state"
+                style="@style/BasketItemContentTextView"
+                android:text="未上电"/>
+        </LinearLayout>
+
+    </LinearLayout>
+
+</LinearLayout>

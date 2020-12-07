@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <!-- 顶部导航栏 -->
+    <include layout="@layout/toolbar_with_title_and_back" />
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/colorMainBackground">
+
+        <!-- 上拉/下拉刷新 -->
+        <com.scwang.smartrefresh.layout.SmartRefreshLayout
+            android:id="@+id/smart_refresh_layout"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+            <!-- 吊篮列表或无吊篮 -->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="vertical">
+
+                <!-- 吊篮主体 -->
+                <android.support.v7.widget.RecyclerView
+                    android:id="@+id/basket_recycler_view"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:visibility="gone">
+
+                </android.support.v7.widget.RecyclerView>
+
+
+                <!-- 空空如也 -->
+                <RelativeLayout
+                    android:id="@+id/basket_no_avaliable"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                    <ImageView
+                        android:id="@+id/no_basket_iv"
+                        android:layout_width="75dp"
+                        android:layout_height="75dp"
+                        android:layout_above="@+id/no_basket_hint"
+                        android:layout_centerHorizontal="true"
+                        android:src="@mipmap/ic_no_avaliable_basket" />
+                    <TextView
+                        android:id="@+id/no_basket_hint"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_centerInParent="true"
+                        android:layout_marginTop="10dp"
+                        android:text="暂无可操作的吊篮"
+                        android:textSize="16sp"/>
+
+                </RelativeLayout>
+
+            </LinearLayout>
+
+        </com.scwang.smartrefresh.layout.SmartRefreshLayout>
+
+        <!-- 控制栏 -->
+        <RelativeLayout
+            android:id="@+id/basket_controller"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_alignParentBottom="true"
+            android:orientation="horizontal"
+            android:background="@color/white">
+
+            <!-- 复选框 -->
+            <CheckBox
+                android:id="@+id/basket_all_checkbox"
+                style="@style/CustomCheckboxTheme" />
+            <!-- 全选 -->
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_toRightOf="@+id/basket_all_checkbox"
+                android:layout_centerVertical="true"
+                android:text="全选"/>
+
+            <!-- 合计 -->
+            <TextView
+                android:layout_toLeftOf="@id/basket_number"
+                android:text="合计："
+                style="@style/ApplyTotalTextView"/>
+            <TextView
+                android:id="@+id/basket_number"
+                android:layout_toLeftOf="@id/ge"
+                android:text="0"
+                android:textSize="@dimen/textSize_18"
+                android:textStyle="bold"
+                android:textColor="@color/dark_red"
+                style="@style/ApplyTotalTextView"/>
+            <TextView
+                android:id="@+id/ge"
+                android:layout_toLeftOf="@id/basket_all_open"
+                android:text="个"
+                android:layout_marginRight="15dp"
+                style="@style/ApplyTotalTextView"/>
+
+            <!-- 报停 -->
+            <TextView
+                android:id="@+id/basket_all_open"
+                android:text="一键上电"
+                style="@style/InstallBtnTextView"/>
+
+        </RelativeLayout>
+    </RelativeLayout>
+
+</LinearLayout>
