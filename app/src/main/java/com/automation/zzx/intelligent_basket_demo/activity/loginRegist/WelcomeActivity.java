@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.activity.common;
+package com.automation.zzx.intelligent_basket_demo.activity.loginRegist;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -10,10 +10,8 @@ import android.view.View;
 import android.view.WindowManager;
 
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryOldActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPreActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
@@ -70,7 +68,7 @@ public class WelcomeActivity extends AppCompatActivity {
                                 RentAdminPrimaryActivity.class);
                     }else if(userRole.equals("areaAdmin")){
                         mainIntent = new Intent(WelcomeActivity.this,  // 区域管理员页面
-                                AreaAdminPrimaryOldActivity.class);
+                                AreaAdminPreActivity.class);
                     }else if(userRole.equals("inspector")){
                         mainIntent = new Intent(WelcomeActivity.this,  // 巡检人员主页面
                                 InspectPersonPrimaryActivity.class);

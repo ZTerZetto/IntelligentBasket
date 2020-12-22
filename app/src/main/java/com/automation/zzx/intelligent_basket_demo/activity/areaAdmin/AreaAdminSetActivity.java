@@ -210,8 +210,8 @@ public class AreaAdminSetActivity extends AppCompatActivity implements View.OnCl
      *//*
         protected void onAttachToContext(Context context) {
             //do something
-            mUserInfo = ((AreaAdminPrimaryOldActivity) context).pushUserInfo();
-            mToken = ((AreaAdminPrimaryOldActivity) context).pushToken();
+            mUserInfo = ((AreaAdminPreActivity) context).pushUserInfo();
+            mToken = ((AreaAdminPreActivity) context).pushToken();
         }
         @TargetApi(23)
         @Override

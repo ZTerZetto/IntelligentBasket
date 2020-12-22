@@ -34,15 +34,10 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.InstallInfo.BasketInstallInfoActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
-import com.automation.zzx.intelligent_basket_demo.entity.BasketInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInstallInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
@@ -50,7 +45,6 @@ import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
-import com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -70,7 +64,6 @@ import java.util.List;
 import okhttp3.Call;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_GET_ALL_BASKET_INFO;
-import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
 
 public class BasketStateListActivity extends AppCompatActivity {
 
@@ -460,8 +453,8 @@ public class BasketStateListActivity extends AppCompatActivity {
                 Intent intent;
                 intent = new Intent(BasketStateListActivity.this, UploadImageFTPActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
-                intent.putExtra(AreaAdminPrimaryActivity.BASKET_ID, mgBasketStatementList.get(position).getBasketId());
-                intent.putExtra(AreaAdminPrimaryActivity.UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
+                intent.putExtra(ProjectOperatingActivity.BASKET_ID, mgBasketStatementList.get(position).getBasketId());
+                intent.putExtra(ProjectOperatingActivity.UPLOAD_IMAGE_TYPE, UPLOAD_BASKETS_PRE_INSTALL_IMAGE);
                 startActivityForResult(intent, UPLOAD_BASKET_IMAGE_RESULT);
             }*/
 

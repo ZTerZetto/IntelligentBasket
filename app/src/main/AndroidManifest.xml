@@ -22,7 +22,8 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" /> <!-- 小米推送 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
+    <!-- 小米推送 -->
     <permission
         android:name="com.automation.zzx.intelligent_basket_demo.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
@@ -66,7 +67,7 @@
         <meta-data
             android:name="com.baidu.lbsapi.API_KEY"
             android:value="hpCY4YjfMzTiFyXdnFblRDjrY5vYcaxc" /> <!-- 欢迎页面 -->
-        <activity android:name=".activity.common.WelcomeActivity">
+        <activity android:name=".activity.loginRegist.WelcomeActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -80,7 +81,7 @@
         <activity android:name=".activity.areaAdmin.AreaAdminMessageActivity" />
         <activity android:name=".activity.areaAdmin.AreaAdminSetActivity" />
         <activity android:name=".activity.basket.BasketStickerActivity" />
-        <activity android:name=".activity.areaAdmin.AreaAdminPrimaryActivity" />
+        <activity android:name=".activity.areaAdmin.ProjectOperatingActivity" />
         <activity android:name=".activity.common.PasswordChangeActivity" />
         <activity android:name=".activity.common.RepairInfoListActivity" />
         <activity android:name=".activity.areaAdmin.ConfigurationActivity" />
@@ -97,15 +98,15 @@
         <activity android:name=".activity.areaAdmin.AreaAdminSumitReportActivity" />
         <activity android:name=".activity.common.UploadImageFTPActivity" />
         <activity android:name=".activity.common.QRcodeCardActivity" />
-        <activity android:name=".activity.common.UserMessageActivity" />
+        <activity android:name=".activity.worker.UserMessageActivity" />
         <activity android:name=".activity.common.PersonalInformationActivity" />
         <activity android:name=".activity.common.RepairDetailActivity" />
         <activity android:name=".activity.worker.WorkerHomePageActivity" />
         <activity android:name=".activity.worker.WorkerMoreActivity" />
-        <activity android:name=".activity.areaAdmin.AreaAdminPrimaryOldActivity" />
+        <activity android:name=".activity.areaAdmin.AreaAdminPreActivity" />
         <activity android:name=".activity.rentAdmin.RentAdminPrimaryActivity" />
         <activity android:name=".activity.rentAdmin.AlarmMessageActivity" />
-        <activity android:name=".activity.proAdmin.ProAdminPrimaryOldActivity" /> <!-- 百度地图Ket -->
+        <activity android:name=".activity.proAdmin.ProAdminPreActivity" /> <!-- 百度地图Ket -->
         <activity android:name=".activity.basket.BasketDetailActivity" />
         <activity android:name=".activity.rentAdmin.BasketDetailByRentActivity" />
         <activity android:name=".activity.basket.BasketParameterActivity" />
@@ -131,7 +132,6 @@
         <activity android:name=".activity.basket.BasketEZVideoActivity" />
         <activity android:name=".activity.basket.BasketStateListActivity" />
         <activity android:name=".activity.oldversion.WorkerListActivity" />
-        <activity android:name=".activity.oldversion.ProListActivity" />
         <activity
             android:name=".activity.loginRegist.RegistWorkerActivity"
             android:launchMode="singleTask" />

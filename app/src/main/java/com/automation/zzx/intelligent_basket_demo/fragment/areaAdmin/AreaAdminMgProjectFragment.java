@@ -41,7 +41,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryOldActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPreActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.CheckCompactActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ConfigurationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProDetailActivity;
@@ -173,7 +173,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
     private State state = State.INVISIBLE;
     protected static final float FLIP_DISTANCE = 150;
     private GestureDetector mGestureDetector;
-    private AreaAdminPrimaryOldActivity.MyOnTouchListener myOnTouchListener;
+    private AreaAdminPreActivity.MyOnTouchListener myOnTouchListener;
     private SVCGestureListener mGestureListener = new SVCGestureListener();
 
     // 个人信息相关
@@ -805,14 +805,14 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
         mGestureDetector.setIsLongpressEnabled(true);
         mGestureDetector.setOnDoubleTapListener(mGestureListener);
 
-        myOnTouchListener = new AreaAdminPrimaryOldActivity.MyOnTouchListener() {
+        myOnTouchListener = new AreaAdminPreActivity.MyOnTouchListener() {
 
             @Override
             public boolean onTouch(MotionEvent ev) {
                 return mGestureDetector.onTouchEvent(ev);
             }
         };
-        ((AreaAdminPrimaryOldActivity) getActivity()).registerMyOnTouchListener(myOnTouchListener);
+        ((AreaAdminPreActivity) getActivity()).registerMyOnTouchListener(myOnTouchListener);
     }
 
     /*
@@ -1103,9 +1103,9 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
      */
     protected void onAttachToContext(Context context) {
         //d o something
-        mUserInfo = ((AreaAdminPrimaryOldActivity) context).pushUserInfo();
-        mToken = ((AreaAdminPrimaryOldActivity) context).pushToken();
-        mLastProjectId = ((AreaAdminPrimaryOldActivity) context).pushProjectId();
+        mUserInfo = ((AreaAdminPreActivity) context).pushUserInfo();
+        mToken = ((AreaAdminPreActivity) context).pushToken();
+        mLastProjectId = ((AreaAdminPreActivity) context).pushProjectId();
     }
 
     @TargetApi(23)
@@ -1134,7 +1134,7 @@ public class AreaAdminMgProjectFragment extends Fragment implements View.OnClick
             editor.putString("projectId", mProjectInfoList.get(currentSelectedProject).getProjectId());
             editor.commit();
         }
-        ((AreaAdminPrimaryOldActivity) getActivity()).unregisterMyOnTouchListener(myOnTouchListener);
+        ((AreaAdminPreActivity) getActivity()).unregisterMyOnTouchListener(myOnTouchListener);
     }
 
     /*

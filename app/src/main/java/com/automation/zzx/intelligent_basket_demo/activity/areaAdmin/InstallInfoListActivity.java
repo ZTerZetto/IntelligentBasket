@@ -151,7 +151,7 @@ public class InstallInfoListActivity extends AppCompatActivity implements View.O
 
         //获取当前项目ID
         Intent intent = getIntent();
-        mProjectId = intent.getStringExtra((AreaAdminPrimaryActivity.PROJECT_ID));
+        mProjectId = intent.getStringExtra((ProjectOperatingActivity.PROJECT_ID));
 
     }
 

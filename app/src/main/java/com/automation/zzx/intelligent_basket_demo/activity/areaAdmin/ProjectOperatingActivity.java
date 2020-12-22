@@ -52,7 +52,7 @@ import okhttp3.Call;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_GET_ALL_BASKET_INFO;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.AREA_ADMIN_GET_ALL_PROJECT_INFO;
 
-public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.OnClickListener {
+public class ProjectOperatingActivity extends AppCompatActivity implements View.OnClickListener {
 
     private final static String TAG = "AreaAdminMgProject";
     //handler 消息类型
@@ -172,7 +172,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
         initWidget();
         mHandler.sendEmptyMessage(UPDATE_AREA_ADMIN_PROJECT_LIST_MSG);
 
-        MiPushUtil.initMiPush(AreaAdminPrimaryActivity.this, mUserInfo.getUserId(), null);
+        MiPushUtil.initMiPush(ProjectOperatingActivity.this, mUserInfo.getUserId(), null);
 
     }
 
@@ -283,7 +283,7 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
         initFunctionList();
 
         //历史记录功能列表点击事件
-        mRecordAdapter = new FunctionAdapter(AreaAdminPrimaryActivity.this,R.layout.item_function,mRecordFunctions);
+        mRecordAdapter = new FunctionAdapter(ProjectOperatingActivity.this,R.layout.item_function,mRecordFunctions);
         mGvRecord.setAdapter(mRecordAdapter);
         mGvRecord.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -292,26 +292,26 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
                 switch (position) {
                     case 0: //安装信息
                         Log.i(TAG, "You have clicked the examine compact button");
-                        intent = new Intent(AreaAdminPrimaryActivity.this, InstallInfoListActivity.class);
+                        intent = new Intent(ProjectOperatingActivity.this, InstallInfoListActivity.class);
                         intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
                         startActivity(intent);
                         break;
                     case 1: //报警记录
                         Log.i(TAG, "You have clicked the pre_apply compact button");
-                        intent = new Intent(AreaAdminPrimaryActivity.this, AlarmRecordProjectActivity.class);
+                        intent = new Intent(ProjectOperatingActivity.this, AlarmRecordProjectActivity.class);
                         intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
                         startActivity(intent);
                         break;
                     case 2: //报修记录
                         Log.i(TAG, "You have clicked the repair information button");
-                        intent = new Intent(AreaAdminPrimaryActivity.this, RepairInfoListActivity.class);
+                        intent = new Intent(ProjectOperatingActivity.this, RepairInfoListActivity.class);
                         intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
                         intent.putExtra(PROJECT_NAME, projectInfo.getProjectName());
                         startActivity(intent);
                         break;
                     case 3: //报停记录
                         Log.i(TAG, "You have clicked the pre stop info button");
-                        intent = new Intent(AreaAdminPrimaryActivity.this, StopRecordActivity.class);
+                        intent = new Intent(ProjectOperatingActivity.this, StopRecordActivity.class);
                         intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
                         startActivity(intent);
                         break;
@@ -362,42 +362,42 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
                 break;
             case R.id.entrance_info:  // 点击消息入口
                 Log.i(TAG, "You have clicked the select projectList button");
-                intent = new Intent(AreaAdminPrimaryActivity.this, AreaAdminMessageActivity.class);
+                intent = new Intent(ProjectOperatingActivity.this, AreaAdminMessageActivity.class);
                 startActivity(intent);
                 break;
             case R.id.entrance_mine:  // 点击我的入口
                 Log.i(TAG, "You have clicked the select projectList button");
-                intent = new Intent(AreaAdminPrimaryActivity.this, AreaAdminSetActivity.class);
+                intent = new Intent(ProjectOperatingActivity.this, AreaAdminSetActivity.class);
                 startActivity(intent);
                 break;
             case R.id.rl_project_info:  // 项目基本信息
                 Log.i(TAG, "You have clicked the select projectList button");
-                intent = new Intent(AreaAdminPrimaryActivity.this, ProDetailActivity.class);
+                intent = new Intent(ProjectOperatingActivity.this, ProDetailActivity.class);
                 intent.putExtra("projectId", mProjectId);
                 startActivity(intent);
                 break;
             case R.id.rl_configuration_info:  // 配置清单
                 Log.i(TAG, "You have clicked the configuration button");
-                intent = new Intent(AreaAdminPrimaryActivity.this, ConfigurationActivity.class);
+                intent = new Intent(ProjectOperatingActivity.this, ConfigurationActivity.class);
                 intent.putExtra(PROJECT_ID, mProjectId);
                 startActivityForResult(intent, UPLOAD_CONFIGURATION_RESULT);
                 break;
             case R.id.rl_install_info:  // 查看安装方案
                 Log.i(TAG, "You have clicked the select projectList button");
-                intent = new Intent(AreaAdminPrimaryActivity.this, PlaneFigureActivity.class);
+                intent = new Intent(ProjectOperatingActivity.this, PlaneFigureActivity.class);
                 intent.putExtra("projectId", mProjectId);
                 startActivity(intent);
                 break;
             case R.id.rl_basket_info:  // 查看吊篮列表
                 Log.i(TAG, "You have clicked the basket button");
-                intent = new Intent(AreaAdminPrimaryActivity.this, BasketStateListActivity.class);
+                intent = new Intent(ProjectOperatingActivity.this, BasketStateListActivity.class);
                 intent.putExtra(PROJECT_ID, projectInfo.getProjectId());
                 intent.putExtra(PROJECT_NAME, projectInfo.getProjectName());
                 startActivity(intent);
                 break;
             case R.id.rl_compact_info:  // 查看合同
                 Log.i(TAG, "You have clicked the examine compact button");
-                intent = new Intent(AreaAdminPrimaryActivity.this, CheckCompactActivity.class);
+                intent = new Intent(ProjectOperatingActivity.this, CheckCompactActivity.class);
                 startActivity(intent);
                 break;
         }
@@ -489,9 +489,9 @@ public class AreaAdminPrimaryActivity extends AppCompatActivity implements View.
                         Log.i(TAG, "错误：" + code);
                         switch (code){
                             case 401: // 未授权
-                                ToastUtil.showToastTips(AreaAdminPrimaryActivity.this, "登录已过期，请重新登陆");
-                                startActivity(new Intent(AreaAdminPrimaryActivity.this, LoginActivity.class));
-                                AreaAdminPrimaryActivity.this.finish();
+                                ToastUtil.showToastTips(ProjectOperatingActivity.this, "登录已过期，请重新登陆");
+                                startActivity(new Intent(ProjectOperatingActivity.this, LoginActivity.class));
+                                ProjectOperatingActivity.this.finish();
                                 break;
                             case 403: // 禁止
                                 break;

@@ -2,7 +2,6 @@ package com.automation.zzx.intelligent_basket_demo.activity.areaAdmin;
 
 import android.content.SharedPreferences;
 import android.graphics.Color;
-import android.os.Build;
 import android.os.StrictMode;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -18,9 +17,7 @@ import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminFirstFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMessageFragment;
-import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminMgProjectFragment;
 import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
-import com.automation.zzx.intelligent_basket_demo.widget.ScaleImageView;
 import com.hjm.bottomtabbar.BottomTabBar;
 
 import java.util.ArrayList;
@@ -31,7 +28,7 @@ import java.util.ArrayList;
  * Describe: 区域管理员主界面
  */
 
-public class AreaAdminPrimaryOldActivity extends AppCompatActivity {
+public class AreaAdminPreActivity extends AppCompatActivity {
 
     // 控件
     private BottomTabBar mBottomTabBar;
@@ -57,7 +54,7 @@ public class AreaAdminPrimaryOldActivity extends AppCompatActivity {
 
         getUserInfo();
         initWidget();
-        MiPushUtil.initMiPush(AreaAdminPrimaryOldActivity.this, mUserInfo.getUserId(), null);
+        MiPushUtil.initMiPush(AreaAdminPreActivity.this, mUserInfo.getUserId(), null);
     }
 
     private void initWidget(){

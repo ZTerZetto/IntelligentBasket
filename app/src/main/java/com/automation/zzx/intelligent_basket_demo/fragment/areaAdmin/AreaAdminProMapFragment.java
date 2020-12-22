@@ -16,7 +16,6 @@ import android.os.Handler;
 import android.os.Message;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -28,7 +27,7 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProjectOperatingActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminProListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
@@ -251,7 +250,7 @@ public class AreaAdminProMapFragment extends Fragment implements SensorEventList
                     mBaiduMap.hideInfoWindow();
                     //根据气泡顺序定位项目
                     if(mItemPosition <= mgProjectInfoList.size()) {
-                        Intent intent = new Intent(getActivity(), AreaAdminPrimaryActivity.class);
+                        Intent intent = new Intent(getActivity(), ProjectOperatingActivity.class);
                         intent.putExtra("project_info", mgProjectInfoList.get(mItemPosition));
                         startActivity(intent);
                         getActivity().finish();

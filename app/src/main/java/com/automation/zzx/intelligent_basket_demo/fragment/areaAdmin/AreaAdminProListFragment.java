@@ -3,7 +3,6 @@ package com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -16,14 +15,10 @@ import android.support.v4.app.Fragment;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AutoCompleteTextView;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -32,19 +27,17 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProjectOperatingActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminProListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProjectFinishedActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProjectInstallActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.ProjectAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
-import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;
 import com.scwang.smartrefresh.layout.api.RefreshLayout;
@@ -55,7 +48,6 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Map;
 
 import okhttp3.Call;
 
@@ -164,7 +156,7 @@ public class AreaAdminProListFragment extends Fragment implements View.OnClickLi
                 switch (projectType){
                     case OPERATING:
                         // item 点击响应
-                         intent = new Intent(getActivity(), AreaAdminPrimaryActivity.class);
+                         intent = new Intent(getActivity(), ProjectOperatingActivity.class);
                         intent.putExtra("project_info",showProjectList.get(position));
                         startActivity(intent);
                         break;

@@ -8,13 +8,11 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
 
-import android.os.Parcelable;
 import android.support.v7.app.AppCompatActivity;
 
 import android.preference.PreferenceManager;
-import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.common.UserMessageActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.ExceptionReportActivity;
+
+import com.automation.zzx.intelligent_basket_demo.activity.worker.UserMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;

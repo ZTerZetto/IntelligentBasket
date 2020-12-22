@@ -23,7 +23,7 @@ import android.widget.TextView;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryOldActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPreActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
@@ -198,8 +198,8 @@ public class AreaAdminFragment extends Fragment implements View.OnClickListener 
      */
     protected void onAttachToContext(Context context) {
         //do something
-        mUserInfo = ((AreaAdminPrimaryOldActivity) context).pushUserInfo();
-        mToken = ((AreaAdminPrimaryOldActivity) context).pushToken();
+        mUserInfo = ((AreaAdminPreActivity) context).pushUserInfo();
+        mToken = ((AreaAdminPreActivity) context).pushToken();
     }
     @TargetApi(23)
     @Override

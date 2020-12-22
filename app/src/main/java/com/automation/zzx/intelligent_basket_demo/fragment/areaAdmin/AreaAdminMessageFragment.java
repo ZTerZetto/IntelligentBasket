@@ -11,10 +11,7 @@ import android.graphics.Bitmap;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
-import android.os.Looper;
 import android.os.Message;
-import android.os.Parcelable;
-import android.os.StrictMode;
 import android.support.v4.app.Fragment;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
@@ -28,21 +25,15 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryOldActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminProListActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPreActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.basket.PlaneBasketActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.ConfigurationListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.SearchProjectActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.AlarmMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgAreaMessageAdapter;
-import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.ScaleImageView;
 import com.automation.zzx.intelligent_basket_demo.widget.image.WebImage;
-import com.automation.zzx.intelligent_basket_demo.widget.image.WebImageCache;
-import com.baidu.mapapi.clusterutil.MarkerManager;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -53,11 +44,8 @@ import com.scwang.smartrefresh.layout.listener.OnRefreshListener;
 
 import org.litepal.crud.DataSupport;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.IllegalFormatCodePointException;
 import java.util.List;
 
 /**
@@ -296,8 +284,8 @@ public class AreaAdminMessageFragment extends Fragment {
      */
     protected void onAttachToContext(Context context) {
         //do something
-        userInfo = ((AreaAdminPrimaryOldActivity) context).pushUserInfo();
-        token = ((AreaAdminPrimaryOldActivity) context).pushToken();
+        userInfo = ((AreaAdminPreActivity) context).pushUserInfo();
+        token = ((AreaAdminPreActivity) context).pushToken();
 
     }
     @TargetApi(23)

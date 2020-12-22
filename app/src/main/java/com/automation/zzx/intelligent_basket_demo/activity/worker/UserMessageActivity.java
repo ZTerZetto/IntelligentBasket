@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.activity.common;
+package com.automation.zzx.intelligent_basket_demo.activity.worker;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
@@ -18,7 +18,6 @@ import android.widget.Toast;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.ConfigurationListActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.OutAndInStorageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.SearchProjectActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.common.UserMessageAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MessageInfo;

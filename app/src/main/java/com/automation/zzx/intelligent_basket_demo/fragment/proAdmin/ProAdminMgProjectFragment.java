@@ -47,7 +47,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailAc
 import com.automation.zzx.intelligent_basket_demo.activity.common.RepairInfoListActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.common.UploadImageFTPActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPreActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgBasketStatementAdapter;
 import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.MgStateAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
@@ -164,7 +164,7 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
     private State state = State.INVISIBLE;
     protected static final float FLIP_DISTANCE = 150;
     private GestureDetector mGestureDetector;
-    private ProAdminPrimaryOldActivity.MyOnTouchListener myOnTouchListener;
+    private ProAdminPreActivity.MyOnTouchListener myOnTouchListener;
     private SVCGestureListener mGestureListener = new SVCGestureListener();
 
     // 个人信息相关
@@ -762,14 +762,14 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
         mGestureDetector.setIsLongpressEnabled(true);
         mGestureDetector.setOnDoubleTapListener(mGestureListener);
 
-        myOnTouchListener = new ProAdminPrimaryOldActivity.MyOnTouchListener() {
+        myOnTouchListener = new ProAdminPreActivity.MyOnTouchListener() {
 
             @Override
             public boolean onTouch(MotionEvent ev) {
                 return mGestureDetector.onTouchEvent(ev);
             }
         };
-        ((ProAdminPrimaryOldActivity)getActivity()).registerMyOnTouchListener(myOnTouchListener);
+        ((ProAdminPreActivity)getActivity()).registerMyOnTouchListener(myOnTouchListener);
     }
 
     /*
@@ -1040,9 +1040,9 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
      */
     protected void onAttachToContext(Context context) {
         //d o something
-        mUserInfo = ((ProAdminPrimaryOldActivity) context).pushUserInfo();
-        mToken = ((ProAdminPrimaryOldActivity) context).pushToken();
-        mLastProjectId = ((ProAdminPrimaryOldActivity) context).pushProjectId();
+        mUserInfo = ((ProAdminPreActivity) context).pushUserInfo();
+        mToken = ((ProAdminPreActivity) context).pushToken();
+        mLastProjectId = ((ProAdminPreActivity) context).pushProjectId();
     }
     @TargetApi(23)
     @Override
@@ -1068,7 +1068,7 @@ public class ProAdminMgProjectFragment extends Fragment implements View.OnClickL
             editor.putString("projectId", mProjectInfoList.get(currentSelectedProject).getProjectId());
             editor.commit();
         }
-        ((ProAdminPrimaryOldActivity) getActivity()).unregisterMyOnTouchListener(myOnTouchListener);
+        ((ProAdminPreActivity) getActivity()).unregisterMyOnTouchListener(myOnTouchListener);
     }
 
     /*

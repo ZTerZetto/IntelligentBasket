@@ -26,10 +26,8 @@ import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.common.PersonalInformationActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.common.UserMessageActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.RegistWorkerActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPreActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.CustomTimeTask;
@@ -42,7 +40,6 @@ import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.ConfirmWorkDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
-import com.automation.zzx.intelligent_basket_demo.widget.dialog.VerifyWorkDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
 import com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity;
 import com.hjq.permissions.OnPermission;
@@ -740,7 +737,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
 
     //切换角色
     private void switchToProAdmin() {
-        startActivity(new Intent(this, ProAdminPrimaryOldActivity.class));
+        startActivity(new Intent(this, ProAdminPreActivity.class));
         this.finish();
     }
 

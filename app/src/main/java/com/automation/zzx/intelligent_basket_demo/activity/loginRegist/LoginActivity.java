@@ -28,11 +28,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONException;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPrimaryOldActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPreActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProjectOperatingActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basketSupervisor.SupervisorPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPrimaryOldActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPreActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
@@ -196,7 +196,7 @@ public class LoginActivity extends AppCompatActivity {
         test.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                StartAndFinishActicity(AreaAdminPrimaryActivity.class); // 跳转到区域管理人员界面
+                StartAndFinishActicity(ProjectOperatingActivity.class); // 跳转到区域管理人员界面
             }
         });
 
@@ -251,7 +251,7 @@ public class LoginActivity extends AppCompatActivity {
                                 StartAndFinishActicity(RentAdminPrimaryActivity.class);
                                 break;
                             case "areaAdmin":  // 区域管理员
-                                StartAndFinishActicity(AreaAdminPrimaryOldActivity.class);
+                                StartAndFinishActicity(AreaAdminPreActivity.class);
                                 break;
                             case "inspector":  // 巡检人员
                                 StartAndFinishActicity(InspectPersonPrimaryActivity.class);
@@ -422,7 +422,7 @@ public class LoginActivity extends AppCompatActivity {
                 if(currentSelected == 0){
                     StartAndFinishActicity(WorkerPrimaryActivity.class);
                 } else {
-                    StartAndFinishActicity(ProAdminPrimaryOldActivity.class);
+                    StartAndFinishActicity(ProAdminPreActivity.class);
                 }
                 mSelectProjectDialog.dismiss();
             }

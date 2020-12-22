@@ -13,11 +13,9 @@ import android.view.View;
 
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
-import com.automation.zzx.intelligent_basket_demo.fragment.areaAdmin.AreaAdminFirstFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.proAdmin.ProAdminFirstFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.proAdmin.ProAdminFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.proAdmin.ProAdminMessageFragment;
-import com.automation.zzx.intelligent_basket_demo.fragment.proAdmin.ProAdminMgProjectFragment;
 import com.automation.zzx.intelligent_basket_demo.utils.xiaomi.mipush.MiPushUtil;
 import com.hjm.bottomtabbar.BottomTabBar;
 
@@ -28,7 +26,7 @@ import java.util.ArrayList;
  * Describe: 项目负责人主界面
  */
 
-public class ProAdminPrimaryOldActivity extends AppCompatActivity {
+public class ProAdminPreActivity extends AppCompatActivity {
 
     // 控件
     private BottomTabBar mBottomTabBar;
@@ -54,7 +52,7 @@ public class ProAdminPrimaryOldActivity extends AppCompatActivity {
 
         getUserInfo();
         initWidget();
-        MiPushUtil.initMiPush(ProAdminPrimaryOldActivity.this, mUserInfo.getUserId(), null);
+        MiPushUtil.initMiPush(ProAdminPreActivity.this, mUserInfo.getUserId(), null);
     }
 
     private void initWidget(){
