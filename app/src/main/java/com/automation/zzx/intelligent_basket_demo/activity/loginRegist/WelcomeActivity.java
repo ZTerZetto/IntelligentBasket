@@ -14,6 +14,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPr
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryNewActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
 
 import java.util.Timer;
@@ -62,7 +63,7 @@ public class WelcomeActivity extends AppCompatActivity {
                     Intent mainIntent;
                     if(userRole.contains("worker")||(WorkerType.getByDetailtype(userRole)!=null)){
                         mainIntent = new Intent(WelcomeActivity.this,  // worker主活动
-                                WorkerPrimaryActivity.class);
+                                WorkerPrimaryNewActivity.class);
                     }else if(userRole.equals("rentAdmin")){
                         mainIntent = new Intent(WelcomeActivity.this,  // 租方管理员页面
                                 RentAdminPrimaryActivity.class);

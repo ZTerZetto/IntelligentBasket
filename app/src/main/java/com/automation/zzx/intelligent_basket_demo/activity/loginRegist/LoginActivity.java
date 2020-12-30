@@ -34,9 +34,9 @@ import com.automation.zzx.intelligent_basket_demo.activity.basketSupervisor.Supe
 import com.automation.zzx.intelligent_basket_demo.activity.inspectionPerson.InspectPersonPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPreActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.RentAdminPrimaryActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryNewActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.enums.WorkerType;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
-import com.automation.zzx.intelligent_basket_demo.activity.worker.WorkerPrimaryActivity;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.google.gson.Gson;
@@ -324,7 +324,7 @@ public class LoginActivity extends AppCompatActivity {
                         msg.what = 4;
                         handler.sendMessage(msg);
                     } else {
-                        StartAndFinishActicity(WorkerPrimaryActivity.class);
+                        StartAndFinishActicity(WorkerPrimaryNewActivity.class);
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -420,7 +420,7 @@ public class LoginActivity extends AppCompatActivity {
                 currentSelected = tmpSelected;
                 //跳转至所选择的角色主界面
                 if(currentSelected == 0){
-                    StartAndFinishActicity(WorkerPrimaryActivity.class);
+                    StartAndFinishActicity(WorkerPrimaryNewActivity.class);
                 } else {
                     StartAndFinishActicity(ProAdminPreActivity.class);
                 }

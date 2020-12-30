@@ -31,7 +31,6 @@ import com.automation.zzx.intelligent_basket_demo.activity.proAdmin.ProAdminPreA
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.CustomTimeTask;
-import com.automation.zzx.intelligent_basket_demo.utils.StringUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
@@ -41,7 +40,6 @@ import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.ConfirmWorkDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
 import com.automation.zzx.intelligent_basket_demo.widget.image.SmartImageView;
-import com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity;
 import com.hjq.permissions.OnPermission;
 import com.hjq.permissions.Permission;
 import com.hjq.permissions.XXPermissions;
@@ -56,22 +54,20 @@ import okhttp3.Response;
 
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.WORKER_BEGIN_WORK;
 import static com.automation.zzx.intelligent_basket_demo.entity.AppConfig.WORKER_END_WORK;
-import static com.automation.zzx.intelligent_basket_demo.widget.zxing.activity.CaptureActivity.QR_CODE_RESULT;
 
 /**
  * Created by pengchenghu on 2019/3/15.
  * Author Email: 15651851181@163.com
  * Describe: 施工人员主页面
  * limits:
- *           此页面为原扫码上下工逻辑
+ *           此页面为新蓝牙上下工逻辑
  */
 
-public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnClickListener {
-    private final static String TAG = "WorkerPrimaryActivity";
+public class WorkerPrimaryNewActivity extends AppCompatActivity implements View.OnClickListener {
+    private final static String TAG = "WorkerPrimaryNewActivity";
 
     // 页面跳转
     private final static int CAPTURE_ACTIVITY_RESULT = 1;
-
     // Handler消息
     private final static int CHANGE_WORK_STATE_MSG = 101;
     private final static int OPEN_VERIFY_DIALOG_MSG = 102;
@@ -154,7 +150,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         public void handleMessage(Message msg) {
             switch (msg.what) {
                 case CHANGE_WORK_STATE_MSG:  // 更改上工状态
-                    if(mWorkState == 0){
+                    /*if(mWorkState == 0){
                         //当前为下工状态，展示改为可上工
                         mWorkTv.setText(R.string.worker_start_basket);
                         mWorkIv.setImageResource(R.mipmap.ic_worker_open);
@@ -166,12 +162,15 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                         mWorkIv.setImageResource(R.mipmap.ic_worker_close);
                         //上工状态获取吊篮编号+现场编号（获取——>显示）
                         getBasketInfo();
-                    }
+                    }*/
+                    mWorkTv.setText(R.string.worker_operate_basket);
+                    mWorkIv.setImageResource(R.mipmap.ic_worker_open);
+                    mBasketLayout.setVisibility(View.GONE);
                     break;
 
                 case OPEN_VERIFY_DIALOG_MSG:  // 打开上/下工确认
                     final String basketId = msg.obj.toString();
-                    mConfirmWorkDialog = new ConfirmWorkDialog(WorkerPrimaryActivity.this,
+                    mConfirmWorkDialog = new ConfirmWorkDialog(WorkerPrimaryNewActivity.this,
                             R.style.verify_dialog, mWorkState, mUserHeadUrl, basketId,
                             new ConfirmWorkDialog.OnDialogOperateListener() {
                                 @Override
@@ -203,29 +202,29 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     int state = (int)msg.obj;
                     switch (state){
                         case 10:  // 可以执行打开吊篮操作
-                            Toast.makeText(WorkerPrimaryActivity.this,
+                            Toast.makeText(WorkerPrimaryNewActivity.this,
                                     "正在打开吊篮...", Toast.LENGTH_SHORT).show();
                             notifyHardDivice();
                             break;
                         case 11:  // 吊篮与施工人员不匹配
-                            Toast.makeText(WorkerPrimaryActivity.this,
+                            Toast.makeText(WorkerPrimaryNewActivity.this,
                                     "此吊篮不是您的工作吊篮，无法打开！", Toast.LENGTH_SHORT).show();
 
                             break;
                         case 200:  // 吊篮上有人，只执行下工，不关闭吊篮
-                            Toast.makeText(WorkerPrimaryActivity.this,
+                            Toast.makeText(WorkerPrimaryNewActivity.this,
                                     "下工成功，吊篮尚有其他作业人员，等待其他施工人员断电!",
                                     Toast.LENGTH_SHORT).show();
                             mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);  // 调整页面显示
                             break;
                         case 201:  // 吊篮上没人其他工人，下工+关闭吊篮
-                            Toast.makeText(WorkerPrimaryActivity.this,
+                            Toast.makeText(WorkerPrimaryNewActivity.this,
                                     "下工成功，正在关闭吊篮...",
                                     Toast.LENGTH_SHORT).show();
                             notifyHardDivice();
                             break;
                         case 21:  // 吊篮与施工人员不匹配
-                            Toast.makeText(WorkerPrimaryActivity.this,
+                            Toast.makeText(WorkerPrimaryNewActivity.this,
                                     "此吊篮不是您的工作吊篮，无法下工！", Toast.LENGTH_SHORT).show();
                             break;
                         default:
@@ -236,7 +235,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     int basket_state = parseParameterInfo(msg.obj); // 获取吊篮参数
                     if(basket_state == mWorkState){
                         mQueryCnt = 0;
-                        ToastUtil.showToastTips(WorkerPrimaryActivity.this, "操作成功");
+                        ToastUtil.showToastTips(WorkerPrimaryNewActivity.this, "操作成功");
                         mHandler.sendEmptyMessage(TIMER_STOP_MSG);
                         mHandler.sendEmptyMessage(DISMISS_LOADING_MSG);
                         mHandler.sendEmptyMessage(CHANGE_WORK_STATE_MSG);  // 调整页面显示
@@ -244,7 +243,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                         mQueryCnt += 1;
                         if (mQueryCnt == mMaxQueryCnt){  // 达到最大的轮询上限
                             mQueryCnt = 0;
-                            ToastUtil.showToastTips(WorkerPrimaryActivity.this, "操作失败");
+                            ToastUtil.showToastTips(WorkerPrimaryNewActivity.this, "操作失败");
                             mWorkState = Math.abs(1-mWorkState);  // 还原状态
                             mHandler.sendEmptyMessage(TIMER_STOP_MSG);
                             mHandler.sendEmptyMessage(DISMISS_LOADING_MSG);
@@ -293,7 +292,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
 //        initTimer();
         initLoadingDialog();
 
-        MiPushUtil.initMiPush(WorkerPrimaryActivity.this, mUserInfo.getUserId(), null);
+        MiPushUtil.initMiPush(WorkerPrimaryNewActivity.this, mUserInfo.getUserId(), null);
     }
 
     // 初始化控件
@@ -361,7 +360,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         switch (v.getId()){
             case R.id.login_layout:  // 跳转至个人信息页面
                 Log.i(TAG, "You have clicked login layout");
-                intent = new Intent(WorkerPrimaryActivity.this, PersonalInformationActivity.class);
+                intent = new Intent(WorkerPrimaryNewActivity.this, PersonalInformationActivity.class);
                 intent.putExtra("userInfo", (Parcelable) mUserInfo);
                 startActivity(intent);
                 break;
@@ -374,17 +373,23 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     mCommonDialog.show();
                     break;
                 }
+                /*
+                // 原：扫码上下工
                 intent = new Intent(WorkerPrimaryActivity.this, CaptureActivity.class);
-                startActivityForResult(intent, CAPTURE_ACTIVITY_RESULT);
+                startActivityForResult(intent, CAPTURE_ACTIVITY_RESULT);*/
+                // 现：蓝牙上下工
+                intent = new Intent(WorkerPrimaryNewActivity.this, BlueToothControlActivity.class);
+                intent.putExtra("work_project_id", mWorkProjectId);
+                startActivity(intent);
                 break;
             case R.id.order_layout:  // 工单
                 Log.i(TAG, "You have clicked order button");
-                intent = new Intent(WorkerPrimaryActivity.this, WorkerOrderActivity.class);
+                intent = new Intent(WorkerPrimaryNewActivity.this, WorkerOrderActivity.class);
                 startActivity(intent);
                 break;
             case R.id.message_layout:  // 消息
                 Log.i(TAG, "You have clicked message button");
-                intent = new Intent(WorkerPrimaryActivity.this, UserMessageActivity.class);
+                intent = new Intent(WorkerPrimaryNewActivity.this, UserMessageActivity.class);
                 intent.putExtra("user_type", "worker");
                 intent.putExtra("user_id", mUserInfo.getUserId());
                 startActivity(intent);
@@ -453,7 +458,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     @Override
     protected void onActivityResult(int requestCode, int resultCode, Intent data){
         switch (requestCode){
-            case CAPTURE_ACTIVITY_RESULT:
+            /*case CAPTURE_ACTIVITY_RESULT:
                 if(resultCode == RESULT_OK){
                     String basket_id = data.getStringExtra(QR_CODE_RESULT);
                     basket_id = StringUtil.replaceBlank(basket_id);  // 过滤空白、制表符等无效字符
@@ -463,7 +468,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     msg.obj = basket_id;
                     mHandler.sendMessage(msg);
                 }
-                break;
+                break;*/
         }
     }
 
@@ -571,7 +576,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     default:
                         Log.i(TAG, "错误编码：" + response.code());
                         Looper.prepare();
-                        Toast.makeText(WorkerPrimaryActivity.this,
+                        Toast.makeText(WorkerPrimaryNewActivity.this,
                                 "网络连接超时,请稍后重试！", Toast.LENGTH_SHORT).show();
                         Looper.loop();
                         break;
@@ -751,7 +756,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         // 200911: 退出登录，去除别名设置
         MiPushUtil.clearAlias(this, mUserInfo.getUserId());
 
-        startActivity(new Intent(WorkerPrimaryActivity.this, LoginActivity.class));
+        startActivity(new Intent(WorkerPrimaryNewActivity.this, LoginActivity.class));
         this.finish();  // 销毁此活动
     }
 
@@ -773,7 +778,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     }
     // 加载弹窗
     private void initLoadingDialog(){
-        mLoadingDialog = new LoadingDialog(WorkerPrimaryActivity.this, "正在操作中...");
+        mLoadingDialog = new LoadingDialog(WorkerPrimaryNewActivity.this, "正在操作中...");
         mLoadingDialog.setCancelable(false);
     }
 
@@ -782,10 +787,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
      */
     // 申请权限
     private void requestPermission() {
-        XXPermissions.with(WorkerPrimaryActivity.this)
+        XXPermissions.with(WorkerPrimaryNewActivity.this)
                 .constantRequest() //可设置被拒绝后继续申请，直到用户授权或者永久拒绝
                 .permission(Permission.CAMERA) //支持请求6.0悬浮窗权限8.0请求安装权限
                 .permission(Permission.CALL_PHONE) //支持请求6.0悬浮窗权限8.0请求安装权限
+                .permission(Permission.ACCESS_FINE_LOCATION) // 获取精确位置，适配BLE targetsdk >= 23
                 .request(new OnPermission() {
                     @Override
                     public void hasPermission(List<String> granted, boolean isAll) {
@@ -793,7 +799,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                             //initCamera(scanPreview.getHolder());
                             onResume();
                         }else {
-                                Toast.makeText(WorkerPrimaryActivity.this,
+                                Toast.makeText(WorkerPrimaryNewActivity.this,
                                     "必须同意所有的权限才能使用本程序", Toast.LENGTH_SHORT).show();
                         }
                     }
@@ -801,12 +807,12 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                     @Override
                     public void noPermission(List<String> denied, boolean quick) {
                         if(quick) {
-                            Toast.makeText(WorkerPrimaryActivity.this, "被永久拒绝授权，请手动授予权限",
+                            Toast.makeText(WorkerPrimaryNewActivity.this, "被永久拒绝授权，请手动授予权限",
                                     Toast.LENGTH_SHORT).show();
                             // 如果是被永久拒绝就跳转到应用权限系统设置页面
-                            XXPermissions.gotoPermissionSettings(WorkerPrimaryActivity.this);
+                            XXPermissions.gotoPermissionSettings(WorkerPrimaryNewActivity.this);
                         }else {
-                            Toast.makeText(WorkerPrimaryActivity.this, "获取权限失败",
+                            Toast.makeText(WorkerPrimaryNewActivity.this, "获取权限失败",
                                     Toast.LENGTH_SHORT).show();
                             finish();
                         }
@@ -816,8 +822,8 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
 
     // 是否有权限：摄像头、拨打电话
     private boolean isHasPermission() {
-        if (XXPermissions.isHasPermission(WorkerPrimaryActivity.this, Permission.CAMERA)
-                && XXPermissions.isHasPermission(WorkerPrimaryActivity.this, Permission.CALL_PHONE))
+        if (XXPermissions.isHasPermission(WorkerPrimaryNewActivity.this, Permission.CAMERA)
+                && XXPermissions.isHasPermission(WorkerPrimaryNewActivity.this, Permission.CALL_PHONE))
             return true;
         return false;
     }

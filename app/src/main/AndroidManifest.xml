@@ -22,8 +22,19 @@
     <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.WAKE_LOCK" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_SETTINGS" />
-    <!-- 小米推送 -->
+    <uses-permission android:name="android.permission.WRITE_SETTINGS" /> <!-- 小米推送 -->
+
+    <!-- 蓝牙 -->
+    <uses-permission android:name = "android.permission.BLUETOOTH"/>
+    <!--启用应用启动设备发现或者操作蓝牙设备的超级管理员-->
+    <uses-permission android:name="android.permission.BLUETOOTH_ADMIN"/>
+
+    <uses-feature android:name="android.hardware.bluetooth_le"
+        android:required="true" />
+    <!-- Needed only if your app targets Android 5.0 (API level 21) or higher. -->
+    <uses-feature android:name="android.hardware.location.network" />
+
+
     <permission
         android:name="com.automation.zzx.intelligent_basket_demo.permission.MIPUSH_RECEIVE"
         android:protectionLevel="signature" />
@@ -39,7 +50,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.basket.BasketCertActivity"></activity>
+        <activity android:name=".activity.worker.BlueToothControlActivity"></activity>
+        <activity android:name=".activity.basket.BasketCertActivity" />
         <activity android:name=".activity.common.MultipleImageActivity" />
         <activity android:name=".activity.worker.WorkerSkillListActivity" />
         <activity android:name=".activity.areaAdmin.ProjectInstallActivity" />
@@ -127,6 +139,11 @@
             android:name=".activity.worker.WorkerPrimaryActivity"
             android:label="@string/title_activity_woker_primary"
             android:theme="@style/AppTheme.NoActionBar" />
+        <activity
+            android:name=".activity.worker.WorkerPrimaryNewActivity"
+            android:label="@string/title_activity_woker_primary"
+            android:theme="@style/AppTheme.NoActionBar" />
+
         <activity android:name=".activity.areaAdmin.ProDetailActivity" />
         <activity android:name=".activity.areaAdmin.ProCommitActivity" />
         <activity android:name=".activity.basket.BasketEZVideoActivity" />
@@ -228,6 +245,10 @@
         <uses-library
             android:name="org.apache.http.legacy"
             android:required="false" />
+
+        <!-- 蓝牙服务 -->
+        <service
+            android:name="com.inuker.bluetooth.library.BluetoothService" />
     </application>
 
 </manifest>

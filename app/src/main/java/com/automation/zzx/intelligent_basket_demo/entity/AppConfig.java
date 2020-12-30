@@ -137,6 +137,8 @@ public class AppConfig {
      */
     // 施工人员基本信息
     public static final String WORKER_ALL_INFO = ANDROID_URL_PATH.concat("/androidGetUserInfo");
+    //施工人员上工前判断
+    public static final String CHECK_BEFORE_START = ANDROID_URL_PATH.concat("/judgeAndroidBeginWork");
     // 施工人员上工
     public static final String WORKER_BEGIN_WORK = ANDROID_URL_PATH.concat("/androidBeginWork");
     // 施工人员下工
@@ -151,6 +153,8 @@ public class AppConfig {
     //请求吊篮批量上电/下电
     public static final String SEND_TO_ALL_DEVICE = ANDROID_URL_PATH.concat("/sendToAllDevice");
 
+    //获取施工信息
+    public static final String GET_WORKER_INFO = ANDROID_URL_PATH.concat("/getWorkerWorkInfo");
 
     /*
      * 租方管理员活动请求

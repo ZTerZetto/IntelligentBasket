@@ -1,0 +1,188 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="@color/white"
+    android:layout_margin="@dimen/textSize_15"
+    android:padding="5dp">
+
+    <!-- 空空如也 -->
+    <RelativeLayout
+        android:id="@+id/basket_no_avaliable"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_centerVertical="true"
+        android:visibility="gone"
+        android:layout_above="@id/basket_avaliable">
+        <ImageView
+            android:id="@+id/no_basket_iv"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            android:layout_above="@+id/no_basket_hint"
+            android:layout_centerHorizontal="true"
+            android:src="@mipmap/ic_no_avaliable_basket" />
+        <TextView
+            android:id="@+id/no_basket_hint"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:layout_marginTop="10dp"
+            android:text="当前未使用吊篮！"
+            android:textSize="16sp" />
+    </RelativeLayout>
+
+
+    <!-- 正常状态 -->
+    <LinearLayout
+        android:id="@+id/ll_ordinary"
+        android:layout_marginTop="70dp"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+        <ImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@mipmap/ic_worker_open"
+            android:layout_gravity="center"
+            android:layout_marginTop="40dp"/>
+
+        <!-- 用户姓名 -->
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            >
+            <TextView
+                android:id="@+id/tv_worker_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/textSize_8"
+                android:gravity="center"
+                android:textSize="@dimen/textSize_24"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:text="工人1号" />
+        </LinearLayout>
+
+        <!-- 吊篮ID -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="40dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerInParent="true"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/size_20"
+                    android:text="正在操作：" />
+                <TextView
+                    android:id="@+id/tv_basket_id"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/size_20"
+                    android:text="吊篮1号" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <!-- 本次累积上机时间 -->
+        <RelativeLayout
+            android:id="@+id/rl_count_time"
+            android:layout_width="165dp"
+            android:layout_height="165dp"
+            android:layout_gravity="center"
+            android:background="@drawable/bg_round_counting"
+            android:orientation="vertical"
+            android:paddingBottom="@dimen/size_24"
+            android:paddingTop="@dimen/size_24">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentTop="true"
+                android:text="上工计时"
+                android:textColor="@color/black"
+                android:textSize="@dimen/textSize_15"/>
+
+            <TextView
+                android:id="@+id/tv_counting_time"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="116:24"
+                android:textColor="@color/black"
+                android:textSize="45sp"
+                android:textStyle="bold" />
+           <!-- <Chronometer
+                android:id="@+id/chronometer"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:textColor="@color/black"
+                android:textStyle="bold"
+                android:textSize="30sp" />-->
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerHorizontal="true"
+                android:layout_alignParentBottom="true"
+                android:text="点击更新"
+                android:textColor="@color/font_blue"
+                android:textSize="@dimen/textSize_12" />
+        </RelativeLayout>
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:layout_gravity="center"
+            android:textSize="@dimen/textSize_12"
+            android:text="" />
+
+        <!-- 本次开始上机时间 -->
+        <!-- 吊篮ID -->
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="5dp">
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_centerInParent="true"
+                android:layout_margin="@dimen/textSize_8">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="center"
+                    android:textSize="@dimen/textSize_14"
+                    android:text="开始于 " />
+                <TextView
+                    android:id="@+id/tv_start_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/textSize_15"
+                    android:text="2020年12月23日 14:33:07" />
+            </LinearLayout>
+        </RelativeLayout>
+
+        <Button
+            android:id="@+id/btn_end_work"
+            android:layout_marginTop="30dp"
+            style="@style/btnStyle"
+            android:backgroundTint="@color/sliver"
+            android:text="结束上机"/>
+    </LinearLayout>
+
+
+
+</LinearLayout>
