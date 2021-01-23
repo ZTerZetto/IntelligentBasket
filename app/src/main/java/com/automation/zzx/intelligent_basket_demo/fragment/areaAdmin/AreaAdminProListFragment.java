@@ -32,7 +32,7 @@ import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminPr
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProjectFinishedActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.ProjectInstallActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.adapter.ProjectAdapter;
+import com.automation.zzx.intelligent_basket_demo.adapter.areaAdmin.ProjectAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;

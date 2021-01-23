@@ -3,20 +3,19 @@ package com.automation.zzx.intelligent_basket_demo.fragment.worker;
 import android.annotation.SuppressLint;
 import android.annotation.TargetApi;
 import android.app.Activity;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Chronometer;
 import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.TextView;
@@ -30,8 +29,11 @@ import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseOkHttpClient;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.CommonDialog;
 import java.io.IOException;
-import java.text.SimpleDateFormat;
+import java.sql.Timestamp;
+import java.util.Calendar;
+import java.util.Date;
 
 import okhttp3.Call;
 
@@ -63,12 +65,14 @@ public class CurrentDeviceFragment extends Fragment {
     private UserInfo workerInfo;
     private String mToken;
     private String deviceId;
-    private String startTime;
-    private String countTime;
+    private Timestamp startTime;
+    private String strStartTime;
+    private String countTimeHour;
+    private String countTimeMinute;
     //private SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
     private BlueToothControlActivity blueToothControlActivity;
-
+    private CommonDialog mCommonDialog;
 
     @SuppressLint("HandlerLeak")
     public Handler handler = new Handler() {
@@ -78,6 +82,7 @@ public class CurrentDeviceFragment extends Fragment {
                     getWorkerWorkInfo();
                     break;
                 case SHOW_WORK_INFO:
+                    getTimeDiff();
                     reUpdateContentView(); // 更新施工信息及控件显示
                     break;
                 case STOP_WORK:
@@ -97,7 +102,7 @@ public class CurrentDeviceFragment extends Fragment {
         llOrdinary = view.findViewById(R.id.ll_ordinary);
         tvWorkerName = view.findViewById(R.id.tv_worker_name);
         tvBasketId = view.findViewById(R.id.tv_basket_id);
-        tvCount = view.findViewById(R.id.chronometer);
+        tvCount = view.findViewById(R.id.tv_counting_time);
         tvStartTime = view.findViewById(R.id.tv_start_time);
 
         //刷新上机时间
@@ -105,7 +110,7 @@ public class CurrentDeviceFragment extends Fragment {
         rlCount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-
+                handler.sendEmptyMessage(SHOW_WORK_INFO);
             }
         });
 
@@ -114,7 +119,11 @@ public class CurrentDeviceFragment extends Fragment {
         btnEnd.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                blueToothControlActivity.mHandler.sendEmptyMessage(BlueToothControlActivity.DISCONNECT_BLE_DEVICE);  // 下工
+                if (mCommonDialog == null) {
+                    String mMsg = "您正在操作设备编号为"+ deviceId + "的吊篮,是否需要下机？";
+                    mCommonDialog = initDialog(mMsg);
+                }
+                mCommonDialog.show();
             }
         });
 
@@ -124,8 +133,6 @@ public class CurrentDeviceFragment extends Fragment {
 
         getWorkerWorkInfo();
         return view;
-
-
 
     }
 
@@ -149,12 +156,14 @@ public class CurrentDeviceFragment extends Fragment {
                         JSONObject jsonObject = JSON.parseObject(o.toString());
                         boolean isAllowed = jsonObject.getBoolean("isLogin");
                         if (isAllowed){
-                            JSONObject workInfo = jsonObject.getJSONObject("workInfo");
-                            if(workInfo.isEmpty()){
+                            if(jsonObject.get("workInfo") == null){
                                 handler.sendEmptyMessage(STOP_WORK);
                             } else {
+                                JSONObject workInfo = jsonObject.getJSONObject("workInfo");
                                 deviceId = workInfo.getString("deviceId");
-                                startTime = workInfo.getString("timeStart");
+                                strStartTime = workInfo.getString("timeStart").substring(0,10)+" "
+                                        +workInfo.getString("timeStart").substring(11,19);
+                                startTime =  Timestamp.valueOf(strStartTime);
                                 handler.sendEmptyMessage(SHOW_WORK_INFO);
                             }
                         }
@@ -183,6 +192,24 @@ public class CurrentDeviceFragment extends Fragment {
                 });
     }
 
+    private void getTimeDiff(){
+        long hour = 0;
+        if(startTime != null) {
+            long nd = 1000  * 60;
+//            long nh = 1000 * 60 * 60;
+            Date date = startTime;
+            Calendar cal = Calendar.getInstance();
+            cal.setTime(date);
+            cal.add(Calendar.HOUR_OF_DAY, 0);
+            date = cal.getTime();
+            Date now = new Date();
+            long diff = now.getTime() - date.getTime();
+            hour = diff / nd;
+        }
+        countTimeHour = String.valueOf(hour / 60 );
+        countTimeMinute = String.valueOf(hour % 60);
+    }
+
 
     /*
      * UI 更新类
@@ -199,7 +226,10 @@ public class CurrentDeviceFragment extends Fragment {
             noRepairListTextView.setVisibility(View.GONE);
             tvWorkerName.setText(workerInfo.getUserName());
             tvBasketId.setText(deviceId);
-            tvStartTime.setText(startTime);
+            tvStartTime.setText(strStartTime);
+            tvCount.setText(countTimeHour + ":"+countTimeMinute);
+            blueToothControlActivity.operatingState = BlueToothControlActivity.WORKING;// 上工中
+            blueToothControlActivity.curBasketId = deviceId;
         }
     }
 
@@ -207,6 +237,25 @@ public class CurrentDeviceFragment extends Fragment {
         llOrdinary.setVisibility(View.GONE);
         noRepairListRelativeLayout.setVisibility(View.VISIBLE);
         noRepairListTextView.setVisibility(View.VISIBLE);
+    }
+
+    /*
+     * 提示弹框
+     */
+    private CommonDialog initDialog(String mMsg){
+        return new CommonDialog(getContext(), R.style.dialog, mMsg,
+                new CommonDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if(confirm){
+                            dialog.dismiss();
+                            blueToothControlActivity.curBasketId = deviceId;
+                            blueToothControlActivity.mHandler.sendEmptyMessage(BlueToothControlActivity.DISCONNECT_BLE_DEVICE);  // 下工
+                        }else{
+                            dialog.dismiss();
+                        }
+                    }
+                }).setTitle("提示");
     }
 
     /*

@@ -17,9 +17,7 @@ import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketDetailActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.basketSupervisor.SupervisorBasketActivity;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.activity.rentAdmin.BasketDetailByRentActivity;
-import com.automation.zzx.intelligent_basket_demo.adapter.SvBasketListAdapter;
-import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketListAdapter;
+import com.automation.zzx.intelligent_basket_demo.adapter.basketSupervisor.SvBasketListAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.MgBasketStatement;
 import com.automation.zzx.intelligent_basket_demo.utils.ToastUtil;
 import com.automation.zzx.intelligent_basket_demo.utils.okhttp.BaseCallBack;
@@ -38,7 +36,6 @@ import android.widget.TextView;
 import com.automation.zzx.intelligent_basket_demo.R;
 
 
-import com.automation.zzx.intelligent_basket_demo.entity.MgBasketInfo;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.scwang.smartrefresh.header.BezierCircleHeader;
 import com.scwang.smartrefresh.layout.SmartRefreshLayout;

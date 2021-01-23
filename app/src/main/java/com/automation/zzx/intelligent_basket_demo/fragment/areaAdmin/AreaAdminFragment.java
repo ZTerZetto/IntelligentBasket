@@ -41,7 +41,7 @@ import okhttp3.Call;
 /**
  * Created by pengchenghu on 2019/3/27.
  * Author Email: 15651851181@163.com
- * Describe:租方管理员用户页面
+ * Describe:区域管理员用户页面
  */
 public class AreaAdminFragment extends Fragment implements View.OnClickListener {
 

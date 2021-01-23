@@ -101,6 +101,10 @@ public class WorkerPrimaryNewActivity extends AppCompatActivity implements View.
     private LinearLayout mMessageLayout; // 消息
     private LinearLayout mWarningLayout; //警告
 
+    //切换上工模式
+    private LinearLayout mSwitchWorkType;
+    private TextView tvSwitchWorkType;
+
     // 其它功能
     private RelativeLayout mGiveHighPrice; // 给个好评
     private RelativeLayout mFeedbackComment; // 反馈意见
@@ -163,7 +167,7 @@ public class WorkerPrimaryNewActivity extends AppCompatActivity implements View.
                         //上工状态获取吊篮编号+现场编号（获取——>显示）
                         getBasketInfo();
                     }*/
-                    mWorkTv.setText(R.string.worker_operate_basket);
+                    mWorkTv.setText("蓝牙上工");
                     mWorkIv.setImageResource(R.mipmap.ic_worker_open);
                     mBasketLayout.setVisibility(View.GONE);
                     break;
@@ -323,6 +327,12 @@ public class WorkerPrimaryNewActivity extends AppCompatActivity implements View.
         mWarningLayout = (LinearLayout) findViewById(R.id.warning_layout);
         mWarningLayout.setOnClickListener(this);
 
+        //切换上下工模式
+        mSwitchWorkType = findViewById(R.id.switch_work_layout);
+        mSwitchWorkType.setOnClickListener(this);
+        tvSwitchWorkType = findViewById(R.id.work_type);
+        tvSwitchWorkType.setText("切换至扫码上下工");
+
         // other function
         mGiveHighPrice = (RelativeLayout) findViewById(R.id.more_item_comment_layout); // 给个好评
         mGiveHighPrice.setOnClickListener(this);
@@ -381,6 +391,11 @@ public class WorkerPrimaryNewActivity extends AppCompatActivity implements View.
                 intent = new Intent(WorkerPrimaryNewActivity.this, BlueToothControlActivity.class);
                 intent.putExtra("work_project_id", mWorkProjectId);
                 startActivity(intent);
+                break;
+            case R.id.switch_work_layout: //切换上下工模式
+                intent = new Intent(WorkerPrimaryNewActivity.this,  WorkerPrimaryActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.order_layout:  // 工单
                 Log.i(TAG, "You have clicked order button");

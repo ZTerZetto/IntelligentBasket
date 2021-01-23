@@ -105,6 +105,10 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private LinearLayout mMessageLayout; // 消息
     private LinearLayout mWarningLayout; //警告
 
+    //切换上工模式
+    private LinearLayout mSwitchWorkType;
+    private TextView tvSwitchWorkType;
+
     // 其它功能
     private RelativeLayout mGiveHighPrice; // 给个好评
     private RelativeLayout mFeedbackComment; // 反馈意见
@@ -324,6 +328,12 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mWarningLayout = (LinearLayout) findViewById(R.id.warning_layout);
         mWarningLayout.setOnClickListener(this);
 
+        //切换上下工模式
+        mSwitchWorkType = findViewById(R.id.switch_work_layout);
+        mSwitchWorkType.setOnClickListener(this);
+        tvSwitchWorkType = findViewById(R.id.work_type);
+        tvSwitchWorkType.setText("切换至蓝牙上下工");
+
         // other function
         mGiveHighPrice = (RelativeLayout) findViewById(R.id.more_item_comment_layout); // 给个好评
         mGiveHighPrice.setOnClickListener(this);
@@ -376,6 +386,11 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 }
                 intent = new Intent(WorkerPrimaryActivity.this, CaptureActivity.class);
                 startActivityForResult(intent, CAPTURE_ACTIVITY_RESULT);
+                break;
+            case R.id.switch_work_layout: //切换上下工模式
+                intent = new Intent(WorkerPrimaryActivity.this,  WorkerPrimaryNewActivity.class);
+                startActivity(intent);
+                finish();
                 break;
             case R.id.order_layout:  // 工单
                 Log.i(TAG, "You have clicked order button");

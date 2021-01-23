@@ -155,9 +155,6 @@ public class AreaAdminMessageFragment extends Fragment {
                     Intent intent;
                     switch(messageInfo.getmType()){
                         case "1": // 报警消息
-                            /*intent = new Intent(getContext(), AlarmMessageActivity.class);
-                            intent.putExtra(ALARM_MESSAGE_MSG, (Parcelable) messageInfo);
-                            startActivity(intent);*/
                             intent = new Intent(getActivity(), BasketDetailActivity.class);
                             intent.putExtra(SearchProjectActivity.PROJECT_ID, messageInfo.getmProjectId());  // 传入项目Id
                             intent.putExtra("basket_id", messageInfo.getmBasketId());
@@ -214,7 +211,6 @@ public class AreaAdminMessageFragment extends Fragment {
         mAlarmPicList.clear();
         for(int i=0; i < mPicUrls.size(); i++){
             String url = mPicUrls.get(i);
-//            mAlarmPicList.add(WebImage.webImageCache.get(url));
             WebImage webImage = new WebImage(url);
             Bitmap bitmap = webImage.getBitmap(getActivity());
             mAlarmPicList.add(bitmap);

@@ -20,7 +20,7 @@
             android:id="@+id/near_order_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/near_three_month"/>
+            android:text="@string/near_three_month" />
 
         <!-- 筛选框 -->
         <ImageView
@@ -30,16 +30,16 @@
             android:layout_alignParentRight="true"
             android:layout_centerVertical="true"
             android:src="@mipmap/ic_order_filter"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
         <!-- 筛选 -->
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_toLeftOf="@id/order_filter_iv"
             android:layout_marginRight="10dp"
+            android:layout_toLeftOf="@id/order_filter_iv"
             android:text="@string/order_filter"
             android:textColor="@color/light_red"
-            android:visibility="invisible"/>
+            android:visibility="invisible" />
 
     </RelativeLayout>
 

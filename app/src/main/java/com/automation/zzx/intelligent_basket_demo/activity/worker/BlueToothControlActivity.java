@@ -1,12 +1,12 @@
 package com.automation.zzx.intelligent_basket_demo.activity.worker;
 
 import android.annotation.SuppressLint;
+import android.app.Dialog;
 import android.bluetooth.BluetoothAdapter;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Handler;
 import android.os.Message;
-import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
@@ -21,13 +21,18 @@ import android.widget.Toast;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.automation.zzx.intelligent_basket_demo.R;
+import com.automation.zzx.intelligent_basket_demo.activity.areaAdmin.AreaAdminSumitReportActivity;
+import com.automation.zzx.intelligent_basket_demo.activity.basket.BasketRepairFinishActivity;
 import com.automation.zzx.intelligent_basket_demo.adapter.rentAdmin.MgBasketContentFragmentAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.UserInfo;
 import com.automation.zzx.intelligent_basket_demo.fragment.worker.BlueDeviceListFragment;
 import com.automation.zzx.intelligent_basket_demo.fragment.worker.CurrentDeviceFragment;
+import com.automation.zzx.intelligent_basket_demo.utils.CustomTimeTask;
 import com.automation.zzx.intelligent_basket_demo.utils.HexAndByte;
 import com.automation.zzx.intelligent_basket_demo.utils.http.HttpUtil;
 import com.automation.zzx.intelligent_basket_demo.widget.NoScrollViewPager;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.LoadingDialog;
+import com.automation.zzx.intelligent_basket_demo.widget.dialog.PictureDialog;
 import com.inuker.bluetooth.library.BluetoothClient;
 import com.inuker.bluetooth.library.connect.listener.BleConnectStatusListener;
 import com.inuker.bluetooth.library.connect.options.BleConnectOptions;
@@ -41,6 +46,7 @@ import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.TimerTask;
 import java.util.UUID;
 import okhttp3.Call;
 import okhttp3.Callback;
@@ -71,6 +77,8 @@ public class BlueToothControlActivity extends AppCompatActivity {
     public final static int DISCONNECT_BLE_DEVICE = 105;
     public final static int DISCONNECT_DEVICE_SUCCESS = 106;
     public final static int DISCONNECT_DEVICE_FAIL = 107;
+    public final static int CONNECT_DEVICE_SUCCESS = 108;
+    public final static int TIMER_TASK_FAIL = 109;
 
 
     //Intent参数
@@ -103,6 +111,16 @@ public class BlueToothControlActivity extends AppCompatActivity {
     public static final int AVAILABLE_STATE = 0; // 下工状态
     public int operatingState = 0;  // 操作类型：
 
+    private PictureDialog mPictureDialog;
+    private LoadingDialog mLoadingDialogOpen;
+    private LoadingDialog mLoadingDialogClose;
+
+    private String mOpenMsg;
+    private String mCheckMsg;
+    private CustomTimeTask customTimeTask;
+    private int checkCount = 0;//查询次数
+
+
     // fragment页面
     CurrentDeviceFragment currentDeviceFragment = new CurrentDeviceFragment();
     BlueDeviceListFragment blueDeviceListFragment = new BlueDeviceListFragment();
@@ -124,36 +142,64 @@ public class BlueToothControlActivity extends AppCompatActivity {
                     }
                 case CONNECT_NEW_BLE_DEVICE:
                     //---------------------1-请求后台确认能否连接--------------------
+                    mLoadingDialogOpen.show();
                     checkBeforeWork();  //上工
                     break;
                 case CHECK_BEFORE_WORK_FAIL:
                     // 上工前操作确认失败
+                    mLoadingDialogOpen.dismiss();
+                    mLoadingDialogClose.dismiss();
                     int state = (int)msg.obj;
+                    String mMsg ;
                     switch (state){
                         case 11:  // 吊篮与施工人员不匹配
-                            Toast.makeText(BlueToothControlActivity.this, "此吊篮不是您的工作吊篮，无法打开！",
-                                Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(BlueToothControlActivity.this, "此吊篮不是您的工作吊篮，无法打开。请联系现场管理员进行处理！"
+                            // ,Toast.LENGTH_SHORT).show();
+                            mMsg = "此吊篮不是您的工作吊篮，无法打开。请联系现场管理员进行处理！";
+                            mPictureDialog = initDialog(2,mMsg);
+                            mPictureDialog.show();
                             break;
                         case 200:  // 吊篮上有人，只执行下工，不关闭吊篮
-                            Toast.makeText(BlueToothControlActivity.this, "下工成功，吊篮尚有其他作业人员，等待其他施工人员断电!",
-                                    Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(BlueToothControlActivity.this, "下工成功，吊篮尚有其他作业人员，等待其他施工人员断电!",
+                            //      Toast.LENGTH_SHORT).show();
+                            mMsg = "下工成功，吊篮尚有其他作业人员，等待其他施工人员断电!";
+                            mPictureDialog = initDialog(0,mMsg);
+                            mPictureDialog.show();
                             break;
                         case 21:  // 吊篮与施工人员不匹配
-                            Toast.makeText(BlueToothControlActivity.this, "此吊篮不是您的工作吊篮，无法下工！", Toast.LENGTH_SHORT).show();
+                            //Toast.makeText(BlueToothControlActivity.this, "此吊篮不是您的工作吊篮，无法下工！", Toast.LENGTH_SHORT).show();
+                            mMsg = "此吊篮不是您的工作吊篮，无法下工！";
+                            mPictureDialog = initDialog(2,mMsg);
+                            mPictureDialog.show();
                             break;
                         default:
                             break;
                     }
+
+                    break;
+
+                case CONNECT_DEVICE_SUCCESS:
+                    setupChatNotify();   // 开启接受数据监听
+                    initTimer();// 开启定时器，在定时器中查询蓝牙状态
+                    customTimeTask.start();
                     break;
                 case CONNECT_DEVICE_FAIL:
+                    mLoadingDialogOpen.dismiss();
+                    checkCount=0;
                     // 连接失败提示
-
+                    mMsg = "蓝牙连接失败，请检查电柜是否上电!";
+                    mPictureDialog = initDialog(2,mMsg);
+                    mPictureDialog.show();
                     break;
 
                 case OPENNING_WORK_SUCCESS:  //----------------------上工成功----------------------
+                    mLoadingDialogOpen.dismiss();
                     //存储已连接的设备信息：MAC地址/吊篮ID
                     curMacAddress = newMacAddress;  // 保存已成功连接的地址
                     curBasketId = newBasketId;  // 保存已成功连接的吊篮ID
+
+                    //断开吊篮连接，以确保第二个人可连
+                    mBluetoothClient.disconnect(curMacAddress);
 
                     //工作状态更改
                     operatingState = WORKING;
@@ -163,8 +209,12 @@ public class BlueToothControlActivity extends AppCompatActivity {
                     editor.putString("curBasketId", curBasketId);
                     editor.apply();
 
-                    setupChatButton();         // 开启按键区域功能
-                    setupChatNotify();   // 开启接受数据监听
+
+                    if (mPictureDialog == null) {
+                        mMsg = "您已成功操作标号为"+ curBasketId + "的吊篮上机，请谨慎操作。";
+                        mPictureDialog = initDialog(1,mMsg);
+                    }
+                    mPictureDialog.show();
 
                     /*//开始计时
                     currentDeviceFragment.chronometer.setBase(SystemClock.elapsedRealtime());
@@ -176,10 +226,12 @@ public class BlueToothControlActivity extends AppCompatActivity {
 
                 case DISCONNECT_BLE_DEVICE:
                     // 下工请求操作
+                    mLoadingDialogClose.show();
                     requestBeginOrEndWork(1);
-
                     break;
                 case DISCONNECT_DEVICE_SUCCESS://----------------------下工成功----------------------
+                    mLoadingDialogClose.dismiss();
+
                     //清空已连接的设备信息：MAC地址/吊篮ID
                     editor = mPref.edit();
                     editor.remove("curMacAddress");
@@ -190,14 +242,33 @@ public class BlueToothControlActivity extends AppCompatActivity {
                     if (operatingState == OPENING_AFTER_CLOSING){
                         // 切换吊篮提示
                         Toast.makeText(BlueToothControlActivity.this, "正在切换上工吊篮...", Toast.LENGTH_SHORT).show();
+                        /*mMsg = "正在切换上工吊篮...";
+                        mPictureDialog = initDialog(1,mMsg);
+                        mPictureDialog.show();*/
                         mHandler.sendEmptyMessage(CONNECT_NEW_BLE_DEVICE);
                     } else {
-                        // 下工成功提示
-                        Toast.makeText(BlueToothControlActivity.this, "下工成功，正在关闭吊篮...", Toast.LENGTH_SHORT).show();
+                        if((int)msg.obj == 200){
+                            mMsg = "下工成功，吊篮尚有其他作业人员，等待其他施工人员断电!";
+                            mPictureDialog = initDialog(0,mMsg);
+                            mPictureDialog.show();
+                        } else {
+                            // 下工成功提示
+                            Toast.makeText(BlueToothControlActivity.this, "下工成功，正在关闭吊篮...", Toast.LENGTH_SHORT).show();
+                        }
                     }
                     operatingState = AVAILABLE_STATE;
                     currentDeviceFragment.handler.sendEmptyMessage(CurrentDeviceFragment.STOP_WORK);
 
+                    break;
+                case DISCONNECT_DEVICE_FAIL:
+                    mLoadingDialogClose.dismiss();
+                    mMsg = "下工失败，请确认网络状态是否良好!";
+                    mPictureDialog = initDialog(2,mMsg);
+                    mPictureDialog.show();
+                    break;
+                case TIMER_TASK_FAIL:
+                    customTimeTask.stop(); // 关闭定时任务
+                    mHandler.sendEmptyMessage(CONNECT_DEVICE_FAIL);
                     break;
 
             }
@@ -219,19 +290,21 @@ public class BlueToothControlActivity extends AppCompatActivity {
 
         initWidgetResource();
         getUserInfo();
+        initLoadingDialog();
 
-        //自动连接蓝牙
-        autoConnectBLE();
-
-
+        initMsg();
     }
 
     private void initWidgetResource() {
-        // 绑定控件
-        mToolbar = findViewById(R.id.toolbar);
-        toolbarTitle = findViewById(R.id.toolbar_title);
+
+        // 顶部导航栏
+        mToolbar = (Toolbar) findViewById(R.id.toolbar);
+        toolbarTitle = (TextView) findViewById(R.id.toolbar_title);
         mToolbar.setTitle("");
         toolbarTitle.setText("蓝牙上下机");
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setHomeButtonEnabled(true); //设置返回键可用
+
 
         mTabLayout = (TabLayout) findViewById(R.id.head_tab_layout);
         mViewPager = (NoScrollViewPager) findViewById(R.id.view_pager);
@@ -254,6 +327,7 @@ public class BlueToothControlActivity extends AppCompatActivity {
 
         //蓝牙
         mBluetoothClient = new BluetoothClient(getApplicationContext());
+
         mBluetoothAdapter = BluetoothAdapter.getDefaultAdapter();
         if (mBluetoothAdapter == null) {   // 设备没有蓝牙，关闭软件
             Toast.makeText(this, "Bluetooth is not available",
@@ -262,6 +336,7 @@ public class BlueToothControlActivity extends AppCompatActivity {
             return;
         }
     }
+
 
 
     // 顶部导航栏消息响应
@@ -283,6 +358,8 @@ public class BlueToothControlActivity extends AppCompatActivity {
     private void autoConnectBLE(){
         curBasketId = mPref.getString("curBasketId","");
         curMacAddress = mPref.getString("curMacAddress","");
+        newBasketId = curBasketId;
+        newMacAddress = curMacAddress;
         mHandler.sendEmptyMessage(CONNECT_NEW_BLE_DEVICE);
     }
 
@@ -292,27 +369,27 @@ public class BlueToothControlActivity extends AppCompatActivity {
     private void connectBLE() {
         BleConnectOptions options = new BleConnectOptions.Builder()
                 .setConnectRetry(3)   // 连接如果失败重试3次
-                .setConnectTimeout(30000)   // 连接超时30s
+                .setConnectTimeout(10000)   // 连接超时30s
                 .setServiceDiscoverRetry(3)  // 发现服务如果失败重试3次
                 .setServiceDiscoverTimeout(20000)  // 发现服务超时20s
                 .build();
-        mBluetoothClient.connect(newMacAddress, new BleConnectResponse() {  // 连接蓝牙
+        mBluetoothClient.connect(newMacAddress, options, new BleConnectResponse() {  // 连接蓝牙
             @Override
             public void onResponse(int code, BleGattProfile data) {
                 if (code == REQUEST_SUCCESS) {   // 连接成功
                     Log.d(TAG, "Connect Sucessfully");
                     // 断开上一次的连接
-                    mBluetoothClient.disconnect(curMacAddress);
-                    mBluetoothClient.unregisterConnectStatusListener(curMacAddress, mBleConnectStatusListener);
+                    //mBluetoothClient.disconnect(curMacAddress);
+                    //mBluetoothClient.unregisterConnectStatusListener(curMacAddress, mBleConnectStatusListener);
                     // 添加蓝牙连接状态监听
                     mBluetoothClient.registerConnectStatusListener(newMacAddress, mBleConnectStatusListener);
                     List<BleGattService> services = data.getServices();
-                    bluetoothService = services.get(2);  // TODO 服务通道待确认（和硬件调试）
-                    //------------------3-后台通信：上工请求------------------------
-                    requestBeginOrEndWork(0);
+                    bluetoothService = services.get(services.size()-1);  // 服务通道待确认（和硬件调试）
+                    sendMessage(bluetoothService, mOpenMsg); // 发送开启蓝牙指令
+                    mHandler.sendEmptyMessage(CONNECT_DEVICE_SUCCESS);
                 } else {
                     Log.d(TAG, String.valueOf(code));
-                    mHandler.sendEmptyMessage(CONNECT_DEVICE_FAIL);
+
                 }
             }
         });
@@ -321,17 +398,24 @@ public class BlueToothControlActivity extends AppCompatActivity {
     // 开启接受数据监听
     private void setupChatNotify(){
         Log.d(TAG, "Setup Chat Notify" );
-        mBluetoothClient.notify(curMacAddress, bluetoothService.getUUID(),
+        mBluetoothClient.notify(newMacAddress, bluetoothService.getUUID(),
                 bluetoothService.getCharacters().get(0).getUuid(), new BleNotifyResponse() {
                     @Override
                     public void onNotify(UUID service, UUID character, byte[] value) {
-                        // TODO: 蓝牙接收数据处理
+                        customTimeTask.stop();
                         String response = HexAndByte.bytesToCharArray(value);
+                        if(parseBLEMessage(response)) {
+                            //------------------3-后台通信：上工请求------------------------
+                            requestBeginOrEndWork(0);
+                        }else {
+                            mHandler.sendEmptyMessage(CONNECT_DEVICE_FAIL);
+                        }
                         Log.d(TAG, response);
                     }
 
                     @Override
                     public void onResponse(int code) {
+                        customTimeTask.stop();
                         if(code == REQUEST_SUCCESS){
                             Log.d(TAG, "Open Notify Sucessfully");
                         }
@@ -368,24 +452,50 @@ public class BlueToothControlActivity extends AppCompatActivity {
      */
     // 通过蓝牙发送数据
     private void sendMessage(BleGattService service, final String message) {
-        byte [] bytes = new byte[0];
-        bytes = message.getBytes();
+//        byte [] bytes = new byte[0];
+//        bytes = message.getBytes();
 
-        mBluetoothClient.write(curMacAddress, service.getUUID(),
-                service.getCharacters().get(0).getUuid(), bytes,
+        int lens = message.length();
+        int MAX_LENGTH = 20;
+        int times = message.length() / MAX_LENGTH + 1;
+
+        for(int i=0; i < times; i++){
+            String temp_str = message.substring(i*MAX_LENGTH, Math.min(lens, (i+1)*MAX_LENGTH));
+            byte [] temp_bytes = temp_str.getBytes();
+
+            mBluetoothClient.write(newMacAddress, service.getUUID(),
+                service.getCharacters().get(0).getUuid(), temp_bytes,
                 new BleWriteResponse() {
-            @Override
-            public void onResponse(int code) {
-                if (code == REQUEST_SUCCESS) {
-                    // Log.i(TAG, "指令发送成功");
+                @Override
+                public void onResponse(int code) {
+                    if (code == REQUEST_SUCCESS) {
+                        // Log.i(TAG, "指令发送成功");
+                    }
                 }
+            });
+
+            try {
+                Thread.sleep(100);
+            } catch (InterruptedException e) {
+                e.printStackTrace();
             }
-        });
+        }
+
+//        mBluetoothClient.write(newMacAddress, service.getUUID(),
+//                service.getCharacters().get(0).getUuid(), bytes,
+//                new BleWriteResponse() {
+//            @Override
+//            public void onResponse(int code) {
+//                if (code == REQUEST_SUCCESS) {
+//                    // Log.i(TAG, "指令发送成功");
+//                }
+//            }
+//        });
     }
 
     // 通过蓝牙接收数据
     private void readMessage(BleGattService service){
-        mBluetoothClient.read(curMacAddress, service.getUUID(), service.getCharacters().get(0).getUuid(),
+        mBluetoothClient.read(newMacAddress, service.getUUID(), service.getCharacters().get(0).getUuid(),
                 new BleReadResponse() {
             @Override
             public void onResponse(int code, byte[] data) {
@@ -402,6 +512,39 @@ public class BlueToothControlActivity extends AppCompatActivity {
         });
     }
 
+    // 蓝牙开启指令 & 蓝牙状态查询指令
+    private void initMsg(){
+        //创建蓝牙开机指令
+        JSONObject jsonObject_open = new JSONObject();
+        JSONObject jsonObject_open_1 = new JSONObject();
+        jsonObject_open_1.put("BketStat","1");
+        jsonObject_open.put("params",jsonObject_open_1);
+        jsonObject_open.put("method","thing.service.property.set");
+        mOpenMsg = jsonObject_open.toJSONString();
+
+        //创建蓝牙状态查询指令
+        JSONObject jsonObject_check = new JSONObject();
+        JSONObject jsonObject_check_1 = new JSONObject();
+        jsonObject_check_1.put("ReadStatus","1");
+        jsonObject_check.put("params",jsonObject_check_1);
+        jsonObject_check.put("method","thing.service.property.set");
+        mCheckMsg =jsonObject_check.toJSONString();
+    }
+
+    //解析接收到的数据
+    private boolean parseBLEMessage(String response){
+        JSONObject jsonObject = JSONObject.parseObject(response);
+        JSONObject params = jsonObject.getJSONObject("params");
+        JSONObject bketStat = params.getJSONObject("BketStat");
+        String stateValue = bketStat.getString("value");
+        if(stateValue.equals("1")){
+            //开机成功
+            return true;
+        }else{
+            return false;
+        }
+    }
+
 
     /*
         * 信息获取
@@ -414,6 +557,7 @@ public class BlueToothControlActivity extends AppCompatActivity {
         mUserInfo.setUserId(mPref.getString("userId", ""));
         mUserInfo.setUserPhone(mPref.getString("userPhone", ""));
         mUserInfo.setUserRole(mPref.getString("userRole", ""));
+        mUserInfo.setUserName(mPref.getString("userName", ""));
         mToken = mPref.getString("loginToken","");
     }
 
@@ -433,7 +577,7 @@ public class BlueToothControlActivity extends AppCompatActivity {
                 if (response.code() == 200) {
                     Log.d(TAG, "Http Server Success");
                     String data = response.body().string();
-                    int state = parseBeginOrEndWork(data,0);
+                    int state = parseBeforeBeginOrEndWork(data,0);
                     Message msg = new Message();
                     if (state == 10){
                         //-----------------2-连接设备蓝牙------------------------
@@ -462,6 +606,8 @@ public class BlueToothControlActivity extends AppCompatActivity {
         else { //等待下工
             Log.i(TAG, "Now, you can close the basket");
             url = WORKER_END_WORK;
+            newBasketId = curBasketId;
+            //newMacAddress = curMacAddress;
         }
         HttpUtil.workerBeginOrEndWorkOkHttpRequest(new Callback() {
             @Override
@@ -480,9 +626,10 @@ public class BlueToothControlActivity extends AppCompatActivity {
                     if (state == 10){
                         // 上工成功刷新展示
                         mHandler.sendEmptyMessage(OPENNING_WORK_SUCCESS);
-
-                    }else if(state == 201) {
-                        mHandler.sendEmptyMessage(DISCONNECT_DEVICE_SUCCESS);
+                    }else if(state == 201 || state == 200) {
+                        msg.what = DISCONNECT_DEVICE_SUCCESS;
+                        msg.obj = state;
+                        mHandler.sendMessage(msg);
                     } else {
                         msg.what = CHECK_BEFORE_WORK_FAIL;
                         msg.obj = state;
@@ -496,16 +643,18 @@ public class BlueToothControlActivity extends AppCompatActivity {
     }
 
     // 解析上下工消息
-    private static int parseBeginOrEndWork(String data,int mWorkState){
+    private static int parseBeforeBeginOrEndWork(String data,int mWorkState){
         JSONObject jsonObject = JSON.parseObject(data);
         int state;
         if(mWorkState == 0) { // 下工状态，等待开工
-            boolean beginWork = jsonObject.getBoolean("beginWork");
+            //if (jsonObject.getBoolean("judgeAndroidBeginWork")!=null){
+            boolean beginWork = jsonObject.getBoolean("judgeAndroidBeginWork");
             if(beginWork) {  // 允许上工
                 state = 10;
             } else {  // 吊篮与工人不匹配
                 state = 11;
             }
+            //}
         }else if(mWorkState == 1){ // 上工状态，等待下工
             boolean endWork = jsonObject.getBoolean("endWork");
             boolean hasPeople = jsonObject.getBoolean("hasPeople");
@@ -522,6 +671,81 @@ public class BlueToothControlActivity extends AppCompatActivity {
             state = 0;
         }
         return state;
+    }
+
+    // 解析上下工消息
+    private static int parseBeginOrEndWork(String data,int mWorkState){
+        JSONObject jsonObject = JSON.parseObject(data);
+        int state;
+        if(mWorkState == 0) { // 下工状态，等待开工
+            //if (jsonObject.getBoolean("judgeAndroidBeginWork")!=null){
+            boolean beginWork = jsonObject.getBoolean("beginWork");
+            if(beginWork) {  // 允许上工
+                state = 10;
+            } else {  // 吊篮与工人不匹配
+                state = 11;
+            }
+            //}
+        }else if(mWorkState == 1){ // 上工状态，等待下工
+            boolean endWork = jsonObject.getBoolean("endWork");
+            boolean hasPeople = jsonObject.getBoolean("hasPeople");
+            if(endWork) {
+                if(hasPeople) {  // 吊篮上还有作业人员
+                    state = 200;
+                }else{  // 吊篮上无其他作业人员
+                    state = 201;
+                }
+            } else {  // 吊篮与工人不匹配
+                state = 21;
+            }
+        }else{  // 错误状态
+            state = 0;
+        }
+        return state;
+    }
+
+    private void initTimer(){
+        customTimeTask = new CustomTimeTask(1000, new TimerTask() {
+            @Override
+            public void run() {
+                checkCount++;
+                if(checkCount >= 3){ // 查询三次后停止
+                    mHandler.sendEmptyMessage(TIMER_TASK_FAIL);
+                } else {
+                    sendMessage(bluetoothService, mCheckMsg);
+                    Log.d(TAG, "定时任务：获取最新吊篮数据");
+                }
+            }
+        });
+    }
+
+
+    /*
+     * 弹窗提示
+     */
+    // 加载弹窗
+    private void initLoadingDialog(){
+        mLoadingDialogOpen = new LoadingDialog(BlueToothControlActivity.this, "正在上工，请等待...");
+        mLoadingDialogClose = new LoadingDialog(BlueToothControlActivity.this, "正在下工，请等待...");
+        mLoadingDialogOpen.setCancelable(false);
+        mLoadingDialogClose.setCancelable(false);
+    }
+
+    /*
+     * 提示弹框
+     */
+    private PictureDialog initDialog(int result, String mMsg){
+        return new PictureDialog(this, R.style.dialog, mMsg, result,
+                new PictureDialog.OnCloseListener() {
+                    @Override
+                    public void onClick(Dialog dialog, boolean confirm) {
+                        if(confirm){
+                            dialog.dismiss();
+                        }else{
+                            dialog.dismiss();
+                        }
+                    }
+                });
     }
 
 

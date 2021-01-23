@@ -1,4 +1,4 @@
-package com.automation.zzx.intelligent_basket_demo.adapter;
+package com.automation.zzx.intelligent_basket_demo.adapter.basketSupervisor;
 
 import android.content.Context;
 import android.support.annotation.NonNull;

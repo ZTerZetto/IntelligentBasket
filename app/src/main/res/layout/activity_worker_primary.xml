@@ -222,6 +222,21 @@
 
             </LinearLayout>
 
+            <!-- 切换上下工 -->
+            <LinearLayout
+                android:id="@+id/switch_work_layout"
+                style="@style/more_common_linearlayout_style">
+                <RelativeLayout
+                    android:id="@+id/more_item_switch_work_layout"
+                    style="@style/me_common_item_relativeLayout_style">
+                    <TextView
+                        android:id="@+id/work_type"
+                        style="@style/more_common_item_textView_style"
+                        android:text="切换至扫码上下工"/>
+                </RelativeLayout>
+            </LinearLayout>
+
+
             <!--软件设置相关-->
             <LinearLayout
                 style="@style/more_common_linearlayout_style">

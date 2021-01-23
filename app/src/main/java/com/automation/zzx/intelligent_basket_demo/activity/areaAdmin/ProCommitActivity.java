@@ -17,7 +17,7 @@ import android.widget.TextView;
 
 import com.automation.zzx.intelligent_basket_demo.R;
 import com.automation.zzx.intelligent_basket_demo.activity.loginRegist.LoginActivity;
-import com.automation.zzx.intelligent_basket_demo.adapter.CommitPhotoAdapter;
+import com.automation.zzx.intelligent_basket_demo.adapter.common.CommitPhotoAdapter;
 import com.automation.zzx.intelligent_basket_demo.entity.AppConfig;
 import com.automation.zzx.intelligent_basket_demo.entity.ProjectInfo;
 import com.automation.zzx.intelligent_basket_demo.widget.ScaleImageView;

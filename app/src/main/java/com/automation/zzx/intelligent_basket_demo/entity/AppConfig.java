@@ -121,7 +121,7 @@ public class AppConfig {
     //电柜参数获取
     public static final String HANGING_BASKET_PARAM = COMMUNICATION_SERVER_PATH.concat("/getSetUpData");
     // 打开/关闭吊篮设备
-    public static final String HANGING_BASKET_OPERATION = COMMUNICATION_SERVER_PATH.concat("/sendToDevice");
+    public static final String HANGING_BASKET_OPERATION = COMMUNICATION_SERVER_PATH.concat("/sendToDevice");  // 通信服务器
     /* 萤石云
      */
     public static final String GET_UIKIT_ACCESS_TOKEN = "https://open.ys7.com/api/lapp/token/get";
