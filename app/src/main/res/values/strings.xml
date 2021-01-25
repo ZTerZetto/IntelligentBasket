@@ -197,6 +197,7 @@
     <!-- 其它 -->
     <string name="searchNothing">抱歉，暂未查找到您需要的结果。</string>
     <string name="title_activity_woker_primary">WokerPrimaryActivity</string>
+    <string name="title_activity_woker_primary_new">WokerPrimaryNewActivity</string>
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

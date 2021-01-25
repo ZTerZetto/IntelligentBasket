@@ -106,7 +106,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
     private LinearLayout mWarningLayout; //警告
 
     //切换上工模式
-    private LinearLayout mSwitchWorkType;
+    private RelativeLayout mSwitchWorkType;
     private TextView tvSwitchWorkType;
 
     // 其它功能
@@ -329,7 +329,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
         mWarningLayout.setOnClickListener(this);
 
         //切换上下工模式
-        mSwitchWorkType = findViewById(R.id.switch_work_layout);
+        mSwitchWorkType = findViewById(R.id.more_item_switch_work_layout);
         mSwitchWorkType.setOnClickListener(this);
         tvSwitchWorkType = findViewById(R.id.work_type);
         tvSwitchWorkType.setText("切换至蓝牙上下工");
@@ -387,7 +387,7 @@ public class WorkerPrimaryActivity extends AppCompatActivity implements View.OnC
                 intent = new Intent(WorkerPrimaryActivity.this, CaptureActivity.class);
                 startActivityForResult(intent, CAPTURE_ACTIVITY_RESULT);
                 break;
-            case R.id.switch_work_layout: //切换上下工模式
+            case R.id.more_item_switch_work_layout: //切换上下工模式
                 intent = new Intent(WorkerPrimaryActivity.this,  WorkerPrimaryNewActivity.class);
                 startActivity(intent);
                 finish();

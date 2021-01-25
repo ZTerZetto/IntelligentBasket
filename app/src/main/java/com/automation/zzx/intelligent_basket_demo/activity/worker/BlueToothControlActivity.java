@@ -179,10 +179,9 @@ public class BlueToothControlActivity extends AppCompatActivity {
                     break;
 
                 case CONNECT_DEVICE_SUCCESS:
-                    setupChatNotify();   // 开启接受数据监听
-                    initTimer();// 开启定时器，在定时器中查询蓝牙状态
                     customTimeTask.start();
                     break;
+
                 case CONNECT_DEVICE_FAIL:
                     mLoadingDialogOpen.dismiss();
                     checkCount=0;
@@ -190,6 +189,8 @@ public class BlueToothControlActivity extends AppCompatActivity {
                     mMsg = "蓝牙连接失败，请检查电柜是否上电!";
                     mPictureDialog = initDialog(2,mMsg);
                     mPictureDialog.show();
+                    // 重新初始化定时器
+                    initTimer();
                     break;
 
                 case OPENNING_WORK_SUCCESS:  //----------------------上工成功----------------------
@@ -291,6 +292,7 @@ public class BlueToothControlActivity extends AppCompatActivity {
         initWidgetResource();
         getUserInfo();
         initLoadingDialog();
+        initTimer();// 开启定时器，在定时器中查询蓝牙状态
 
         initMsg();
     }
@@ -385,6 +387,7 @@ public class BlueToothControlActivity extends AppCompatActivity {
                     mBluetoothClient.registerConnectStatusListener(newMacAddress, mBleConnectStatusListener);
                     List<BleGattService> services = data.getServices();
                     bluetoothService = services.get(services.size()-1);  // 服务通道待确认（和硬件调试）
+                    setupChatNotify();   // 开启接受数据监听
                     sendMessage(bluetoothService, mOpenMsg); // 发送开启蓝牙指令
                     mHandler.sendEmptyMessage(CONNECT_DEVICE_SUCCESS);
                 } else {
@@ -415,7 +418,7 @@ public class BlueToothControlActivity extends AppCompatActivity {
 
                     @Override
                     public void onResponse(int code) {
-                        customTimeTask.stop();
+//                        customTimeTask.stop();
                         if(code == REQUEST_SUCCESS){
                             Log.d(TAG, "Open Notify Sucessfully");
                         }
@@ -460,7 +463,7 @@ public class BlueToothControlActivity extends AppCompatActivity {
         int times = message.length() / MAX_LENGTH + 1;
 
         for(int i=0; i < times; i++){
-            String temp_str = message.substring(i*MAX_LENGTH, Math.min(lens, (i+1)*MAX_LENGTH));
+            final String temp_str = message.substring(i*MAX_LENGTH, Math.min(lens, (i+1)*MAX_LENGTH));
             byte [] temp_bytes = temp_str.getBytes();
 
             mBluetoothClient.write(newMacAddress, service.getUUID(),
@@ -469,47 +472,16 @@ public class BlueToothControlActivity extends AppCompatActivity {
                 @Override
                 public void onResponse(int code) {
                     if (code == REQUEST_SUCCESS) {
-                        // Log.i(TAG, "指令发送成功");
+                        Log.i(TAG,  "指令发送成功" + message);
                     }
                 }
             });
-
             try {
                 Thread.sleep(100);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
         }
-
-//        mBluetoothClient.write(newMacAddress, service.getUUID(),
-//                service.getCharacters().get(0).getUuid(), bytes,
-//                new BleWriteResponse() {
-//            @Override
-//            public void onResponse(int code) {
-//                if (code == REQUEST_SUCCESS) {
-//                    // Log.i(TAG, "指令发送成功");
-//                }
-//            }
-//        });
-    }
-
-    // 通过蓝牙接收数据
-    private void readMessage(BleGattService service){
-        mBluetoothClient.read(newMacAddress, service.getUUID(), service.getCharacters().get(0).getUuid(),
-                new BleReadResponse() {
-            @Override
-            public void onResponse(int code, byte[] data) {
-                if (code == REQUEST_SUCCESS) {
-                    String response = null;
-                    try {
-                        response = new String(data, "UTF-8");
-                    } catch (UnsupportedEncodingException e) {
-                        e.printStackTrace();
-                    }
-                    Log.i(TAG, "串口收到消息：" + response);
-                }
-            }
-        });
     }
 
     // 蓝牙开启指令 & 蓝牙状态查询指令
@@ -710,10 +682,11 @@ public class BlueToothControlActivity extends AppCompatActivity {
             public void run() {
                 checkCount++;
                 if(checkCount >= 3){ // 查询三次后停止
+                    Log.d(TAG, "定时任务：查询停止"+checkCount);
                     mHandler.sendEmptyMessage(TIMER_TASK_FAIL);
                 } else {
+                    Log.d(TAG, "定时任务：获取最新吊篮数据"+checkCount);
                     sendMessage(bluetoothService, mCheckMsg);
-                    Log.d(TAG, "定时任务：获取最新吊篮数据");
                 }
             }
         });
@@ -792,5 +765,6 @@ public class BlueToothControlActivity extends AppCompatActivity {
         super.onDestroy();
         mBluetoothClient.disconnect(curMacAddress);
         mBluetoothClient.unregisterConnectStatusListener(curMacAddress, mBleConnectStatusListener);
+        customTimeTask.stop();
     }
 }

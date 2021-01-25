@@ -225,7 +225,8 @@
             <!-- 切换上下工 -->
             <LinearLayout
                 android:id="@+id/switch_work_layout"
-                style="@style/more_common_linearlayout_style">
+                style="@style/more_common_linearlayout_style"
+                android:clickable="true">
                 <RelativeLayout
                     android:id="@+id/more_item_switch_work_layout"
                     style="@style/me_common_item_relativeLayout_style">

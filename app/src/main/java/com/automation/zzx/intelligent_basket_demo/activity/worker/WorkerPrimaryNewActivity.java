@@ -102,7 +102,7 @@ public class WorkerPrimaryNewActivity extends AppCompatActivity implements View.
     private LinearLayout mWarningLayout; //警告
 
     //切换上工模式
-    private LinearLayout mSwitchWorkType;
+    private RelativeLayout mSwitchWorkType;
     private TextView tvSwitchWorkType;
 
     // 其它功能
@@ -328,7 +328,7 @@ public class WorkerPrimaryNewActivity extends AppCompatActivity implements View.
         mWarningLayout.setOnClickListener(this);
 
         //切换上下工模式
-        mSwitchWorkType = findViewById(R.id.switch_work_layout);
+        mSwitchWorkType = (RelativeLayout) findViewById(R.id.more_item_switch_work_layout);
         mSwitchWorkType.setOnClickListener(this);
         tvSwitchWorkType = findViewById(R.id.work_type);
         tvSwitchWorkType.setText("切换至扫码上下工");
@@ -392,7 +392,7 @@ public class WorkerPrimaryNewActivity extends AppCompatActivity implements View.
                 intent.putExtra("work_project_id", mWorkProjectId);
                 startActivity(intent);
                 break;
-            case R.id.switch_work_layout: //切换上下工模式
+            case R.id.more_item_switch_work_layout: //切换上下工模式
                 intent = new Intent(WorkerPrimaryNewActivity.this,  WorkerPrimaryActivity.class);
                 startActivity(intent);
                 finish();

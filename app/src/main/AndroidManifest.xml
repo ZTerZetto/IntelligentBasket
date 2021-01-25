@@ -145,7 +145,7 @@
             android:theme="@style/AppTheme.NoActionBar" />
         <activity
             android:name=".activity.worker.WorkerPrimaryNewActivity"
-            android:label="@string/title_activity_woker_primary"
+            android:label="@string/title_activity_woker_primary_new"
             android:theme="@style/AppTheme.NoActionBar" />
 
         <activity android:name=".activity.areaAdmin.ProDetailActivity" />
